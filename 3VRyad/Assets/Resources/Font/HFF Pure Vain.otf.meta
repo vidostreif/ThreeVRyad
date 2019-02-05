@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 6ff4d2675e98dbe49ad5e2f512268666
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: HFF Pure Vain [Rus by me]
+  fontNames:
+  - HFF Pure Vain [Rus by me]
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

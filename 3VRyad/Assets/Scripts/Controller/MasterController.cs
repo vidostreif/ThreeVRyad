@@ -1,0 +1,195 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MasterController : MonoBehaviour
+{    
+    public static MasterController Instance; // Синглтон
+
+    private Transform transforForLocalDAndD = null;
+    private Vector3 startPosition = new Vector3(0, 0, 0);
+    private Vector3 startPositionLocalDAndD;
+
+    //для перемещения элемента
+    public float maxDistanceToMove;
+    public double angle = 0.75;// оптимальное значение для вычисление направления смещения елемента
+    private Position gridPositionDAndD; //позиция блока в сетке
+    private NeighboringBlocks neighboringBlocksDAndD; //соседние блоки
+    private Element processedNeighboringElement; // соседний элемент с которым мы взаимодействуем
+    private Block blockFieldDAndD;
+    private bool change = false;//признак для определения того, что мы будем заменять элемент с соседним
+    private DirectionEnum offsetDirection;
+    bool matchFound;
+
+    void Awake()
+    {
+        // регистрация синглтона
+        if (Instance != null)
+        {
+            Debug.LogError("Несколько экземпляров MasterController!");
+        }
+        Instance = this;
+    }
+
+    void Update()
+    {
+        MoveDragObject();//процедура перемещения взятого объекта
+    }
+
+    public void DragLocalObject(Transform gameObjectTransform)//записываем данные для последующего перемещения объекта за мышкой или пальцем
+    {
+        //если сетка не заблокирована
+        if (!Grid.Instance.blockedForMove)
+        {
+            transforForLocalDAndD = gameObjectTransform;
+            startPositionLocalDAndD = gameObjectTransform.position;//локальная позиция
+            //Находим позицию блока в сетке
+            blockFieldDAndD = gameObjectTransform.GetComponentInParent<Block>();
+            gridPositionDAndD = Grid.Instance.FindPosition(blockFieldDAndD);
+            //Определяем соседние блоки
+            neighboringBlocksDAndD = Grid.Instance.DeterminingNeighboringBlocks(gridPositionDAndD);
+            //если стартовая позиция мыши нулевая
+            if (startPosition == new Vector3(0, 0, 0))
+            {
+                RecordStartPosition();
+            }
+        }                
+    }
+
+    
+
+    public void DropLocalObject()// удаляем данные об объекте который перемещяли мышкой или пальцем и возвращаем его на место
+    {
+        //если определились, что хотим поменять с соседним объектом
+        if (change)
+        {
+            //перемещаем елементы на новую позицию
+            Grid.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
+
+            //ищем совпавшие линии 
+            
+            Grid.Instance.Move(blockFieldDAndD, neighboringBlocksDAndD.GetBlock(offsetDirection), result => matchFound = result);
+
+            //если совпадение не нашли, то возвращаем элементы обратно
+            if (!matchFound)
+            {
+                Grid.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
+            }
+
+        }
+        else if(transforForLocalDAndD != null)
+        {
+            //возвращаем на стартовую позицию
+            transforForLocalDAndD.position = startPosition;
+        }
+
+        Reset();//Обнуляем Данные
+    }
+
+    private void MoveDragObject()//процедура перемещения взятого объекта
+    {
+        if (transforForLocalDAndD != null)
+        {
+            //вычисляем позицию пальца
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePosition.z = startPosition.z;
+            //расчитываем вектор смещения
+            Vector3 translation = mousePosition - startPosition;
+            //вычисляем расстояние на которое смещаем объект
+            float offsetDistance = translation.magnitude;
+            //нормализируем вектор для упрощения вычисления направления
+            Vector3 direction = translation / offsetDistance;
+
+            // Если растояние меньше допистимого то смещаем объект за пальцем
+            //уменьшить вектор до нужного размера, что бы смещать элемент на нужное растояние
+            if (offsetDistance > maxDistanceToMove)
+            {
+                translation = direction * maxDistanceToMove;
+            }
+
+            //передаем координаты взятому объекту
+            // направляем строго влево или вправо или вверх или вниз
+            Vector3 newPosition = transforForLocalDAndD.position;
+            //DirectionEnum oldDirection = offsetDirection; // записываем старое направление
+            if (direction.x > angle || direction.x < -angle)
+            {
+                newPosition = new Vector3(startPosition.x + translation.x, startPosition.y, startPosition.z);
+                //записываем направление
+                if (direction.x > 0)
+                    offsetDirection = DirectionEnum.Right;
+                else
+                    offsetDirection = DirectionEnum.Left;
+            }
+            else if (direction.y > angle || direction.y < -angle)
+            {
+                newPosition = new Vector3(startPosition.x, startPosition.y + translation.y, startPosition.z);
+                //записываем направление
+                if (direction.y > 0)
+                    offsetDirection = DirectionEnum.Up;
+                else
+                    offsetDirection = DirectionEnum.Down;
+            }
+
+            //узнаем заблокирован ли элемент в укзанном направлении
+            Block neighboringBlock = neighboringBlocksDAndD.GetBlock(offsetDirection);
+            if (neighboringBlock != null)
+            {
+                //Если в соседнем блоке есть элемент и он не заблокирован, то смещаем его к нашему блоку на тоже растояние
+                //или если нет элемента
+                if ((neighboringBlock.Element != null && !neighboringBlock.Element.LockedForMove) || neighboringBlock.Element == null)
+                {
+                    //записываем достаточно ли мы сместили объект, что бы поменять его с соседним
+                    if (offsetDistance > maxDistanceToMove / 2)
+                        change = true;
+                    else
+                        change = false;
+
+                    //тащим элемент за пальцем
+                    transforForLocalDAndD.position = newPosition;                                      
+
+                    ////Если в соседнем блоке есть элемент, то смещаем его к нашему блоку на тоже растояние
+                    if (neighboringBlock.Element != null && offsetDistance > maxDistanceToMove / 8)
+                    {
+                        //расчитываем вектор смещения для соседнего элемента
+                        Vector3 neighboringTranslation = newPosition - startPosition;
+                        neighboringBlock.Element.transform.position = neighboringBlock.transform.position - neighboringTranslation;
+                        neighboringBlock.Element.drag = true;
+
+                        //если изменился соседний блок к которому движемся, то у предыдущего блока сбрасываем что он перетаскивается
+                        if (processedNeighboringElement != neighboringBlock.Element)
+                        {
+                            //BlockField oldNeighboringBlock = neighboringBlocksDAndD.GetBlock(oldDirection);
+                            if (processedNeighboringElement != null)
+                            {
+                                processedNeighboringElement.drag = false;
+                            }
+                        }
+                        processedNeighboringElement = neighboringBlock.Element;
+                    }
+                }
+            }
+        }
+    }
+
+    private void RecordStartPosition()//записываем стартовую позицию мыши или пальца
+    {
+        //записываем стартовое положение объекта (потом привезать к родителю)
+        startPosition = startPositionLocalDAndD;
+    }
+
+    private void Reset()//обнуляем значение стартовой позиции
+    {
+        transforForLocalDAndD = null;
+        startPosition = new Vector3(0, 0, 0);
+        startPositionLocalDAndD = new Vector3(0, 0, 0);
+        gridPositionDAndD = new Position();
+        neighboringBlocksDAndD = new NeighboringBlocks();
+        change = false;
+
+        if (processedNeighboringElement != null)
+        {
+            processedNeighboringElement.drag = false;
+        }
+        processedNeighboringElement = null;
+    }
+}
