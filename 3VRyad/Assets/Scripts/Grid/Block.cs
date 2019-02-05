@@ -12,8 +12,8 @@ public class Block : MonoBehaviour {
     //protected SpriteBank objectManagement;
     [SerializeField] protected SpriteRenderer spriteRenderer;
 
-    private float smoothTime = 15f;//скорость перемещения элемента к блоку
-    private float yVelocity = 0.0f;
+    //private float smoothTime = 15f;//скорость перемещения элемента к блоку
+    //private float yvelocity = 0.0f;
 
 
     public BlockTypeEnum Type
