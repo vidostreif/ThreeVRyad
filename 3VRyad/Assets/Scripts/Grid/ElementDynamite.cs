@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class ElementDynamite : Element
 {
+    [SerializeField] protected float explosionRadius;
+
+    protected override void DopSettings()
+    {
+        explosionRadius = 0.6f;
+    }
+
     public override Element Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
     {
         if (!destroyed)
@@ -31,7 +38,7 @@ public class ElementDynamite : Element
                     {
                         //воздействие на соседние блоки
                         destroyed = true;
-                        MainAnimator.Instance.AddExplosionEffect(thisTransform.position, 0.6f);
+                        MainAnimator.Instance.AddExplosionEffect(thisTransform.position, explosionRadius);
                         HitNeighboringBlocks(thisHitTypeEnum);
                         Tasks.Instance.Collect(this);
                         AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();

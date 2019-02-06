@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class ElementBomb : ElementDynamite
 {
+    protected override void DopSettings()
+    {
+        explosionRadius = 0.8f;
+    }
+
     //ударяем по соседним блокам
     protected override void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)
     {

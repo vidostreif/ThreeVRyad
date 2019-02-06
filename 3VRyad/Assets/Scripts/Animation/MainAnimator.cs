@@ -20,6 +20,8 @@ public class MainAnimator : MonoBehaviour {
     private List<CompressAndRecover> CompressAndRecoverElements = new List<CompressAndRecover>();//элементы для перемещения
     private List<CompressAndRecover> CompressAndRecoverElementsForRemove = new List<CompressAndRecover>();//элементы которые можно удалить из коллекции
 
+    public GameObject explosionEffect;//префаб
+    //public List<GameObject> explosionEffects;// лист взрывов
 
     public List<Element> ElementsForNextMove
     {
@@ -130,18 +132,36 @@ public class MainAnimator : MonoBehaviour {
     }
 
     public void AddExplosionEffect(Vector3 epicenter, float power) {
-        explosions.Add(new Explosion(epicenter, power, Time.time));
-    }
 
+        GameObject explosionEf = Instantiate(explosionEffect, epicenter, Quaternion.identity);
+        //Destroy(explosionEf, power * 0.33f);//устанавливаем время жизни
+        explosions.Add(new Explosion(epicenter, power, Time.time, explosionEf));
+    }
+    
+    //эффекты взрыва
     private void Explosions() {
         //создаем эффекты взрыва
         foreach (Explosion item in explosions)
         {
+            //item.radiusExplosionEffect *= 70 * Time.deltaTime;
+            ////если эффект все еще есть
+            //if (item.radiusExplosionEffect < item.maxRadiusExplosionEffect)
+            //{
+            //    //увеличиваем эффект искажения
+            //    item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
+                
+            //}
+            //else
+            //{
+            //    Debug.Log(item.explosionEffect.transform.localScale + "  " + item.maxRadiusExplosionEffect + "  " + item.radiusExplosionEffect);
+            //}
 
             if (item.moment < Time.time)
             {
-                item.moment = Time.time + 0.05f;
-                item.radius += Grid.Instance.blockSize * 0.95f;
+                item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
+                item.radiusExplosionEffect += 1;
+                item.moment = Time.time + 0.025f;
+                item.radius += Grid.Instance.blockSize * 0.45f;
                 GameObject[] objectsToMove = FindObjectsInRadiusWithComponent(item.epicenter, item.radius, item.radius + Grid.Instance.blockSize, typeof(Element));
 
                 foreach (GameObject objectToMove in objectsToMove)
@@ -160,7 +180,7 @@ public class MainAnimator : MonoBehaviour {
                         animatorElement.PlayIdleAnimation();
                     }
                 }                
-                item.power -= 0.2f;
+                item.power -= 0.1f;
             }
 
             if (item.power <= 0)
@@ -170,6 +190,7 @@ public class MainAnimator : MonoBehaviour {
         //удаляем из массива
         foreach (Explosion item in explosionsForRemove)
         {
+            Destroy(item.explosionEffect);
             explosions.Remove(item);
         }
         explosionsForRemove.Clear();

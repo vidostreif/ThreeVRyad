@@ -10,7 +10,7 @@ using UnityEngine;
 /// наследоваться от интерфейса?
 //описание поведения стандартного элемента
 [ExecuteInEditMode]
-public class Element : MonoBehaviour//, IPointerUpHandler, IPointerDownHandler
+public class Element : MonoBehaviour
 {
     public bool drag; //элемент перетаскивается
     [SerializeField] protected ElementsTypeEnum type;//тип элемента
@@ -85,7 +85,7 @@ public class Element : MonoBehaviour//, IPointerUpHandler, IPointerDownHandler
         }
     }
 
-    void Awake()
+    public virtual void Awake()
     {
         drag = false;
         thisTransform = transform;
@@ -103,26 +103,13 @@ public class Element : MonoBehaviour//, IPointerUpHandler, IPointerDownHandler
         this.createLine = createLine;
         this.activated = activated;
         this.thisHitTypeEnum = hitTypeEnum;
+        DopSettings();
     }
 
-    //public void OnPointerDown(PointerEventData eventData)//начало перетаскивания
-    //{
-    //    if (!lockedForMove)
-    //    {
-    //        MasterController.Instance.DragLocalObject(transform);
-    //        drag = true;
-    //    }        
-    //}
+    protected virtual void DopSettings()
+    {
 
-    //public void OnPointerUp(PointerEventData eventData)//прекращаем перетаскивание
-    //{
-    //    if (!lockedForMove)
-    //    {
-    //        MasterController.Instance.DropLocalObject();//бросаем с возвратом на локальную позицию
-    //        drag = false;
-    //    }        
-    //}
-
+    }
 
     //удар элементу
     public virtual Element Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
