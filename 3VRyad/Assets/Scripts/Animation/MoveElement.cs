@@ -11,10 +11,11 @@ public class MoveElement {
     public int priority;//приоритет
     public float yVelocity = 0.0f;
 
-    public MoveElement(Transform objTransform, Vector3 targetPosition, float smoothTime)
+    public MoveElement(Transform objTransform, Vector3 targetPosition, float smoothTime, int priority)
     {
         this.thisTransform = objTransform;
         this.targetPosition = targetPosition;
         this.smoothTime = smoothTime;
+        this.priority = priority;
     }
 }

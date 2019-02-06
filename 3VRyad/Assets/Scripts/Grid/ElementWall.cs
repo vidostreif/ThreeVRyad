@@ -5,7 +5,7 @@ using UnityEngine;
 public class ElementWall : Element {
 
 
-    public override Element Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
+    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
     {
         if (!destroyed)
         {
@@ -19,15 +19,15 @@ public class ElementWall : Element {
                     Tasks.Instance.Collect(this);
                     AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
                     animatorElement.PlayDestroyAnimation();                    
-                    return null;
+                    //return null;
                 }
             }
-            return this;
+            //return this;
         }
-        else
-        {
-            return null;
-        }
+        //else
+        //{
+        //    return null;
+        //}
         
     }
 

@@ -172,9 +172,9 @@ public class Block : MonoBehaviour {
     //удар по блоку
     public void Hit(HitTypeEnum hitTypeEnum = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty) {
 
-        if (element != null)
+        if (element != null && !element.Destroyed)
         {
-            Element = element.Hit(hitTypeEnum, hitElementShape);
+            element.Hit(hitTypeEnum, hitElementShape);
         }
     }
 
@@ -189,7 +189,7 @@ public class Block : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //если есть элемент и он не на позиции нашего блока то медлено премещаем его к блоку
-        if (this.Element != null && this.Element.thisTransform.position != thisTransform.position && !this.Element.drag)
+        if (this.Element != null && this.Element.thisTransform.position != thisTransform.position && !this.Element.drag && !this.Element.Destroyed)
         {
             MainAnimator.Instance.AddElementForSmoothMove(this.Element.thisTransform, thisTransform.position, 1);
             //float newPositionX = Mathf.SmoothDamp(Element.thisTransform.position.x, thisTransform.position.x, ref yVelocity, smoothTime);

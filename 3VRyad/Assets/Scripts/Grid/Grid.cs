@@ -86,7 +86,7 @@ public class Grid : MonoBehaviour
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
                 //если стандартный блок и в нем нет элемента
-                if (containers[x].block[y] != null && containers[x].block[y].Type == BlockTypeEnum.Standard && containers[x].block[y].Element == null)
+                if (ThisStandardBlockWithoutElement(containers[x].block[y]))
                 {
                     bool elementfound = false;
                     ElementsPriority elementsPriority = null;
@@ -201,10 +201,10 @@ public class Grid : MonoBehaviour
                 //если треубется, возвращаем данные в место вызова функции
                 if (iteration == 1 && cb != null)
                     cb(false);
-            }                
+            }
 
             //проверяем длинну совпавших линий для бонусов 
-            List<Block> findedBlockInLine = CountCollectedLine(blockFields);
+            List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
 
             //ударяем по найденным блокам
             foreach (Block blockField in blockFields)
@@ -224,19 +224,19 @@ public class Grid : MonoBehaviour
                     destinationBlock.Element.Activate();
                     matchFound = true;
                 }
-            }
-                                     
-            //если совпадения найдены, делаем паузу для анимации
-            if (matchFound)
-            {
-                yield return new WaitForSeconds(0.25f);
-            }
-
+            }                                    
+            
             //создаем бонусы
             if (iteration == 1 && matchFound)
-                Bonuses.Instance.CheckBonuses(findedBlockInLine, touchingBlock, destinationBlock);
+                foreach (List<Block> item in findedBlockInLine)
+                    Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
             else if(matchFound)
-                Bonuses.Instance.CheckBonuses(findedBlockInLine, null, null);
+                foreach (List<Block> item in findedBlockInLine)
+                    Bonuses.Instance.CheckBonuses(item, null, null);
+
+            //если совпадения найдены, делаем паузу для анимации
+            if (matchFound)
+                yield return new WaitForSeconds(0.25f);
 
             //заполняем сетку элементами
             yield return StartCoroutine(Filling());
@@ -285,11 +285,11 @@ public class Grid : MonoBehaviour
                 if (y != 0 || y != containers[x].block.GetLength(0) - 1)
                 {
                     //проверяем что соседние блоки существуют
-                    if (neighboringBlocks.Left != null && neighboringBlocks.Right != null && containers[x].block[y] != null)
+                    if (ThisStandardBlockWithElement(neighboringBlocks.Left) && ThisStandardBlockWithElement(neighboringBlocks.Right) && ThisStandardBlockWithElement(containers[x].block[y]))
                     {
-                        //проверяем что элементы существуют в блоках
-                        if (neighboringBlocks.Left.Element != null && neighboringBlocks.Right.Element != null && containers[x].block[y].Element != null)
-                        {
+                        ////проверяем что элементы существуют в блоках
+                        //if (neighboringBlocks.Left.Element != null && neighboringBlocks.Right.Element != null && containers[x].block[y].Element != null)
+                        //{
                             //Если все три блока в линии создают линию
                             if (neighboringBlocks.Left.Element.CreateLine && neighboringBlocks.Right.Element.CreateLine && containers[x].block[y].Element.CreateLine)
                             {
@@ -307,7 +307,7 @@ public class Grid : MonoBehaviour
                                     //matchFound = true;
                                 }
                             }
-                        }
+                        //}
                     }
                 }
 
@@ -315,16 +315,16 @@ public class Grid : MonoBehaviour
                 if (x != 0 || x != containers.GetLength(0) - 1)
                 {
                     //Проверяем что соседние блоки существуют
-                    if (neighboringBlocks.Up != null && neighboringBlocks.Down != null && containers[x].block[y] != null)
+                    if (ThisStandardBlockWithElement(neighboringBlocks.Up) && ThisStandardBlockWithElement(neighboringBlocks.Down) && ThisStandardBlockWithElement(containers[x].block[y]))
                     {
-                        //Проверяем что элементы существуют в блоках
-                        if (neighboringBlocks.Up.Element != null && neighboringBlocks.Down.Element != null && containers[x].block[y].Element != null)
+                        ////проверяем что соседние блоки существуют
+                        //if (neighboringBlocks.Up.Element != null && neighboringBlocks.Down.Element != null && containers[x].block[y].Element != null)
+                        //{
+                        //Если все три блока в линии создают линию
+                        if (neighboringBlocks.Up.Element.CreateLine && neighboringBlocks.Down.Element.CreateLine && containers[x].block[y].Element.CreateLine)
                         {
-                            //Если все три блока в линии создают линию
-                            if (neighboringBlocks.Up.Element.CreateLine && neighboringBlocks.Down.Element.CreateLine && containers[x].block[y].Element.CreateLine)
-                            {
-                                //Если все три елементы в линии равны
-                                if (neighboringBlocks.Up.Element.Shape == neighboringBlocks.Down.Element.Shape
+                            //Если все три елементы в линии равны
+                            if (neighboringBlocks.Up.Element.Shape == neighboringBlocks.Down.Element.Shape
                                 && neighboringBlocks.Down.Element.Shape == containers[x].block[y].Element.Shape)
                                 {
                                     //предварительно проверяем, что блоков нет в списке
@@ -336,8 +336,8 @@ public class Grid : MonoBehaviour
                                         blockFieldsToRemoveElement.Add(containers[x].block[y]);
                                     //matchFound = true;
                                 }
-                            }
                         }
+                    //}
                     }
                 }
             }
@@ -345,8 +345,8 @@ public class Grid : MonoBehaviour
         return blockFieldsToRemoveElement;
     }
     
-    //подсчет самой длинной линии совпавших элементов
-    private List<Block> CountCollectedLine(List<Block> blockFields)
+    //поиск линий совпавших элементов более трех
+    private List<List<Block>> CountCollectedLine(List<Block> blockFields)
     {
         //проверяем длинну совпавших линий для бонусов
         //копируем массив
@@ -354,17 +354,16 @@ public class Grid : MonoBehaviour
         foreach (Block item in blockFields)
             listForCheck.Add(item);
 
-        List<Block> blocksInLine = new List<Block>();
-        List<Block> maxBlocksInLine = new List<Block>();
-        List<Block> findedBlocks = new List<Block>();
+        List<List<Block>> listBlocksInLine = new List<List<Block>>();//возвращаемый массив
+        List<Block> blocksInLine;//одна линия
+        List<Block> findedBlocks = new List<Block>();//промежуточный массив
 
-        //int findedBlockInLine = 0;
         bool repit;
         do
         {
             repit = false;
             //добавляем первый элемент
-            blocksInLine.Clear();
+            blocksInLine = new List<Block>();
             if (listForCheck.Count > 0)
                 blocksInLine.Add(listForCheck[0]);
 
@@ -375,7 +374,7 @@ public class Grid : MonoBehaviour
                 {
                     foreach (Block item in blocksInLine)
                     {
-                        if (blockField != item && blockField.Element.Shape == item.Element.Shape)
+                        if (blockField != item && ThisStandardBlockWithStandartElementCanMove(item) && blockField.Element.Shape == item.Element.Shape)
                         {
                             Position blockPosition = FindPosition(item);
                             NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(blockPosition);
@@ -393,7 +392,6 @@ public class Grid : MonoBehaviour
                         }
                     }
                 }
-
                 //переносим найденные блоки в основной массив
                 foreach (Block item in findedBlocks)
                 {
@@ -401,16 +399,14 @@ public class Grid : MonoBehaviour
                 }
             } while (findedBlocks.Count > 0);
 
-            if (blocksInLine.Count > maxBlocksInLine.Count)
+            if (blocksInLine.Count > 3)
             {
-                //findedBlockInLine = blocksInLine.Count;                
+                listBlocksInLine.Add(blocksInLine);
                 //Удаляем из основного массива
                 foreach (Block item in blocksInLine)
                 {
                     listForCheck.Remove(item);
-                    maxBlocksInLine.Add(item);
                 }
-
                 repit = true;
             }
         } while (repit);
@@ -420,8 +416,8 @@ public class Grid : MonoBehaviour
         //    Debug.Log("Найдено блоков в линии:" + maxBlocksInLine.Count);
         //}
 
-        //возвращаем блоки которые составили самую длиннную линию
-        return maxBlocksInLine;
+        //возвращаем блоки которые составили линию больше 3
+        return listBlocksInLine;
     }
 
     //возвращает массив элементов которые могут составить линию в следующем ходу
@@ -435,7 +431,7 @@ public class Grid : MonoBehaviour
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
                 //если стандартный блок и в нем есть элемент
-                if (containers[x].block[y] != null && containers[x].block[y].Type == BlockTypeEnum.Standard && containers[x].block[y].Element != null)
+                if (ThisStandardBlockWithElement(containers[x].block[y]))
                 {
                     for (int j = 0; j < 2; j++)
                     {
@@ -473,7 +469,7 @@ public class Grid : MonoBehaviour
                                     continue;
                                 if (curBlock != null && curBlock.Type != BlockTypeEnum.Standard)//если тип не стандартный
                                     continue;
-                                if (curBlock != null && curBlock.Element != null && curBlock.Element.LockedForMove)//если элемент заблокирован для движения
+                                if (ThisBlockWithElementCantMove(curBlock))//если элемент заблокирован для движения
                                     continue;
 
                                 Position position = new Position(posX, posY);
@@ -558,6 +554,19 @@ public class Grid : MonoBehaviour
         StartFilling(listPriority);
     }
 
+    public bool ThisBlockWithoutElement(Block block)
+    {
+
+        if (block != null && (block.Element == null || block.Element.Destroyed))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public bool ThisStandardBlockWithoutElement(Block block)
     {
 
@@ -571,9 +580,22 @@ public class Grid : MonoBehaviour
         }
     }
 
+    public bool ThisStandardBlockWithElement(Block block)
+    {
+
+        if (block != null && block.Type == BlockTypeEnum.Standard && block.Element != null && !block.Element.Destroyed)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public bool ThisStandardBlockWithStandartElementCanMove(Block block) {
 
-        if (block != null && block.Type == BlockTypeEnum.Standard && block.Element != null && block.Element.Type == ElementsTypeEnum.Standard && !block.Element.LockedForMove)
+        if (block != null && block.Type == BlockTypeEnum.Standard && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.Standard && !block.Element.LockedForMove)
         {
             return true;
         }
@@ -586,7 +608,7 @@ public class Grid : MonoBehaviour
     public bool ThisBlockWithElementCanMove(Block block)
     {
 
-        if (block != null && block.Element != null && !block.Element.LockedForMove)
+        if (block != null && block.Element != null && !block.Element.Destroyed && !block.Element.LockedForMove)
         {
             return true;
         }
@@ -598,7 +620,6 @@ public class Grid : MonoBehaviour
 
     public bool ThisBlockWithElementCantMove(Block block)
     {
-
         if (block != null && block.Element != null && block.Element.LockedForMove)
         {
             return true;
@@ -898,11 +919,11 @@ public class Grid : MonoBehaviour
                     if (currentBlock != null)
                     {
                         //если пустой блок и не умеет генерировать элемент, идем дальше
-                        if (currentBlock.Element == null && !currentBlock.GeneratorElements)
+                        if (ThisBlockWithoutElement(currentBlock) && !currentBlock.GeneratorElements)
                         { continue; }
 
                         //если пустой блок и умеет генерировать элемент, то предварительно создаем случайный элемент
-                        else if (currentBlock.Element == null && currentBlock.GeneratorElements)
+                        else if (ThisBlockWithoutElement(currentBlock) && currentBlock.GeneratorElements)
                         {
                             //выбираем случайное число для выбора типа элемента из списка
                             //int random = UnityEngine.Random.Range(0, elementsShapeAndPriority.Count);
@@ -912,19 +933,19 @@ public class Grid : MonoBehaviour
                         }
 
                         //если текущий элемент заблокирован для движения, то переходим к следующему
-                        else if (currentBlock.Element != null && currentBlock.Element.LockedForMove)
+                        else if (ThisBlockWithElementCantMove(currentBlock))
                         { continue; }
 
                         //ищем место для смещения
                         //если нижний блок не имеет элемента, то смещаем к нему
-                        if (containers[x].block[y - 1] != null && containers[x].block[y - 1].Element == null)
+                        if (ThisStandardBlockWithoutElement(containers[x].block[y - 1]))
                         {
                             ExchangeElements(currentBlock, containers[x].block[y - 1]);
                             needIteration = true;
                             continue;
                         }
                         //иначе, проверяем правый нижний блок по диагонали, при условии, что справа нет элементов в блоках
-                        if ((x < containers.GetLength(0) - 1) && (containers[x + 1].block[y - 1] != null && containers[x + 1].block[y - 1].Element == null))
+                        if ((x < containers.GetLength(0) - 1) && ThisStandardBlockWithoutElement(containers[x + 1].block[y - 1]))
                         {
                             bool moveRight = false;
                             for (int i = y; i < containers[x].block.GetLength(0); i++)
@@ -969,7 +990,7 @@ public class Grid : MonoBehaviour
                             }
                         }
                         //иначе, проверяем левый нижний блок по диагонали , при условии, что слева нет элементов в блоках
-                        if ((x > 0) && (containers[x - 1].block[y - 1] != null && containers[x - 1].block[y - 1].Element == null))
+                        if ((x > 0) && ThisStandardBlockWithoutElement(containers[x - 1].block[y - 1]))
                         {
                             bool moveLeft = false;
                             for (int i = y; i < containers[x].block.GetLength(0); i++)

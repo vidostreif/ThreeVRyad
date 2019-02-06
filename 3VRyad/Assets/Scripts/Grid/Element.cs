@@ -112,7 +112,7 @@ public class Element : MonoBehaviour
     }
 
     //удар элементу
-    public virtual Element Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
+    public virtual void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
     {
         if (!destroyed)
         {
@@ -143,17 +143,17 @@ public class Element : MonoBehaviour
                         Tasks.Instance.Collect(this);
                         AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
                         animatorElement.PlayDestroyAnimation();                        
-                        return null;
+                        //return null;
                     }
                 }
             }
 
-            return this;
+            //return this;
         }
-        else
-        {
-            return null;
-        }
+        //else
+        //{
+        //    return null;
+        //}
 
     }
 

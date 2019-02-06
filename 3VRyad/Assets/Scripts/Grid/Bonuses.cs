@@ -34,21 +34,27 @@ public class Bonuses : MonoBehaviour {
         {
             //определяем место выдачи бонуса
             Block blockToCreateBonus = null;
-            if (Grid.Instance.ThisStandardBlockWithoutElement(destinationBlock))
-                blockToCreateBonus = destinationBlock;
-            else if (Grid.Instance.ThisStandardBlockWithoutElement(touchingBlock))
-                blockToCreateBonus = touchingBlock;
-            else
+            if (Grid.Instance.ThisStandardBlockWithoutElement(destinationBlock) || Grid.Instance.ThisStandardBlockWithoutElement(touchingBlock))
             {
-                //for (int i = (findedBlockInLine.Count - 1); i >= 1; i--)
-                //{
-                //    //int j = UnityEngine.Random.Range(0, i + 1);
-                //    int j = random.Next(i + 1);
-                //    // обменять значения data[j] и data[i]
-                //    var temp = findedBlockInLine[j];
-                //    findedBlockInLine[j] = findedBlockInLine[i];
-                //    findedBlockInLine[i] = temp;
-                //}
+                //ищем блок куда переместили элемент в массиве
+                blockToCreateBonus = findedBlockInLine.Find(item => item == destinationBlock);
+                //если не нашли, ищем в том месте откуда переместили
+                if (blockToCreateBonus == null)
+                    blockToCreateBonus = findedBlockInLine.Find(item => item == touchingBlock);
+            }
+
+            //если не нашли, или блоки изначально == null, то определяем случайное место
+            if (blockToCreateBonus == null)
+            {
+                for (int i = (findedBlockInLine.Count - 1); i >= 1; i--)
+                {
+                    int j = UnityEngine.Random.Range(0, i + 1);
+                    //int j = random.Next(i + 1);
+                    // обменять значения data[j] и data[i]
+                    var temp = findedBlockInLine[j];
+                    findedBlockInLine[j] = findedBlockInLine[i];
+                    findedBlockInLine[i] = temp;
+                }
 
                 foreach (Block item in findedBlockInLine)
                 {
@@ -62,33 +68,17 @@ public class Bonuses : MonoBehaviour {
             }
             if (blockToCreateBonus != null)
             {
+                //делаем анимацию перемещения
+                foreach (Block item in findedBlockInLine)
+                    MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6);
                 //выбираем случайный бонус и выдаем его
                 int random = UnityEngine.Random.Range(0, findedBonus.Count);
-                GiveBonus(findedBonus[random], blockToCreateBonus);
-                //return true;
+                CreatBonus(findedBonus[random], blockToCreateBonus);
             }
         }
-        //return false;
     }
 
-    private void GiveBonus(Bonus bonus, Block blockToCreateBonus) {
-
+    private void CreatBonus(Bonus bonus, Block blockToCreateBonus) {
         blockToCreateBonus.CreatElement(Grid.Instance.prefabElement, bonus.Shape, bonus.Type);
-
-        //switch (bonus.Type)
-        //{
-        //    case BonusesEnum.Empty:
-                
-        //        break;
-        //    case BonusesEnum.Bomb:
-                
-        //        break;
-        //    case BonusesEnum.Wall:
-                
-        //        break;
-        //    default:
-        //        Debug.LogError("Неудалось определить тип бонуса!");
-        //        break;
-        //}
     }
 }

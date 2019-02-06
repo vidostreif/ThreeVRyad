@@ -83,7 +83,7 @@ public class MainAnimator : MonoBehaviour {
         {
             if (item.thisTransform == objTransform)
             {
-                if (item.priority >= priority)
+                if (item.priority > priority)
                 {
                     add = false;
                     break;
@@ -98,7 +98,7 @@ public class MainAnimator : MonoBehaviour {
             //и если есть, то удаляем его
             moveElements.RemoveAll(p => p.thisTransform == objTransform);
             //добавляем
-            moveElements.Add(new MoveElement(objTransform, targetPosition, smoothTime));
+            moveElements.Add(new MoveElement(objTransform, targetPosition, smoothTime, priority));
         }
         
     }
@@ -159,9 +159,9 @@ public class MainAnimator : MonoBehaviour {
             if (item.moment < Time.time)
             {
                 item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
-                item.radiusExplosionEffect += 1;
-                item.moment = Time.time + 0.025f;
-                item.radius += Grid.Instance.blockSize * 0.45f;
+                item.radiusExplosionEffect += 2.2f;
+                item.moment = Time.time + 0.05f;
+                item.radius += Grid.Instance.blockSize * 0.95f;
                 GameObject[] objectsToMove = FindObjectsInRadiusWithComponent(item.epicenter, item.radius, item.radius + Grid.Instance.blockSize, typeof(Element));
 
                 foreach (GameObject objectToMove in objectsToMove)
@@ -174,13 +174,13 @@ public class MainAnimator : MonoBehaviour {
                         float offsetDistance = translation.magnitude;
                         //нормализируем вектор для упрощения вычисления направления
                         Vector3 direction = translation / offsetDistance;
-                        AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power, 5, 0.01f);
+                        AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.5f, 5, 0.01f);
                         AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);
                         AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
                         animatorElement.PlayIdleAnimation();
                     }
                 }                
-                item.power -= 0.1f;
+                item.power -= 0.2f;
             }
 
             if (item.power <= 0)
