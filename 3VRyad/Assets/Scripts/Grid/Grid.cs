@@ -372,21 +372,23 @@ public class Grid : MonoBehaviour
                 findedBlocks.Clear();
                 foreach (Block blockField in listForCheck)
                 {
-                    foreach (Block item in blocksInLine)
+                    if (ThisStandardBlockWithStandartElementCanMove(blockField))
                     {
-                        if (blockField != item && ThisStandardBlockWithStandartElementCanMove(item) && blockField.Element.Shape == item.Element.Shape)
+                        foreach (Block item in blocksInLine)
                         {
-                            Position blockPosition = FindPosition(item);
-                            NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(blockPosition);
-
-                            foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
+                            if (blockField != item && blockField.Element.Shape == item.Element.Shape)
                             {
-                                //если блок находится по соседству
-                                if (neighboringBlock == blockField)
+                                NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(FindPosition(item));
+
+                                foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
                                 {
-                                    //проверяем что блок еще не добавили в массив
-                                    if (!blocksInLine.Contains(blockField))
-                                        findedBlocks.Add(blockField);
+                                    //если блок находится по соседству
+                                    if (neighboringBlock == blockField)
+                                    {
+                                        //проверяем что блок еще не добавили в массив
+                                        if (!blocksInLine.Contains(blockField))
+                                            findedBlocks.Add(blockField);
+                                    }
                                 }
                             }
                         }
@@ -401,20 +403,19 @@ public class Grid : MonoBehaviour
 
             if (blocksInLine.Count > 3)
             {
-                listBlocksInLine.Add(blocksInLine);
-                //Удаляем из основного массива
-                foreach (Block item in blocksInLine)
-                {
-                    listForCheck.Remove(item);
-                }
-                repit = true;
-            }
-        } while (repit);
+                Debug.Log("Найдено блоков в линии:" + blocksInLine.Count);
 
-        //if (maxBlocksInLine.Count > 1)
-        //{
-        //    Debug.Log("Найдено блоков в линии:" + maxBlocksInLine.Count);
-        //}
+                listBlocksInLine.Add(blocksInLine);                
+                //repit = true;
+            }
+
+            //Удаляем из основного массива
+            foreach (Block item in blocksInLine)
+            {
+                listForCheck.Remove(item);
+            }
+
+        } while (blocksInLine.Count > 0);            
 
         //возвращаем блоки которые составили линию больше 3
         return listBlocksInLine;

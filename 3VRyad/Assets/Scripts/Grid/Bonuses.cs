@@ -75,6 +75,14 @@ public class Bonuses : MonoBehaviour {
                 int random = UnityEngine.Random.Range(0, findedBonus.Count);
                 CreatBonus(findedBonus[random], blockToCreateBonus);
             }
+            else
+            {
+                Debug.Log("Не удалось создать бонус! 1" );
+            }
+        }
+        else
+        {
+            Debug.Log("Не удалось создать бонус! 2");
         }
     }
 
