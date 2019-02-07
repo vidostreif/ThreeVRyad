@@ -7,7 +7,6 @@ public class Bonuses : MonoBehaviour {
     public static Bonuses Instance; // Синглтон
     public List<Bonus> bonusesList;
 
-
     void Awake()
     {
         // регистрация синглтона
@@ -43,32 +42,67 @@ public class Bonuses : MonoBehaviour {
                     blockToCreateBonus = findedBlockInLine.Find(item => item == touchingBlock);
             }
 
-            //если не нашли, или блоки изначально == null, то определяем случайное место
+            //если не нашли, или блоки изначально == null, то определяем место на пересечении
             if (blockToCreateBonus == null)
             {
-                for (int i = (findedBlockInLine.Count - 1); i >= 1; i--)
-                {
-                    int j = UnityEngine.Random.Range(0, i + 1);
-                    //int j = random.Next(i + 1);
-                    // обменять значения data[j] и data[i]
-                    var temp = findedBlockInLine[j];
-                    findedBlockInLine[j] = findedBlockInLine[i];
-                    findedBlockInLine[i] = temp;
-                }
-
+                //пробегаемся по всему массиву и находим блок на пересечении
                 foreach (Block item in findedBlockInLine)
                 {
-                    //создаем элемент в первом свободном блоке, если такой есть
-                    if (Grid.Instance.ThisStandardBlockWithoutElement(item))
+                    if (Grid.Instance.ThisStandardBlockWithoutElement(item))//если блок без элемента
                     {
-                        blockToCreateBonus = item;
-                        break;
+                        NeighboringBlocks neighboringBlocks = Grid.Instance.DeterminingNeighboringBlocks(Grid.Instance.FindPosition(item));
+                        List<Block> matchedBlocks = new List<Block>();
+                        foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
+                        {
+                            //ищем соседние блоки в основном массиве
+                            if (findedBlockInLine.Contains(neighboringBlock))
+                                matchedBlocks.Add(neighboringBlock);
+                        }
+
+                        //если нашли два блока по соседству, то проверяем как они расположены
+                        if (matchedBlocks.Count == 2)
+                        {
+                            blockToCreateBonus = item;
+                            //Если на против друг друга
+                            if ((matchedBlocks[0] == neighboringBlocks.Left && matchedBlocks[1] == neighboringBlocks.Right) || (matchedBlocks[1] == neighboringBlocks.Left && matchedBlocks[0] == neighboringBlocks.Right) ||
+                                (matchedBlocks[0] == neighboringBlocks.Up && matchedBlocks[1] == neighboringBlocks.Down) || (matchedBlocks[1] == neighboringBlocks.Up && matchedBlocks[0] == neighboringBlocks.Down))
+                            {
+                                continue;//продолжаем поиски
+                            }
+                            else
+                            {
+                                break;//иначе выбираем этот блок
+                            }
+                        }
+                        else if (matchedBlocks.Count > 2)//если больше двух 
+                        {
+                            blockToCreateBonus = item;
+                            break;//выбираем этот блок
+                        }
                     }
                 }
+
+                //for (int i = (findedBlockInLine.Count - 1); i >= 1; i--)
+                //{
+                //    int j = UnityEngine.Random.Range(0, i + 1);
+                //    var temp = findedBlockInLine[j];
+                //    findedBlockInLine[j] = findedBlockInLine[i];
+                //    findedBlockInLine[i] = temp;
+                //}
+
+                //foreach (Block item in findedBlockInLine)
+                //{
+                //    //создаем элемент в первом свободном блоке, если такой есть
+                //    if (Grid.Instance.ThisStandardBlockWithoutElement(item))
+                //    {
+                //        blockToCreateBonus = item;
+                //        break;
+                //    }
+                //}
             }
             if (blockToCreateBonus != null)
             {
-                //делаем анимацию перемещения
+                //делаем анимацию перемещения уничтоженных элементов
                 foreach (Block item in findedBlockInLine)
                     MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6);
                 //выбираем случайный бонус и выдаем его
