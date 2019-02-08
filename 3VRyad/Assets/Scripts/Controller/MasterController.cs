@@ -9,16 +9,16 @@ public class MasterController : MonoBehaviour
     private Transform transforForLocalDAndD = null;
     private Vector3 startPosition = new Vector3(0, 0, 0);
     private Vector3 startPositionLocalDAndD;
-
-    //для перемещения элемента
-    public float maxDistanceToMove;
-    public double angle = 0.75;// оптимальное значение для вычисление направления смещения елемента
+    private Vector3 cursorDeviation; //отклонение курсора
+    private float startDragMoment;//момент взятия элемента
+    private float maxDistanceToMove;//максимальная дистанция для перемещения
+    private double angle = 0.75;// оптимальное значение для вычисление направления смещения елемента
     private Position gridPositionDAndD; //позиция блока в сетке
     private NeighboringBlocks neighboringBlocksDAndD; //соседние блоки
     private Element processedNeighboringElement; // соседний элемент с которым мы взаимодействуем
     private Block blockFieldDAndD;
     private bool change = false;//признак для определения того, что мы будем заменять элемент с соседним
-    private DirectionEnum offsetDirection;
+    private DirectionEnum offsetDirection;//направление движения
     bool matchFound;
 
     void Awake()
@@ -42,7 +42,17 @@ public class MasterController : MonoBehaviour
         if (!Grid.Instance.blockedForMove)
         {
             transforForLocalDAndD = gameObjectTransform;
-            startPositionLocalDAndD = gameObjectTransform.position;//локальная позиция
+            startPositionLocalDAndD = gameObjectTransform.position;//позиция
+
+            //вычисляем позицию пальца для записи отклонения курсора
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePosition.z = startPosition.z;
+            cursorDeviation = mousePosition - startPositionLocalDAndD;
+
+            //записываем момент взятия элемента
+            startDragMoment = Time.time;
+            maxDistanceToMove = Grid.Instance.blockSize;
+
             //Находим позицию блока в сетке
             blockFieldDAndD = gameObjectTransform.GetComponentInParent<Block>();
             gridPositionDAndD = Grid.Instance.FindPosition(blockFieldDAndD);
@@ -66,8 +76,7 @@ public class MasterController : MonoBehaviour
             //перемещаем елементы на новую позицию
             Grid.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
 
-            //ищем совпавшие линии 
-            
+            //ищем совпавшие линии             
             Grid.Instance.Move(blockFieldDAndD, neighboringBlocksDAndD.GetBlock(offsetDirection), result => matchFound = result);
 
             //если совпадение не нашли, то возвращаем элементы обратно
@@ -91,7 +100,7 @@ public class MasterController : MonoBehaviour
         if (transforForLocalDAndD != null)
         {
             //вычисляем позицию пальца
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition)- cursorDeviation;
             mousePosition.z = startPosition.z;
             //расчитываем вектор смещения
             Vector3 translation = mousePosition - startPosition;
@@ -99,7 +108,7 @@ public class MasterController : MonoBehaviour
             float offsetDistance = translation.magnitude;
             //нормализируем вектор для упрощения вычисления направления
             Vector3 direction = translation / offsetDistance;
-
+            
             // Если растояние меньше допистимого то смещаем объект за пальцем
             //уменьшить вектор до нужного размера, что бы смещать элемент на нужное растояние
             if (offsetDistance > maxDistanceToMove)
@@ -139,7 +148,8 @@ public class MasterController : MonoBehaviour
                 if ((neighboringBlock.Element != null && !neighboringBlock.Element.LockedForMove) || neighboringBlock.Element == null)
                 {
                     //записываем достаточно ли мы сместили объект, что бы поменять его с соседним
-                    if (offsetDistance > maxDistanceToMove / 2)
+                    //или если прошло очень мало времени, то меняем элементы
+                    if (offsetDistance > maxDistanceToMove * 0.4f || Time.time - startDragMoment < 0.3f)
                         change = true;
                     else
                         change = false;
@@ -147,8 +157,8 @@ public class MasterController : MonoBehaviour
                     //тащим элемент за пальцем
                     transforForLocalDAndD.position = newPosition;                                      
 
-                    ////Если в соседнем блоке есть элемент, то смещаем его к нашему блоку на тоже растояние
-                    if (neighboringBlock.Element != null && offsetDistance > maxDistanceToMove / 8)
+                    //Если в соседнем блоке есть элемент, то смещаем его к нашему блоку на тоже растояние
+                    if (neighboringBlock.Element != null && offsetDistance > maxDistanceToMove * 0.2f)
                     {
                         //расчитываем вектор смещения для соседнего элемента
                         Vector3 neighboringTranslation = newPosition - startPosition;
@@ -182,6 +192,7 @@ public class MasterController : MonoBehaviour
         transforForLocalDAndD = null;
         startPosition = new Vector3(0, 0, 0);
         startPositionLocalDAndD = new Vector3(0, 0, 0);
+        cursorDeviation = new Vector3(0, 0, 0);
         gridPositionDAndD = new Position();
         neighboringBlocksDAndD = new NeighboringBlocks();
         change = false;

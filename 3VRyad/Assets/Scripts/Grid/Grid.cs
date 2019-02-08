@@ -179,6 +179,19 @@ public class Grid : MonoBehaviour
         blockedForMove = true;        
         MainAnimator.Instance.ClearElementsForNextMove();
 
+        ////если элементы еще не на позиции блоков, то делаем паузу
+        //bool pause = false;
+        //if (ThisBlockWithElement(touchingBlock) && touchingBlock.thisTransform.position != touchingBlock.Element.thisTransform.position)
+        //{
+        //    pause = true;
+        //}else if (ThisBlockWithElement(destinationBlock) && destinationBlock.thisTransform.position != destinationBlock.Element.thisTransform.position)
+        //{
+        //    pause = true;
+        //}
+
+        //if (pause)
+        //    yield return new WaitForSeconds(0.25f);
+
         //повторяем итерации заполнения и поиска совпадений, пока совпадения не будут найдены
         int iteration = 1;
         List<Block> blockFields;
@@ -559,6 +572,19 @@ public class Grid : MonoBehaviour
     {
 
         if (block != null && (block.Element == null || block.Element.Destroyed))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ThisBlockWithElement(Block block)
+    {
+
+        if (block != null && block.Element != null && !block.Element.Destroyed)
         {
             return true;
         }
