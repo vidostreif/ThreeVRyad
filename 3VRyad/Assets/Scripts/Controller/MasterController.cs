@@ -79,11 +79,11 @@ public class MasterController : MonoBehaviour
             //ищем совпавшие линии             
             Grid.Instance.Move(blockFieldDAndD, neighboringBlocksDAndD.GetBlock(offsetDirection), result => matchFound = result);
 
-            //если совпадение не нашли, то возвращаем элементы обратно
-            if (!matchFound)
-            {
-                Grid.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
-            }
+            ////если совпадение не нашли, то возвращаем элементы обратно
+            //if (!matchFound)
+            //{
+            //    Grid.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
+            //}
 
         }
         else if(transforForLocalDAndD != null)

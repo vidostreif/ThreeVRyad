@@ -207,14 +207,16 @@ public class Grid : MonoBehaviour
             {
                 matchFound = true;
                 //если треубется, возвращаем данные в место вызова функции
-                if (iteration == 1 && cb != null)
-                    cb(true);
+                //if (iteration == 1 && cb != null)
+                //    cb(true);
             }
-            else {
-                //если треубется, возвращаем данные в место вызова функции
-                if (iteration == 1 && cb != null)
-                    cb(false);
-            }
+            //else {
+            //    //если треубется, возвращаем данные в место вызова функции
+            //    //if (iteration == 1 && cb != null)
+            //    //    cb(false);
+            //    if(iteration == 1)
+            //        ExchangeElements(touchingBlock, destinationBlock);
+            //}
 
             //проверяем длинну совпавших линий для бонусов 
             List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
@@ -232,10 +234,14 @@ public class Grid : MonoBehaviour
                     matchFound = true;
                 }
 
-                if (destinationBlock != null && destinationBlock.Element != null && destinationBlock.Element.Activated)
+                else if (destinationBlock != null && destinationBlock.Element != null && destinationBlock.Element.Activated)
                 {
                     destinationBlock.Element.Activate();
                     matchFound = true;
+                }
+                else if (blockFields.Count == 0)
+                {
+                    ExchangeElements(touchingBlock, destinationBlock);
                 }
             }                                    
             
@@ -920,9 +926,13 @@ public class Grid : MonoBehaviour
     //процедура замены элементов между блоками
     public void ExchangeElements(Block Block1, Block Block2)
     {
-        Element element1 = Block1.Element;
-        Block1.Element = Block2.Element;
-        Block2.Element = element1;
+        if (Block1 != null && Block2 != null)
+        {
+            Element element1 = Block1.Element;
+            Block1.Element = Block2.Element;
+            Block2.Element = element1;
+        }
+        
     }
 
     //заполнение сетки элементами
