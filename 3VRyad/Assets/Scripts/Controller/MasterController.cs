@@ -9,17 +9,17 @@ public class MasterController : MonoBehaviour
     private Transform transforForLocalDAndD = null;
     private Vector3 startPosition = new Vector3(0, 0, 0);
     private Vector3 startPositionLocalDAndD;
-    private Vector3 cursorDeviation; //отклонение курсора
+    //private Vector3 cursorDeviation; //отклонение курсора
     private float startDragMoment;//момент взятия элемента
     private float maxDistanceToMove;//максимальная дистанция для перемещения
-    private double angle = 0.75;// оптимальное значение для вычисление направления смещения елемента
+    private readonly double angle = 0.75;// оптимальное значение для вычисление направления смещения елемента
     private Position gridPositionDAndD; //позиция блока в сетке
     private NeighboringBlocks neighboringBlocksDAndD; //соседние блоки
     private Element processedNeighboringElement; // соседний элемент с которым мы взаимодействуем
     private Block blockFieldDAndD;
     private bool change = false;//признак для определения того, что мы будем заменять элемент с соседним
     private DirectionEnum offsetDirection;//направление движения
-    bool matchFound;
+    //bool matchFound;
 
     void Awake()
     {
@@ -52,7 +52,7 @@ public class MasterController : MonoBehaviour
                 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             touchPosition.z = startPosition.z;
-            cursorDeviation = touchPosition - startPositionLocalDAndD;
+            //cursorDeviation = touchPosition - startPositionLocalDAndD;
 
             //записываем момент взятия элемента
             startDragMoment = Time.time;
@@ -82,7 +82,7 @@ public class MasterController : MonoBehaviour
             Grid.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
 
             //ищем совпавшие линии             
-            Grid.Instance.Move(blockFieldDAndD, neighboringBlocksDAndD.GetBlock(offsetDirection), result => matchFound = result);
+            Grid.Instance.Move(blockFieldDAndD, neighboringBlocksDAndD.GetBlock(offsetDirection));
 
             ////если совпадение не нашли, то возвращаем элементы обратно
             //if (!matchFound)
@@ -111,7 +111,7 @@ public class MasterController : MonoBehaviour
                 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             //вычисляем позицию пальца
-            touchPosition = touchPosition - cursorDeviation;
+            //touchPosition = touchPosition - cursorDeviation;
             touchPosition.z = startPosition.z;
             //расчитываем вектор смещения
             Vector3 translation = touchPosition - startPosition;
@@ -203,7 +203,7 @@ public class MasterController : MonoBehaviour
         transforForLocalDAndD = null;
         startPosition = new Vector3(0, 0, 0);
         startPositionLocalDAndD = new Vector3(0, 0, 0);
-        cursorDeviation = new Vector3(0, 0, 0);
+        //cursorDeviation = new Vector3(0, 0, 0);
         gridPositionDAndD = new Position();
         neighboringBlocksDAndD = new NeighboringBlocks();
         change = false;

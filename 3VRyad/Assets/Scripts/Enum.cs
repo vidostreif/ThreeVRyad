@@ -111,3 +111,9 @@ public enum BorderEnum
     InAngle,
     OutAngle
 }//типы обвотки
+
+public enum SmoothEnum
+{
+    InArc,
+    InLine
+}//тип сглаженного перемещения

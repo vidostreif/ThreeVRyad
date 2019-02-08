@@ -75,7 +75,7 @@ public class MainAnimator : MonoBehaviour {
     }
     
     //добавление объекта для сглаженного перемещения
-    public void AddElementForSmoothMove(Transform objTransform, Vector3 targetPosition, int priority, float smoothTime = 0.05f)
+    public void AddElementForSmoothMove(Transform objTransform, Vector3 targetPosition, int priority, SmoothEnum smoothEnum, float smoothTime = 0.05f, bool destroyAfterMoving = false)
     {
         //проверяем есть ли уже такой объект и какой у него приоритет
         bool add = true;
@@ -98,7 +98,7 @@ public class MainAnimator : MonoBehaviour {
             //и если есть, то удаляем его
             moveElements.RemoveAll(p => p.thisTransform == objTransform);
             //добавляем
-            moveElements.Add(new MoveElement(objTransform, targetPosition, smoothTime, priority));
+            moveElements.Add(new MoveElement(objTransform, targetPosition, smoothTime, smoothEnum, priority, destroyAfterMoving));
         }
         
     }
@@ -110,13 +110,23 @@ public class MainAnimator : MonoBehaviour {
         {
             if (item.thisTransform != null)
             {
-                float newPositionX = Mathf.SmoothDamp(item.thisTransform.position.x, item.targetPosition.x, ref item.yVelocity, item.smoothTime);
-                float newPositionY = Mathf.SmoothDamp(item.thisTransform.position.y, item.targetPosition.y, ref item.yVelocity, item.smoothTime);
-                item.thisTransform.position = new Vector3(newPositionX, newPositionY, item.targetPosition.z);
-                //item.thisTransform.position = Vector3.Lerp(item.thisTransform.position, item.targetTransform.position, Time.deltaTime * item.smoothTime);
+                if (item.smoothEnum == SmoothEnum.InArc)
+                {
+                    float newPositionX = Mathf.SmoothDamp(item.thisTransform.position.x, item.targetPosition.x, ref item.yVelocity, item.smoothTime);
+                    float newPositionY = Mathf.SmoothDamp(item.thisTransform.position.y, item.targetPosition.y, ref item.yVelocity, item.smoothTime);
+                    item.thisTransform.position = new Vector3(newPositionX, newPositionY, item.targetPosition.z);
+                }
+                else if (item.smoothEnum == SmoothEnum.InLine)
+                {
+                    item.thisTransform.position = Vector3.Lerp(item.thisTransform.position, item.targetPosition, Time.deltaTime * 100 * item.smoothTime);
+                }
 
                 if (item.thisTransform.position == item.targetPosition)
+                {
+                    if (item.destroyAfterMoving)
+                        DestroyImmediate(item.thisTransform.gameObject);
                     moveElementsForRemove.Add(item);
+                }
             }
             else
             {
@@ -143,19 +153,6 @@ public class MainAnimator : MonoBehaviour {
         //создаем эффекты взрыва
         foreach (Explosion item in explosions)
         {
-            //item.radiusExplosionEffect *= 70 * Time.deltaTime;
-            ////если эффект все еще есть
-            //if (item.radiusExplosionEffect < item.maxRadiusExplosionEffect)
-            //{
-            //    //увеличиваем эффект искажения
-            //    item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
-                
-            //}
-            //else
-            //{
-            //    Debug.Log(item.explosionEffect.transform.localScale + "  " + item.maxRadiusExplosionEffect + "  " + item.radiusExplosionEffect);
-            //}
-
             if (item.moment < Time.time)
             {
                 item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
@@ -174,7 +171,7 @@ public class MainAnimator : MonoBehaviour {
                         float offsetDistance = translation.magnitude;
                         //нормализируем вектор для упрощения вычисления направления
                         Vector3 direction = translation / offsetDistance;
-                        AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.5f, 5, 0.01f);
+                        AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.5f, 5, SmoothEnum.InArc, 0.01f);
                         AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);
                         AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
                         animatorElement.PlayIdleAnimation();

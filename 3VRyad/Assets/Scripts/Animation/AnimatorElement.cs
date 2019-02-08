@@ -48,6 +48,11 @@ public class AnimatorElement : MonoBehaviour
         thisAnimation.CrossFade("Destroy");
     }
 
+    public void StopDestroyAnimation()
+    {
+        thisAnimation.Stop("Destroy");
+    }
+
     public void PlayIdleAnimation()
     {
         //thisAnimator.SetBool("Idle", true);

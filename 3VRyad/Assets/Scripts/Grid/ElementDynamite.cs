@@ -40,20 +40,15 @@ public class ElementDynamite : Element
                         destroyed = true;
                         MainAnimator.Instance.AddExplosionEffect(thisTransform.position, explosionRadius);
                         HitNeighboringBlocks(thisHitTypeEnum);
-                        Tasks.Instance.Collect(this);
-                        AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-                        animatorElement.PlayDestroyAnimation();
-                        //return null;
+                        if (!Tasks.Instance.Collect(this))
+                        {
+                            AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+                            animatorElement.PlayDestroyAnimation();
+                        }
                     }
                 }
             }
-
-            //return this;
-        }
-        //else
-        //{
-        //    return null;
-        //}     
+        }  
     }
 
     public override void Activate()

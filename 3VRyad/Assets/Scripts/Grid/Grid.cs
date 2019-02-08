@@ -164,33 +164,20 @@ public class Grid : MonoBehaviour
         elementsForMix.Clear();
     }
 
-    public void Move(Block touchingBlock = null, Block destinationBlock = null, Action<bool> cb = null)
+    public void Move(Block touchingBlock = null, Block destinationBlock = null)
     {
-        StartCoroutine(Grid.Instance.MakeMove(touchingBlock, destinationBlock, cb));
+        StartCoroutine(Grid.Instance.MakeMove(touchingBlock, destinationBlock));
     }
 
     //выполняем ход
     //принимаем параметры - 1. Блок с которого передвигаем элемент 2. Блок к которому передвигаем элемент 
-    private IEnumerator MakeMove(Block touchingBlock = null, Block destinationBlock = null, Action<bool> cb = null)
+    private IEnumerator MakeMove(Block touchingBlock = null, Block destinationBlock = null)
     {
         if (blockedForMove)
             yield break;
 
         blockedForMove = true;        
         MainAnimator.Instance.ClearElementsForNextMove();
-
-        ////если элементы еще не на позиции блоков, то делаем паузу
-        //bool pause = false;
-        //if (ThisBlockWithElement(touchingBlock) && touchingBlock.thisTransform.position != touchingBlock.Element.thisTransform.position)
-        //{
-        //    pause = true;
-        //}else if (ThisBlockWithElement(destinationBlock) && destinationBlock.thisTransform.position != destinationBlock.Element.thisTransform.position)
-        //{
-        //    pause = true;
-        //}
-
-        //if (pause)
-        //    yield return new WaitForSeconds(0.25f);
 
         //повторяем итерации заполнения и поиска совпадений, пока совпадения не будут найдены
         int iteration = 1;
@@ -204,19 +191,10 @@ public class Grid : MonoBehaviour
             matchFound = false;
             blockFields = CheckMatchingLine();
             if (blockFields.Count > 0)
-            {
                 matchFound = true;
-                //если треубется, возвращаем данные в место вызова функции
-                //if (iteration == 1 && cb != null)
-                //    cb(true);
-            }
-            //else {
-            //    //если треубется, возвращаем данные в место вызова функции
-            //    //if (iteration == 1 && cb != null)
-            //    //    cb(false);
-            //    if(iteration == 1)
-            //        ExchangeElements(touchingBlock, destinationBlock);
-            //}
+
+            if (matchFound)
+                yield return new WaitForSeconds(0.15f);
 
             //проверяем длинну совпавших линий для бонусов 
             List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
@@ -247,18 +225,23 @@ public class Grid : MonoBehaviour
             
             //создаем бонусы
             if (iteration == 1 && matchFound)
+            {
                 foreach (List<Block> item in findedBlockInLine)
                     Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
-            else if(matchFound)
+            }
+            else if (matchFound)
+            {
                 foreach (List<Block> item in findedBlockInLine)
                     Bonuses.Instance.CheckBonuses(item, null, null);
+            }
 
             //если совпадения найдены, делаем паузу для анимации
             if (matchFound)
                 yield return new WaitForSeconds(0.25f);
 
             //заполняем сетку элементами
-            yield return StartCoroutine(Filling());
+            yield return StartCoroutine(Filling());       
+
             iteration++;
         } while (matchFound);
 
@@ -336,9 +319,6 @@ public class Grid : MonoBehaviour
                     //Проверяем что соседние блоки существуют
                     if (ThisStandardBlockWithElement(neighboringBlocks.Up) && ThisStandardBlockWithElement(neighboringBlocks.Down) && ThisStandardBlockWithElement(containers[x].block[y]))
                     {
-                        ////проверяем что соседние блоки существуют
-                        //if (neighboringBlocks.Up.Element != null && neighboringBlocks.Down.Element != null && containers[x].block[y].Element != null)
-                        //{
                         //Если все три блока в линии создают линию
                         if (neighboringBlocks.Up.Element.CreateLine && neighboringBlocks.Down.Element.CreateLine && containers[x].block[y].Element.CreateLine)
                         {
@@ -356,14 +336,13 @@ public class Grid : MonoBehaviour
                                     //matchFound = true;
                                 }
                         }
-                    //}
                     }
                 }
             }
         }        
         return blockFieldsToRemoveElement;
     }
-    
+
     //поиск линий совпавших элементов более трех
     private List<List<Block>> CountCollectedLine(List<Block> blockFields)
     {
@@ -375,50 +354,115 @@ public class Grid : MonoBehaviour
 
         List<List<Block>> listBlocksInLine = new List<List<Block>>();//возвращаемый массив
         List<Block> blocksInLine;//одна линия
-        List<Block> findedBlocks = new List<Block>();//промежуточный массив
+        //List<Block> findedBlocks = new List<Block>();//промежуточный массив
 
-        bool repit;
+        //bool repit;
         do
         {
-            repit = false;
-            //добавляем первый элемент
             blocksInLine = new List<Block>();
-            if (listForCheck.Count > 0)
-                blocksInLine.Add(listForCheck[0]);
-
-            do
+            foreach (Block blockField in listForCheck)
             {
-                findedBlocks.Clear();
-                foreach (Block blockField in listForCheck)
-                {
-                    if (ThisStandardBlockWithStandartElementCanMove(blockField))
+                //добавляем первые элементы                
+                if (ThisStandardBlockWithStandartElementCanMove(blockField))
+                {                    
+                    NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(FindPosition(blockField));
+                    foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
                     {
-                        foreach (Block item in blocksInLine)
+                        //если блок находится по соседству и в нем такой же элемент
+                        if (listForCheck.Contains(neighboringBlock) && ThisStandardBlockWithStandartElementCanMove(neighboringBlock) && blockField.Element.Shape == neighboringBlock.Element.Shape)
                         {
-                            if (blockField != item && blockField.Element.Shape == item.Element.Shape)
+                            //и если противоположный блок имеет такой же элемент
+                            Block OppositeBlock = neighboringBlocks.GetOppositeBlock(neighboringBlock);
+                            if (listForCheck.Contains(OppositeBlock) && ThisStandardBlockWithStandartElementCanMove(OppositeBlock) && blockField.Element.Shape == OppositeBlock.Element.Shape)
                             {
-                                NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(FindPosition(item));
-
-                                foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
+                                if (blocksInLine.Count == 0)
                                 {
-                                    //если блок находится по соседству
-                                    if (neighboringBlock == blockField)
+                                    //проверяем что блок еще не добавили в массив
+                                    //добавляем все три блока и прерываем
+                                    //if (!blocksInLine.Contains(blockField))
+                                        blocksInLine.Add(blockField);
+                                    //проверяем что блок еще не добавили в массив
+                                    //if (!blocksInLine.Contains(neighboringBlock))
+                                        blocksInLine.Add(neighboringBlock);
+                                    //и сразу добавляем противоположный блок
+                                    //if (!blocksInLine.Contains(OppositeBlock))
+                                        blocksInLine.Add(OppositeBlock);
+                                }
+                                else
+                                {
+                                    bool blockFieldInLine = blocksInLine.Contains(blockField);
+                                    bool neighboringBlockInLine = blocksInLine.Contains(neighboringBlock);
+                                    bool OppositeBlockInLine = blocksInLine.Contains(OppositeBlock);
+
+                                    if (blockFieldInLine || neighboringBlockInLine || OppositeBlockInLine)
                                     {
                                         //проверяем что блок еще не добавили в массив
-                                        if (!blocksInLine.Contains(blockField))
-                                            findedBlocks.Add(blockField);
+                                        //добавляем все три блока и прерываем
+                                        if (!blockFieldInLine)
+                                            blocksInLine.Add(blockField);
+                                        //проверяем что блок еще не добавили в массив
+                                        if (!neighboringBlockInLine)
+                                            blocksInLine.Add(neighboringBlock);
+                                        //и сразу добавляем противоположный блок
+                                        if (!OppositeBlockInLine)
+                                            blocksInLine.Add(OppositeBlock);
                                     }
                                 }
+                                
+
+                                //break;
                             }
                         }
                     }
                 }
-                //переносим найденные блоки в основной массив
-                foreach (Block item in findedBlocks)
-                {
-                    blocksInLine.Add(item);
-                }
-            } while (findedBlocks.Count > 0);
+                ////если добавили блоки
+                //if (blocksInLine.Count > 0)
+                //    break;
+            }
+
+
+            //do
+            //{
+            //    findedBlocks.Clear();
+            //    //foreach (Block blockField in listForCheck)
+            //    //{
+            //    //    if (ThisStandardBlockWithStandartElementCanMove(blockField))
+            //    //    {
+            //            foreach (Block blockField in blocksInLine)
+            //            {
+            //                //if (blockField != item && blockField.Element.Shape == item.Element.Shape)
+            //                //{
+            //                    NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(FindPosition(blockField));
+
+            //                    foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
+            //                    {                                    
+            //                        //если блок находится в основном массиве
+            //                        if (listForCheck.Contains(neighboringBlock) && ThisStandardBlockWithStandartElementCanMove(neighboringBlock) && blockField.Element.Shape == neighboringBlock.Element.Shape)
+            //                        {
+            //                            //Если противоположный блок имеет такой же элемент
+            //                            Block OppositeBlock = neighboringBlocks.GetOppositeBlock(neighboringBlock);
+            //                            if (listForCheck.Contains(OppositeBlock) && ThisStandardBlockWithStandartElementCanMove(OppositeBlock) && blockField.Element.Shape == OppositeBlock.Element.Shape)
+            //                            {
+            //                                //проверяем что блок еще не добавили в массив
+            //                                if (!blocksInLine.Contains(neighboringBlock) && !findedBlocks.Contains(neighboringBlock))
+            //                                    findedBlocks.Add(neighboringBlock);
+            //                                //добавляем противоположный блок
+            //                                if (!blocksInLine.Contains(OppositeBlock) && !findedBlocks.Contains(OppositeBlock))
+            //                                    findedBlocks.Add(OppositeBlock);
+
+            //                            }                                        
+            //                        }
+            //                    }
+            //                //}
+            //            }
+            //    //    }
+            //    //}
+            //    //переносим найденные блоки в основной массив
+            //    foreach (Block item in findedBlocks)
+            //    {
+            //        blocksInLine.Add(item);
+            //    }
+            //} while (findedBlocks.Count > 0);
 
             if (blocksInLine.Count > 3)
             {
@@ -591,6 +635,19 @@ public class Grid : MonoBehaviour
     {
 
         if (block != null && block.Element != null && !block.Element.Destroyed)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ThisBlockWithDestroyElement(Block block)
+    {
+
+        if (block != null && block.Element != null && block.Element.Destroyed)
         {
             return true;
         }
@@ -1071,7 +1128,7 @@ public class Grid : MonoBehaviour
             }
             if (needIteration)
             {
-                yield return new WaitForSeconds(0.08f);
+                yield return new WaitForSeconds(0.1f);
             }
         }
 

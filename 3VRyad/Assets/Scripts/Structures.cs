@@ -31,15 +31,6 @@ public struct NeighboringBlocks
 
     public NeighboringBlocks(Block up, Block down, Block left, Block right)
     {
-        ////если значения не определены то создаем пустые блоки
-        //if (up == null)
-        //    up = new BlockField();
-        //if (down == null)
-        //    down = new BlockField();
-        //if (left == null)
-        //    left = new BlockField();
-        //if (right == null)
-        //    right = new BlockField();
 
         this.Up = up;
         this.Down = down;
@@ -61,6 +52,38 @@ public struct NeighboringBlocks
             block = this.Left;
         else if (direction == DirectionEnum.Right)
             block = this.Right;
+
+        return block;
+    }
+
+    //выдает блок в указанном направлении
+    public Block GetOppositeBlock(DirectionEnum direction)
+    {
+        Block block = null;
+        if (direction == DirectionEnum.Up)
+            block = this.Down;
+        else if (direction == DirectionEnum.Down)
+            block = this.Up;
+        else if (direction == DirectionEnum.Left)
+            block = this.Right;
+        else if (direction == DirectionEnum.Right)
+            block = this.Left;
+
+        return block;
+    }
+
+    //выдает блок в указанном направлении
+    public Block GetOppositeBlock(Block inBlock)
+    {
+        Block block = null;
+        if (inBlock == this.Up)
+            block = this.Down;
+        else if (inBlock == this.Down)
+            block = this.Up;
+        else if (inBlock == this.Left)
+            block = this.Right;
+        else if (inBlock == this.Right)
+            block = this.Left;
 
         return block;
     }

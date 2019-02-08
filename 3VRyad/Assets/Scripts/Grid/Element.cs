@@ -139,21 +139,17 @@ public class Element : MonoBehaviour
                     {
                         //воздействие на соседние блоки
                         destroyed = true;
-                        HitNeighboringBlocks(thisHitTypeEnum);
-                        Tasks.Instance.Collect(this);
-                        AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-                        animatorElement.PlayDestroyAnimation();                        
-                        //return null;
+                        if (hitType == HitTypeEnum.Standart)
+                            HitNeighboringBlocks(thisHitTypeEnum);
+                        if (!Tasks.Instance.Collect(this))
+                        {
+                            AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+                            animatorElement.PlayDestroyAnimation();
+                        }
                     }
                 }
             }
-
-            //return this;
         }
-        //else
-        //{
-        //    return null;
-        //}
 
     }
 

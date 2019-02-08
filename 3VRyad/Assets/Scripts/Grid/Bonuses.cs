@@ -82,29 +82,17 @@ public class Bonuses : MonoBehaviour {
                     }
                 }
 
-                //for (int i = (findedBlockInLine.Count - 1); i >= 1; i--)
-                //{
-                //    int j = UnityEngine.Random.Range(0, i + 1);
-                //    var temp = findedBlockInLine[j];
-                //    findedBlockInLine[j] = findedBlockInLine[i];
-                //    findedBlockInLine[i] = temp;
-                //}
-
-                //foreach (Block item in findedBlockInLine)
-                //{
-                //    //создаем элемент в первом свободном блоке, если такой есть
-                //    if (Grid.Instance.ThisStandardBlockWithoutElement(item))
-                //    {
-                //        blockToCreateBonus = item;
-                //        break;
-                //    }
-                //}
             }
             if (blockToCreateBonus != null)
             {
                 //делаем анимацию перемещения уничтоженных элементов
-                foreach (Block item in findedBlockInLine)
-                    MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6);
+                foreach (Block item in findedBlockInLine) {
+                    MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLine,smoothTime: 0.2f , destroyAfterMoving: true);
+                    //AnimatorElement animatorElement = item.Element.GetComponent<AnimatorElement>();
+                    //animatorElement.StopDestroyAnimation();
+                    item.Element = null;
+                }
+
                 //выбираем случайный бонус и выдаем его
                 int random = UnityEngine.Random.Range(0, findedBonus.Count);
                 CreatBonus(findedBonus[random], blockToCreateBonus);

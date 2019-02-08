@@ -39,14 +39,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
   - name: Block
     uniqueID: 1619239947
     locked: 0
   - name: Elements
     uniqueID: 2417309139
-    locked: 0
-  - name: Default
-    uniqueID: 0
     locked: 0
   - name: Wall
     uniqueID: 3953663659

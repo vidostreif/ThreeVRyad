@@ -78,16 +78,16 @@ public class Block : MonoBehaviour {
                     element = value;
                     element.thisTransform.parent = thisTransform;
 
-                    //если растояние меньше размеров блока сетки, то перемещаем моментально на позицию блока
-                    //расчитываем вектор смещения
-                    Vector3 vector = element.thisTransform.position - thisTransform.position;
-                    //вычисляем расстояние на которое смещаем объект
-                    float distance = vector.magnitude;
+                    ////если растояние меньше размеров блока сетки, то перемещаем моментально на позицию блока
+                    ////расчитываем вектор смещения
+                    //Vector3 vector = element.thisTransform.position - thisTransform.position;
+                    ////вычисляем расстояние на которое смещаем объект
+                    //float distance = vector.magnitude;
 
-                    if (Grid.Instance != null && distance < Grid.Instance.blockSize)
-                    {
-                        element.thisTransform.position = thisTransform.position;
-                    }
+                    //if (Grid.Instance != null && distance < Grid.Instance.blockSize)
+                    //{
+                    //    element.thisTransform.position = thisTransform.position;
+                    //}
                     
                 }
                 else if (value == null)
@@ -112,11 +112,11 @@ public class Block : MonoBehaviour {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
         {
-            //если уже есть элемент то удаляем его
-            if (element != null)
-            {
-                DestroyImmediate(element.gameObject);
-            }
+            ////если уже есть элемент то удаляем его
+            //if (element != null)
+            //{
+            //    DestroyImmediate(element.gameObject);
+            //}
 
             //создаем новый элемент
             GameObject elementGameObject = Instantiate(prefabElement, thisTransform.position, Quaternion.identity);
@@ -191,11 +191,7 @@ public class Block : MonoBehaviour {
         //если есть элемент и он не на позиции нашего блока то медлено премещаем его к блоку
         if (this.Element != null && this.Element.thisTransform.position != thisTransform.position && !this.Element.drag && !this.Element.Destroyed)
         {
-            MainAnimator.Instance.AddElementForSmoothMove(this.Element.thisTransform, thisTransform.position, 1);
-            //float newPositionX = Mathf.SmoothDamp(Element.thisTransform.position.x, thisTransform.position.x, ref yVelocity, smoothTime);
-            //float newPositionY = Mathf.SmoothDamp(Element.thisTransform.position.y, thisTransform.position.y, ref yVelocity, smoothTime);
-            //Element.thisTransform.position = new Vector3(newPositionX, newPositionY, thisTransform.position.z);
-            //Element.thisTransform.position = Vector3.Lerp(Element.thisTransform.position, thisTransform.position, Time.deltaTime * smoothTime);
+            MainAnimator.Instance.AddElementForSmoothMove(this.Element.thisTransform, thisTransform.position, 1, SmoothEnum.InLine, smoothTime: 0.1f);
         }        
     }
 }
