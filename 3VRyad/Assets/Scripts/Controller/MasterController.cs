@@ -38,16 +38,21 @@ public class MasterController : MonoBehaviour
 
     public void DragLocalObject(Transform gameObjectTransform)//записываем данные для последующего перемещения объекта за мышкой или пальцем
     {
-        //если сетка не заблокирована
-        if (!Grid.Instance.blockedForMove)
+        //если сетка не заблокирована и мы не перетаскиваем другой объект
+        if (!Grid.Instance.blockedForMove && transforForLocalDAndD == null)
         {
             transforForLocalDAndD = gameObjectTransform;
             startPositionLocalDAndD = gameObjectTransform.position;//позиция
 
             //вычисляем позицию пальца для записи отклонения курсора
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePosition.z = startPosition.z;
-            cursorDeviation = mousePosition - startPositionLocalDAndD;
+            Vector3 touchPosition;
+            if (Input.touchCount > 0)
+                touchPosition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+            else
+                touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            touchPosition.z = startPosition.z;
+            cursorDeviation = touchPosition - startPositionLocalDAndD;
 
             //записываем момент взятия элемента
             startDragMoment = Time.time;
@@ -99,11 +104,17 @@ public class MasterController : MonoBehaviour
     {
         if (transforForLocalDAndD != null)
         {
+            Vector3 touchPosition;
+            if (Input.touchCount > 0)
+                touchPosition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
+            else
+                touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
             //вычисляем позицию пальца
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition)- cursorDeviation;
-            mousePosition.z = startPosition.z;
+            touchPosition = touchPosition - cursorDeviation;
+            touchPosition.z = startPosition.z;
             //расчитываем вектор смещения
-            Vector3 translation = mousePosition - startPosition;
+            Vector3 translation = touchPosition - startPosition;
             //вычисляем расстояние на которое смещаем объект
             float offsetDistance = translation.magnitude;
             //нормализируем вектор для упрощения вычисления направления
