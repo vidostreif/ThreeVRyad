@@ -1000,7 +1000,20 @@ public class Grid : MonoBehaviour
         ElementsPriority elementPriority;
         float speed = 0.05f;
 
-        //смещае элементы на один блок вниз за каждую итерацию
+        //yield return new WaitForSeconds(0.001f);
+        for (int y = 1; y < containers[0].block.GetLength(0); y++)
+        {
+            //начинаем со второй строки
+            for (int x = 0; x < containers.GetLength(0); x++)
+            {
+                if (ThisBlockWithElement(containers[x].block[y]))
+                {
+                    containers[x].block[y].Element.speed = 0;
+                }
+            }
+        }
+
+                //смещае элементы на один блок вниз за каждую итерацию
         while (needIteration)
         {
             needIteration = false;
@@ -1084,7 +1097,7 @@ public class Grid : MonoBehaviour
                             if (moveRight)
                             {
                                 ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x].block[y - 1].Element.speed);
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x + 1].block[y - 1].Element.speed);
                                 containers[x + 1].block[y - 1].Element.speed += 0.02f;
                                 needIteration = true;
                                 continue;
@@ -1125,7 +1138,7 @@ public class Grid : MonoBehaviour
                             if (moveLeft)
                             {
                                 ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x].block[y - 1].Element.speed);
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x - 1].block[y - 1].Element.speed);
                                 containers[x - 1].block[y - 1].Element.speed += 0.02f;
                                 needIteration = true;
                                 continue;
@@ -1139,7 +1152,7 @@ public class Grid : MonoBehaviour
             }
             if (needIteration)
             {
-                yield return new WaitForSeconds(0.12f);
+                yield return new WaitForSeconds(0.13f);
             }
         }
 
