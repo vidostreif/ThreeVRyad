@@ -1003,10 +1003,12 @@ public class Grid : MonoBehaviour
         while (needIteration)
         {
             needIteration = false;
-            //начинаем со второй строки
-            for (int x = 0; x < containers.GetLength(0); x++)
-            {
-                for (int y = 1; y < containers[x].block.GetLength(0); y++)
+            
+                //yield return new WaitForSeconds(0.001f);
+                for (int y = 1; y < containers[0].block.GetLength(0); y++)
+                {
+                //начинаем со второй строки
+                for (int x = 0; x < containers.GetLength(0); x++)
                 {
                     Block currentBlock = containers[x].block[y];
 

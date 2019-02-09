@@ -5,90 +5,6 @@ using UnityEngine;
 public static class BorderGrid
 {
     ////обвести сетку
-    //public static void CircleGrid(Grid grid) {
-
-    //    GameObject borderGrid = new GameObject();
-    //    borderGrid.name = "BorderGrid";
-    //    borderGrid.transform.parent = grid.transform;
-    //    borderGrid.transform.localRotation = new Quaternion(0, 0, 0, 0);
-    //    borderGrid.transform.localPosition = new Vector3(0 - grid.blockSize * 0.5f, 0 - grid.blockSize * 0.5f, 0);
-
-    //    //MonoBehaviour.Instantiate(prefabElement, thisTransform.position, Quaternion.identity);
-
-    //    for (int x = 0; x < grid.containers.GetLength(0) + 1; x++)
-    //    {
-    //        for (int y = 0; y < grid.containers[0].block.GetLength(0) + 1; y++)
-    //        {
-    //            Vector3 localPosition = new Vector3(grid.blockSize * x, grid.blockSize * y, 0);
-    //            int turn = 0;
-
-    //            Block LeftDown = grid.GetBlock(x - 1, y - 1);
-    //            Block LeftUp = grid.GetBlock(x - 1, y);
-    //            Block RightDown = grid.GetBlock(x, y - 1);
-    //            Block RightUp = grid.GetBlock(x, y);
-
-    //            BorderEnum borderEnum = BorderEnum.Angle;
-
-    //            //если не все блоки равны null
-    //            if ((LeftDown == null && LeftUp == null && RightDown == null && RightUp == null) || (LeftDown != null && LeftUp != null && RightDown != null && RightUp != null))
-    //            {
-    //                continue;
-    //            }
-    //            else { 
-    //                //определяем какие блоки заняты и выбираем соответствующий рисунок и поворот
-    //                if ((LeftDown == null && LeftUp == null && RightDown == null && RightUp != null) || (LeftDown != null && LeftUp != null && RightDown != null && RightUp == null))
-    //                {
-    //                    CreateBorder(localPosition, 0, BorderEnum.Angle, borderGrid);
-    //                }
-    //                else if ((LeftDown == null && LeftUp != null && RightDown == null && RightUp == null) || (LeftDown != null && LeftUp == null && RightDown != null && RightUp != null))
-    //                {
-    //                    CreateBorder(localPosition, 90, BorderEnum.Angle, borderGrid);
-    //                }
-    //                else if ((LeftDown != null && LeftUp == null && RightDown == null && RightUp == null) || (LeftDown == null && LeftUp != null && RightDown != null && RightUp != null))
-    //                {
-    //                    CreateBorder(localPosition, 180, BorderEnum.Angle, borderGrid);
-    //                }
-    //                else if ((LeftDown == null && LeftUp == null && RightDown != null && RightUp == null) || (LeftDown != null && LeftUp != null && RightDown == null && RightUp != null))
-    //                {
-    //                    CreateBorder(localPosition, 270, BorderEnum.Angle, borderGrid);
-    //                }
-    //                else if ((LeftDown == null && LeftUp != null && RightDown == null && RightUp != null) || (LeftDown != null && LeftUp == null && RightDown != null && RightUp == null))
-    //                {
-    //                    CreateBorder(localPosition, 0, BorderEnum.Line, borderGrid);
-    //                }
-    //                else if ((LeftDown != null && LeftUp != null && RightDown == null && RightUp == null) || (LeftDown == null && LeftUp == null && RightDown != null && RightUp != null))
-    //                {
-    //                    CreateBorder(localPosition, -90, BorderEnum.Line, borderGrid);
-    //                }
-    //                else if ((LeftDown != null && LeftUp == null && RightDown == null && RightUp != null))
-    //                {
-    //                    CreateBorder(localPosition, -90, BorderEnum.Angle, borderGrid);
-    //                    CreateBorder(localPosition, 90, BorderEnum.Angle, borderGrid);
-    //                }
-    //                else if ((LeftDown == null && LeftUp != null && RightDown != null && RightUp == null))
-    //                {
-    //                    CreateBorder(localPosition, 0, BorderEnum.Angle, borderGrid);
-    //                    CreateBorder(localPosition, 180, BorderEnum.Angle, borderGrid);
-    //                }
-
-    //                //промежуточные линии
-    //                if ((LeftUp != null && RightUp == null) || (LeftUp == null && RightUp != null))
-    //                {
-                        
-    //                    CreateBorder(new Vector3(localPosition.x, localPosition.y + grid.blockSize * 0.5f, localPosition.z), 90, BorderEnum.Line, borderGrid);
-    //                }
-
-    //                if ((RightDown != null && RightUp == null) || (RightDown == null && RightUp != null))
-    //                {
-    //                    CreateBorder(new Vector3(localPosition.x + grid.blockSize * 0.5f, localPosition.y, localPosition.z), 0, BorderEnum.Line, borderGrid);
-    //                }
-    //            }
-
-                
-    //        }
-    //    }
-    //}
-
     public static void CircleGrid(Grid grid)
     {
 
@@ -156,6 +72,7 @@ public static class BorderGrid
         border.transform.localPosition = localPosition;
         SpriteRenderer spriteRendererBorder = border.AddComponent<SpriteRenderer>();
         spriteRendererBorder.sprite = SpriteBank.SetShape(borderEnum);
+        spriteRendererBorder.sortingLayerName = "Block";
     }
 
     private static void DefineAndCreateBorder(Vector3 localPosition, int turn, GameObject borderGrid, Block block1, Block block2)
