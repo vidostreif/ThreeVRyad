@@ -20,6 +20,7 @@ public class MainAnimator : MonoBehaviour {
     private List<CompressAndRecover> CompressAndRecoverElements = new List<CompressAndRecover>();//элементы для перемещения
     private List<CompressAndRecover> CompressAndRecoverElementsForRemove = new List<CompressAndRecover>();//элементы которые можно удалить из коллекции
 
+    public GameObject boom;
     public GameObject explosionEffect;//префаб
     //public List<GameObject> explosionEffects;// лист взрывов
 
@@ -168,8 +169,8 @@ public class MainAnimator : MonoBehaviour {
     public void AddExplosionEffect(Vector3 epicenter, float power) {
 
         GameObject explosionEf = Instantiate(explosionEffect, epicenter, Quaternion.identity);
-        //Destroy(explosionEf, power * 0.33f);//устанавливаем время жизни
         explosions.Add(new Explosion(epicenter, power, Time.time, explosionEf));
+
     }
     
     //эффекты взрыва
@@ -179,7 +180,7 @@ public class MainAnimator : MonoBehaviour {
         {
             if (item.moment < Time.time)
             {
-                item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
+                //item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
                 item.radiusExplosionEffect += 2.2f;
                 item.moment = Time.time + 0.05f;
                 item.radius += Grid.Instance.blockSize * 0.95f;
@@ -211,7 +212,7 @@ public class MainAnimator : MonoBehaviour {
         //удаляем из массива
         foreach (Explosion item in explosionsForRemove)
         {
-            Destroy(item.explosionEffect);
+            Destroy(item.explosionEffect, 2);
             explosions.Remove(item);
         }
         explosionsForRemove.Clear();
