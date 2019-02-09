@@ -168,8 +168,7 @@ MonoBehaviour:
     - {fileID: 0}
   prefabBlock: {fileID: 1432295883623472, guid: ba35badb2c19b764aadcf4bee37930f4,
     type: 3}
-  prefabElement: {fileID: 1149049531233430, guid: f925ff8db482b684d84e1e8ebc0b80c4,
-    type: 3}
+  prefabElement: {fileID: 30, guid: f925ff8db482b684d84e1e8ebc0b80c4, type: 3}
   prefabBlockingWall: {fileID: 1697969287702766, guid: e9fdac4dcd7fb434193fc8257c0b5b7e,
     type: 3}
   elementsPriority:

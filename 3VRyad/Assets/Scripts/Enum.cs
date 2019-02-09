@@ -115,5 +115,6 @@ public enum BorderEnum
 public enum SmoothEnum
 {
     InArc,
-    InLine
+    InLine,
+    InLineWithOneSpeed
 }//тип сглаженного перемещения

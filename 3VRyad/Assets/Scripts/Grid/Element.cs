@@ -13,6 +13,7 @@ using UnityEngine;
 public class Element : MonoBehaviour
 {
     public bool drag; //элемент перетаскивается
+    public float speed = 0; //скорость
     [SerializeField] protected ElementsTypeEnum type;//тип элемента
     [SerializeField] protected ElementsShapeEnum shape;//форма элемента
     [SerializeField] protected BlockingElement blockingElement;// блокирующий элемент
@@ -94,7 +95,13 @@ public class Element : MonoBehaviour
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
         GetComponent<ElementController>().ThisElement = this;
     }
-        
+
+    public void Start()
+    {
+        AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+        animatorElement.PlayCreatureAnimation();
+    }
+
     //установка настроек элементов
     public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, HitTypeEnum hitTypeEnum) {
         this.type = type;

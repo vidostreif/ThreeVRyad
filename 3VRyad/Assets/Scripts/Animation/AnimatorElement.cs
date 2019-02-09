@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[ExecuteInEditMode]
 public class AnimatorElement : MonoBehaviour
 {
     //public bool destroyThisObject = false;
@@ -11,12 +12,12 @@ public class AnimatorElement : MonoBehaviour
     void Awake()
     {
         //ссылка на аниматор
-        //thisAnimator = GetComponent<Animator>();
         thisAnimation = GetComponent<Animation>();
         //определяем когда в следующий раз проиграть анимацию
         SetidleAnimationTime();
 
         thisAnimation["Destroy"].layer = 1;
+        thisAnimation["creature"].layer = 2;
     }
 
     // Update is called once per frame
@@ -51,6 +52,27 @@ public class AnimatorElement : MonoBehaviour
     public void StopDestroyAnimation()
     {
         thisAnimation.Stop("Destroy");
+    }
+
+    public void PlayFallAnimation()
+    {
+        //thisAnimator.SetBool("Destroy", true);
+        thisAnimation.Play("fall");
+    }
+
+    public void StopFallAnimation()
+    {
+        thisAnimation.Stop("fall");
+    }
+
+    public void PlayCreatureAnimation()
+    {
+        thisAnimation.Play("creature");
+    }
+
+    public void StopCreatureAnimation()
+    {
+        thisAnimation.Stop("creature");
     }
 
     public void PlayIdleAnimation()

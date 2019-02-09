@@ -121,7 +121,7 @@ public class Block : MonoBehaviour {
             //создаем новый элемент
             GameObject elementGameObject = Instantiate(prefabElement, thisTransform.position, Quaternion.identity);
             Element curElement;
-
+                    
             if (typeElementsEnum == ElementsTypeEnum.Standard)
             {                
                 curElement = elementGameObject.AddComponent<Element>();

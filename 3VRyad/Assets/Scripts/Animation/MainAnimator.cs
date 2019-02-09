@@ -120,9 +120,33 @@ public class MainAnimator : MonoBehaviour {
                 {
                     item.thisTransform.position = Vector3.Lerp(item.thisTransform.position, item.targetPosition, Time.deltaTime * 100 * item.smoothTime);
                 }
+                else if (item.smoothEnum == SmoothEnum.InLineWithOneSpeed)
+                {
+                    //расчитываем вектор смещения
+                    Vector3 translation = item.targetPosition - item.thisTransform.position;
+                    //вычисляем расстояние на которое смещаем объект
+                    float offsetDistance = translation.magnitude;
+                    //нормализируем вектор для упрощения вычисления направления
+                    Vector3 direction = translation / offsetDistance;
+                    if (offsetDistance > (Time.deltaTime * 100 * item.smoothTime))
+                    {
+                        item.thisTransform.Translate(direction * Time.deltaTime * 100 * item.smoothTime);
+                    }
+                    else
+                    {                        
+                        item.thisTransform.position = item.targetPosition;
+                    }
+                    
+                }
 
                 if (item.thisTransform.position == item.targetPosition)
                 {
+                    //if (item.smoothEnum == SmoothEnum.InLineWithOneSpeed)
+                    //{
+                    //    AnimatorElement animatorElement = item.thisTransform.GetComponent<AnimatorElement>();
+                    //    animatorElement.PlayFallAnimation();
+                    //}
+
                     if (item.destroyAfterMoving)
                         DestroyImmediate(item.thisTransform.gameObject);
                     moveElementsForRemove.Add(item);

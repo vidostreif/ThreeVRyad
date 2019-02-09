@@ -998,14 +998,16 @@ public class Grid : MonoBehaviour
         //нужна еще итерация
         bool needIteration = true;
         ElementsPriority elementPriority;
+        float speed = 0.05f;
 
         //смещае элементы на один блок вниз за каждую итерацию
         while (needIteration)
         {
             needIteration = false;
-            
-                //yield return new WaitForSeconds(0.001f);
-                for (int y = 1; y < containers[0].block.GetLength(0); y++)
+            //speed += 0.02f;
+
+            //yield return new WaitForSeconds(0.001f);
+            for (int y = 1; y < containers[0].block.GetLength(0); y++)
                 {
                 //начинаем со второй строки
                 for (int x = 0; x < containers.GetLength(0); x++)
@@ -1021,22 +1023,23 @@ public class Grid : MonoBehaviour
                         //если пустой блок и умеет генерировать элемент, то предварительно создаем случайный элемент
                         else if (ThisBlockWithoutElement(currentBlock) && currentBlock.GeneratorElements)
                         {
-                            //выбираем случайное число для выбора типа элемента из списка
-                            //int random = UnityEngine.Random.Range(0, elementsShapeAndPriority.Count);
                             elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
-
                             currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                            needIteration = true;
+                            continue;
                         }
 
                         //если текущий элемент заблокирован для движения, то переходим к следующему
                         else if (ThisBlockWithElementCantMove(currentBlock))
                         { continue; }
-
+                                                
                         //ищем место для смещения
                         //если нижний блок не имеет элемента, то смещаем к нему
                         if (ThisStandardBlockWithoutElement(containers[x].block[y - 1]))
                         {
                             ExchangeElements(currentBlock, containers[x].block[y - 1]);
+                            MainAnimator.Instance.AddElementForSmoothMove(containers[x].block[y - 1].Element.thisTransform, new Vector3(containers[x].block[y - 1].thisTransform.position.x, containers[x].block[y - 1].thisTransform.position.y-0.1f, containers[x].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x].block[y - 1].Element.speed);
+                            containers[x].block[y - 1].Element.speed += 0.02f;
                             needIteration = true;
                             continue;
                         }
@@ -1081,6 +1084,8 @@ public class Grid : MonoBehaviour
                             if (moveRight)
                             {
                                 ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x].block[y - 1].Element.speed);
+                                containers[x + 1].block[y - 1].Element.speed += 0.02f;
                                 needIteration = true;
                                 continue;
                             }
@@ -1120,17 +1125,21 @@ public class Grid : MonoBehaviour
                             if (moveLeft)
                             {
                                 ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x].block[y - 1].Element.speed);
+                                containers[x - 1].block[y - 1].Element.speed += 0.02f;
                                 needIteration = true;
                                 continue;
                             }
-                        }                       
+                        }
+
+                        currentBlock.Element.speed = 0;
                     }
 
                 }
             }
             if (needIteration)
             {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.12f);
             }
         }
 
