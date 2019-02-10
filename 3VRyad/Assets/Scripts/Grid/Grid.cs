@@ -26,6 +26,7 @@ public class Grid : MonoBehaviour
     public static Grid Instance; // Синглтон
 
     private bool needFilling = false;
+    private List<Blocks> elementsForMove = new List<Blocks>();//элементы для последовательного выполнения ходов
 
     //public bool matchFoundInFirstIteration { get; protected set; }//признак что были найдены совпадения
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
@@ -168,135 +169,163 @@ public class Grid : MonoBehaviour
 
     public void Move(Block touchingBlock = null, Block destinationBlock = null)
     {
-        StartCoroutine(Grid.Instance.MakeMove(touchingBlock, destinationBlock));
+        Blocks blocks = new Blocks();
+        blocks.block = new Block[2];
+        blocks.block[0] = touchingBlock;
+        blocks.block[1] = destinationBlock;
+        elementsForMove.Add(blocks);
+
+        if (!blockedForMove)
+        {
+            StartCoroutine(Grid.Instance.MakeMove(touchingBlock, destinationBlock));
+        }
     }
 
     //выполняем ход
     //принимаем параметры - 1. Блок с которого передвигаем элемент 2. Блок к которому передвигаем элемент 
     private IEnumerator MakeMove(Block touchingBlock = null, Block destinationBlock = null)
     {
-        if (blockedForMove)
-            yield break;
+        //if (blockedForMove)
+        //    yield break;
 
-        blockedForMove = true;        
-        MainAnimator.Instance.ClearElementsForNextMove();
-
-        //повторяем итерации заполнения и поиска совпадений, пока совпадения не будут найдены
-        int iteration = 1;
-        List<Block> blockFields;
-        bool matchFound;
-        do
+        blockedForMove = true;
+        if (elementsForMove.Count > 0)
         {
-            //добавить проверку, что если нет destinationBlock, то не искать совпадающие линии
-
-            //ищем совпавшие линии 
-            matchFound = false;
-            blockFields = CheckMatchingLine();
-            if (blockFields.Count > 0)
-                matchFound = true;
-
-            if (matchFound)
-                yield return new WaitForSeconds(0.15f);
-
-            //проверяем длинну совпавших линий для бонусов 
-            List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
-
-            //ударяем по найденным блокам
-            foreach (Block blockField in blockFields)
-                blockField.Hit();            
-
-            if (iteration == 1)
-            {     
-                //активируем активируемые элементы
-                if (touchingBlock != null && touchingBlock.Element != null && touchingBlock.Element.Activated)
-                {
-                    touchingBlock.Element.Activate();
-                    matchFound = true;
-                }
-
-                else if (destinationBlock != null && destinationBlock.Element != null && destinationBlock.Element.Activated)
-                {
-                    destinationBlock.Element.Activate();
-                    matchFound = true;
-                }
-                else if (blockFields.Count == 0)
-                {
-                    ExchangeElements(touchingBlock, destinationBlock);
-                }
-            }                                    
-            
-            //создаем бонусы
-            if (iteration == 1 && matchFound)
+            while (elementsForMove.Count > 0)
             {
-                foreach (List<Block> item in findedBlockInLine)
-                    Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
-            }
-            else if (matchFound)
-            {
-                foreach (List<Block> item in findedBlockInLine)
-                    Bonuses.Instance.CheckBonuses(item, null, null);
-            }
+                Blocks blocks = elementsForMove[0];
+                touchingBlock = blocks.block[0];
+                destinationBlock = blocks.block[1];
 
-            //если совпадения найдены, делаем паузу для анимации
-            if (matchFound && !needFilling) 
-                yield return new WaitForSeconds(0.15f);
+                MainAnimator.Instance.ClearElementsForNextMove();
 
-            if (matchFound)
-            {
-                for (int y = 0; y < containers[0].block.GetLength(0); y++)
+                //повторяем итерации заполнения и поиска совпадений, пока совпадения не будут найдены
+                int iteration = 1;
+                List<Block> blockFields;
+                bool matchFound;
+                do
                 {
-                    //начинаем со второй строки
-                    for (int x = 0; x < containers.GetLength(0); x++)
+                    //добавить проверку, что если нет destinationBlock, то не искать совпадающие линии
+
+                    //ищем совпавшие линии 
+                    matchFound = false;
+                    blockFields = CheckMatchingLine();
+                    if (blockFields.Count > 0)
+                        matchFound = true;
+
+                    if (matchFound)
+                        yield return new WaitForSeconds(0.15f);
+
+                    //проверяем длинну совпавших линий для бонусов 
+                    List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
+
+                    //ударяем по найденным блокам
+                    foreach (Block blockField in blockFields)
+                        blockField.Hit();
+
+                    if (iteration == 1)
                     {
-                        if (ThisBlockWithElement(containers[x].block[y]))
+                        //активируем активируемые элементы
+                        if (touchingBlock != null && touchingBlock.Element != null && touchingBlock.Element.Activated)
                         {
-                            containers[x].block[y].Element.speed = 0;
+                            touchingBlock.Element.Activate();
+                            matchFound = true;
                         }
+
+                        else if (destinationBlock != null && destinationBlock.Element != null && destinationBlock.Element.Activated)
+                        {
+                            destinationBlock.Element.Activate();
+                            matchFound = true;
+                        }
+                        else if (blockFields.Count == 0)
+                        {
+                            ExchangeElements(touchingBlock, destinationBlock);
+                        }
+                    }
+
+                    //создаем бонусы
+                    if (iteration == 1 && matchFound)
+                    {
+                        foreach (List<Block> item in findedBlockInLine)
+                            Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
+                    }
+                    else if (matchFound)
+                    {
+                        foreach (List<Block> item in findedBlockInLine)
+                            Bonuses.Instance.CheckBonuses(item, null, null);
+                    }
+
+                    ////если совпадения найдены, делаем паузу для анимации
+                    //if (matchFound && !needFilling)
+                    //    yield return new WaitForSeconds(0.15f);
+
+                    if (matchFound)
+                    {
+                        for (int y = 0; y < containers[0].block.GetLength(0); y++)
+                        {
+                            //начинаем со второй строки
+                            for (int x = 0; x < containers.GetLength(0); x++)
+                            {
+                                if (ThisBlockWithElement(containers[x].block[y]))
+                                {
+                                    containers[x].block[y].Element.speed = 0;
+                                }
+                            }
+                        }
+                    }
+
+                    //заполняем сетку элементами
+                    yield return StartCoroutine(Filling());
+
+
+                    elementsForMove.Remove(blocks);
+                    //если есть элементы в очереди на движение
+                    if (elementsForMove.Count > 0)
+                    {
+                        break;
+                    }
+
+                    iteration++;
+                } while (matchFound || needFilling);
+
+                //действия элементов после хода!!!!               
+
+            }
+
+            //сброс скорости
+            for (int y = 0; y < containers[0].block.GetLength(0); y++)
+            {
+                //начинаем со второй строки
+                for (int x = 0; x < containers.GetLength(0); x++)
+                {
+                    if (ThisBlockWithElement(containers[x].block[y]))
+                    {
+                        containers[x].block[y].Element.speed = 0;
                     }
                 }
             }
-
-            //заполняем сетку элементами
-            yield return StartCoroutine(Filling());       
-
-            iteration++;
-        } while (matchFound || needFilling);
-
-        //действия элементов после хода!!!!
-
-        //сброс скорости
-        for (int y = 0; y < containers[0].block.GetLength(0); y++)
-        {
-            //начинаем со второй строки
-            for (int x = 0; x < containers.GetLength(0); x++)
-            {
-                if (ThisBlockWithElement(containers[x].block[y]))
+            //проверка, что остались доступные ходы
+            List<Element> elementsForNextMove;
+                int iteration2 = 1;
+                do
                 {
-                    containers[x].block[y].Element.speed = 0;
-                }
-            }
+                    elementsForNextMove = CheckElementsForNextMove();
+                    //Если нет доступных ходов, то перемешиваем поле
+                    if (elementsForNextMove.Count == 0)
+                        MixStandartElements();
+
+                    if (iteration2 > 4)
+                    {
+                        Debug.Log("Поле было перемешано " + iteration2 + " раз, но доступные ходы так и небыли найдены");
+                        break;
+                    }
+                    iteration2++;
+
+                } while (elementsForNextMove.Count == 0);//повторяем проверку
+
+                MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
+            
         }
-
-        //проверка, что остались доступные ходы
-        List<Element> elementsForNextMove;
-        iteration = 1;
-        do
-        {
-            elementsForNextMove = CheckElementsForNextMove();
-            //Если нет доступных ходов, то перемешиваем поле
-            if (elementsForNextMove.Count == 0)
-                MixStandartElements();
-
-            if (iteration > 4)
-            {
-                Debug.Log("Поле было перемешано " + iteration + " раз, но доступные ходы так и небыли найдены");
-                break;
-            }
-            iteration++;
-
-        } while (elementsForNextMove.Count == 0);//повторяем проверку
-        
-        MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
         blockedForMove = false;
     }
 

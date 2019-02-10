@@ -39,9 +39,11 @@ public class MasterController : MonoBehaviour
     public void DragLocalObject(Transform gameObjectTransform)//записываем данные для последующего перемещения объекта за мышкой или пальцем
     {
         //если сетка не заблокирована и мы не перетаскиваем другой объект
-        if (!Grid.Instance.blockedForMove && transforForLocalDAndD == null)
-        {
-            transforForLocalDAndD = gameObjectTransform;
+        //if (!Grid.Instance.blockedForMove && transforForLocalDAndD == null)
+        //{
+            if (transforForLocalDAndD == null)
+            {
+                transforForLocalDAndD = gameObjectTransform;
             startPositionLocalDAndD = gameObjectTransform.position;//позиция
 
             //вычисляем позицию пальца для записи отклонения курсора

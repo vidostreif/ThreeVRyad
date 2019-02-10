@@ -30,7 +30,7 @@ public class ElementController : MonoBehaviour {
 
     public void Drag(PointerEventData data)//начало перетаскивания
     {
-        if (!ThisElement.LockedForMove)
+        if (!ThisElement.LockedForMove && !ThisElement.Destroyed)
         {
             MasterController.Instance.DragLocalObject(transform);
             ThisElement.drag = true;
@@ -39,7 +39,7 @@ public class ElementController : MonoBehaviour {
 
     public void EndDrag(PointerEventData data)//прекращаем перетаскивание
     {
-        if (!ThisElement.LockedForMove)
+        if (!ThisElement.LockedForMove && !ThisElement.Destroyed)
         {
             MasterController.Instance.DropLocalObject();
             ThisElement.drag = false;
@@ -48,7 +48,7 @@ public class ElementController : MonoBehaviour {
 
     public void DoubleClick(PointerEventData data)//обработка двойного клика
     {
-        if (ThisElement.Activated && !Grid.Instance.blockedForMove)
+        if (ThisElement.Activated && !ThisElement.LockedForMove && !ThisElement.Destroyed)
         {
             if (Time.time > timeFirstClick + timeBetweenClicks)
             {
