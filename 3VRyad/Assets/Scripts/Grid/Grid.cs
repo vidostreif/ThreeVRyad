@@ -213,8 +213,8 @@ public class Grid : MonoBehaviour
                     if (blockFields.Count > 0)
                         matchFound = true;
 
-                    if (matchFound)
-                        yield return new WaitForSeconds(0.15f);
+                    //if (matchFound)
+                    //    yield return new WaitForSeconds(0.15f);
 
                     //проверяем длинну совпавших линий для бонусов 
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
