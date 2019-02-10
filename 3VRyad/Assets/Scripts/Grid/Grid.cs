@@ -210,18 +210,29 @@ public class Grid : MonoBehaviour
                     //ищем совпавшие линии 
                     matchFound = false;
                     blockFields = CheckMatchingLine();
-                    if (blockFields.Count > 0)
+                    if (blockFields.Count > 0) {
                         matchFound = true;
+                        
+                        
+                    }
+                    // проверяем длинну совпавших линий для бонусов
+                    List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
 
                     //if (matchFound)
-                    //    yield return new WaitForSeconds(0.15f);
+                    //{
+                    //    //добавить запрет на смещение найденных блоков
 
-                    //проверяем длинну совпавших линий для бонусов 
-                    List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
+                    //    //заполняем сетку элементами
+                    //    yield return StartCoroutine(Filling());
+                    //}
+                    
 
                     //ударяем по найденным блокам
                     foreach (Block blockField in blockFields)
                         blockField.Hit();
+
+                    //if (matchFound)
+                    //    yield return new WaitForSeconds(0.15f);
 
                     if (iteration == 1)
                     {
@@ -262,21 +273,6 @@ public class Grid : MonoBehaviour
                     ////если совпадения найдены, делаем паузу для анимации
                     //if (matchFound && !needFilling)
                     //    yield return new WaitForSeconds(0.15f);
-
-                    //if (matchFound)
-                    //{
-                    //    for (int y = 0; y < containers[0].block.GetLength(0); y++)
-                    //    {
-                    //        //начинаем со второй строки
-                    //        for (int x = 0; x < containers.GetLength(0); x++)
-                    //        {
-                    //            if (ThisBlockWithElement(containers[x].block[y]))
-                    //            {
-                    //                containers[x].block[y].Element.speed = 0;
-                    //            }
-                    //        }
-                    //    }
-                    //}
 
                     //заполняем сетку элементами
                     yield return StartCoroutine(Filling());
@@ -369,7 +365,6 @@ public class Grid : MonoBehaviour
                                         blockFieldsToRemoveElement.Add(neighboringBlocks.Right);
                                     if (!blockFieldsToRemoveElement.Contains(containers[x].block[y]))
                                         blockFieldsToRemoveElement.Add(containers[x].block[y]);
-                                    //matchFound = true;
                                 }
                             }
                         }
@@ -398,7 +393,6 @@ public class Grid : MonoBehaviour
                                         blockFieldsToRemoveElement.Add(neighboringBlocks.Down);
                                     if (!blockFieldsToRemoveElement.Contains(containers[x].block[y]))
                                         blockFieldsToRemoveElement.Add(containers[x].block[y]);
-                                    //matchFound = true;
                                 }
                             }
                         }
@@ -1210,7 +1204,11 @@ public class Grid : MonoBehaviour
                             }
                         }
                     }
-                    currentBlock.Element.speed = 0;
+                    if (currentBlock.Element.speed > 0)
+                    {
+                        currentBlock.Element.speed -= 0.01f;
+                    }
+                    
                     }
                 }
             }
