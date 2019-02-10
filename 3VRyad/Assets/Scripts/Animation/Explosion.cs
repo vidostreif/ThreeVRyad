@@ -9,7 +9,10 @@ public class Explosion
     public float power;//мощность взрыва
     public float moment;//момент взрыва
     public float radius;// нарастающий радиус взрыва
+    public float iteration;// итерации
     public GameObject explosionEffect;//эффект искажения
+
+
     public float radiusExplosionEffect;// радиус эффекта
     public float maxRadiusExplosionEffect;// макс радиус эффекта
 
@@ -19,6 +22,7 @@ public class Explosion
         this.power = power;
         this.moment = moment;
         this.radius = 0;
+        this.iteration = 3;
         this.explosionEffect = explosionEffect;
         this.radiusExplosionEffect = 1;
         this.maxRadiusExplosionEffect = power * 10;

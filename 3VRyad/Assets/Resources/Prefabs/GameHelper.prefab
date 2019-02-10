@@ -189,6 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0453c4a590404074090b20c1beb6359d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boom: {fileID: 0}
   explosionEffect: {fileID: 5187769647623933975, guid: 3c7925780b11508498fd0be7fba505cf,
     type: 3}
 --- !u!114 &114290488209028102
@@ -233,6 +234,9 @@ MonoBehaviour:
   - type: 6
     shape: 7
     cost: 4
+  - type: 7
+    shape: 12
+    cost: 6
 --- !u!114 &114988500668735914
 MonoBehaviour:
   m_ObjectHideFlags: 0

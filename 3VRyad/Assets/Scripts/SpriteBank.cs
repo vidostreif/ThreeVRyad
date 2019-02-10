@@ -39,10 +39,12 @@ public class SpriteBank : MonoBehaviour
                 return Resources.Load<Sprite>("Sprites/banana") as Sprite;
             case ElementsShapeEnum.Wall:
                 return Resources.Load<Sprite>("Sprites/wall") as Sprite;
-            case ElementsShapeEnum.Bomb:
-                return Resources.Load<Sprite>("Sprites/bomb") as Sprite;
-            case ElementsShapeEnum.Dynamite:
-                return Resources.Load<Sprite>("Sprites/dynamite") as Sprite;
+            case ElementsShapeEnum.BigFlask:
+                return Resources.Load<Sprite>("Sprites/BigFlask") as Sprite;
+            case ElementsShapeEnum.MediumFlask:
+                return Resources.Load<Sprite>("Sprites/MediumFlask") as Sprite;
+            case ElementsShapeEnum.SmallFlask:
+                return Resources.Load<Sprite>("Sprites/SmallFlask") as Sprite;
             case ElementsShapeEnum.Orange:
                 return Resources.Load<Sprite>("Sprites/orange") as Sprite;
             case ElementsShapeEnum.Camomile:

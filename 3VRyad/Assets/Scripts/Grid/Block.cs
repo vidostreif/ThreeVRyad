@@ -137,14 +137,19 @@ public class Block : MonoBehaviour {
                 curElement = elementGameObject.AddComponent<ElementWall>();
                 curElement.InitialSettings(typeElementsEnum, true, true, false, false, HitTypeEnum.Empty);
             }
-            else if (typeElementsEnum == ElementsTypeEnum.Bomb)
+            else if (typeElementsEnum == ElementsTypeEnum.BigFlask)
             {
-                curElement = elementGameObject.AddComponent<ElementBomb>();
+                curElement = elementGameObject.AddComponent<ElementBigFlask>();
                 curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion);
             }
-            else if (typeElementsEnum == ElementsTypeEnum.Dynamite)
+            else if (typeElementsEnum == ElementsTypeEnum.MediumFlask)
             {
-                curElement = elementGameObject.AddComponent<ElementDynamite>();
+                curElement = elementGameObject.AddComponent<ElementMediumFlask>();
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion);
+            }
+            else if (typeElementsEnum == ElementsTypeEnum.SmallFlask)
+            {
+                curElement = elementGameObject.AddComponent<ElementSmallFlask>();
                 curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion);
             }
             else

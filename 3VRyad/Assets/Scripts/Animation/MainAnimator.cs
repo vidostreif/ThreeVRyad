@@ -181,31 +181,34 @@ public class MainAnimator : MonoBehaviour {
             if (item.moment < Time.time)
             {
                 //item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
-                item.radiusExplosionEffect += 2.2f;
+                //item.radiusExplosionEffect += 2.2f;
                 item.moment = Time.time + 0.05f;
-                item.radius += Grid.Instance.blockSize * 0.95f;
-                GameObject[] objectsToMove = FindObjectsInRadiusWithComponent(item.epicenter, item.radius, item.radius + Grid.Instance.blockSize, typeof(Element));
+                item.radius += Grid.Instance.blockSize * 0.95f * item.power;
 
-                foreach (GameObject objectToMove in objectsToMove)
-                {
-                    if (objectToMove.transform != null)
+                    GameObject[] objectsToMove = FindObjectsInRadiusWithComponent(item.epicenter, item.radius, item.radius + Grid.Instance.blockSize, typeof(Element));
+
+                    foreach (GameObject objectToMove in objectsToMove)
                     {
-                        //расчитываем вектор смещения
-                        Vector3 translation = objectToMove.transform.position - item.epicenter;
-                        //вычисляем расстояние до объекта
-                        float offsetDistance = translation.magnitude;
-                        //нормализируем вектор для упрощения вычисления направления
-                        Vector3 direction = translation / offsetDistance;
-                        AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.5f, 5, SmoothEnum.InArc, 0.01f);
-                        AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);
-                        AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
-                        animatorElement.PlayIdleAnimation();
+                        if (objectToMove.transform != null)
+                        {
+                            //расчитываем вектор смещения
+                            Vector3 translation = objectToMove.transform.position - item.epicenter;
+                            //вычисляем расстояние до объекта
+                            float offsetDistance = translation.magnitude;
+                            //нормализируем вектор для упрощения вычисления направления
+                            Vector3 direction = translation / offsetDistance;
+                            AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.2f, 5, SmoothEnum.InArc, 0.01f);
+                            //AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);
+                            AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
+                            animatorElement.PlayIdleAnimation();
+                        }
                     }
-                }                
-                item.power -= 0.2f;
+                             
+                item.power *= 0.5f;
+                item.iteration--;
             }
 
-            if (item.power <= 0)
+            if (item.iteration == 0)
                 explosionsForRemove.Add(item);
         }
 

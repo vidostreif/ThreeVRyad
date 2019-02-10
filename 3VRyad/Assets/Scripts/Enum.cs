@@ -9,8 +9,9 @@ public enum ElementsTypeEnum
     SpecElement,
     ImmortalWall, //неразрушаемая стена
     CrushableWall, //разрушаемый блок, который предварительно нужно разбить
-    Bomb, //бомба
-    Dynamite, //динамит
+    MediumFlask, //фласка средняя
+    SmallFlask, //фласка малая
+    BigFlask,//фласка большая
 }//Типы элементов
 
 public enum ElementsShapeEnum
@@ -21,12 +22,13 @@ public enum ElementsShapeEnum
     Apple, //яблоко
     Banana, //банан
     Wall, //стандартная стена
-    Bomb, //бомба
-    Dynamite, //динамит
+    MediumFlask, //фласка средняя
+    SmallFlask, //фласка малая
     Strawberry, //клубника
     Orange,
     Camomile, //ромашка
     Plum, //слива
+    BigFlask,//фласка большая
 }//Внешние виды элементов
 
 
@@ -51,13 +53,14 @@ public enum AllShapeEnum
     Apple, //яблоко
     Banana, //банан
     Wall, //стандартная стена
-    Bomb, //бомба
-    Dynamite, //динамит
+    MediumFlask, //бомба
+    SmallFlask, //динамит
     Liana, //лиана
     Strawberry, //клубника
     Orange,
     Camomile, //ромашка
     Plum, //слива
+    BigFlask,//фласка большая
 }//Внешние виды элементов
 
 public enum BlockTypeEnum

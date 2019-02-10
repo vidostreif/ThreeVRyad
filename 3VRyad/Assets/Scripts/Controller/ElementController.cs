@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(EventTrigger))]// требуем наличие у объекта EventTrigger
 
+//система управления элементом игроком
 public class ElementController : MonoBehaviour {
 
     public Element ThisElement { protected get; set; }
