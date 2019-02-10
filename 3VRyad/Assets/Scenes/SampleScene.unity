@@ -6784,11 +6784,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4341326326066182, guid: e9fdac4dcd7fb434193fc8257c0b5b7e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.39
+      value: -7.78
       objectReference: {fileID: 0}
     - target: {fileID: 4341326326066182, guid: e9fdac4dcd7fb434193fc8257c0b5b7e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.18
+      value: 8.47
       objectReference: {fileID: 0}
     - target: {fileID: 4341326326066182, guid: e9fdac4dcd7fb434193fc8257c0b5b7e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7361,16 +7361,6 @@ PrefabInstance:
       propertyPath: grid
       value: 
       objectReference: {fileID: 886705231}
-    - target: {fileID: 114290488209028102, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
-        type: 3}
-      propertyPath: xmlDocument
-      value: 
-      objectReference: {fileID: 4900000, guid: 76df9ac9541cc214e91b5e9bef33ed9a, type: 3}
-    - target: {fileID: 114290488209028102, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
-        type: 3}
-      propertyPath: SceneName
-      value: 111
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
 --- !u!1 &1332354580
@@ -11181,12 +11171,12 @@ PrefabInstance:
     - target: {fileID: 5187769647623933972, guid: 3c7925780b11508498fd0be7fba505cf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.512
+      value: -5.08
       objectReference: {fileID: 0}
     - target: {fileID: 5187769647623933972, guid: 3c7925780b11508498fd0be7fba505cf,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.075
+      value: 8.47
       objectReference: {fileID: 0}
     - target: {fileID: 5187769647623933972, guid: 3c7925780b11508498fd0be7fba505cf,
         type: 3}
@@ -11306,10 +11296,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1368275443, guid: c5fa6683a9f5e704a9133c3b1a2bcb88, type: 3}
-      propertyPath: m_Volume
-      value: 0.116
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5fa6683a9f5e704a9133c3b1a2bcb88, type: 3}
