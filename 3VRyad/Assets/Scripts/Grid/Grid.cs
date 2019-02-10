@@ -212,8 +212,6 @@ public class Grid : MonoBehaviour
                     blockFields = CheckMatchingLine();
                     if (blockFields.Count > 0) {
                         matchFound = true;
-                        
-                        
                     }
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
@@ -225,14 +223,13 @@ public class Grid : MonoBehaviour
                     //    //заполняем сетку элементами
                     //    yield return StartCoroutine(Filling());
                     //}
-                    
+
+                    if (matchFound)
+                        yield return new WaitForSeconds(0.07f);
 
                     //ударяем по найденным блокам
                     foreach (Block blockField in blockFields)
-                        blockField.Hit();
-
-                    //if (matchFound)
-                    //    yield return new WaitForSeconds(0.15f);
+                        blockField.Hit();                    
 
                     if (iteration == 1)
                     {
