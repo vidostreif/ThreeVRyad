@@ -80,6 +80,7 @@ public class MainAnimator : MonoBehaviour {
     {
         //проверяем есть ли уже такой объект и какой у него приоритет
         bool add = true;
+        bool dellOld = false; //признак, что нужно удалить старые записи
         foreach (MoveElement item in moveElements)
         {
             if (item.thisTransform == objTransform)
@@ -88,16 +89,26 @@ public class MainAnimator : MonoBehaviour {
                 {
                     add = false;
                     break;
-                }             
+                }
+                else if (item.priority < priority)
+                {
+                    dellOld = true;
+                    break;
+                }           
             }
         }
 
         //если определились что будем добавлять элемент в массив
         if (add)
         {
-            //предварительный проверяем, что перемещаемого объекта нет в нашем массиве
-            //и если есть, то удаляем его
-            moveElements.RemoveAll(p => p.thisTransform == objTransform);
+
+            if (dellOld)
+            {
+                //предварительный проверяем, что перемещаемого объекта нет в нашем массиве
+                //и если есть, то удаляем его
+                moveElements.RemoveAll(p => p.thisTransform == objTransform);
+            }
+
             //добавляем
             moveElements.Add(new MoveElement(objTransform, targetPosition, smoothTime, smoothEnum, priority, destroyAfterMoving));
         }
@@ -106,11 +117,18 @@ public class MainAnimator : MonoBehaviour {
 
     //процедура сглаженного перемещения объектов к указанной позиции
     private void SmoothMove() {
+
+        //список элементов которые уже двигали, что бы не двигать повторно
+        List<Transform> moveIitems = new List<Transform>();
+
         //перемещаем все элементы которые попали в коллекцию
         foreach (MoveElement item in moveElements)
         {
-            if (item.thisTransform != null)
+            //если еще не двигали
+            if (item.thisTransform != null && !moveIitems.Contains(item.thisTransform))
             {
+                moveIitems.Add(item.thisTransform);
+
                 if (item.smoothEnum == SmoothEnum.InArc)
                 {
                     float newPositionX = Mathf.SmoothDamp(item.thisTransform.position.x, item.targetPosition.x, ref item.yVelocity, item.smoothTime);
@@ -155,7 +173,7 @@ public class MainAnimator : MonoBehaviour {
                     moveElementsForRemove.Add(item);
                 }
             }
-            else
+            else if(item.thisTransform == null)
             {
                 moveElementsForRemove.Add(item);
             }
