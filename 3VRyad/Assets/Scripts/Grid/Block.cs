@@ -119,7 +119,7 @@ public class Block : MonoBehaviour {
             //}
 
             //создаем новый элемент
-            GameObject elementGameObject = Instantiate(prefabElement, thisTransform.position, Quaternion.identity);
+            GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + 1, thisTransform.position.z), Quaternion.identity);
             Element curElement;
                     
             if (typeElementsEnum == ElementsTypeEnum.Standard)

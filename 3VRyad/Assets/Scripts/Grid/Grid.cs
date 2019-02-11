@@ -210,8 +210,21 @@ public class Grid : MonoBehaviour
                     //ищем совпавшие линии 
                     matchFound = false;
                     blockFields = CheckMatchingLine();
-                    if (blockFields.Count > 0) {
+                    if (blockFields.Count > 0)
+                    {
                         matchFound = true;
+                        //сброс скорости
+                        for (int y = 0; y < containers[0].block.GetLength(0); y++)
+                        {
+                            //начинаем со второй строки
+                            for (int x = 0; x < containers.GetLength(0); x++)
+                            {
+                                if (ThisBlockWithElement(containers[x].block[y]))
+                                {
+                                    containers[x].block[y].Element.speed = 0;
+                                }
+                            }
+                        }
                     }
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
@@ -224,12 +237,10 @@ public class Grid : MonoBehaviour
                     //    yield return StartCoroutine(Filling());
                     //}
 
-                    if (matchFound)
-                        yield return new WaitForSeconds(0.07f);
 
                     //ударяем по найденным блокам
                     foreach (Block blockField in blockFields)
-                        blockField.Hit();                    
+                        blockField.Hit();
 
                     if (iteration == 1)
                     {
@@ -253,6 +264,7 @@ public class Grid : MonoBehaviour
                         }
                     }
 
+
                     //создаем бонусы
                     if (iteration == 1 && matchFound)
                     {
@@ -267,12 +279,19 @@ public class Grid : MonoBehaviour
                         //yield return new WaitForSeconds(0.07f);
                     }
 
+                    if (matchFound)
+                    {
+                        yield return new WaitForSeconds(0.1f);
+                        iteration = 1;
+                    }
+
+
                     ////если совпадения найдены, делаем паузу для анимации
                     //if (matchFound && !needFilling)
                     //    yield return new WaitForSeconds(0.15f);
 
                     //заполняем сетку элементами
-                    yield return StartCoroutine(Filling());
+                    yield return StartCoroutine(Filling(iteration));
 
 
                     elementsForMove.Remove(blocks);
@@ -289,39 +308,28 @@ public class Grid : MonoBehaviour
 
             }
 
-            //сброс скорости
-            for (int y = 0; y < containers[0].block.GetLength(0); y++)
-            {
-                //начинаем со второй строки
-                for (int x = 0; x < containers.GetLength(0); x++)
-                {
-                    if (ThisBlockWithElement(containers[x].block[y]))
-                    {
-                        containers[x].block[y].Element.speed = 0;
-                    }
-                }
-            }
+
             //проверка, что остались доступные ходы
             List<Element> elementsForNextMove;
-                int iteration2 = 1;
-                do
+            int iteration2 = 1;
+            do
+            {
+                elementsForNextMove = CheckElementsForNextMove();
+                //Если нет доступных ходов, то перемешиваем поле
+                if (elementsForNextMove.Count == 0)
+                    MixStandartElements();
+
+                if (iteration2 > 4)
                 {
-                    elementsForNextMove = CheckElementsForNextMove();
-                    //Если нет доступных ходов, то перемешиваем поле
-                    if (elementsForNextMove.Count == 0)
-                        MixStandartElements();
+                    Debug.Log("Поле было перемешано " + iteration2 + " раз, но доступные ходы так и небыли найдены");
+                    break;
+                }
+                iteration2++;
 
-                    if (iteration2 > 4)
-                    {
-                        Debug.Log("Поле было перемешано " + iteration2 + " раз, но доступные ходы так и небыли найдены");
-                        break;
-                    }
-                    iteration2++;
+            } while (elementsForNextMove.Count == 0);//повторяем проверку
 
-                } while (elementsForNextMove.Count == 0);//повторяем проверку
+            MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
 
-                MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
-            
         }
         blockedForMove = false;
     }
@@ -1051,48 +1059,54 @@ public class Grid : MonoBehaviour
     }
 
     //заполнение сетки элементами
-    public IEnumerator Filling()
+    public IEnumerator Filling(int iteration)
     {
         //нужна еще итерация
         needFilling = false;
         bool needIteration = true;
         ElementsPriority elementPriority;
-        float speed = 0.065f;
+        float speed = 0.045f;
+        float dopSpeed = 0.025f;
+        float maxDopSpeed = 0.075f;
 
-        yield return new WaitForSeconds(0.1f);
+        //yield return new WaitForSeconds(0.05f);
 
         //смещае элементы на один блок вниз за каждую итерацию
         //while (needIteration)
         //{
         needIteration = false;
-            //speed += 0.02f;
+        //speed += 0.02f;
 
-            //yield return new WaitForSeconds(0.001f);
-            for (int y = 0; y < containers[0].block.GetLength(0); y++)
-                {
-                //начинаем со второй строки
-                for (int x = 0; x < containers.GetLength(0); x++)
-                {
-                    Block currentBlock = containers[x].block[y];
+        //yield return new WaitForSeconds(0.001f);
+        for (int y = 0; y < containers[0].block.GetLength(0); y++)
+        {
 
-                    if (currentBlock != null)
+            //yield return new WaitForSeconds(0.015f - (iteration * 0.001f > 0.012f ? 0.012f : iteration * 0.001f));
+            //начинаем со второй строки
+            for (int x = 0; x < containers.GetLength(0); x++)
+            {
+                Block currentBlock = containers[x].block[y];
+
+                if (currentBlock != null)
+                {
+                    //если пустой блок и не умеет генерировать элемент, идем дальше
+                    if (ThisBlockWithoutElement(currentBlock) && !currentBlock.GeneratorElements)
+                    { continue; }
+
+                    //если пустой блок и умеет генерировать элемент, то предварительно создаем случайный элемент
+                    else if (ThisBlockWithoutElement(currentBlock) && currentBlock.GeneratorElements)
                     {
-                        //если пустой блок и не умеет генерировать элемент, идем дальше
-                        if (ThisBlockWithoutElement(currentBlock) && !currentBlock.GeneratorElements)
-                        { continue; }
+                        elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                        currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                        if (currentBlock.Element.speed < maxDopSpeed)
+                            currentBlock.Element.speed += dopSpeed;
+                        needIteration = true;
+                        continue;
+                    }
 
-                        //если пустой блок и умеет генерировать элемент, то предварительно создаем случайный элемент
-                        else if (ThisBlockWithoutElement(currentBlock) && currentBlock.GeneratorElements)
-                        {
-                            elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
-                            currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
-                            needIteration = true;
-                            continue;
-                        }
-
-                        //если текущий элемент заблокирован для движения, то переходим к следующему
-                        else if (ThisBlockWithElementCantMove(currentBlock))
-                        { continue; }
+                    //если текущий элемент заблокирован для движения, то переходим к следующему
+                    else if (ThisBlockWithElementCantMove(currentBlock))
+                    { continue; }
 
                     if (y > 0)
                     {
@@ -1100,10 +1114,33 @@ public class Grid : MonoBehaviour
                         //если нижний блок не имеет элемента, то смещаем к нему
                         if (ThisStandardBlockWithoutElement(containers[x].block[y - 1]))
                         {
-                            ExchangeElements(currentBlock, containers[x].block[y - 1]);
-                            MainAnimator.Instance.AddElementForSmoothMove(containers[x].block[y - 1].Element.thisTransform, new Vector3(containers[x].block[y - 1].thisTransform.position.x, containers[x].block[y - 1].thisTransform.position.y - 0.1f, containers[x].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x].block[y - 1].Element.speed);
-                            containers[x].block[y - 1].Element.speed += 0.01f;
+                            Block newBlock = containers[x].block[y - 1];
+                            int distance = 1;
+                            for (int i = y - 2; i >= 0; i--)
+                            {
+                                if (ThisStandardBlockWithoutElement(containers[x].block[i]))
+                                {
+                                    newBlock = containers[x].block[i];
+                                    distance++;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                            ExchangeElements(currentBlock, newBlock);
+                            MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + distance * 0.01f);
+
+                            if (newBlock.Element.speed < maxDopSpeed)
+                                newBlock.Element.speed += dopSpeed;
                             needIteration = true;
+                            if (currentBlock.GeneratorElements)
+                            {
+                                elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                                currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                if (currentBlock.Element.speed < maxDopSpeed)
+                                    currentBlock.Element.speed += dopSpeed;
+                            }
                             continue;
                         }
                         //иначе, проверяем правый нижний блок по диагонали, при условии, что справа нет элементов в блоках
@@ -1148,8 +1185,16 @@ public class Grid : MonoBehaviour
                             {
                                 ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
                                 MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x + 1].block[y - 1].Element.speed);
-                                containers[x + 1].block[y - 1].Element.speed += 0.01f;
+                                if (containers[x + 1].block[y - 1].Element.speed < maxDopSpeed)
+                                    containers[x + 1].block[y - 1].Element.speed += dopSpeed;
                                 needIteration = true;
+                                if (currentBlock.GeneratorElements)
+                                {
+                                    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                                    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                    if (currentBlock.Element.speed < maxDopSpeed)
+                                        currentBlock.Element.speed += dopSpeed;
+                                }
                                 continue;
                             }
                         }
@@ -1195,23 +1240,34 @@ public class Grid : MonoBehaviour
                             {
                                 ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
                                 MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x - 1].block[y - 1].Element.speed);
-                                containers[x - 1].block[y - 1].Element.speed += 0.01f;
+                                if (containers[x - 1].block[y - 1].Element.speed < maxDopSpeed)
+                                    containers[x - 1].block[y - 1].Element.speed += dopSpeed;
                                 needIteration = true;
+                                if (currentBlock.GeneratorElements)
+                                {
+                                    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                                    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                    if (currentBlock.Element.speed < maxDopSpeed)
+                                        currentBlock.Element.speed += dopSpeed;
+                                }
                                 continue;
                             }
                         }
                     }
                     if (currentBlock.Element.speed > 0)
                     {
-                        currentBlock.Element.speed -= 0.01f;
+                        //Debug.Log(currentBlock+ " " + currentBlock.Element.speed);
+                        needIteration = true;
+                        currentBlock.Element.speed = 0;
                     }
-                    
-                    }
+
                 }
             }
+        }
         if (needIteration)
         {
-            //yield return new WaitForSeconds(0.07f);
+            //Debug.Log(Time.deltaTime);
+            yield return new WaitForSeconds(0.15f - (iteration * 0.01f > 0.1f ? 0.1f : iteration * 0.01f) - Time.deltaTime);
             needFilling = true;
             //yield break;
         }
