@@ -76,7 +76,7 @@ public class MainAnimator : MonoBehaviour {
     }
     
     //добавление объекта для сглаженного перемещения
-    public void AddElementForSmoothMove(Transform objTransform, Vector3 targetPosition, int priority, SmoothEnum smoothEnum, float smoothTime = 0.05f, bool destroyAfterMoving = false)
+    public void AddElementForSmoothMove(Transform objTransform, Vector3 targetPosition, int priority, SmoothEnum smoothEnum, float smoothTime = 0.05f, bool destroyAfterMoving = false, bool addToQueue = false)
     {
         //проверяем есть ли уже такой объект и какой у него приоритет
         bool add = true;
@@ -102,7 +102,7 @@ public class MainAnimator : MonoBehaviour {
         if (add)
         {
 
-            if (dellOld)
+            if (dellOld || !addToQueue)
             {
                 //предварительный проверяем, что перемещаемого объекта нет в нашем массиве
                 //и если есть, то удаляем его

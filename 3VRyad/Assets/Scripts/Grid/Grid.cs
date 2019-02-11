@@ -1074,7 +1074,7 @@ public class Grid : MonoBehaviour
         needFilling = false;
         bool needIteration = true;
         ElementsPriority elementPriority;
-        float speed = 0.075f;
+        float speed = 0.065f;
         float dopSpeed = 0.025f;
         float maxDopSpeed = 0.075f;
 
@@ -1107,6 +1107,7 @@ public class Grid : MonoBehaviour
                     {
                         elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
                         currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                        MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
                         if (currentBlock.Element.speed < maxDopSpeed)
                             currentBlock.Element.speed += dopSpeed;
                         needIteration = true;
@@ -1138,7 +1139,7 @@ public class Grid : MonoBehaviour
                                 }
                             }
                             ExchangeElements(currentBlock, newBlock);
-                            MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + distance * 0.01f);
+                            MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + distance * 0.01f, addToQueue: true);
 
                             if (newBlock.Element.speed < maxDopSpeed)
                                 newBlock.Element.speed += dopSpeed;
@@ -1147,6 +1148,7 @@ public class Grid : MonoBehaviour
                             {
                                 elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
                                 currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
                                 if (currentBlock.Element.speed < maxDopSpeed)
                                     currentBlock.Element.speed += dopSpeed;
                             }
@@ -1198,7 +1200,7 @@ public class Grid : MonoBehaviour
                             if (moveRight)
                             {
                                 ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x + 1].block[y - 1].Element.speed);
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x + 1].block[y - 1].Element.speed, addToQueue: true);
                                 if (containers[x + 1].block[y - 1].Element.speed < maxDopSpeed)
                                     containers[x + 1].block[y - 1].Element.speed += dopSpeed;
                                 needIteration = true;
@@ -1206,6 +1208,7 @@ public class Grid : MonoBehaviour
                                 {
                                     elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
                                     currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                    MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
                                     if (currentBlock.Element.speed < maxDopSpeed)
                                         currentBlock.Element.speed += dopSpeed;
                                 }
@@ -1255,7 +1258,7 @@ public class Grid : MonoBehaviour
                             if (moveLeft)
                             {
                                 ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x - 1].block[y - 1].Element.speed);
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x - 1].block[y - 1].Element.speed, addToQueue: true);
                                 if (containers[x - 1].block[y - 1].Element.speed < maxDopSpeed)
                                     containers[x - 1].block[y - 1].Element.speed += dopSpeed;
                                 needIteration = true;
@@ -1263,6 +1266,7 @@ public class Grid : MonoBehaviour
                                 {
                                     elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
                                     currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                    MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
                                     if (currentBlock.Element.speed < maxDopSpeed)
                                         currentBlock.Element.speed += dopSpeed;
                                 }
