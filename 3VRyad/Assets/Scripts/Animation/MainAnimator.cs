@@ -123,15 +123,17 @@ public class MainAnimator : MonoBehaviour {
                 }
                 else if (item.smoothEnum == SmoothEnum.InLineWithOneSpeed)
                 {
+                    //перемещаем с ускорением по прямой
                     //расчитываем вектор смещения
                     Vector3 translation = item.targetPosition - item.thisTransform.position;
                     //вычисляем расстояние на которое смещаем объект
                     float offsetDistance = translation.magnitude;
                     //нормализируем вектор для упрощения вычисления направления
                     Vector3 direction = translation / offsetDistance;
-                    if (offsetDistance > (Time.deltaTime * 100 * item.smoothTime))
+                    item.yVelocity += 0.1f;
+                    if (offsetDistance > (Time.deltaTime * 100 * item.smoothTime * item.yVelocity))
                     {
-                        item.thisTransform.Translate(direction * Time.deltaTime * 100 * item.smoothTime);
+                        item.thisTransform.Translate(direction * Time.deltaTime * 100 * item.smoothTime * item.yVelocity);
                     }
                     else
                     {                        

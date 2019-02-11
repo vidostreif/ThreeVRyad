@@ -237,6 +237,10 @@ public class Grid : MonoBehaviour
                     //    yield return StartCoroutine(Filling());
                     //}
 
+                    if (matchFound)
+                    {
+                        yield return new WaitForSeconds(0.15f);
+                    }
 
                     //ударяем по найденным блокам
                     foreach (Block blockField in blockFields)
@@ -248,14 +252,14 @@ public class Grid : MonoBehaviour
                         if (touchingBlock != null && touchingBlock.Element != null && touchingBlock.Element.Activated)
                         {
                             touchingBlock.Element.Activate();
-                            yield return new WaitForSeconds(0.07f);
+                            yield return new WaitForSeconds(0.1f);
                             matchFound = true;
                         }
 
                         else if (destinationBlock != null && destinationBlock.Element != null && destinationBlock.Element.Activated)
                         {
                             destinationBlock.Element.Activate();
-                            yield return new WaitForSeconds(0.07f);
+                            yield return new WaitForSeconds(0.1f);
                             matchFound = true;
                         }
                         else if (blockFields.Count == 0)
@@ -270,20 +274,20 @@ public class Grid : MonoBehaviour
                     {
                         foreach (List<Block> item in findedBlockInLine)
                             Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
-                        //yield return new WaitForSeconds(0.07f);
+                        yield return new WaitForSeconds(0.07f);
                     }
                     else if (matchFound)
                     {
                         foreach (List<Block> item in findedBlockInLine)
                             Bonuses.Instance.CheckBonuses(item, null, null);
-                        //yield return new WaitForSeconds(0.07f);
+                        yield return new WaitForSeconds(0.07f);
                     }
 
-                    if (matchFound)
-                    {
-                        yield return new WaitForSeconds(0.1f);
-                        iteration = 1;
-                    }
+                    //if (matchFound)
+                    //{
+                    //    yield return new WaitForSeconds(0.1f);
+                    //    iteration = 1;
+                    //}
 
 
                     ////если совпадения найдены, делаем паузу для анимации
@@ -1065,7 +1069,7 @@ public class Grid : MonoBehaviour
         needFilling = false;
         bool needIteration = true;
         ElementsPriority elementPriority;
-        float speed = 0.045f;
+        float speed = 0.075f;
         float dopSpeed = 0.025f;
         float maxDopSpeed = 0.075f;
 
@@ -1077,11 +1081,11 @@ public class Grid : MonoBehaviour
         needIteration = false;
         //speed += 0.02f;
 
-        //yield return new WaitForSeconds(0.001f);
+        //yield return new WaitForSeconds(0.1f);
         for (int y = 0; y < containers[0].block.GetLength(0); y++)
         {
 
-            //yield return new WaitForSeconds(0.015f - (iteration * 0.001f > 0.012f ? 0.012f : iteration * 0.001f));
+            yield return new WaitForSeconds(0.01f);
             //начинаем со второй строки
             for (int x = 0; x < containers.GetLength(0); x++)
             {
@@ -1143,116 +1147,120 @@ public class Grid : MonoBehaviour
                             }
                             continue;
                         }
-                        //иначе, проверяем правый нижний блок по диагонали, при условии, что справа нет элементов в блоках
-                        if ((x < containers.GetLength(0) - 1) && ThisStandardBlockWithoutElement(containers[x + 1].block[y - 1]))
+                        if (currentBlock.Element.speed == 0)
                         {
-                            bool moveRight = false;
-                            for (int i = y; i < containers[x].block.GetLength(0); i++)
+                            //иначе, проверяем правый нижний блок по диагонали, при условии, что справа нет элементов в блоках
+                            if ((x < containers.GetLength(0) - 1) && ThisStandardBlockWithoutElement(containers[x + 1].block[y - 1]))
                             {
-                                if (ThisBlockWithElementCanMove(containers[x + 1].block[i]))
+                                bool moveRight = false;
+                                for (int i = y; i < containers[x].block.GetLength(0); i++)
                                 {
-                                    moveRight = false;
-                                    break;
-                                }
-                                if (ThisBlockWithElementCantMove(containers[x + 1].block[i]) || containers[x + 1].block[i] == null)
-                                {
-                                    if (currentBlock == containers[x].block[i])
-                                    {
-                                        moveRight = true;
-                                        break;
-                                    }
-                                    else if (!ThisBlockWithElementCanMove(containers[x].block[i]) && !ThisBlockWithElementCanMove(GetBlock(x + 2, i)))
-                                    {
-                                        moveRight = true;
-                                        break;
-                                    }
-                                    else
+                                    if (ThisBlockWithElementCanMove(containers[x + 1].block[i]))
                                     {
                                         moveRight = false;
                                         break;
                                     }
-                                }
-                                if (containers[x + 1].block[i] != null && containers[x + 1].block[i].GeneratorElements == true)
-                                {
-                                    moveRight = false;
-                                    break;
-                                }
-                                else
-                                    moveRight = true;
-                            }
-
-                            if (moveRight)
-                            {
-                                ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x + 1].block[y - 1].Element.speed);
-                                if (containers[x + 1].block[y - 1].Element.speed < maxDopSpeed)
-                                    containers[x + 1].block[y - 1].Element.speed += dopSpeed;
-                                needIteration = true;
-                                if (currentBlock.GeneratorElements)
-                                {
-                                    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
-                                    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
-                                    if (currentBlock.Element.speed < maxDopSpeed)
-                                        currentBlock.Element.speed += dopSpeed;
-                                }
-                                continue;
-                            }
-                        }
-                        //иначе, проверяем левый нижний блок по диагонали , при условии, что слева нет элементов в блоках
-                        if ((x > 0) && ThisStandardBlockWithoutElement(containers[x - 1].block[y - 1]))
-                        {
-                            bool moveLeft = false;
-                            for (int i = y; i < containers[x].block.GetLength(0); i++)
-                            {
-                                if (ThisBlockWithElementCanMove(containers[x - 1].block[i]))
-                                {
-                                    moveLeft = false;
-                                    break;
-                                }
-                                if (ThisBlockWithElementCantMove(containers[x - 1].block[i]) || containers[x - 1].block[i] == null)
-                                {
-                                    if (currentBlock == containers[x].block[i] && !ThisBlockWithElementCanMove(GetBlock(x - 2, i)))
+                                    if (ThisBlockWithElementCantMove(containers[x + 1].block[i]) || containers[x + 1].block[i] == null)
                                     {
-                                        moveLeft = true;
-                                        break;
+                                        if (currentBlock == containers[x].block[i])
+                                        {
+                                            moveRight = true;
+                                            break;
+                                        }
+                                        else if (!ThisBlockWithElementCanMove(containers[x].block[i]) && !ThisBlockWithElementCanMove(GetBlock(x + 2, i)))
+                                        {
+                                            moveRight = true;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            moveRight = false;
+                                            break;
+                                        }
                                     }
-                                    else if (!ThisBlockWithElementCanMove(containers[x].block[i]) && !ThisBlockWithElementCanMove(GetBlock(x - 2, i)))
+                                    if (containers[x + 1].block[i] != null && containers[x + 1].block[i].GeneratorElements == true)
                                     {
-                                        moveLeft = true;
+                                        moveRight = false;
                                         break;
                                     }
                                     else
+                                        moveRight = true;
+                                }
+
+                                if (moveRight)
+                                {
+                                    ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
+                                    MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x + 1].block[y - 1].Element.speed);
+                                    if (containers[x + 1].block[y - 1].Element.speed < maxDopSpeed)
+                                        containers[x + 1].block[y - 1].Element.speed += dopSpeed;
+                                    needIteration = true;
+                                    if (currentBlock.GeneratorElements)
+                                    {
+                                        elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                                        currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                        if (currentBlock.Element.speed < maxDopSpeed)
+                                            currentBlock.Element.speed += dopSpeed;
+                                    }
+                                    continue;
+                                }
+                            }
+                            //иначе, проверяем левый нижний блок по диагонали , при условии, что слева нет элементов в блоках
+                            if ((x > 0) && ThisStandardBlockWithoutElement(containers[x - 1].block[y - 1]))
+                            {
+                                bool moveLeft = false;
+                                for (int i = y; i < containers[x].block.GetLength(0); i++)
+                                {
+                                    if (ThisBlockWithElementCanMove(containers[x - 1].block[i]))
                                     {
                                         moveLeft = false;
                                         break;
                                     }
+                                    if (ThisBlockWithElementCantMove(containers[x - 1].block[i]) || containers[x - 1].block[i] == null)
+                                    {
+                                        if (currentBlock == containers[x].block[i] && !ThisBlockWithElementCanMove(GetBlock(x - 2, i)))
+                                        {
+                                            moveLeft = true;
+                                            break;
+                                        }
+                                        else if (!ThisBlockWithElementCanMove(containers[x].block[i]) && !ThisBlockWithElementCanMove(GetBlock(x - 2, i)))
+                                        {
+                                            moveLeft = true;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            moveLeft = false;
+                                            break;
+                                        }
+                                    }
+                                    if (containers[x - 1].block[i] != null && containers[x - 1].block[i].GeneratorElements == true)
+                                    {
+                                        moveLeft = false;
+                                        break;
+                                    }
+                                    else
+                                        moveLeft = true;
                                 }
-                                if (containers[x - 1].block[i] != null && containers[x - 1].block[i].GeneratorElements == true)
-                                {
-                                    moveLeft = false;
-                                    break;
-                                }
-                                else
-                                    moveLeft = true;
-                            }
 
-                            if (moveLeft)
-                            {
-                                ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x - 1].block[y - 1].Element.speed);
-                                if (containers[x - 1].block[y - 1].Element.speed < maxDopSpeed)
-                                    containers[x - 1].block[y - 1].Element.speed += dopSpeed;
-                                needIteration = true;
-                                if (currentBlock.GeneratorElements)
+                                if (moveLeft)
                                 {
-                                    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
-                                    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
-                                    if (currentBlock.Element.speed < maxDopSpeed)
-                                        currentBlock.Element.speed += dopSpeed;
+                                    ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
+                                    MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x - 1].block[y - 1].Element.speed);
+                                    if (containers[x - 1].block[y - 1].Element.speed < maxDopSpeed)
+                                        containers[x - 1].block[y - 1].Element.speed += dopSpeed;
+                                    needIteration = true;
+                                    if (currentBlock.GeneratorElements)
+                                    {
+                                        elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                                        currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                        if (currentBlock.Element.speed < maxDopSpeed)
+                                            currentBlock.Element.speed += dopSpeed;
+                                    }
+                                    continue;
                                 }
-                                continue;
                             }
                         }
+                        
                     }
                     if (currentBlock.Element.speed > 0)
                     {
@@ -1267,7 +1275,7 @@ public class Grid : MonoBehaviour
         if (needIteration)
         {
             //Debug.Log(Time.deltaTime);
-            yield return new WaitForSeconds(0.15f - (iteration * 0.01f > 0.1f ? 0.1f : iteration * 0.01f) - Time.deltaTime);
+            //yield return new WaitForSeconds(0.15f - Time.deltaTime);
             needFilling = true;
             //yield break;
         }
