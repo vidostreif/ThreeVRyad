@@ -241,6 +241,8 @@ public class Grid : MonoBehaviour
                     if (matchFound)
                     {
                         yield return new WaitForSeconds(0.15f);
+                        if (iteration != 1)
+                            yield return new WaitForSeconds(0.10f);
                     }
 
                     //ударяем по найденным блокам
@@ -284,11 +286,11 @@ public class Grid : MonoBehaviour
                         yield return new WaitForSeconds(0.07f);
                     }
 
-                    //if (matchFound)
-                    //{
+                    if (matchFound)
+                    {
                     //    yield return new WaitForSeconds(0.1f);
-                    //    iteration = 1;
-                    //}
+                        iteration = 1;
+                    }
 
 
                     ////если совпадения найдены, делаем паузу для анимации
@@ -344,6 +346,139 @@ public class Grid : MonoBehaviour
     {
         //matchFound = false;
         List<Block> blockFieldsToRemoveElement = new List<Block>();
+        //List<Block> blockedBlockElement = new List<Block>();//блокирующий список
+
+        ////ищем
+        //for (int x = 0; x < containers.GetLength(0); x++)
+        //{
+        //    for (int y = 0; y < containers[x].block.GetLength(0); y++)
+        //    {
+        //        NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(new Position(x, y));
+
+        //        //проверяем горизонталь если не первый и не последний стоблец
+        //        if (x != 0 && x != containers.GetLength(0) - 1)
+        //        {
+        //            //проверяем что соседние блоки существуют
+        //            if (ThisStandardBlockWithElement(neighboringBlocks.Left) && ThisStandardBlockWithElement(neighboringBlocks.Right) && ThisStandardBlockWithElement(containers[x].block[y]))
+        //            {
+
+        //                //Если все три блока в линии создают линию
+        //                if (neighboringBlocks.Left.Element.CreateLine && neighboringBlocks.Right.Element.CreateLine && containers[x].block[y].Element.CreateLine)
+        //                {
+        //                    //если все три елементы в линии равны
+        //                    if (neighboringBlocks.Left.Element.Shape == neighboringBlocks.Right.Element.Shape
+        //                    && neighboringBlocks.Right.Element.Shape == containers[x].block[y].Element.Shape)
+        //                    {
+        //                        ////проверяем что элементы существуют в блоках
+        //                        if (neighboringBlocks.Left.Element.speed != 0 || neighboringBlocks.Right.Element.speed != 0 || containers[x].block[y].Element.speed != 0)
+        //                        {
+        //                            //предварительно проверяем, что блоков нет в списке
+        //                            //if (!blockFieldsToRemoveElement.Contains(neighboringBlocks.Left))
+        //                            //blockedBlockElement.Add(neighboringBlocks.Left);
+        //                            Block curBlock = neighboringBlocks.Left;                                 
+        //                            NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(curBlock));
+        //                            foreach (Block item in neighboringBlocks2.allBlockField)
+        //                            {
+        //                                if (ThisStandardBlockWithStandartElementCanMove(item) && item.Element.Shape == curBlock.Element.Shape)
+        //                                {
+        //                                    item.Element.speed = 1;
+        //                                    //blockedBlockElement.Add(item);
+        //                                }
+        //                            }
+        //                            //if (!blockFieldsToRemoveElement.Contains(neighboringBlocks.Right))
+        //                            //blockedBlockElement.Add(neighboringBlocks.Right);
+        //                            curBlock = neighboringBlocks.Right;
+        //                            neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(curBlock));
+        //                            foreach (Block item in neighboringBlocks2.allBlockField)
+        //                            {
+        //                                if (ThisStandardBlockWithStandartElementCanMove(item) && item.Element.Shape == curBlock.Element.Shape)
+        //                                {
+        //                                    item.Element.speed = 1;
+        //                                    //blockedBlockElement.Add(item);
+        //                                }
+        //                            }
+        //                            //if (!blockFieldsToRemoveElement.Contains(containers[x].block[y]))
+        //                            //blockedBlockElement.Add(containers[x].block[y]);
+        //                            curBlock = containers[x].block[y];
+        //                            neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(curBlock));
+        //                            foreach (Block item in neighboringBlocks2.allBlockField)
+        //                            {
+        //                                if (ThisStandardBlockWithStandartElementCanMove(item) && item.Element.Shape == curBlock.Element.Shape)
+        //                                {
+        //                                    item.Element.speed = 1;
+        //                                    //blockedBlockElement.Add(item);
+        //                                }
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+
+        //                        }
+
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        //проверяем вертикаль если не первая и не последняя строка
+        //        if (y != 0 && y != containers[x].block.GetLength(0) - 1)
+        //        {
+        //            //Проверяем что соседние блоки существуют
+        //            if (ThisStandardBlockWithElement(neighboringBlocks.Up) && ThisStandardBlockWithElement(neighboringBlocks.Down) && ThisStandardBlockWithElement(containers[x].block[y]))
+        //            {
+        //                if (neighboringBlocks.Up.Element.speed != 0 || neighboringBlocks.Down.Element.speed != 0 || containers[x].block[y].Element.speed != 0)
+        //                {
+        //                    //Если все три блока в линии создают линию
+        //                    if (neighboringBlocks.Up.Element.CreateLine && neighboringBlocks.Down.Element.CreateLine && containers[x].block[y].Element.CreateLine)
+        //                    {
+        //                        //Если все три елементы в линии равны
+        //                        if (neighboringBlocks.Up.Element.Shape == neighboringBlocks.Down.Element.Shape
+        //                        && neighboringBlocks.Down.Element.Shape == containers[x].block[y].Element.Shape)
+        //                        {
+        //                            //предварительно проверяем, что блоков нет в списке
+        //                            //if (!blockFieldsToRemoveElement.Contains(neighboringBlocks.Up))
+        //                            //blockedBlockElement.Add(neighboringBlocks.Up);
+        //                            Block curBlock = neighboringBlocks.Up;
+        //                            NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(curBlock));
+        //                            foreach (Block item in neighboringBlocks2.allBlockField)
+        //                            {
+        //                                if (ThisStandardBlockWithStandartElementCanMove(item) && item.Element.Shape == curBlock.Element.Shape)
+        //                                {
+        //                                    item.Element.speed = 1;
+        //                                    //blockedBlockElement.Add(item);
+        //                                }
+        //                            }
+        //                            //if (!blockFieldsToRemoveElement.Contains(neighboringBlocks.Right))
+        //                            //blockedBlockElement.Add(neighboringBlocks.Down);
+        //                            curBlock = neighboringBlocks.Down;
+        //                            neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(curBlock));
+        //                            foreach (Block item in neighboringBlocks2.allBlockField)
+        //                            {
+        //                                if (ThisStandardBlockWithStandartElementCanMove(item) && item.Element.Shape == curBlock.Element.Shape)
+        //                                {
+        //                                    item.Element.speed = 1;
+        //                                    //blockedBlockElement.Add(item);
+        //                                }
+        //                            }
+        //                            //if (!blockFieldsToRemoveElement.Contains(containers[x].block[y]))
+        //                            //blockedBlockElement.Add(containers[x].block[y]);
+        //                            curBlock = containers[x].block[y];
+        //                            neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(curBlock));
+        //                            foreach (Block item in neighboringBlocks2.allBlockField)
+        //                            {
+        //                                if (ThisStandardBlockWithStandartElementCanMove(item) && item.Element.Shape == curBlock.Element.Shape)
+        //                                {
+        //                                    item.Element.speed = 1;
+        //                                    //blockedBlockElement.Add(item);
+        //                                }
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         //ищем
         for (int x = 0; x < containers.GetLength(0); x++)
@@ -361,6 +496,7 @@ public class Grid : MonoBehaviour
                         ////проверяем что элементы существуют в блоках
                         if (neighboringBlocks.Left.Element.speed == 0 && neighboringBlocks.Right.Element.speed == 0 && containers[x].block[y].Element.speed == 0)
                         {
+
                             //Если все три блока в линии создают линию
                             if (neighboringBlocks.Left.Element.CreateLine && neighboringBlocks.Right.Element.CreateLine && containers[x].block[y].Element.CreateLine)
                             {
@@ -368,6 +504,7 @@ public class Grid : MonoBehaviour
                                 if (neighboringBlocks.Left.Element.Shape == neighboringBlocks.Right.Element.Shape
                                 && neighboringBlocks.Right.Element.Shape == containers[x].block[y].Element.Shape)
                                 {
+                                
                                     //предварительно проверяем, что блоков нет в списке
                                     if (!blockFieldsToRemoveElement.Contains(neighboringBlocks.Left))
                                         blockFieldsToRemoveElement.Add(neighboringBlocks.Left);
@@ -1095,7 +1232,7 @@ public class Grid : MonoBehaviour
             for (int x = 0; x < containers.GetLength(0); x++)
             {
                 Block currentBlock = containers[x].block[y];
-
+                bool createdElement = false;
                 if (currentBlock != null)
                 {
                     //если пустой блок и не умеет генерировать элемент, идем дальше
@@ -1108,10 +1245,20 @@ public class Grid : MonoBehaviour
                         elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
                         currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
                         MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
-                        if (currentBlock.Element.speed < maxDopSpeed)
-                            currentBlock.Element.speed += dopSpeed;
+
+                        //NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(currentBlock));
+                        currentBlock.Element.speed = 1;
+                        //foreach (Block item in neighboringBlocks2.allBlockField)
+                        //{
+                        //    if (ThisStandardBlockWithElement(item) && item.Element.Shape == currentBlock.Element.Shape)
+                        //    {
+                        //        currentBlock.Element.speed = 0;
+                        //        break;
+                        //    }
+                        //}
                         needIteration = true;
-                        continue;
+                        createdElement = true;
+                        //continue;
                     }
 
                     //если текущий элемент заблокирован для движения, то переходим к следующему
@@ -1139,19 +1286,27 @@ public class Grid : MonoBehaviour
                                 }
                             }
                             ExchangeElements(currentBlock, newBlock);
-                            MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + distance * 0.01f, addToQueue: true);
+                            MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + distance * 0.01f, addToQueue: !createdElement);
 
-                            if (newBlock.Element.speed < maxDopSpeed)
-                                newBlock.Element.speed += dopSpeed;
+                            //NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(newBlock));
+                            newBlock.Element.speed = 1;
+                            //foreach (Block item in neighboringBlocks2.allBlockField)
+                            //{
+                            //    if (ThisStandardBlockWithElement(item) && item.Element.Shape == newBlock.Element.Shape)
+                            //    {
+                            //        newBlock.Element.speed = 0;
+                            //        break;
+                            //    }
+                            //}
                             needIteration = true;
-                            if (currentBlock.GeneratorElements)
-                            {
-                                elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
-                                currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
-                                MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
-                                if (currentBlock.Element.speed < maxDopSpeed)
-                                    currentBlock.Element.speed += dopSpeed;
-                            }
+                            //if (currentBlock.GeneratorElements)
+                            //{
+                            //    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                            //    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                            //    MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
+                            //    if (currentBlock.Element.speed < maxDopSpeed)
+                            //        currentBlock.Element.speed += dopSpeed;
+                            //}
                             continue;
                         }
                         //if (currentBlock.Element.speed == 0)
@@ -1200,18 +1355,26 @@ public class Grid : MonoBehaviour
                             if (moveRight)
                             {
                                 ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x + 1].block[y - 1].Element.speed, addToQueue: true);
-                                if (containers[x + 1].block[y - 1].Element.speed < maxDopSpeed)
-                                    containers[x + 1].block[y - 1].Element.speed += dopSpeed;
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: !createdElement);
+                                //NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(containers[x + 1].block[y - 1]));
+                                containers[x + 1].block[y - 1].Element.speed = 1;
+                                //foreach (Block item in neighboringBlocks2.allBlockField)
+                                //{
+                                //    if (ThisStandardBlockWithElement(item) && item.Element.Shape == containers[x + 1].block[y - 1].Element.Shape)
+                                //    {
+                                //        containers[x + 1].block[y - 1].Element.speed = 0;
+                                //        break;
+                                //    }
+                                //}
                                 needIteration = true;
-                                if (currentBlock.GeneratorElements)
-                                {
-                                    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
-                                    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
-                                    MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
-                                    if (currentBlock.Element.speed < maxDopSpeed)
-                                        currentBlock.Element.speed += dopSpeed;
-                                }
+                                //if (currentBlock.GeneratorElements)
+                                //{
+                                //    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                                //    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                //    MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
+                                //    if (currentBlock.Element.speed < maxDopSpeed)
+                                //        currentBlock.Element.speed += dopSpeed;
+                                //}
                                 continue;
                             }
                         }
@@ -1258,18 +1421,26 @@ public class Grid : MonoBehaviour
                             if (moveLeft)
                             {
                                 ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + containers[x - 1].block[y - 1].Element.speed, addToQueue: true);
-                                if (containers[x - 1].block[y - 1].Element.speed < maxDopSpeed)
-                                    containers[x - 1].block[y - 1].Element.speed += dopSpeed;
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: !createdElement);
+                                //NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(containers[x - 1].block[y - 1]));
+                                containers[x - 1].block[y - 1].Element.speed = 1;
+                                //foreach (Block item in neighboringBlocks2.allBlockField)
+                                //{
+                                //    if (ThisStandardBlockWithElement(item) && item.Element.Shape == containers[x - 1].block[y - 1].Element.Shape)
+                                //    {
+                                //        containers[x - 1].block[y - 1].Element.speed = 0;
+                                //        break;
+                                //    }
+                                //}
                                 needIteration = true;
-                                if (currentBlock.GeneratorElements)
-                                {
-                                    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
-                                    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
-                                    MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
-                                    if (currentBlock.Element.speed < maxDopSpeed)
-                                        currentBlock.Element.speed += dopSpeed;
-                                }
+                                //if (currentBlock.GeneratorElements)
+                                //{
+                                //    elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
+                                //    currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
+                                //    MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
+                                //    if (currentBlock.Element.speed < maxDopSpeed)
+                                //        currentBlock.Element.speed += dopSpeed;
+                                //}
                                 continue;
                             }
                         }
