@@ -119,5 +119,6 @@ public enum SmoothEnum
 {
     InArc,
     InLine,
-    InLineWithOneSpeed
+    InLineWithOneSpeed,
+    InLineWithAcceleration
 }//тип сглаженного перемещения

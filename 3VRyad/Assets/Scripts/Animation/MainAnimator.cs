@@ -139,7 +139,7 @@ public class MainAnimator : MonoBehaviour {
                 {
                     item.thisTransform.position = Vector3.Lerp(item.thisTransform.position, item.targetPosition, Time.deltaTime * 100 * item.smoothTime);
                 }
-                else if (item.smoothEnum == SmoothEnum.InLineWithOneSpeed)
+                else if (item.smoothEnum == SmoothEnum.InLineWithAcceleration)
                 {
                     //перемещаем с ускорением по прямой
                     //расчитываем вектор смещения
@@ -158,6 +158,26 @@ public class MainAnimator : MonoBehaviour {
                         item.thisTransform.position = item.targetPosition;
                     }
                     
+                }
+                else if (item.smoothEnum == SmoothEnum.InLineWithOneSpeed)
+                {
+                    //перемещаем с ускорением по прямой
+                    //расчитываем вектор смещения
+                    Vector3 translation = item.targetPosition - item.thisTransform.position;
+                    //вычисляем расстояние на которое смещаем объект
+                    float offsetDistance = translation.magnitude;
+                    //нормализируем вектор для упрощения вычисления направления
+                    Vector3 direction = translation / offsetDistance;
+                    item.yVelocity = 1f;
+                    if (offsetDistance > (Time.deltaTime * 100 * item.smoothTime * item.yVelocity))
+                    {
+                        item.thisTransform.Translate(direction * Time.deltaTime * 100 * item.smoothTime * item.yVelocity);
+                    }
+                    else
+                    {
+                        item.thisTransform.position = item.targetPosition;
+                    }
+
                 }
 
                 if (item.thisTransform.position == item.targetPosition)

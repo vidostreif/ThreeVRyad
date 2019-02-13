@@ -211,39 +211,46 @@ public class Grid : MonoBehaviour
                     //ищем совпавшие линии 
                     matchFound = false;
                     blockFields = CheckMatchingLine();
+                    int CountElementsForMove = elementsForMove.Count;
                     if (blockFields.Count > 0)
                     {
                         matchFound = true;
-                        //сброс скорости
-                        for (int y = 0; y < containers[0].block.GetLength(0); y++)
+                        
+                        if (iteration != 1)
                         {
-                            //начинаем со второй строки
-                            for (int x = 0; x < containers.GetLength(0); x++)
+                            int countblockFields = 0;                            
+                            while (countblockFields < blockFields.Count)
                             {
-                                if (ThisBlockWithElement(containers[x].block[y]))
-                                {
-                                    containers[x].block[y].Element.speed = 0;
-                                }
+                                iteration++;
+                                yield return StartCoroutine(Filling(blockFields, false, iteration));
+                                blockFields = CheckMatchingLine();
+                                countblockFields = blockFields.Count;
+                                //прерывание в случае вмешательства игрока
+                                if (CountElementsForMove < elementsForMove.Count)
+                                    break;
                             }
-                        }
+
+                            if (CountElementsForMove < elementsForMove.Count)
+                                break;
+
+                            if (needFilling)
+                            {
+                                for (int i = 0; i < 2; i++)
+                                {
+                                iteration++;
+                                yield return StartCoroutine(Filling(blockFields, false, iteration));
+                                }
+                                if (CountElementsForMove < elementsForMove.Count)
+                                    break;
+                                iteration++;
+                                StartCoroutine(Filling(blockFields, false, iteration));
+                                if (CountElementsForMove < elementsForMove.Count)
+                                    break;
+                            }
+                        }  
                     }
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
-
-                    //if (matchFound)
-                    //{
-                    //    //добавить запрет на смещение найденных блоков
-
-                    //    //заполняем сетку элементами
-                    //    yield return StartCoroutine(Filling());
-                    //}
-
-                    if (matchFound)
-                    {
-                        yield return new WaitForSeconds(0.15f);
-                        if (iteration != 1)
-                            yield return new WaitForSeconds(0.10f);
-                    }
 
                     //ударяем по найденным блокам
                     foreach (Block blockField in blockFields)
@@ -285,21 +292,16 @@ public class Grid : MonoBehaviour
                             Bonuses.Instance.CheckBonuses(item, null, null);
                         yield return new WaitForSeconds(0.07f);
                     }
+                    
 
-                    if (matchFound)
+                    if (matchFound && iteration != 1)
                     {
-                    //    yield return new WaitForSeconds(0.1f);
-                        iteration = 1;
+                        if (CountElementsForMove < elementsForMove.Count)
+                            break;
+                        yield return new WaitForSeconds(0.1f);                        
                     }
-
-
-                    ////если совпадения найдены, делаем паузу для анимации
-                    //if (matchFound && !needFilling)
-                    //    yield return new WaitForSeconds(0.15f);
-
-                    //заполняем сетку элементами
-                    yield return StartCoroutine(Filling(iteration));
-
+                    blockFields.Clear();
+                    yield return StartCoroutine(Filling(blockFields, true, iteration));
 
                     elementsForMove.Remove(blocks);
                     //если есть элементы в очереди на движение
@@ -1205,15 +1207,16 @@ public class Grid : MonoBehaviour
     }
 
     //заполнение сетки элементами
-    public IEnumerator Filling(int iteration)
+    public IEnumerator Filling(List<Block> blockFields, bool breakSpeed = true, int iteration = 1)
     {
         //нужна еще итерация
         needFilling = false;
         bool needIteration = true;
         ElementsPriority elementPriority;
         float speed = 0.065f;
-        float dopSpeed = 0.025f;
-        float maxDopSpeed = 0.075f;
+        //float dopSpeed = 0.025f;
+        //float maxDopSpeed = 0.075f;
+        Block dropBlock = null;
 
         //yield return new WaitForSeconds(0.05f);
 
@@ -1226,14 +1229,14 @@ public class Grid : MonoBehaviour
         //yield return new WaitForSeconds(0.1f);
         for (int y = 0; y < containers[0].block.GetLength(0); y++)
         {
-
+            dropBlock = null;
             yield return new WaitForSeconds(0.01f);
             //начинаем со второй строки
             for (int x = 0; x < containers.GetLength(0); x++)
             {
                 Block currentBlock = containers[x].block[y];
                 bool createdElement = false;
-                if (currentBlock != null)
+                if (currentBlock != null && !blockFields.Contains(currentBlock))
                 {
                     //если пустой блок и не умеет генерировать элемент, идем дальше
                     if (ThisBlockWithoutElement(currentBlock) && !currentBlock.GeneratorElements)
@@ -1244,7 +1247,9 @@ public class Grid : MonoBehaviour
                     {
                         elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
                         currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
-                        MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: true);
+                        MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.1f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + iteration * 0.01f, addToQueue: true);
+
+                        //currentBlock.Element.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
 
                         //NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(currentBlock));
                         currentBlock.Element.speed = 1;
@@ -1286,10 +1291,10 @@ public class Grid : MonoBehaviour
                                 }
                             }
                             ExchangeElements(currentBlock, newBlock);
-                            MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + distance * 0.01f, addToQueue: !createdElement);
+                            MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithAcceleration, smoothTime: speed + distance  * 0.01f, addToQueue: !createdElement);
 
                             //NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(newBlock));
-                            newBlock.Element.speed = 1;
+                            //newBlock.Element.speed = 1;
                             //foreach (Block item in neighboringBlocks2.allBlockField)
                             //{
                             //    if (ThisStandardBlockWithElement(item) && item.Element.Shape == newBlock.Element.Shape)
@@ -1307,6 +1312,7 @@ public class Grid : MonoBehaviour
                             //    if (currentBlock.Element.speed < maxDopSpeed)
                             //        currentBlock.Element.speed += dopSpeed;
                             //}
+                            dropBlock = containers[x].block[y];
                             continue;
                         }
                         //if (currentBlock.Element.speed == 0)
@@ -1317,6 +1323,11 @@ public class Grid : MonoBehaviour
                             bool moveRight = false;
                             for (int i = y; i < containers[x].block.GetLength(0); i++)
                             {
+                                if (dropBlock != null && containers[x + 1].block[i] == dropBlock)
+                                {
+                                    moveRight = false;
+                                    break;
+                                }
                                 if (ThisBlockWithElementCanMove(containers[x + 1].block[i]))
                                 {
                                     moveRight = false;
@@ -1354,8 +1365,18 @@ public class Grid : MonoBehaviour
 
                             if (moveRight)
                             {
+                                SmoothEnum smoothEnum;
+                                if (currentBlock.Element.speed > 0)
+                                {
+                                    smoothEnum = SmoothEnum.InLineWithOneSpeed;
+                                }
+                                else
+                                {
+                                    smoothEnum = SmoothEnum.InLineWithAcceleration;
+                                }
+
                                 ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: !createdElement);
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, smoothEnum, smoothTime: speed + 1 * 0.01f, addToQueue: !createdElement);
                                 //NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(containers[x + 1].block[y - 1]));
                                 containers[x + 1].block[y - 1].Element.speed = 1;
                                 //foreach (Block item in neighboringBlocks2.allBlockField)
@@ -1384,6 +1405,11 @@ public class Grid : MonoBehaviour
                             bool moveLeft = false;
                             for (int i = y; i < containers[x].block.GetLength(0); i++)
                             {
+                                if (dropBlock != null && containers[x - 1].block[i] == dropBlock)
+                                {
+                                    moveLeft = false;
+                                    break;
+                                }
                                 if (ThisBlockWithElementCanMove(containers[x - 1].block[i]))
                                 {
                                     moveLeft = false;
@@ -1420,8 +1446,17 @@ public class Grid : MonoBehaviour
 
                             if (moveLeft)
                             {
+                                SmoothEnum smoothEnum;
+                                if (currentBlock.Element.speed > 0)
+                                {
+                                    smoothEnum = SmoothEnum.InLineWithOneSpeed;
+                                }
+                                else
+                                {
+                                    smoothEnum = SmoothEnum.InLineWithAcceleration;
+                                }
                                 ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
-                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + 1 * 0.01f, addToQueue: !createdElement);
+                                MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, smoothEnum, smoothTime: speed + 1 * 0.01f, addToQueue: !createdElement);
                                 //NeighboringBlocks neighboringBlocks2 = DeterminingNeighboringBlocks(FindPosition(containers[x - 1].block[y - 1]));
                                 containers[x - 1].block[y - 1].Element.speed = 1;
                                 //foreach (Block item in neighboringBlocks2.allBlockField)
@@ -1450,7 +1485,9 @@ public class Grid : MonoBehaviour
                     if (currentBlock.Element.speed > 0)
                     {
                         //Debug.Log(currentBlock+ " " + currentBlock.Element.speed);
+
                         needIteration = true;
+                        //currentBlock.Element.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1);
                         currentBlock.Element.speed = 0;
                     }
 
