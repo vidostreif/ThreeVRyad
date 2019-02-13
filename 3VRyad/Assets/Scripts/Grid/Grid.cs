@@ -1082,7 +1082,7 @@ public class Grid : MonoBehaviour
         needFilling = false;
         bool needIteration = true;
         ElementsPriority elementPriority;
-        float speed = 0.050f;
+        float speed = 0.065f;
         //float dopSpeed = 0.025f;
         //float maxDopSpeed = 0.075f;
         Block dropBlock = null;
