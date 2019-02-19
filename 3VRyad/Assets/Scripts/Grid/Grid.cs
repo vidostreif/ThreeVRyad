@@ -11,25 +11,23 @@ using System.Linq;
 [InitializeOnLoad]
 #endif
 public class Grid : MonoBehaviour
+
 {
+    public static Grid Instance; // Синглтон
     public float blockSize = 1;
     public Transform thisTransform;
 
     public Blocks[] containers;
-
     public GameObject prefabBlock;
     public GameObject prefabElement;
     public GameObject prefabBlockingWall;
     public List<ElementsPriority> elementsPriority;
-    private List<Element> elementsForMix = new List<Element>();//элементы для замены во время микса
-    private System.Random random;
-    public static Grid Instance; // Синглтон
 
-    private bool needFilling = false;
-    private List<Blocks> elementsForMove = new List<Blocks>();//элементы для последовательного выполнения ходов
-
-    //public bool matchFoundInFirstIteration { get; protected set; }//признак что были найдены совпадения
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
+    private List<Element> elementsForMix = new List<Element>();//элементы для замены во время микса
+    private List<Blocks> elementsForMove = new List<Blocks>();//элементы для последовательного выполнения ходов
+    private bool needFilling = false;
+    private System.Random random;
 
     void Awake()
     {
@@ -41,9 +39,7 @@ public class Grid : MonoBehaviour
 
         Instance = this;
         thisTransform = transform;
-        //matchFound = false;
         blockedForMove = false;
-        //containers = new Blocks[10];
         BorderGrid.CircleGrid(this);
     }
 
@@ -170,16 +166,21 @@ public class Grid : MonoBehaviour
 
     public void Move(Block touchingBlock = null, Block destinationBlock = null)
     {
-        Blocks blocks = new Blocks();
-        blocks.block = new Block[2];
-        blocks.block[0] = touchingBlock;
-        blocks.block[1] = destinationBlock;
-        elementsForMove.Add(blocks);
-
-        if (!blockedForMove)
+        //если остались ходы
+        if (!Tasks.Instance.endGame)
         {
-            StartCoroutine(Grid.Instance.MakeMove(touchingBlock, destinationBlock));
-        }
+            Tasks.Instance.SubMoves();//минус ход
+            Blocks blocks = new Blocks();
+            blocks.block = new Block[2];
+            blocks.block[0] = touchingBlock;
+            blocks.block[1] = destinationBlock;
+            elementsForMove.Add(blocks);
+
+            if (!blockedForMove)
+            {
+                StartCoroutine(Grid.Instance.MakeMove(touchingBlock, destinationBlock));
+            }
+        }        
     }
 
     //выполняем ход
@@ -317,6 +318,12 @@ public class Grid : MonoBehaviour
 
             }
 
+            //если закончились ходы игрока и ходы всей игры
+            if (elementsForMove.Count == 0 && Tasks.Instance.endGame)
+            {
+                MainSceneScript.Instance.CompleteGame();
+                yield break;
+            }
 
             //проверка, что остались доступные ходы
             List<Element> elementsForNextMove;

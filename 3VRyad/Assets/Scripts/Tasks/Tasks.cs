@@ -10,9 +10,15 @@ public class Tasks : MonoBehaviour {
         
     //public int sizeOfArray;
     public static Tasks Instance; // Синглтон
-    public Transform thisTransform;
+    [HideInInspector] public Transform thisTransform;
     public GameObject prefabcollectedElements;
-    public float distanceBetweenTargets = 3;
+    public float distanceBetweenTargets;
+    public bool collected { get; protected set; }
+
+    private Text movesText;
+    [SerializeField] private int moves; //остаток ходов
+    public bool endGame { get; protected set; } //признак что можно выполнить ход
+
     public Target[] targets;// список целей
 
     void Awake()
@@ -24,11 +30,15 @@ public class Tasks : MonoBehaviour {
         }
 
         Instance = this;
-        thisTransform = transform;        
+        thisTransform = transform;
+        endGame = false;
+        collected = false;
     }
 
     void Start()
     {
+        movesText = GetComponentInChildren<Text>();
+        UpdateMovesText();
         CreateCollectedElements();
     }
 
@@ -37,7 +47,7 @@ public class Tasks : MonoBehaviour {
         //смещение по y
         float startingYPoint = thisTransform.position.y - ((Grid.Instance.blockSize + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;
 
-        //Text MyScore = GetComponentInChildren<Text>();
+        
 
         for (int i = 0; i < targets.Length; i++)
         {
@@ -109,79 +119,27 @@ public class Tasks : MonoBehaviour {
         //если собрали все коллекции заканчиваем игру
         if (CollectedAll)
         {
-            //заканчиваем игру!!!!
+            endGame = true;
+            collected = true;
+        }
+    }
+    
+    //обнолвление текста количества ходов
+    private void UpdateMovesText() {
+        movesText.text = "Ходы:" + moves;
+    }
+
+    //ход
+    public void SubMoves()
+    {
+        if (moves > 0)
+        {
+            moves--;
+            UpdateMovesText();
+        }
+        else
+        {
+            endGame = true;
         }
     }
 }
-
-
-//#if UNITY_EDITOR
-
-//[CustomEditor(typeof(Tasks), true)]
-//public class TargetEditor : Editor
-//{
-//    Tasks tasks;
-
-//    void OnEnable()
-//    {
-//        tasks = (Tasks)target;
-//    }
-
-//    public override void OnInspectorGUI()
-//    {
-//        //base.OnInspectorGUI();
-//        int LastSizeOfArray = tasks.sizeOfArray; //сохраняем последний размер массива
-//        EditorGUILayout.LabelField("Массив параметров для изменения:", EditorStyles.boldLabel);
-//        tasks.sizeOfArray = EditorGUILayout.IntField("Размер массива", tasks.sizeOfArray);
-
-//        if (LastSizeOfArray != tasks.sizeOfArray)//если изменили размер массива, то пересоздаем массив объектов
-//        {
-//            tasks.targets = new Target[tasks.sizeOfArray];
-//        }
-
-//        if (tasks.targets != null)//если инициализирован массив
-//        {
-//            foreach (Target thisTarget in tasks.targets)
-//            {
-//                EditorGUILayout.Separator();
-//                //если пересоздали массив
-//                if (LastSizeOfArray != tasks.sizeOfArray)
-//                {
-//                    thisTarget.CollectionTypes = CollectionTypesEnum.Element;
-//                }
-
-//                CollectionTypesEnum collectionTypes = thisTarget.CollectionTypes;
-//                thisTarget.CollectionTypes = (CollectionTypesEnum)EditorGUILayout.EnumPopup("Тип собираемого элемента", thisTarget.CollectionTypes);
-
-//                //если изменили тип собираемого элемента или пересоздали массив
-//                if (collectionTypes != thisTarget.CollectionTypes || LastSizeOfArray != tasks.sizeOfArray)
-//                {
-//                    if (thisTarget.CollectionTypes == CollectionTypesEnum.Element)
-//                    {
-//                        thisTarget.shape = Enum.ToObject(typeof(ElementsShapeEnum), 0);
-//                    }
-//                    else if (thisTarget.CollectionTypes == CollectionTypesEnum.BlockingElement)
-//                    {
-//                        thisTarget.shape = Enum.ToObject(typeof(BlockingElementsShapeEnum), 0);
-//                    }
-//                }
-//                if (thisTarget.CollectionTypes == CollectionTypesEnum.Element)
-//                {
-//                    thisTarget.shape = (ElementsShapeEnum)EditorGUILayout.EnumPopup("Вид элемента", (ElementsShapeEnum)thisTarget.shape);
-//                }
-//                else if (thisTarget.CollectionTypes == CollectionTypesEnum.BlockingElement)
-//                {
-//                    thisTarget.shape = (BlockingElementsShapeEnum)EditorGUILayout.EnumPopup("Вид элемента", (BlockingElementsShapeEnum)thisTarget.shape);
-//                }
-                
-//                thisTarget.goal = EditorGUILayout.IntField("Требуется собрать", thisTarget.goal);
-
-//            }
-//        }
-
-//        EditorUtility.SetDirty(tasks);
-//    }
-
-//}
-
-//#endif

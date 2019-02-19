@@ -9091,7 +9091,7 @@ PrefabInstance:
     - target: {fileID: 3706334145065158582, guid: bc0788ad0773e6f4aad662a69f67c928,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: CanvasGame
       objectReference: {fileID: 0}
     - target: {fileID: 3706334145065158578, guid: bc0788ad0773e6f4aad662a69f67c928,
         type: 3}
@@ -9203,22 +9203,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
-    - target: {fileID: 3706334145065158581, guid: bc0788ad0773e6f4aad662a69f67c928,
+    - target: {fileID: 3673395432131807107, guid: bc0788ad0773e6f4aad662a69f67c928,
         type: 3}
-      propertyPath: m_SortingLayerID
-      value: 1134750941
-      objectReference: {fileID: 0}
-    - target: {fileID: 1683492387, guid: bc0788ad0773e6f4aad662a69f67c928, type: 3}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1683492387, guid: bc0788ad0773e6f4aad662a69f67c928, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1683492387, guid: bc0788ad0773e6f4aad662a69f67c928, type: 3}
-      propertyPath: m_Type
-      value: 0
+      propertyPath: targets.Array.data[0].goal
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc0788ad0773e6f4aad662a69f67c928, type: 3}
@@ -9296,6 +9284,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c7925780b11508498fd0be7fba505cf, type: 3}
+--- !u!1 &6642235521190513261 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6642235521190513261, guid: bc0788ad0773e6f4aad662a69f67c928,
+    type: 3}
+  m_PrefabInstance: {fileID: 3706334144951237486}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6642235521190513262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6642235521190513261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1001 &7457034389507222368
 PrefabInstance:
   m_ObjectHideFlags: 0

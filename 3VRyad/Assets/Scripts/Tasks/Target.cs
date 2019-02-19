@@ -50,7 +50,7 @@ public class Target
         }
     }
 
-    //есл элемент подошел то возвращаем истину
+    //если элемент подошел то возвращаем истину
     public bool Collect(AllShapeEnum Shape) {
         if (Shape == elementsShape && alreadyCollected < goal)
         {

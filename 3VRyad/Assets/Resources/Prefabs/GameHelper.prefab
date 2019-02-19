@@ -177,6 +177,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08a19a9f16d47e844941865f730f19c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabCanvasEndGameMenu: {fileID: 6577434973905200748, guid: 1dc5341ed8052334388bc69bdfb10467,
+    type: 3}
 --- !u!114 &114133086956370690
 MonoBehaviour:
   m_ObjectHideFlags: 0
