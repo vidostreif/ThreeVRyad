@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[ExecuteInEditMode]
 public class MainAnimator : MonoBehaviour {
 
     public static MainAnimator Instance; // Синглтон

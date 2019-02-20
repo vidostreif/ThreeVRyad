@@ -262,14 +262,14 @@ public class Grid : MonoBehaviour
                         //активируем активируемые элементы
                         if (touchingBlock != null && touchingBlock.Element != null && touchingBlock.Element.Activated)
                         {
-                            touchingBlock.Element.Activate();
+                            touchingBlock.Hit();
                             yield return new WaitForSeconds(0.1f);
                             matchFound = true;
                         }
 
                         else if (destinationBlock != null && destinationBlock.Element != null && destinationBlock.Element.Activated)
                         {
-                            destinationBlock.Element.Activate();
+                            destinationBlock.Hit();
                             yield return new WaitForSeconds(0.1f);
                             matchFound = true;
                         }

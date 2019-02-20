@@ -52,10 +52,10 @@ public class ElementSmallFlask : Element
         }  
     }
 
-    public override void Activate()
-    {
-        Hit();
-    }
+    //public override void Activate()
+    //{
+    //    Hit();
+    //}
 
     //ударяем по соседним блокам
     protected override void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)

@@ -91,7 +91,6 @@ public class Element : MonoBehaviour
         drag = false;
         thisTransform = transform;
         destroyed = false;
-        //objectManagement = GetComponent<SpriteBank>();
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
         GetComponent<ElementController>().ThisElement = this;
     }
@@ -118,7 +117,7 @@ public class Element : MonoBehaviour
 
     }
 
-    //удар элементу
+    //удар по элементу
     public virtual void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
     {
         if (!destroyed)
@@ -157,12 +156,11 @@ public class Element : MonoBehaviour
                 }
             }
         }
-
     }
 
-    public virtual void Activate() {
+    //public virtual void Activate() {
 
-    }
+    //}
 
     public virtual BlockingElement BlockingElement
     {

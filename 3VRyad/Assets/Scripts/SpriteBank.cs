@@ -28,33 +28,51 @@ public class SpriteBank : MonoBehaviour
                 return null;
             case ElementsShapeEnum.Carrot:
                 //устанавливаем спрайт
-                return Resources.Load<Sprite>("Sprites/star") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/star") as Sprite;
             case ElementsShapeEnum.Watermelon:
-                return Resources.Load<Sprite>("Sprites/watermelon") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/watermelon") as Sprite;
             case ElementsShapeEnum.Apple:
-                return Resources.Load<Sprite>("Sprites/apple") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/apple") as Sprite;
             case ElementsShapeEnum.Strawberry:
-                return Resources.Load<Sprite>("Sprites/strawberry") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/strawberry") as Sprite;
             case ElementsShapeEnum.Banana:
-                return Resources.Load<Sprite>("Sprites/banana") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/banana") as Sprite;
             case ElementsShapeEnum.Wall:
-                return Resources.Load<Sprite>("Sprites/wall") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/wall") as Sprite;
             case ElementsShapeEnum.BigFlask:
-                return Resources.Load<Sprite>("Sprites/BigFlask") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/BigFlask") as Sprite;
             case ElementsShapeEnum.MediumFlask:
-                return Resources.Load<Sprite>("Sprites/MediumFlask") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/MediumFlask") as Sprite;
             case ElementsShapeEnum.SmallFlask:
-                return Resources.Load<Sprite>("Sprites/SmallFlask") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/SmallFlask") as Sprite;
             case ElementsShapeEnum.Orange:
-                return Resources.Load<Sprite>("Sprites/orange") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/orange") as Sprite;
             case ElementsShapeEnum.Camomile:
-                return Resources.Load<Sprite>("Sprites/camomile") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/camomile") as Sprite;
             case ElementsShapeEnum.Plum:
-                return Resources.Load<Sprite>("Sprites/plum") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Elements/plum") as Sprite;
             default:
                 Debug.LogError("Не определен тип " + shape);
                 return null;
                 
+        }
+    }
+
+    public static Sprite SetShape(BehindElementsShapeEnum shape)
+    {
+        //в зависимости от типа
+        switch (shape)
+        {
+            case BehindElementsShapeEnum.Empty:
+                //удаляем спрайт!!!
+                return null;
+            case BehindElementsShapeEnum.Grass:
+                //устанавливаем спрайт
+                return Resources.Load<Sprite>("Sprites/BehindElements/Grass") as Sprite;
+            default:
+                Debug.LogError("Не определен тип " + shape);
+                return null;
+
         }
     }
 
@@ -125,6 +143,10 @@ public class SpriteBank : MonoBehaviour
         else if (Enum.IsDefined(typeof(BlockTypeEnum), shape.ToString()))
         {
             return SetShape((BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), shape.ToString()));
+        }
+        else if (Enum.IsDefined(typeof(BehindElementsShapeEnum), shape.ToString()))
+        {
+            return SetShape((BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), shape.ToString()));
         }
         return null;
     }

@@ -31,6 +31,17 @@ public enum ElementsShapeEnum
     BigFlask,//фласка большая
 }//Внешние виды элементов
 
+public enum BehindElementsTypeEnum
+{
+    Empty, //пустой 
+    Standard, //стандартный элемент
+}//Типы элементов позади
+
+public enum BehindElementsShapeEnum
+{
+    Empty, //пустой элемент
+    Grass, //трава
+}//Внешние виды элементов позади
 
 public enum BlockingElementsTypeEnum
 {
@@ -61,6 +72,7 @@ public enum AllShapeEnum
     Camomile, //ромашка
     Plum, //слива
     BigFlask,//фласка большая
+    Grass, //трава
 }//Внешние виды элементов
 
 public enum BlockTypeEnum

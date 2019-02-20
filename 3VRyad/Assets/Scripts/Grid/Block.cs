@@ -5,16 +5,12 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Block : MonoBehaviour {
 
-    [SerializeField] protected BlockTypeEnum type;
     public Transform thisTransform;
-    public Element element;// элемент
+    [SerializeField] protected BlockTypeEnum type;
+    [SerializeField] protected Element element;// элемент
+    [SerializeField] protected BehindElement behindElement;// элемент на блоке за основным элементом
     [SerializeField] protected bool generatorElements; //признак, что блок генерирует новые элементы
-    //protected SpriteBank objectManagement;
     [SerializeField] protected SpriteRenderer spriteRenderer;
-
-    //private float smoothTime = 15f;//скорость перемещения элемента к блоку
-    //private float yvelocity = 0.0f;
-
 
     public BlockTypeEnum Type
     {
@@ -76,19 +72,7 @@ public class Block : MonoBehaviour {
                 if (value != null)
                 {
                     element = value;
-                    element.thisTransform.parent = thisTransform;
-
-                    ////если растояние меньше размеров блока сетки, то перемещаем моментально на позицию блока
-                    ////расчитываем вектор смещения
-                    //Vector3 vector = element.thisTransform.position - thisTransform.position;
-                    ////вычисляем расстояние на которое смещаем объект
-                    //float distance = vector.magnitude;
-
-                    //if (Grid.Instance != null && distance < Grid.Instance.blockSize)
-                    //{
-                    //    element.thisTransform.position = thisTransform.position;
-                    //}
-                    
+                    element.thisTransform.parent = thisTransform;                    
                 }
                 else if (value == null)
                 {
@@ -103,7 +87,22 @@ public class Block : MonoBehaviour {
             else if (value == null)
             {
                 element = value;
+                element.thisTransform.parent = thisTransform;
             }
+        }
+    }
+
+    public BehindElement BehindElement
+    {
+        get
+        {
+            return behindElement;
+        }
+
+        set
+        {
+            behindElement = value;
+            element.thisTransform.parent = thisTransform;
         }
     }
 
@@ -174,16 +173,56 @@ public class Block : MonoBehaviour {
         element = null;
     }
 
+    public void CreatBehindElement(GameObject prefabElement, BehindElementsShapeEnum shape, BehindElementsTypeEnum typeElementsEnum)
+    {
+        //создаем элемент у блока
+        if (this.Type != BlockTypeEnum.Empty)
+        {
+            //создаем новый элемент
+            GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y, thisTransform.position.z), Quaternion.identity);
+            BehindElement curElement;
+
+            if (typeElementsEnum == BehindElementsTypeEnum.Standard)
+            {
+                curElement = elementGameObject.AddComponent<BehindElement>();
+                curElement.InitialSettings(typeElementsEnum);
+            }
+            else
+            {
+                Debug.LogError("У блока " + this.name + " не удалось определить тип создаваемого элемента на заднем плане");
+                DestroyImmediate(elementGameObject);
+                return;
+            }
+
+            curElement.Shape = shape;
+            //Добавляем в блок
+            this.BehindElement = curElement;
+        }
+    }
+
+    public void DellBehindElement()
+    {
+        if (behindElement != null)
+        {
+            DestroyImmediate(behindElement.gameObject);
+        }
+        behindElement = null;
+    }
+    
     //удар по блоку
     public void Hit(HitTypeEnum hitTypeEnum = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty) {
 
         if (element != null && !element.Destroyed)
         {
             element.Hit(hitTypeEnum, hitElementShape);
+            //если уничтожили элемент то ударяем по элементу позади
+            if ((behindElement != null && !behindElement.Destroyed) && (element == null || element.Destroyed))
+            {
+                behindElement.Hit();
+            }
         }
     }
-
-
+    
     void Awake()
     {
         thisTransform = transform;

@@ -48,6 +48,9 @@ TagManager:
   - name: Block
     uniqueID: 1619239947
     locked: 0
+  - name: BackgroundElements
+    uniqueID: 3788826309
+    locked: 0
   - name: Elements
     uniqueID: 2417309139
     locked: 0

@@ -64,33 +64,30 @@ public class Tasks : MonoBehaviour {
 
     public bool Collect(Element element) {
         //ищем данный вид элемента в массиве и если нашли, то возвращаем истина
-        AllShapeEnum allShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString());
-        foreach (Target target in targets)
-        {
-            if (target.Collect(allShape))
-            {
-                element.transform.parent = this.thisTransform;
-                //перемещаем элемент к нашему объекту
-                MainAnimator.Instance.AddElementForSmoothMove(element.transform, target.Image.transform.position, 10, SmoothEnum.InArc, 0.05f, true);
-                //проверяем, не собрали ли мы коллекцию
-                CheckAll();
-                return true;
-            }
-        }
-        return false;
+        return Collect((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()), element.transform);
     }
 
     public bool Collect(BlockingElement element)
     {
         //ищем данный вид элемента в массиве и если нашли, то возвращаем истина
-        AllShapeEnum allShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString());
+        return Collect((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()), element.transform);
+    }
+
+    public bool Collect(BehindElement element)
+    {
+        //ищем данный вид элемента в массиве и если нашли, то возвращаем истина
+        return Collect((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()), element.transform);
+    }
+
+    private bool Collect(AllShapeEnum allShape, Transform transformElement)
+    {
         foreach (Target target in targets)
         {
             if (target.Collect(allShape))
             {
-                element.transform.parent = this.thisTransform;
+                transformElement.parent = this.thisTransform;
                 //перемещаем элемент к нашему объекту
-                MainAnimator.Instance.AddElementForSmoothMove(element.transform, target.Image.transform.position, 10, SmoothEnum.InArc, 0.05f, true);
+                MainAnimator.Instance.AddElementForSmoothMove(transformElement, target.Image.transform.position, 10, SmoothEnum.InArc, 0.05f, true);
                 //проверяем, не собрали ли мы коллекцию
                 CheckAll();
                 return true;
