@@ -31,13 +31,14 @@ public class Tasks : MonoBehaviour {
 
         Instance = this;
         thisTransform = transform;
+        movesText = GetComponentInChildren<Text>();
         endGame = false;
         collected = false;
     }
 
     void Start()
     {
-        movesText = GetComponentInChildren<Text>();
+        
         UpdateMovesText();
         CreateCollectedElements();
     }

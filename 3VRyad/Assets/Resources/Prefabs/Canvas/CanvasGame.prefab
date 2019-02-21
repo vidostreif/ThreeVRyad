@@ -388,7 +388,7 @@ PrefabInstance:
     - target: {fileID: 114013765681295424, guid: 8110c872837aac442987e947c8db8d82,
         type: 3}
       propertyPath: moves
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 114013765681295424, guid: 8110c872837aac442987e947c8db8d82,
         type: 3}
@@ -399,6 +399,16 @@ PrefabInstance:
         type: 3}
       propertyPath: targets.Array.data[0].goal
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114013765681295424, guid: 8110c872837aac442987e947c8db8d82,
+        type: 3}
+      propertyPath: targets.Array.data[1].goal
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 114013765681295424, guid: 8110c872837aac442987e947c8db8d82,
+        type: 3}
+      propertyPath: targets.Array.data[2].goal
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8110c872837aac442987e947c8db8d82, type: 3}

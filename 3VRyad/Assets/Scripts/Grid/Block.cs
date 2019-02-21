@@ -102,7 +102,7 @@ public class Block : MonoBehaviour {
         set
         {
             behindElement = value;
-            element.thisTransform.parent = thisTransform;
+            behindElement.thisTransform.parent = thisTransform;
         }
     }
 

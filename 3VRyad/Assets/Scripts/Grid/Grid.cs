@@ -1371,10 +1371,20 @@ public class Grid : MonoBehaviour
                     XAttribute posY = new XAttribute("posY", y);
                     XAttribute blockType = new XAttribute("blockType", containers[x].block[y].Type);
                     XAttribute generatorElements = new XAttribute("generatorElements", containers[x].block[y].GeneratorElements);
+                    XAttribute behindElementsType = new XAttribute("behindElementsType", BehindElementsTypeEnum.Empty);
+                    XAttribute behindElementsShape = new XAttribute("behindElementsShape", BehindElementsShapeEnum.Empty);
                     XAttribute elementType = new XAttribute("elementType", ElementsTypeEnum.Empty);
                     XAttribute elementShape = new XAttribute("elementShape", ElementsShapeEnum.Empty);
                     XAttribute blockingElementType = new XAttribute("blockingElementType", BlockingElementsTypeEnum.Empty);
                     XAttribute blockingElementShape = new XAttribute("blockingElementShape", BlockingElementsShapeEnum.Empty);
+
+                    //если в блоке есть элемент на заднем фоне
+                    if (containers[x].block[y].BehindElement != null)
+                    {
+                        behindElementsType = new XAttribute("behindElementsType", containers[x].block[y].BehindElement.Type);
+                        behindElementsShape = new XAttribute("behindElementsShape", containers[x].block[y].BehindElement.Shape);
+                    }
+
                     //если в блоке есть элемент
                     if (containers[x].block[y].Element != null)
                     {
@@ -1389,7 +1399,7 @@ public class Grid : MonoBehaviour
                         }
                     }
 
-                    XElement blockXElement = new XElement("block", posX, posY, blockType, generatorElements, elementType, elementShape, blockingElementType, blockingElementShape);
+                    XElement blockXElement = new XElement("block", posX, posY, blockType, generatorElements, behindElementsType, behindElementsShape, elementType, elementShape, blockingElementType, blockingElementShape);
                     blocksXElement.Add(blockXElement);
                 }
             }
@@ -1453,6 +1463,8 @@ public class Grid : MonoBehaviour
             int posY = int.Parse(block.Attribute("posY").Value);
             bool generatorElements = bool.Parse(block.Attribute("generatorElements").Value);
             BlockTypeEnum blockType = (BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), block.Attribute("blockType").Value);
+            BehindElementsTypeEnum behindElementsType = (BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), block.Attribute("behindElementsType").Value);
+            BehindElementsShapeEnum behindElementsShape = (BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), block.Attribute("behindElementsShape").Value);
             ElementsTypeEnum elementType = (ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), block.Attribute("elementType").Value);
             ElementsShapeEnum elementShape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), block.Attribute("elementShape").Value);
             BlockingElementsTypeEnum blockingElementType = (BlockingElementsTypeEnum)Enum.Parse(typeof(BlockingElementsTypeEnum), block.Attribute("blockingElementType").Value);
@@ -1473,9 +1485,14 @@ public class Grid : MonoBehaviour
                 //добавляем блок в массив блоков
                 containers[posX].block[posY] = blockField;
 
+                //создаем элемент на заднем фоне
+                if (behindElementsType != BehindElementsTypeEnum.Empty)
+                {
+                    blockField.CreatBehindElement(prefabElement, behindElementsShape, behindElementsType);
+                }
+                //создаем элемент
                 if (elementType != ElementsTypeEnum.Empty)
                 {
-                    //создаем элемент
                     blockField.CreatElement(prefabElement, elementShape, elementType);
                     //создаем блокирующий элемент
                     if (blockingElementType != BlockingElementsTypeEnum.Empty)
