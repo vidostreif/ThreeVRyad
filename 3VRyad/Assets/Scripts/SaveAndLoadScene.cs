@@ -6,17 +6,20 @@ using UnityEngine.UI;
 using System;
 using System.IO;
 using System.Xml.Linq;
-
+using System.Reflection;
+using System.Linq;
 
 [ExecuteInEditMode]
 public class SaveAndLoadScene : MonoBehaviour {
 
-    public Grid grid;
+    //public Grid grid;
+    //public Tasks tasks;
     public string SceneName;
     [SerializeField] public UnityEngine.Object xmlDocument;
     // Use this for initialization
     void Start () {
-        grid = GameObject.Find("Grid").GetComponent<Grid>();
+        //grid = GameObject.Find("Grid").GetComponent<Grid>();
+        //tasks = GameObject.Find("Tasks").GetComponent<Tasks>();
         //xDocument = new UnityEngine.Object();
     }
 	
@@ -37,7 +40,32 @@ public class SaveAndLoadScene : MonoBehaviour {
 
         XElement root = new XElement("root");
 
-        root.Add(grid.GetXElement());
+        //сохраняем данные из других классов
+        var instances = from t in Assembly.GetExecutingAssembly().GetTypes()
+                        where t.GetInterfaces().Contains(typeof(IESaveAndLoad))
+                          && t.GetConstructor(Type.EmptyTypes) != null
+                        select Activator.CreateInstance(t) as IESaveAndLoad;
+
+        List<GameObject> objectsToInteract = new List<GameObject>();//список найденных объектов  
+
+        foreach (var instance in instances)
+        {
+            Type component = instance.GetClassName();
+            IESaveAndLoad[] findeObjects = FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
+
+            //!!! потом можноо переделать что бы сохранялись все объекты даже если тип объектов несколько. Сохранять можно по имени.
+            if (findeObjects.GetLength(0) > 1)
+            {
+                Debug.LogError("Объектов типа: " + component.ToString() + ", больше одного на сцене! Сохранение прервано.");
+                return;
+            }
+
+            foreach (var currentObject in findeObjects) //для каждого объекта в массиве
+            {
+                root.Add(currentObject.GetXElement()); // where Foo is a method of ISomething 
+            }            
+        }
+
 
         XDocument xDocument = new XDocument(root);
         File.WriteAllText(datapath, xDocument.ToString());
@@ -69,11 +97,34 @@ public class SaveAndLoadScene : MonoBehaviour {
         }
 
         GenerateScene(root);
+
     }
 
     private void GenerateScene(XElement root) {
 
-        grid.RecoverFromXElement(root.Element("grid"));
+
+        //grid.RecoverFromXElement(root.Element("Grid"));
+        //tasks.RecoverFromXElement(root.Element("tasks"));
+
+        List<GameObject> objectsToInteract = new List<GameObject>();//список найденных объектов 
+
+        foreach (XElement ListXElement in root.Elements())
+        {
+            Type component = Type.GetType(ListXElement.Name.ToString());
+            IESaveAndLoad[] findeObjects = FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
+
+            //!!! потом можноо переделать что бы загружались все объекты даже если тип объектов несколько. Загружать можно по имени.
+            if (findeObjects.GetLength(0) > 1)
+            {
+                Debug.LogError("Объектов типа: " + component.ToString() + ", больше одного на сцене! Загрузка прервана.");
+                return;
+            }
+
+            foreach (var currentObject in findeObjects) //для каждого объекта в массиве
+            {
+                currentObject.RecoverFromXElement(ListXElement); 
+            }
+        }
     }
 
 }

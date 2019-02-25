@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UnityEngine.UI;
+using System.Xml.Linq;
 
 //класс для создания бонусов на игровом поле после хода игрока
-public class Bonuses : MonoBehaviour {
+public class Bonuses : MonoBehaviour, IESaveAndLoad
+{
     public static Bonuses Instance; // Синглтон
     public List<Bonus> bonusesList;
 
@@ -110,5 +114,48 @@ public class Bonuses : MonoBehaviour {
 
     private void CreatBonus(Bonus bonus, Block blockToCreateBonus) {
         blockToCreateBonus.CreatElement(Grid.Instance.prefabElement, bonus.Shape, bonus.Type);
+    }
+
+    //сохранение и заргрузка
+    //передаем данные о на стройках в xml формате
+    public Type GetClassName()
+    {
+        return this.GetType();
+    }
+    
+
+    public XElement GetXElement()
+    {
+        XElement bonusesXElement = new XElement("Bonuses");
+
+        //записываем все внешности и количество
+        XElement bonusesListXElement = new XElement("bonusesList");
+        foreach (Bonus bonus in bonusesList)
+        {
+            XAttribute type = new XAttribute("type", bonus.Type);
+            XAttribute shape = new XAttribute("shape", bonus.Shape);
+            XAttribute cost = new XAttribute("cost", bonus.Cost);
+            XElement bonusXElement = new XElement("bonus", shape, type, cost);
+            bonusesListXElement.Add(bonusXElement);
+        }
+        bonusesXElement.Add(bonusesListXElement);
+
+        Debug.Log(bonusesXElement);
+
+        return bonusesXElement;
+    }
+
+    public void RecoverFromXElement(XElement bonusesXElement)
+    {
+        //восстанавливаем значения
+        bonusesList.Clear();
+        foreach (XElement bonusesListXElement in bonusesXElement.Element("bonusesList").Elements("bonus"))
+        {
+            ElementsTypeEnum type = (ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), bonusesListXElement.Attribute("type").Value);
+            ElementsShapeEnum shape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), bonusesListXElement.Attribute("shape").Value);
+            int cost = int.Parse(bonusesListXElement.Attribute("cost").Value);
+            Bonus bonus = new Bonus(type, shape, cost);
+            this.bonusesList.Add(bonus);
+        }
     }
 }

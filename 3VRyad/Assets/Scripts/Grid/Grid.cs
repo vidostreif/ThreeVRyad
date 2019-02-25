@@ -10,7 +10,7 @@ using System.Linq;
 #if UNITY_EDITOR
 [InitializeOnLoad]
 #endif
-public class Grid : MonoBehaviour
+public class Grid : MonoBehaviour, IESaveAndLoad
 
 {
     public static Grid Instance; // Синглтон
@@ -1330,10 +1330,15 @@ public class Grid : MonoBehaviour
     }
 
     //передаем данные о на стройках в xml формате
+    public Type GetClassName()
+    {
+        return this.GetType();
+    }
+
     public XElement GetXElement()
     {
 
-        XElement gridXElement = new XElement("grid");
+        XElement gridXElement = new XElement("Grid");
 
         gridXElement.Add(new XElement("blockSize", blockSize));
 

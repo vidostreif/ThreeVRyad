@@ -1,5 +1,12 @@
 <root>
-  <grid>
+  <Bonuses>
+    <bonusesList>
+      <bonus shape="MediumFlask" type="MediumFlask" cost="5" />
+      <bonus shape="SmallFlask" type="SmallFlask" cost="4" />
+      <bonus shape="BigFlask" type="BigFlask" cost="6" />
+    </bonusesList>
+  </Bonuses>
+  <Grid>
     <blockSize>1</blockSize>
     <XSize>12</XSize>
     <YSize>9</YSize>
@@ -89,5 +96,14 @@
       <block posX="10" posY="7" blockType="Standard" generatorElements="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="10" posY="8" blockType="Standard" generatorElements="true" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
     </blocks>
-  </grid>
+  </Grid>
+  <Tasks>
+    <moves>20</moves>
+    <sizeTargets>3</sizeTargets>
+    <targets>
+      <shapeAndGoal shape="Grass" goal="8" />
+      <shapeAndGoal shape="Apple" goal="50" />
+      <shapeAndGoal shape="Plum" goal="50" />
+    </targets>
+  </Tasks>
 </root>

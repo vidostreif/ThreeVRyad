@@ -14,7 +14,13 @@ public class Target
     public int alreadyCollected = 0;//собрано
     private Text text;
     private bool collected = false; //признак, что коллекция собрана
-       
+
+    public Target(AllShapeEnum elementsShape, int goal)
+    {
+        this.elementsShape = elementsShape;
+        this.goal = goal;
+    }
+
     public bool Collected
     {
         get

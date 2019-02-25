@@ -4,22 +4,25 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using UnityEngine.UI;
+using System.Xml.Linq;
 
+#if UNITY_EDITOR
+[InitializeOnLoad]
+#endif
 //задания
-public class Tasks : MonoBehaviour {
+public class Tasks : MonoBehaviour, IESaveAndLoad
+{
         
-    //public int sizeOfArray;
     public static Tasks Instance; // Синглтон
     [HideInInspector] public Transform thisTransform;
     public GameObject prefabcollectedElements;
     public float distanceBetweenTargets;
     public bool collected { get; protected set; }
+    public Target[] targets;// список целей
 
     private Text movesText;
-    [SerializeField] private int moves; //остаток ходов
-    public bool endGame { get; protected set; } //признак что можно выполнить ход
-
-    public Target[] targets;// список целей
+    [SerializeField] private int moves; //количество ходов
+    public bool endGame { get; protected set; } //признак что можно выполнить ход    
 
     void Awake()
     {
@@ -138,6 +141,54 @@ public class Tasks : MonoBehaviour {
         else
         {
             endGame = true;
+        }
+    }
+
+
+    //сохранение и заргрузка
+    public Type GetClassName()
+    {
+        return this.GetType();
+    }
+    //передаем данные о на стройках в xml формате
+    public XElement GetXElement()
+    {
+        XElement tasksXElement = new XElement("Tasks");
+
+        tasksXElement.Add(new XElement("moves", moves));//количество ходов
+        tasksXElement.Add(new XElement("sizeTargets", targets.GetLength(0)));//записываем количество заданий
+
+        //записываем все внешности и количество
+        XElement targetsXElement = new XElement("targets");
+        foreach (Target target in targets)
+        {
+            XAttribute shape = new XAttribute("shape", target.elementsShape);
+            XAttribute goal = new XAttribute("goal", target.goal);
+            XElement shapeAndGoalXElement = new XElement("shapeAndGoal", shape, goal);
+            targetsXElement.Add(shapeAndGoalXElement);
+        }
+        tasksXElement.Add(targetsXElement);
+
+        Debug.Log(tasksXElement);
+
+        return tasksXElement;
+    }
+
+    public void RecoverFromXElement(XElement tasksXElement)
+    {
+        //восстанавливаем значения
+        this.moves = int.Parse(tasksXElement.Element("moves").Value);
+        int sizeTargets = int.Parse(tasksXElement.Element("sizeTargets").Value);
+        targets = new Target[sizeTargets];
+
+        int iteration = 0;
+        foreach (XElement shapeAndGoalXElement in tasksXElement.Element("targets").Elements("shapeAndGoal"))
+        {
+            AllShapeEnum shape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), shapeAndGoalXElement.Attribute("shape").Value);
+            int goal = int.Parse(shapeAndGoalXElement.Attribute("goal").Value);
+            Target target = new Target(shape, goal);
+            this.targets[iteration] = target;
+            iteration++;
         }
     }
 }
