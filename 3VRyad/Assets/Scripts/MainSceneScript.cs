@@ -40,7 +40,7 @@ public class MainSceneScript : MonoBehaviour {
         restartButton.onClick.AddListener(delegate { RestartLevel(); });
 
         //если выполнили все задания
-        if (Tasks.Instance.collected)
+        if (Tasks.Instance.collectedAll)
         {
             //победа
             textEndGame.text = "Победа!";

@@ -17,7 +17,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     [HideInInspector] public Transform thisTransform;
     public GameObject prefabcollectedElements;
     public float distanceBetweenTargets;
-    public bool collected { get; protected set; }
+    public bool collectedAll { get; protected set; }
     public Target[] targets;// список целей
 
     private Text movesText;
@@ -36,7 +36,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         thisTransform = transform;
         movesText = GetComponentInChildren<Text>();
         endGame = false;
-        collected = false;
+        collectedAll = false;
     }
 
     void Start()
@@ -49,21 +49,16 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     //создание коллекции целей
     private void CreateCollectedElements() {
         //смещение по y
-        float startingYPoint = thisTransform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;
-
-        
+        float startingYPoint = thisTransform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;       
 
         for (int i = 0; i < targets.Length; i++)
         {
             GameObject elementGameObject = Instantiate(prefabcollectedElements, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenTargets)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
-            //SpriteBank objectManagement = elementGameObject.GetComponent<SpriteBank>();
             Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
             image.sprite = SpriteBank.SetShape(targets[i].elementsShape);
-            //objectManagement.SetShape(targets[i].elementsShape);
             targets[i].Image = image;
             targets[i].Text = image.GetComponentInChildren<Text>();
         }
-
     }
 
     public bool Collect(Element element) {
@@ -121,10 +116,21 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         if (CollectedAll)
         {
             endGame = true;
-            collected = true;
+            collectedAll = true;
         }
     }
-    
+
+    public void UpdateAllGoal() {
+        //обновляем данные по коллекциям
+        foreach (Target item in targets)
+        {
+            //если не собрали коллекцию
+            if (!item.Collected)
+            {
+                item.UpdateGoal();
+            }
+        }
+    }
     //обнолвление текста количества ходов
     private void UpdateMovesText() {
         movesText.text = "Ходы:" + moves;
@@ -163,8 +169,9 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         foreach (Target target in targets)
         {
             XAttribute shape = new XAttribute("shape", target.elementsShape);
-            XAttribute goal = new XAttribute("goal", target.goal);
-            XElement shapeAndGoalXElement = new XElement("shapeAndGoal", shape, goal);
+            XAttribute goal = new XAttribute("goal", target.Goal);
+            XAttribute collectEverything = new XAttribute("collectEverything", target.CollectEverything);
+            XElement shapeAndGoalXElement = new XElement("shapeAndGoal", shape, goal, collectEverything);
             targetsXElement.Add(shapeAndGoalXElement);
         }
         tasksXElement.Add(targetsXElement);
@@ -186,7 +193,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             AllShapeEnum shape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), shapeAndGoalXElement.Attribute("shape").Value);
             int goal = int.Parse(shapeAndGoalXElement.Attribute("goal").Value);
-            Target target = new Target(shape, goal);
+            bool collectEverything = bool.Parse(shapeAndGoalXElement.Attribute("collectEverything").Value);
+            Target target = new Target(shape, goal, collectEverything);
             this.targets[iteration] = target;
             iteration++;
         }

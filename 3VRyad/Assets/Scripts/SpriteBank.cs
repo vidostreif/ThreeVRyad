@@ -133,7 +133,6 @@ public class SpriteBank : MonoBehaviour
     public static Sprite SetShape(AllShapeEnum shape)
     {
         //поиск в других коллекциях данное значение с перенаправлением к другому SetShape
-        //BlockingElementsShapeEnum value2 = Enum.TryParse(value.ToString(), out Enum2 outValue) ? outValue : Enum2.Unknown;
 
         if (Enum.IsDefined(typeof(BlockingElementsShapeEnum), shape.ToString()))
         {

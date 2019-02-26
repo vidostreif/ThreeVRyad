@@ -10,23 +10,51 @@ public class Target
 {
     private Image image;
     public AllShapeEnum elementsShape;//какой вид элементов собераем
-    public int goal;//необходимо собрать
-    public int alreadyCollected = 0;//собрано
+    [SerializeField] private bool collectEverything;//признак, что нужно собрать все элементы на поле
+    [SerializeField] private int goal;//необходимо собрать
+    //public int alreadyCollected = 0;//собрано
     private Text text;
     private bool collected = false; //признак, что коллекция собрана
 
-    public Target(AllShapeEnum elementsShape, int goal)
+    public Target(AllShapeEnum elementsShape, int goal, bool collectEverything)
     {
         this.elementsShape = elementsShape;
+        this.collectEverything = collectEverything;
         this.goal = goal;
     }
-
+    public int Goal
+    {
+        get
+        {
+            return goal;
+        }
+    }
+    public bool CollectEverything
+    {
+        get
+        {
+            return collectEverything;
+        }
+    }
     public bool Collected
     {
         get
         {
             return collected;
         }
+    }
+    public void UpdateGoal() {
+        //если нужно собрать все элементы на поле, то проверяем поле и обновляем счетчик
+        if (collectEverything)
+        {
+            goal = GridBlocks.Instance.DetermineNumberElements(elementsShape);
+            UpdateText();
+        }
+    }
+    //обнолвление текста количества ходов
+    private void UpdateText()
+    {
+        text.text = "" + goal;
     }
 
     public Text Text
@@ -39,7 +67,8 @@ public class Target
         set
         {
             text = value;
-            text.text = "" + goal;
+            UpdateGoal();
+            UpdateText();
         }
     }
 
@@ -55,14 +84,15 @@ public class Target
             image = value;
         }
     }
-
+       
     //если элемент подошел то возвращаем истину
     public bool Collect(AllShapeEnum Shape) {
-        if (Shape == elementsShape && alreadyCollected < goal)
+        if (Shape == elementsShape && goal > 0)
         {
-            alreadyCollected++;
+            //alreadyCollected++;
+            goal--;
             Check();
-            Text.text = ""+(goal - alreadyCollected);
+            UpdateText();
             return true;
         }
         else
@@ -73,7 +103,7 @@ public class Target
 
     //проверяем собрали ли коллекцию
     private void Check() {
-        if (alreadyCollected >= goal)
+        if (goal <= 0)
         {
             collected = true;
         }

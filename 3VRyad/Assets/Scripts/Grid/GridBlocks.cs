@@ -321,7 +321,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 {
                     //действия элементов после хода             
                     PerformActionElementsAfterMove();
-                }                
+                }
+
+                //обновляем данные по коллекциям
+                Tasks.Instance.UpdateAllGoal();
             }
 
             //если закончились ходы игрока и ходы всей игры
@@ -850,7 +853,32 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     public bool ThisBlockWithElementCantMove(Block block)
     {
-        if (block != null && block.Element != null && block.Element.LockedForMove)
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.LockedForMove)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ThisBlockWithElementAndBlockingElement(Block block)
+    {
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.BlockingElement != null && !block.Element.BlockingElement.Destroyed)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ThisBlockWithBehindElement(Block block)
+    {
+
+        if (block != null && block.BehindElement != null && !block.BehindElement.Destroyed)
         {
             return true;
         }
@@ -1160,6 +1188,82 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
         }
         return blocks;
+    }
+
+    //возвращает количество элементов указанной формы
+    public int DetermineNumberElements(AllShapeEnum shape)
+    {
+        int number = 0;
+
+        if (Enum.IsDefined(typeof(BlockingElementsShapeEnum), shape.ToString()))
+        {
+            for (int x = 0; x < containers.GetLength(0); x++)
+            {
+                for (int y = 0; y < containers[x].block.GetLength(0); y++)
+                {
+                    //если блок существует по данному адресу и в нем есть элемент и блокирующий элемент
+                    if (ThisBlockWithElementAndBlockingElement(containers[x].block[y]))
+                    {
+                        if (containers[x].block[y].Element.BlockingElement.Shape == (BlockingElementsShapeEnum)Enum.Parse(typeof(BlockingElementsShapeEnum), shape.ToString()))
+                        {
+                            number++;
+                        }
+                    }
+                }
+            }
+        }
+        else if (Enum.IsDefined(typeof(ElementsShapeEnum), shape.ToString()))
+        {
+            for (int x = 0; x < containers.GetLength(0); x++)
+            {
+                for (int y = 0; y < containers[x].block.GetLength(0); y++)
+                {
+                    //если блок существует по данному адресу и в нем есть элемент и блокирующий элемент
+                    if (ThisBlockWithElement(containers[x].block[y]))
+                    {
+                        if (containers[x].block[y].Element.Shape == (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shape.ToString()))
+                        {
+                            number++;
+                        }
+                    }
+                }
+            }
+        }
+        //else if (Enum.IsDefined(typeof(BlockTypeEnum), shape.ToString()))
+        //{
+        //    for (int x = 0; x < containers.GetLength(0); x++)
+        //    {
+        //        for (int y = 0; y < containers[x].block.GetLength(0); y++)
+        //        {
+        //            //если блок существует по данному адресу и в нем есть элемент и блокирующий элемент
+        //            if (containers[x].block[y] != null)
+        //            {
+        //                if (containers[x].block[y].Shape == (BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), shape.ToString()))
+        //                {
+        //                    number++;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+        else if (Enum.IsDefined(typeof(BehindElementsShapeEnum), shape.ToString()))
+        {
+            for (int x = 0; x < containers.GetLength(0); x++)
+            {
+                for (int y = 0; y < containers[x].block.GetLength(0); y++)
+                {
+                    //если блок существует по данному адресу и в нем есть элемент и блокирующий элемент
+                    if (ThisBlockWithBehindElement(containers[x].block[y]))
+                    {
+                        if (containers[x].block[y].BehindElement.Shape == (BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), shape.ToString()))
+                        {
+                            number++;
+                        }
+                    }
+                }
+            }
+        }
+        return number;
     }
 
     //процедура замены элементов между блоками
