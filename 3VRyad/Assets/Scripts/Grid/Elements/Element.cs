@@ -10,22 +10,17 @@ using UnityEngine;
 /// наследоваться от интерфейса?
 //описание поведения стандартного элемента
 [ExecuteInEditMode]
-public class Element : MonoBehaviour
+public class Element : BaseElement
 {
     public bool drag; //элемент перетаскивается
     public float speed = 0; //скорость
     [SerializeField] protected ElementsTypeEnum type;//тип элемента
     [SerializeField] protected ElementsShapeEnum shape;//форма элемента
     [SerializeField] protected BlockingElement blockingElement;// блокирующий элемент
-    public Transform thisTransform;
     [SerializeField] protected bool lockedForMove;//признак что элемент заблокирован для передвижения
-    [SerializeField] protected bool destroyed;//признак что элемент был уничтожен
-    [SerializeField] protected bool immortal;//признак бессмертия
     [SerializeField] protected bool createLine;//признак что элемент создает линию
     [SerializeField] protected bool activated;//признак что элемент активируемый
     [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у блока
-    //protected SpriteBank objectManagement;
-    protected SpriteRenderer spriteRenderer;
 
 
     public bool LockedForMove {
@@ -34,18 +29,6 @@ public class Element : MonoBehaviour
             return lockedForMove;
         }
     }//признак что элемент заблокирован для передвижения
-    public bool Destroyed {
-        get
-        {
-            return destroyed;
-        }
-    }//признак что элемент был уничтожен
-    public bool Immortal {
-        get
-        {
-            return immortal;
-        }
-    }//признак бессмертия
     public bool CreateLine {
         get
         {
@@ -109,12 +92,13 @@ public class Element : MonoBehaviour
         this.createLine = createLine;
         this.activated = activated;
         this.thisHitTypeEnum = hitTypeEnum;
+        actionAfterMove = false;
         DopSettings();
     }
 
     protected virtual void DopSettings()
     {
-
+        
     }
 
     //удар по элементу
@@ -129,7 +113,7 @@ public class Element : MonoBehaviour
                 //если стоит блокировка на элементе, то пытаемся ее снять
                 if (BlockingElementExists())
                 {
-                    blockingElement = blockingElement.Hit();
+                    blockingElement.Hit();
 
                     //если уничтожили блокирующий элемент
                     if (blockingElement.Destroyed)
@@ -158,9 +142,9 @@ public class Element : MonoBehaviour
         }
     }
 
-    //public virtual void Activate() {
+    public virtual void PerformActionAfterMove() {
 
-    //}
+    }
 
     public virtual BlockingElement BlockingElement
     {
@@ -215,7 +199,7 @@ public class Element : MonoBehaviour
             if (typeBlockingElementsEnum == BlockingElementsTypeEnum.Standard)
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
-                curElement.InitialSettings(typeBlockingElementsEnum, 1, false);
+                curElement.InitialSettings(typeBlockingElementsEnum, false, false, 1);
                 lockedForMove = true;
             }
             //else if (typeBlockingElementsEnum == BlockingElementsTypeEnum.CrushableWall)
@@ -258,9 +242,9 @@ public class Element : MonoBehaviour
     protected virtual void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)
 {
     //Находим позицию блока в сетке
-    Position gridPosition = Grid.Instance.FindPosition(this);
+    Position gridPosition = GridBlocks.Instance.FindPosition(this);
     //Определяем соседние блоки
-    NeighboringBlocks neighboringBlocks = Grid.Instance.DeterminingNeighboringBlocks(gridPosition);
+    NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(gridPosition);
 
     foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
     {

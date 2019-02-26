@@ -58,8 +58,8 @@ public class ElementController : MonoBehaviour {
             else
             {
                 Debug.Log("Double click");
-                Block block = Grid.Instance.GetBlock(ThisElement);
-                Grid.Instance.Move(block);
+                Block block = GridBlocks.Instance.GetBlock(ThisElement);
+                GridBlocks.Instance.Move(block);
             }
         }
         

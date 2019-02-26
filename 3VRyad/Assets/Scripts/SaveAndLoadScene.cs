@@ -46,7 +46,7 @@ public class SaveAndLoadScene : MonoBehaviour {
                           && t.GetConstructor(Type.EmptyTypes) != null
                         select Activator.CreateInstance(t) as IESaveAndLoad;
 
-        List<GameObject> objectsToInteract = new List<GameObject>();//список найденных объектов  
+        //List<GameObject> objectsToInteract = new List<GameObject>();//список найденных объектов  
 
         foreach (var instance in instances)
         {
@@ -106,7 +106,7 @@ public class SaveAndLoadScene : MonoBehaviour {
         //grid.RecoverFromXElement(root.Element("Grid"));
         //tasks.RecoverFromXElement(root.Element("tasks"));
 
-        List<GameObject> objectsToInteract = new List<GameObject>();//список найденных объектов 
+        //List<GameObject> objectsToInteract = new List<GameObject>();//список найденных объектов 
 
         foreach (XElement ListXElement in root.Elements())
         {

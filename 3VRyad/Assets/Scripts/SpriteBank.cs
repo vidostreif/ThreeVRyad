@@ -69,6 +69,9 @@ public class SpriteBank : MonoBehaviour
             case BehindElementsShapeEnum.Grass:
                 //устанавливаем спрайт
                 return Resources.Load<Sprite>("Sprites/BehindElements/Grass") as Sprite;
+            case BehindElementsShapeEnum.Dirt:
+                //устанавливаем спрайт
+                return Resources.Load<Sprite>("Sprites/BehindElements/Dirt") as Sprite;
             default:
                 Debug.LogError("Не определен тип " + shape);
                 return null;

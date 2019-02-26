@@ -7,7 +7,7 @@ public class AnimatorElement : MonoBehaviour
     //public bool destroyThisObject = false;
     //private Animator thisAnimator;
     private Animation thisAnimation;
-    private float idleAnimationTime;
+    //private float idleAnimationTime;
 
     void Awake()
     {
@@ -35,7 +35,7 @@ public class AnimatorElement : MonoBehaviour
     private void SetidleAnimationTime() {
         //определяем когда в следующий раз проиграть анимацию
         int random = UnityEngine.Random.Range(1, 30);
-        idleAnimationTime = Time.time + random;
+        //idleAnimationTime = Time.time + random;
     }
 
     //Если закончилась анимация смерти, то удаляем этот элемент

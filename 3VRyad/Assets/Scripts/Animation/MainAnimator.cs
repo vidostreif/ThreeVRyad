@@ -224,9 +224,9 @@ public class MainAnimator : MonoBehaviour {
                 //item.explosionEffect.transform.localScale = new Vector3(item.radiusExplosionEffect, item.radiusExplosionEffect, 1);
                 //item.radiusExplosionEffect += 2.2f;
                 item.moment = Time.time + 0.05f;
-                item.radius += Grid.Instance.blockSize * 0.95f * item.power;
+                item.radius += GridBlocks.Instance.blockSize * 0.95f * item.power;
 
-                    GameObject[] objectsToMove = FindObjectsInRadiusWithComponent(item.epicenter, item.radius, item.radius + Grid.Instance.blockSize, typeof(Element));
+                    GameObject[] objectsToMove = FindObjectsInRadiusWithComponent(item.epicenter, item.radius, item.radius + GridBlocks.Instance.blockSize, typeof(Element));
 
                     foreach (GameObject objectToMove in objectsToMove)
                     {

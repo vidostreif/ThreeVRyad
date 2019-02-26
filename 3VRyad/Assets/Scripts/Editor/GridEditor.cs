@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Grid))]
+[CustomEditor(typeof(GridBlocks))]
 public class GridEditor : Editor
 {
-    Grid grid;
+    GridBlocks grid;
 
     void OnEnable() {
         EditorApplication.update += Update;
-        grid = (Grid)target;
+        grid = (GridBlocks)target;
         grid.thisTransform = grid.transform;
     }
 

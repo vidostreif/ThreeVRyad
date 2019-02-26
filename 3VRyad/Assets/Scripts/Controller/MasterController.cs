@@ -58,13 +58,13 @@ public class MasterController : MonoBehaviour
 
             //записываем момент взятия элемента
             startDragMoment = Time.time;
-            maxDistanceToMove = Grid.Instance.blockSize;
+            maxDistanceToMove = GridBlocks.Instance.blockSize;
 
             //Находим позицию блока в сетке
             blockFieldDAndD = gameObjectTransform.GetComponentInParent<Block>();
-            gridPositionDAndD = Grid.Instance.FindPosition(blockFieldDAndD);
+            gridPositionDAndD = GridBlocks.Instance.FindPosition(blockFieldDAndD);
             //Определяем соседние блоки
-            neighboringBlocksDAndD = Grid.Instance.DeterminingNeighboringBlocks(gridPositionDAndD);
+            neighboringBlocksDAndD = GridBlocks.Instance.DeterminingNeighboringBlocks(gridPositionDAndD);
             //если стартовая позиция мыши нулевая
             if (startPosition == new Vector3(0, 0, 0))
             {
@@ -81,10 +81,10 @@ public class MasterController : MonoBehaviour
         if (change)
         {
             //перемещаем елементы на новую позицию
-            Grid.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
+            GridBlocks.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
 
             //ищем совпавшие линии             
-            Grid.Instance.Move(blockFieldDAndD, neighboringBlocksDAndD.GetBlock(offsetDirection));
+            GridBlocks.Instance.Move(blockFieldDAndD, neighboringBlocksDAndD.GetBlock(offsetDirection));
 
             ////если совпадение не нашли, то возвращаем элементы обратно
             //if (!matchFound)

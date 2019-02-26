@@ -10,10 +10,10 @@ using System.Linq;
 #if UNITY_EDITOR
 [InitializeOnLoad]
 #endif
-public class Grid : MonoBehaviour, IESaveAndLoad
+public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
 {
-    public static Grid Instance; // Синглтон
+    public static GridBlocks Instance; // Синглтон
     public float blockSize = 1;
     public Transform thisTransform;
 
@@ -178,7 +178,7 @@ public class Grid : MonoBehaviour, IESaveAndLoad
 
             if (!blockedForMove)
             {
-                StartCoroutine(Grid.Instance.MakeMove(touchingBlock, destinationBlock));
+                StartCoroutine(GridBlocks.Instance.MakeMove(touchingBlock, destinationBlock));
             }
         }        
     }
@@ -205,6 +205,7 @@ public class Grid : MonoBehaviour, IESaveAndLoad
                 int iteration = 1;
                 List<Block> blockFields;
                 bool matchFound;
+                bool makeActionElementsAfterMove = false;
                 do
                 {
                     //добавить проверку, что если нет destinationBlock, то не искать совпадающие линии
@@ -248,7 +249,11 @@ public class Grid : MonoBehaviour, IESaveAndLoad
                                 if (CountElementsForMove < elementsForMove.Count)
                                     break;
                             }
-                        }  
+                        }
+                        else
+                        {
+                            makeActionElementsAfterMove = true;
+                        } 
                     }
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFields);
@@ -278,8 +283,7 @@ public class Grid : MonoBehaviour, IESaveAndLoad
                             ExchangeElements(touchingBlock, destinationBlock);
                         }
                     }
-
-
+                    
                     //создаем бонусы
                     if (iteration == 1 && matchFound)
                     {
@@ -294,7 +298,6 @@ public class Grid : MonoBehaviour, IESaveAndLoad
                         yield return new WaitForSeconds(0.07f);
                     }
                     
-
                     if (matchFound && iteration != 1)
                     {
                         if (CountElementsForMove < elementsForMove.Count)
@@ -307,15 +310,16 @@ public class Grid : MonoBehaviour, IESaveAndLoad
                     elementsForMove.Remove(blocks);
                     //если есть элементы в очереди на движение
                     if (elementsForMove.Count > 0)
-                    {
                         break;
-                    }
 
                     iteration++;
                 } while (matchFound || needFilling);
 
-                //действия элементов после хода!!!!               
-
+                if (makeActionElementsAfterMove)
+                {
+                    //действия элементов после хода             
+                    PerformActionElementsAfterMove();
+                }                
             }
 
             //если закончились ходы игрока и ходы всей игры
@@ -348,6 +352,38 @@ public class Grid : MonoBehaviour, IESaveAndLoad
 
         }
         blockedForMove = false;
+    }
+
+    //действия элементов после хода
+    private void PerformActionElementsAfterMove() {
+
+
+
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                if (containers[x].block[y] != null)
+                {
+                    if (containers[x].block[y].Element != null )
+                    {
+                        //действие элемента
+                        containers[x].block[y].Element.PerformActionAfterMove();
+
+                        if (containers[x].block[y].Element.BlockingElement != null)
+                        {
+                            //действие блокирующего элемента
+                            containers[x].block[y].Element.BlockingElement.PerformActionAfterMove();
+                        }
+                    }
+                    if (containers[x].block[y].BehindElement != null)
+                    {
+                        //действие элемента на заднем плане
+                        containers[x].block[y].BehindElement.PerformActionAfterMove();
+                    }
+                }
+            }
+        }
     }
 
     //проверка совпадений по всей сетке, возвращает массив найденых блоков
@@ -969,6 +1005,22 @@ public class Grid : MonoBehaviour, IESaveAndLoad
         return null;
     }
 
+    //возвращает блок с указанным элементом на заднем плане
+    public Block GetBlock(BehindElement behindElement)
+    {
+        //ищем объект
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если нашли наш блок то возвращаем его позицию
+                if (containers[x].block[y] != null && containers[x].block[y].BehindElement == behindElement)
+                    return containers[x].block[y];
+            }
+        }
+        return null;
+    }
+
     //функцию поиска позиции оп блоку
     public Position FindPosition(Block block)
     {
@@ -1005,6 +1057,30 @@ public class Grid : MonoBehaviour, IESaveAndLoad
                 if (containers[x].block[y] != null)
                 {
                     if (containers[x].block[y].Element == element)
+                        return new Position(x, y);
+                }
+            }
+        }
+
+        //если ничего не нашли, то возвращаем -1 -1
+        return new Position(positionX, positionY);
+    }
+
+    //функцию поиска позиции по элементу на заднем плане
+    public Position FindPosition(BehindElement behindElement)
+    {
+        int positionX = -1;
+        int positionY = -1;
+
+        //ищем объект
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если нашли наш блок то возвращаем его позицию
+                if (containers[x].block[y] != null)
+                {
+                    if (containers[x].block[y].BehindElement == behindElement)
                         return new Position(x, y);
                 }
             }

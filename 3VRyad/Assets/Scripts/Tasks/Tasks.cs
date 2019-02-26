@@ -49,13 +49,13 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     //создание коллекции целей
     private void CreateCollectedElements() {
         //смещение по y
-        float startingYPoint = thisTransform.position.y - ((Grid.Instance.blockSize + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;
+        float startingYPoint = thisTransform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;
 
         
 
         for (int i = 0; i < targets.Length; i++)
         {
-            GameObject elementGameObject = Instantiate(prefabcollectedElements, new Vector3(thisTransform.position.x, startingYPoint + (i * (Grid.Instance.blockSize + distanceBetweenTargets)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
+            GameObject elementGameObject = Instantiate(prefabcollectedElements, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenTargets)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
             //SpriteBank objectManagement = elementGameObject.GetComponent<SpriteBank>();
             Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
             image.sprite = SpriteBank.SetShape(targets[i].elementsShape);

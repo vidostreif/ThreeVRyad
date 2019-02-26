@@ -3,22 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class BehindElement : MonoBehaviour
+public class BehindElement : BaseElement
 {
-    public Transform thisTransform;
-    protected SpriteRenderer spriteRenderer;
-    [SerializeField] protected bool destroyed;//признак что элемент был уничтожен
     [SerializeField] protected BehindElementsTypeEnum type;//тип элемента
     [SerializeField] protected BehindElementsShapeEnum shape;//форма элемента
 
-
-    public bool Destroyed
-    {
-        get
-        {
-            return destroyed;
-        }
-    }//признак что элемент был уничтожен
     public BehindElementsTypeEnum Type
     {
         get
@@ -50,25 +39,38 @@ public class BehindElement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     //установка настроек элементов
-    public void InitialSettings(BehindElementsTypeEnum type)
+    public void InitialSettings(BehindElementsTypeEnum type, bool actionAfterMove, bool immortal, int life)
     {
         this.type = type;
+        this.actionAfterMove = actionAfterMove;
+        this.immortal = immortal;
+        this.life = life;
     }
 
-    public void Hit() {
-        if (!destroyed)
+    public void Hit()
+    {
+        //если не неразрушаемый
+        if (!destroyed && !this.immortal)
         {
-                        //воздействие на соседние блоки
-                        destroyed = true;
-                        if (!Tasks.Instance.Collect(this))
-                        {
-                            AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-                            animatorElement.PlayDestroyAnimation();
-                        }
+            life--;
         }
+        if (life <= 0)
+        {
+            destroyed = true;
+            if (!Tasks.Instance.Collect(this))
+            {
+                AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+                animatorElement.PlayDestroyAnimation();
+            }
+        }
+    }
+
+    public virtual void PerformActionAfterMove()
+    {
+
     }
 }

@@ -185,7 +185,12 @@ public class Block : MonoBehaviour {
             if (typeElementsEnum == BehindElementsTypeEnum.Standard)
             {
                 curElement = elementGameObject.AddComponent<BehindElement>();
-                curElement.InitialSettings(typeElementsEnum);
+                curElement.InitialSettings(typeElementsEnum, false, false, 1);
+            }
+            if (typeElementsEnum == BehindElementsTypeEnum.Dirt)
+            {
+                curElement = elementGameObject.AddComponent<DirtBehindElement>();
+                curElement.InitialSettings(typeElementsEnum, true, false, 1);
             }
             else
             {
@@ -222,7 +227,27 @@ public class Block : MonoBehaviour {
             }
         }
     }
-    
+
+    ////действие полсле хода
+    //public void PerformActionAfterMove() {
+    //    if (Element != null)
+    //    {
+    //        //действие элемента
+    //        Element.PerformActionAfterMove();
+
+    //        if (Element.BlockingElement != null)
+    //        {
+    //            //действие блокирующего элемента
+    //            Element.BlockingElement.PerformActionAfterMove();
+    //        }
+    //    }
+    //    if (BehindElement != null)
+    //    {
+    //        //действие элемента на заднем плане
+    //        BehindElement.PerformActionAfterMove();
+    //    }
+    //}
+
     void Awake()
     {
         thisTransform = transform;

@@ -3,46 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class BlockingElement : MonoBehaviour {
-        
-    public Transform thisTransform;
-    //protected SpriteBank objectManagement;
-    protected SpriteRenderer spriteRenderer;
+public class BlockingElement : BaseElement
+{
     [SerializeField] protected BlockingElementsShapeEnum shape;//форма элемента
     [SerializeField] protected BlockingElementsTypeEnum type;//тип элемента
-    [SerializeField] protected bool destroyed;
-    [SerializeField] protected int life = 1;
-    [SerializeField] protected bool immortal;
-
-
-    public bool Destroyed {
-        get
-        {
-            return destroyed;
-        }
-    }
-    public bool Immortal
-    {
-        get
-        {
-            return immortal;
-        }
-    }//признак бессмертия
-    public int Life
-    {
-        get
-        {
-            return life;
-        }
-    }//признак бессмертия
-    public BlockingElementsTypeEnum Type
+    public virtual BlockingElementsTypeEnum Type
     {
         get
         {
             return type;
         }
     }
-    public BlockingElementsShapeEnum Shape
+    public virtual BlockingElementsShapeEnum Shape
     {
         get
         {
@@ -55,17 +27,18 @@ public class BlockingElement : MonoBehaviour {
             spriteRenderer.sprite = SpriteBank.SetShape(value);
         }
     }
-       
+
     //установка настроек элементов
-    public void InitialSettings(BlockingElementsTypeEnum type, int life, bool immortal)
+    public void InitialSettings(BlockingElementsTypeEnum type, bool actionAfterMove, bool immortal, int life)
     {
         this.type = type;
         this.life = life;
         this.immortal = immortal;
+        this.actionAfterMove = actionAfterMove;
     }
 
     //удар элементу
-    public BlockingElement Hit()
+    public override void Hit()
     {
         //если не неразрушаемый
         if (!this.immortal)
@@ -75,12 +48,13 @@ public class BlockingElement : MonoBehaviour {
         //если елемент убили, то возвращаем null
         if (life <= 0)
         {
-            Tasks.Instance.Collect(this);
-            AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-            animatorElement.PlayDestroyAnimation();
             destroyed = true;
+            if (!Tasks.Instance.Collect(this))
+            {
+                AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+                animatorElement.PlayDestroyAnimation();
+            }
         }
-        return this;
     }
 
     void Awake()
@@ -90,14 +64,4 @@ public class BlockingElement : MonoBehaviour {
         //objectManagement = GetComponent<SpriteBank>();
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
     }
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

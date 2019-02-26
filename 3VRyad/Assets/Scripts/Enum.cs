@@ -35,12 +35,14 @@ public enum BehindElementsTypeEnum
 {
     Empty, //пустой 
     Standard, //стандартный элемент
+    Dirt, //грязь
 }//Типы элементов позади
 
 public enum BehindElementsShapeEnum
 {
     Empty, //пустой элемент
     Grass, //трава
+    Dirt, //грязь
 }//Внешние виды элементов позади
 
 public enum BlockingElementsTypeEnum
@@ -73,6 +75,7 @@ public enum AllShapeEnum
     Plum, //слива
     BigFlask,//фласка большая
     Grass, //трава
+    Dirt, //грязь
 }//Внешние виды элементов
 
 public enum BlockTypeEnum

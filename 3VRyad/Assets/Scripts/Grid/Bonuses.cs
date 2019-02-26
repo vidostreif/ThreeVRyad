@@ -37,7 +37,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         {
             //определяем место выдачи бонуса
             Block blockToCreateBonus = null;
-            if (Grid.Instance.ThisStandardBlockWithoutElement(destinationBlock) || Grid.Instance.ThisStandardBlockWithoutElement(touchingBlock))
+            if (GridBlocks.Instance.ThisStandardBlockWithoutElement(destinationBlock) || GridBlocks.Instance.ThisStandardBlockWithoutElement(touchingBlock))
             {
                 //ищем блок куда переместили элемент в массиве
                 blockToCreateBonus = findedBlockInLine.Find(item => item == destinationBlock);
@@ -52,9 +52,9 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
                 //пробегаемся по всему массиву и находим блок на пересечении
                 foreach (Block item in findedBlockInLine)
                 {
-                    if (Grid.Instance.ThisStandardBlockWithoutElement(item))//если блок без элемента
+                    if (GridBlocks.Instance.ThisStandardBlockWithoutElement(item))//если блок без элемента
                     {
-                        NeighboringBlocks neighboringBlocks = Grid.Instance.DeterminingNeighboringBlocks(Grid.Instance.FindPosition(item));
+                        NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(GridBlocks.Instance.FindPosition(item));
                         List<Block> matchedBlocks = new List<Block>();
                         foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
                         {
@@ -113,7 +113,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
     }
 
     private void CreatBonus(Bonus bonus, Block blockToCreateBonus) {
-        blockToCreateBonus.CreatElement(Grid.Instance.prefabElement, bonus.Shape, bonus.Type);
+        blockToCreateBonus.CreatElement(GridBlocks.Instance.prefabElement, bonus.Shape, bonus.Type);
     }
 
     //сохранение и заргрузка

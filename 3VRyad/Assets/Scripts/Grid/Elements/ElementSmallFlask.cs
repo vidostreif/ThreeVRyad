@@ -23,7 +23,7 @@ public class ElementSmallFlask : Element
                 //если стоит блокировка на элементе, то пытаемся ее снять
                 if (BlockingElementExists())
                 {
-                    blockingElement = blockingElement.Hit();
+                    blockingElement.Hit();
 
                     //если уничтожили блокирующий элемент
                     if (blockingElement.Destroyed)
@@ -61,7 +61,7 @@ public class ElementSmallFlask : Element
     protected override void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)
     {
         //Находим позицию блока в сетке
-        Position gridPosition = Grid.Instance.FindPosition(this);
+        Position gridPosition = GridBlocks.Instance.FindPosition(this);
         //Определяем блоки вокруг
         Block[] aroundBlocks = DeterminingBlocksForHit(gridPosition, explosionRadius);
 
@@ -77,7 +77,7 @@ public class ElementSmallFlask : Element
     protected Block[] DeterminingBlocksForHit(Position position, int radius)
     {
         int diameter = radius * 2;
-        Blocks[] containers = Grid.Instance.containers;
+        Blocks[] containers = GridBlocks.Instance.containers;
         Block[] blocks = new Block[(diameter + 1) * (diameter + 1) - 5];
 
         if (position.posX != -1 || position.posY != -1)

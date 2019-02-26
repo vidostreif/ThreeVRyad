@@ -8,11 +8,11 @@ public class BlockEditor : Editor
 {
 
     Block block;
-    Grid grid;
+    GridBlocks grid;
 
     void OnEnable() { EditorApplication.update += Update;
         block = (Block)target;
-        grid = GameObject.Find("Grid").GetComponent<Grid>();
+        grid = GameObject.Find("Grid").GetComponent<GridBlocks>();
         block.thisTransform = block.transform;
     }
 

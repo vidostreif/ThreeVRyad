@@ -5,7 +5,7 @@ using UnityEngine;
 public static class BorderGrid
 {
     ////обвести сетку
-    public static void CircleGrid(Grid grid)
+    public static void CircleGrid(GridBlocks grid)
     {
 
         GameObject borderGrid = new GameObject();

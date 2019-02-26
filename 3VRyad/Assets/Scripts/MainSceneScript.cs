@@ -23,8 +23,8 @@ public class MainSceneScript : MonoBehaviour {
 
     void Start()
     {
-        Grid.Instance.StartFilling();
-        Grid.Instance.Move();
+        GridBlocks.Instance.StartFilling();
+        GridBlocks.Instance.Move();
     }
 
     public void CompleteGame() {
