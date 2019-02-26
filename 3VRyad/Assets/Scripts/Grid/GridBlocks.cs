@@ -270,6 +270,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             touchingBlock.Hit();
                             yield return new WaitForSeconds(0.1f);
                             matchFound = true;
+                            makeActionElementsAfterMove = true;
                         }
 
                         else if (destinationBlock != null && destinationBlock.Element != null && destinationBlock.Element.Activated)
@@ -277,6 +278,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             destinationBlock.Hit();
                             yield return new WaitForSeconds(0.1f);
                             matchFound = true;
+                            makeActionElementsAfterMove = true;
                         }
                         else if (blockFields.Count == 0 || (!blockFields.Contains(destinationBlock) && !blockFields.Contains(touchingBlock)))
                         {
