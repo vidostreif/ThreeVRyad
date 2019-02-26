@@ -20,7 +20,7 @@ public class Element : BaseElement
     [SerializeField] protected bool lockedForMove;//признак что элемент заблокирован для передвижения
     [SerializeField] protected bool createLine;//признак что элемент создает линию
     [SerializeField] protected bool activated;//признак что элемент активируемый
-    [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у блока
+    [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у элемента
 
 
     public bool LockedForMove {
@@ -102,7 +102,7 @@ public class Element : BaseElement
     }
 
     //удар по элементу
-    public virtual void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
+    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
     {
         if (!destroyed)
         {
@@ -140,10 +140,6 @@ public class Element : BaseElement
                 }
             }
         }
-    }
-
-    public virtual void PerformActionAfterMove() {
-
     }
 
     public virtual BlockingElement BlockingElement

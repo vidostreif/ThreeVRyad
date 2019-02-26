@@ -44,11 +44,12 @@ public class BaseElement : MonoBehaviour
     //удар элементу
     public virtual void Hit()
     {
-
     }
+
+    public virtual void Hit(HitTypeEnum hitType, ElementsShapeEnum hitElementShape)
+    { }
 
     public virtual void PerformActionAfterMove()
     {
-
     }
 }

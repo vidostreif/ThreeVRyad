@@ -228,26 +228,6 @@ public class Block : MonoBehaviour {
         }
     }
 
-    ////действие полсле хода
-    //public void PerformActionAfterMove() {
-    //    if (Element != null)
-    //    {
-    //        //действие элемента
-    //        Element.PerformActionAfterMove();
-
-    //        if (Element.BlockingElement != null)
-    //        {
-    //            //действие блокирующего элемента
-    //            Element.BlockingElement.PerformActionAfterMove();
-    //        }
-    //    }
-    //    if (BehindElement != null)
-    //    {
-    //        //действие элемента на заднем плане
-    //        BehindElement.PerformActionAfterMove();
-    //    }
-    //}
-
     void Awake()
     {
         thisTransform = transform;

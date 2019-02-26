@@ -36,11 +36,6 @@ public class BehindElement : BaseElement
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
         spriteRenderer.sortingLayerName = "BackgroundElements";
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     //установка настроек элементов
     public void InitialSettings(BehindElementsTypeEnum type, bool actionAfterMove, bool immortal, int life)
@@ -51,7 +46,7 @@ public class BehindElement : BaseElement
         this.life = life;
     }
 
-    public void Hit()
+    public override void Hit()
     {
         //если не неразрушаемый
         if (!destroyed && !this.immortal)
@@ -67,10 +62,5 @@ public class BehindElement : BaseElement
                 animatorElement.PlayDestroyAnimation();
             }
         }
-    }
-
-    public virtual void PerformActionAfterMove()
-    {
-
     }
 }

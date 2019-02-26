@@ -357,32 +357,46 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //действия элементов после хода
     private void PerformActionElementsAfterMove() {
 
+        //предварительно собераем все элементы которые выполняют действие
+        BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
+        List<BaseElement> elementsForAction = new List<BaseElement>();
 
-
-        for (int x = 0; x < containers.GetLength(0); x++)
+        foreach (BaseElement item in findeObjects)
         {
-            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            if ( item.ActionAfterMove)
             {
-                if (containers[x].block[y] != null)
-                {
-                    if (containers[x].block[y].Element != null )
-                    {
-                        //действие элемента
-                        containers[x].block[y].Element.PerformActionAfterMove();
-
-                        if (containers[x].block[y].Element.BlockingElement != null)
-                        {
-                            //действие блокирующего элемента
-                            containers[x].block[y].Element.BlockingElement.PerformActionAfterMove();
-                        }
-                    }
-                    if (containers[x].block[y].BehindElement != null)
-                    {
-                        //действие элемента на заднем плане
-                        containers[x].block[y].BehindElement.PerformActionAfterMove();
-                    }
-                }
+                elementsForAction.Add(item);
             }
+        }
+
+        //for (int x = 0; x < containers.GetLength(0); x++)
+        //{
+        //    for (int y = 0; y < containers[x].block.GetLength(0); y++)
+        //    {
+        //        if (containers[x].block[y] != null)
+        //        {
+        //            if (containers[x].block[y].Element != null)
+        //            {
+        //                if (containers[x].block[y].Element.ActionAfterMove)
+        //                {
+        //                    elementsForAction.Add(containers[x].block[y].Element);
+        //                }
+        //                if (containers[x].block[y].Element.BlockingElement != null && containers[x].block[y].Element.BlockingElement.ActionAfterMove)
+        //                {
+        //                    elementsForAction.Add(containers[x].block[y].Element.BlockingElement);
+        //                }
+        //            }
+        //            if (containers[x].block[y].BehindElement != null && containers[x].block[y].BehindElement.ActionAfterMove)
+        //            {
+        //                elementsForAction.Add(containers[x].block[y].BehindElement);
+        //            }
+        //        }
+        //    }
+        //}
+        //выполняем действия
+        foreach (BaseElement item in elementsForAction)
+        {
+            item.PerformActionAfterMove();
         }
     }
 
