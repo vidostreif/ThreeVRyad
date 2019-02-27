@@ -47,13 +47,7 @@ public class BehindElement : BaseElement
         this.immortal = immortal;
         this.life = life;
 
-        if (actionDelay != 0)
-        {
-            //изменяем альфу спрайта
-            float dActionDelay = actionDelay;
-            float dStartingActionDelay = startingActionDelay;
-            SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
-        }
+        UpdateSpriteAlfa();
     }
 
     public override void Hit()
@@ -71,6 +65,17 @@ public class BehindElement : BaseElement
                 AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
                 animatorElement.PlayDestroyAnimation();
             }
+        }
+    }
+
+    protected void UpdateSpriteAlfa()
+    {
+        if (startingActionDelay != 0)
+        {
+            //изменяем альфу спрайта
+            float dActionDelay = actionDelay;
+            float dStartingActionDelay = startingActionDelay;
+            SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
         }
     }
 }

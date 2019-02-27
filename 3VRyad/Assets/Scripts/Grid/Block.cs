@@ -190,7 +190,7 @@ public class Block : MonoBehaviour {
             else if(typeElementsEnum == BehindElementsTypeEnum.Dirt)
             {
                 curElement = elementGameObject.AddComponent<DirtBehindElement>();
-                curElement.InitialSettings(typeElementsEnum, false, 1, true, 1);
+                curElement.InitialSettings(typeElementsEnum, false, 1, true, 2);
             }
             else
             {
@@ -237,7 +237,7 @@ public class Block : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //если есть элемент и он не на позиции нашего блока то медлено премещаем его к блоку
-        if (this.Element != null && this.Element.thisTransform.position != thisTransform.position && !this.Element.drag && !this.Element.Destroyed)
+        if (MainAnimator.Instance != null && this.Element != null && this.Element.thisTransform.position != thisTransform.position && !this.Element.drag && !this.Element.Destroyed)
         {
             MainAnimator.Instance.AddElementForSmoothMove(this.Element.thisTransform, thisTransform.position, 1, SmoothEnum.InLine, smoothTime: 0.1f);
         }        

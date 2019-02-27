@@ -126,7 +126,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
 
     public XElement GetXElement()
     {
-        XElement bonusesXElement = new XElement("Bonuses");
+        XElement bonusesXElement = new XElement(this.GetType().ToString());
 
         //записываем все внешности и количество
         XElement bonusesListXElement = new XElement("bonusesList");

@@ -76,10 +76,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4351087558254360}
   - component: {fileID: 222831252065997530}
+  - component: {fileID: 114133086956370690}
   - component: {fileID: 114988500668735914}
   - component: {fileID: 114191125961773848}
   - component: {fileID: 114031967854233578}
-  - component: {fileID: 114133086956370690}
   m_Layer: 0
   m_Name: GameHelper
   m_TagString: GameController
@@ -110,6 +110,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1234334804531704}
   m_CullTransparentMesh: 0
+--- !u!114 &114133086956370690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234334804531704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0453c4a590404074090b20c1beb6359d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boom: {fileID: 0}
+  explosionEffect: {fileID: 5187769647623933975, guid: 3c7925780b11508498fd0be7fba505cf,
+    type: 3}
 --- !u!114 &114988500668735914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,19 +162,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabCanvasEndGameMenu: {fileID: 6577434973905200748, guid: 1dc5341ed8052334388bc69bdfb10467,
-    type: 3}
---- !u!114 &114133086956370690
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1234334804531704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0453c4a590404074090b20c1beb6359d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boom: {fileID: 0}
-  explosionEffect: {fileID: 5187769647623933975, guid: 3c7925780b11508498fd0be7fba505cf,
     type: 3}

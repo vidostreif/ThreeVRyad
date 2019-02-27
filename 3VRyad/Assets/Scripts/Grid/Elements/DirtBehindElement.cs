@@ -11,15 +11,9 @@ public class DirtBehindElement : BehindElement
         {
             if (actionDelay == 0)
             {
-                if (startingActionDelay != 0)
-                {
                 actionDelay = startingActionDelay;
-                    //изменяем альфу спрайта
-                    float dActionDelay = actionDelay;
-                    float dStartingActionDelay = startingActionDelay;
-                    SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
-                }                
-                
+                UpdateSpriteAlfa();
+
                 //распространение на соседний блок
                 NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(GridBlocks.Instance.FindPosition(this));
                 SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
@@ -40,13 +34,7 @@ public class DirtBehindElement : BehindElement
             else
             {   
                 actionDelay--;
-                if (startingActionDelay != 0)
-                {
-                    //изменяем альфу спрайта
-                    float dActionDelay = actionDelay;
-                    float dStartingActionDelay = startingActionDelay;
-                    SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
-                }
+                UpdateSpriteAlfa();
             }
             
         }

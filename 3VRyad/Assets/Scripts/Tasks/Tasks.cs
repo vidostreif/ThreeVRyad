@@ -159,7 +159,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     //передаем данные о на стройках в xml формате
     public XElement GetXElement()
     {
-        XElement tasksXElement = new XElement("Tasks");
+        XElement tasksXElement = new XElement(this.GetType().ToString());
 
         tasksXElement.Add(new XElement("moves", moves));//количество ходов
         tasksXElement.Add(new XElement("sizeTargets", targets.GetLength(0)));//записываем количество заданий

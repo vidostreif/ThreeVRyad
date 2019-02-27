@@ -167,7 +167,7 @@ public class BlockEditor : Editor
             Element element = block.Element.GetComponent<Element>();
             EditorUtility.SetDirty(element);
             if (block.Element.BlockingElement != null) {
-                BlockingElement blockingElement = block.Element.GetComponent<BlockingElement>();
+                BlockingElement blockingElement = block.Element.BlockingElement.GetComponent<BlockingElement>();
                 EditorUtility.SetDirty(blockingElement);
             }
         }
