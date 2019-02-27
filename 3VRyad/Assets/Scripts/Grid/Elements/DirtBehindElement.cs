@@ -9,22 +9,46 @@ public class DirtBehindElement : BehindElement
     {
         if (!destroyed)
         {
-            //распространение на соседний блок
-            NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(GridBlocks.Instance.FindPosition(this));
-            SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
-
-            foreach (Block block in neighboringBlocks.allBlockField)
+            if (actionDelay == 0)
             {
-                //находим не заблокированный элемент
-                if (GridBlocks.Instance.ThisStandardBlockWithStandartElementCanMove(block))
+                if (startingActionDelay != 0)
                 {
-                    if (block.BehindElement == null || block.BehindElement.Destroyed)
+                actionDelay = startingActionDelay;
+                    //изменяем альфу спрайта
+                    float dActionDelay = actionDelay;
+                    float dStartingActionDelay = startingActionDelay;
+                    SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
+                }                
+                
+                //распространение на соседний блок
+                NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(GridBlocks.Instance.FindPosition(this));
+                SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
+
+                foreach (Block block in neighboringBlocks.allBlockField)
+                {
+                    //находим не заблокированный элемент
+                    if (GridBlocks.Instance.ThisStandardBlockWithStandartElementCanMove(block))
                     {
-                        block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type);
-                        break;
+                        if (block.BehindElement == null || block.BehindElement.Destroyed)
+                        {
+                            block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type);
+                            break;
+                        }
                     }
                 }
             }
+            else
+            {   
+                actionDelay--;
+                if (startingActionDelay != 0)
+                {
+                    //изменяем альфу спрайта
+                    float dActionDelay = actionDelay;
+                    float dStartingActionDelay = startingActionDelay;
+                    SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
+                }
+            }
+            
         }
     }
 }

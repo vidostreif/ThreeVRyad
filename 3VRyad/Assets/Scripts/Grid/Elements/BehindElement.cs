@@ -38,12 +38,22 @@ public class BehindElement : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(BehindElementsTypeEnum type, bool actionAfterMove, bool immortal, int life)
+    public void InitialSettings(BehindElementsTypeEnum type, bool immortal, int life, bool actionAfterMove, int actionDelay = 0)
     {
         this.type = type;
         this.actionAfterMove = actionAfterMove;
+        this.actionDelay = actionDelay;
+        this.startingActionDelay = actionDelay;
         this.immortal = immortal;
         this.life = life;
+
+        if (actionDelay != 0)
+        {
+            //изменяем альфу спрайта
+            float dActionDelay = actionDelay;
+            float dStartingActionDelay = startingActionDelay;
+            SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
+        }
     }
 
     public override void Hit()

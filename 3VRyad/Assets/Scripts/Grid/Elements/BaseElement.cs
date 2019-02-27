@@ -8,9 +8,11 @@ public class BaseElement : MonoBehaviour
     //protected SpriteBank objectManagement;
     protected SpriteRenderer spriteRenderer;
     [SerializeField] protected bool destroyed;//признак что элемент был уничтожен
-    [SerializeField] protected int life = 1;
+    [SerializeField] protected int life;
     [SerializeField] protected bool immortal;//признак бессмертия
     [SerializeField] protected bool actionAfterMove;//признак активируемости по окончанию хода
+    [SerializeField] protected int actionDelay;//задержка перед активированием
+    [SerializeField] protected int startingActionDelay;//запоминает первичную задержку для расчетов
 
     public bool Destroyed
     {
@@ -52,4 +54,5 @@ public class BaseElement : MonoBehaviour
     public virtual void PerformActionAfterMove()
     {
     }
+    
 }

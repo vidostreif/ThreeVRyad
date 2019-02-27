@@ -1533,8 +1533,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     public XElement GetXElement()
     {
-
-        XElement gridXElement = new XElement("Grid");
+        XElement gridXElement = new XElement(this.GetType().ToString());
 
         gridXElement.Add(new XElement("blockSize", blockSize));
 

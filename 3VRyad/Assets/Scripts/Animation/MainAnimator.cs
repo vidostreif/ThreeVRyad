@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using System;
 
 [ExecuteInEditMode]
+//#if UNITY_EDITOR
+//[InitializeOnLoad]
+//#endif
 public class MainAnimator : MonoBehaviour {
 
     public static MainAnimator Instance; // Синглтон

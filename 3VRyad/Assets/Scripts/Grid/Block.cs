@@ -185,12 +185,12 @@ public class Block : MonoBehaviour {
             if (typeElementsEnum == BehindElementsTypeEnum.Standard)
             {
                 curElement = elementGameObject.AddComponent<BehindElement>();
-                curElement.InitialSettings(typeElementsEnum, false, false, 1);
+                curElement.InitialSettings(typeElementsEnum, false, 1, false);
             }
-            if (typeElementsEnum == BehindElementsTypeEnum.Dirt)
+            else if(typeElementsEnum == BehindElementsTypeEnum.Dirt)
             {
                 curElement = elementGameObject.AddComponent<DirtBehindElement>();
-                curElement.InitialSettings(typeElementsEnum, true, false, 1);
+                curElement.InitialSettings(typeElementsEnum, false, 1, true, 1);
             }
             else
             {
@@ -231,7 +231,6 @@ public class Block : MonoBehaviour {
     void Awake()
     {
         thisTransform = transform;
-        //objectManagement = GetComponent<SpriteBank>();
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
     }
     	
