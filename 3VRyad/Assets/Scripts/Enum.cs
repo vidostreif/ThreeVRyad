@@ -29,6 +29,7 @@ public enum ElementsShapeEnum
     Camomile, //ромашка
     Plum, //слива
     BigFlask,//фласка большая
+    Mushroom,//гриб
 }//Внешние виды элементов
 
 public enum BehindElementsTypeEnum
@@ -76,6 +77,7 @@ public enum AllShapeEnum
     BigFlask,//фласка большая
     Grass, //трава
     Dirt, //грязь
+    Mushroom,//гриб
 }//Внешние виды элементов
 
 public enum BlockTypeEnum

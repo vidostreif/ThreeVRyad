@@ -3070,6 +3070,11 @@ PrefabInstance:
       propertyPath: containers.Array.data[10].block.Array.data[8]
       value: 
       objectReference: {fileID: 1199189284}
+    - target: {fileID: 5605447329317330089, guid: 0caa77b6e936f3e47ae9e4d1ae030266,
+        type: 3}
+      propertyPath: elementsPriority.Array.data[0].elementsShape
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 47804590683754226, guid: 0caa77b6e936f3e47ae9e4d1ae030266,
         type: 3}
       propertyPath: grid
