@@ -111,11 +111,11 @@ public class Block : MonoBehaviour {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
         {
-            ////если уже есть элемент то удаляем его
-            //if (element != null)
-            //{
-            //    DestroyImmediate(element.gameObject);
-            //}
+            //если уже есть элемент то удаляем его
+            if (element != null)
+            {
+                DestroyImmediate(element.gameObject);
+            }
 
             //создаем новый элемент
             GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + 1, thisTransform.position.z), Quaternion.identity);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿//using Boo.Lang;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,17 @@ public static class SupportFunctions
             arr.SetValue(temp, i);
         }
     }
+
+    //public static void MixArray(List<MonoBehaviour> arr)
+    //{
+    //    for (int i = (arr.Count - 1); i >= 1; i--)
+    //    {
+    //        int j = UnityEngine.Random.Range(0, i + 1);
+    //        var temp = arr[j];
+    //        arr[j] = arr[i];
+    //        arr[i] = temp;
+    //    }
+    //}
 
     public static void ChangeAlfa(SpriteRenderer spriteRenderer, float alfa) {
         //изменяем альфу спрайта

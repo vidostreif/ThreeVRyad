@@ -6,12 +6,11 @@ using UnityEngine.UI;
 [System.Serializable]
 public class Instrument
 {
+    [SerializeField] private InstrumentsEnum type;//какой вид инструмента
+    [SerializeField] private int quantity;//доступное количество
     private Image image;
-    public InstrumentsEnum elementsType;//какой вид элементов собераем
     private Text text;
     private Button button;
-    public int number;
-    [SerializeField] private int quantity;//доступное количество
 
     public Text Text
     {
@@ -26,7 +25,6 @@ public class Instrument
             UpdateText();
         }
     }
-
     public Image Image
     {
         get
@@ -39,7 +37,6 @@ public class Instrument
             image = value;
         }
     }
-
     public Button Button
     {
         get
@@ -50,6 +47,13 @@ public class Instrument
         set
         {
             button = value;
+        }
+    }
+    public InstrumentsEnum Type
+    {
+        get
+        {
+            return type;
         }
     }
 
@@ -63,11 +67,12 @@ public class Instrument
     public void Action() {
         if (quantity > 0)
         {
-            Debug.Log(elementsType);
+            Debug.Log(Type);
             InstrumentsManager.Instance.PreparInstrument(this);
         }
         
     }
+
     //обнолвление текста
     private void UpdateText()
     {

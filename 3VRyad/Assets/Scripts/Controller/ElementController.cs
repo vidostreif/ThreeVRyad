@@ -52,8 +52,8 @@ public class ElementController : MonoBehaviour {
         //если есть актиный инструмент
         if (InstrumentsManager.Instance.InstrumentPrepared)
         {
-            Block block = GridBlocks.Instance.GetBlock(ThisElement);
-            InstrumentsManager.Instance.ActivateInstrument(block);
+            //Block block = GridBlocks.Instance.GetBlock(ThisElement);
+            //InstrumentsManager.Instance.ActivateInstrument(block);
         }
         else
         {

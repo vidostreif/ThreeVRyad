@@ -724,7 +724,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //перемешать стандартные элементы
-    private void MixStandartElements()
+    public void MixStandartElements()
     {
         List<ElementsPriority> listPriority = new List<ElementsPriority>();
         elementsForMix.Clear();
@@ -777,6 +777,32 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     {
 
         if (block != null && block.Element != null && !block.Element.Destroyed)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ThisBlockWithMortalElement(Block block)
+    {
+
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Immortal == false)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool ThisBlockWithStandartElement(Block block)
+    {
+
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.Standard)
         {
             return true;
         }
@@ -1190,6 +1216,37 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         return blocks;
     }
 
+    //определяем блоки крест на крест кроме центрального
+    public Block[] DeterminingAllCrossBlocks(Position position)
+    {
+        Block[] blocks = new Block[0];
+
+        if (position.posX != -1 || position.posY != -1)
+        {
+            blocks = new Block[containers.GetLength(0) + containers[position.posX].block.GetLength(0) - 2];
+            int iteration = 0;
+
+            for (int x = 0; x < containers.GetLength(0); x++)
+            {
+                if (position.posX != x)
+                {
+                    blocks[iteration] = containers[x].block[position.posY];
+                    iteration++;
+                }
+            }
+
+            for (int y = 0; y < containers[position.posX].block.GetLength(0); y++)
+            {
+                if (position.posY != y)
+                {
+                    blocks[iteration] = containers[position.posX].block[y];
+                    iteration++;
+                }
+            }
+        }
+        return blocks;
+    }
+
     //возвращает количество элементов указанной формы
     public int DetermineNumberElements(AllShapeEnum shape)
     {
@@ -1264,6 +1321,25 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
         }
         return number;
+    }
+
+    //возвращает все блоки со стандартными элементами в сетке
+    public Block[] ReturnAllBlocksWithStandartElements()
+    {
+        List<Block> blocks = new List<Block>();
+
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если блок существует по данному адресу и в нем есть стандартный элемент
+                if (ThisBlockWithStandartElement(containers[x].block[y]))
+                {
+                    blocks.Add(containers[x].block[y]);
+                }
+            }
+        }
+        return blocks.ToArray();
     }
 
     //процедура замены элементов между блоками
