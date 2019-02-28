@@ -149,8 +149,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             endGame = true;
         }
     }
-
-
+    
     //сохранение и заргрузка
     public Type GetClassName()
     {
