@@ -51,7 +51,8 @@ public class Target
             UpdateText();
         }
     }
-    //обнолвление текста количества ходов
+
+    //обнолвление текста
     private void UpdateText()
     {
         text.text = "" + goal;

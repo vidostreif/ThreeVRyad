@@ -85,12 +85,15 @@ public enum BlockTypeEnum
 }//Типы блоков
 
 
-public enum AbilitiesEnum
+public enum InstrumentsEnum
 {
     Empty, //пустой элемент
-    WateringCan, //лейка
-    Hoe //мотыга
-}//
+    Shovel, //лопата
+    Hoe, //мотыга
+    Vortex, //вихрь
+    Repainting, //перекраска
+
+}//инсструменты
 
 public enum HitTypeEnum
 {

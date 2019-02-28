@@ -112,6 +112,30 @@ public class SpriteBank : MonoBehaviour
         }
     }
 
+    public static Sprite SetShape(InstrumentsEnum shape)
+    {
+        //в зависимости от типа
+        switch (shape)
+        {
+            case InstrumentsEnum.Empty:
+                //удаляем спрайт!!!
+                return null;
+            case InstrumentsEnum.Shovel:
+                //устанавливаем спрайт
+                return Resources.Load<Sprite>("Sprites/Instruments/Shovel") as Sprite;
+            case InstrumentsEnum.Hoe:
+                return Resources.Load<Sprite>("Sprites/Instruments/Hoe") as Sprite;
+            case InstrumentsEnum.Vortex:
+                return Resources.Load<Sprite>("Sprites/Instruments/Vortex") as Sprite;
+            case InstrumentsEnum.Repainting:
+                return Resources.Load<Sprite>("Sprites/Instruments/Repainting") as Sprite;
+            default:
+                Debug.LogError("Не определен тип " + shape);
+                return null;
+
+        }
+    }
+
     public static Sprite SetShape(BorderEnum shape)
     {
         //в зависимости от типа элемента 

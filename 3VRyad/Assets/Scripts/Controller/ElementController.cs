@@ -49,19 +49,28 @@ public class ElementController : MonoBehaviour {
 
     public void DoubleClick(PointerEventData data)//обработка двойного клика
     {
-        if (ThisElement.Activated && !ThisElement.LockedForMove && !ThisElement.Destroyed)
+        //если есть актиный инструмент
+        if (InstrumentsManager.Instance.InstrumentPrepared)
         {
-            if (Time.time > timeFirstClick + timeBetweenClicks)
+            Block block = GridBlocks.Instance.GetBlock(ThisElement);
+            InstrumentsManager.Instance.ActivateInstrument(block);
+        }
+        else
+        {
+            if (ThisElement.Activated && !ThisElement.LockedForMove && !ThisElement.Destroyed)
             {
-                timeFirstClick = Time.time;
-            }
-            else
-            {
-                Debug.Log("Double click");
-                Block block = GridBlocks.Instance.GetBlock(ThisElement);
-                GridBlocks.Instance.Move(block);
+                if (Time.time > timeFirstClick + timeBetweenClicks)
+                {
+                    timeFirstClick = Time.time;
+                }
+                else
+                {
+                    Debug.Log("Double click");
+                    Block block = GridBlocks.Instance.GetBlock(ThisElement);
+                    GridBlocks.Instance.Move(block);
+                }
             }
         }
-        
+             
     }
 }
