@@ -13,8 +13,8 @@ public class InstrumentsManager : MonoBehaviour
     public Instrument[] instruments;// список инструментов 
     private bool instrumentPrepared = false;
     private Instrument preparedInstrument;
-
-
+    private bool successfulActivation = false;
+    
     public bool InstrumentPrepared
     {
         get
@@ -64,11 +64,14 @@ public class InstrumentsManager : MonoBehaviour
         preparedInstrument = instrument;
     }
 
-    public void ActivateInstrument(Block block)
+    public void ActivateInstrument(Block block) {
+        StartCoroutine(Activate(block));
+    }
+
+    private IEnumerator Activate(Block block)
     {
         if (instrumentPrepared)
-        {
-            bool successfulActivation;
+        {            
             //в зависимости от типа
             switch (preparedInstrument.Type)
             {
@@ -76,79 +79,119 @@ public class InstrumentsManager : MonoBehaviour
                     successfulActivation = false;
                     break;
                 case InstrumentsEnum.Shovel:
-                    successfulActivation = ActivateShovel(block);
+                    yield return StartCoroutine(ActivateShovel(block));
+                    //successfulActivation = ActivateShovel(block);
                     break;
                 case InstrumentsEnum.Hoe:
-                    successfulActivation = ActivateHoe(block);
+                    yield return StartCoroutine(ActivateHoe(block));
+                    //successfulActivation = ActivateHoe(block);
                     break;
                 case InstrumentsEnum.Vortex:
-                    successfulActivation = ActivateVortex(block);
+                    yield return StartCoroutine(ActivateVortex(block));
+                    //successfulActivation = ActivateVortex(block);
                     break;
                 case InstrumentsEnum.Repainting:
-                    successfulActivation = ActivateRepainting(block);
+                    yield return StartCoroutine(ActivateRepainting(block));
+                    //successfulActivation = ActivateRepainting(block);
                     break;
                 default:
                     Debug.LogError("Не определен тип инструмента" + preparedInstrument.Type);
                     successfulActivation = false;
                     break;
             }
+            instrumentPrepared = false;
 
             if (successfulActivation)
             {
                 preparedInstrument.SubQuantity();
                 GridBlocks.Instance.Move();
-            }
-            instrumentPrepared = false;
+                successfulActivation = false;
+            }            
         }
     }
 
     //активация лопаты
     //ударяет по одному блоку
-    private bool ActivateShovel(Block block) {
+    private IEnumerator ActivateShovel(Block block) {
         if (GridBlocks.Instance.ThisBlockWithMortalElement(block))
         {
             block.Hit();
-            return true;
+            yield return new WaitForSeconds(0.03f);
+            successfulActivation = true;
+            yield break;
         }
-        return false;
+        successfulActivation = false;
     }
 
     //активация мотыги
     //ударяет крест на крест по всем блокам от указанного блока 
-    private bool ActivateHoe(Block block)
+    private IEnumerator ActivateHoe(Block block)
     {
         Block[] blocks = GridBlocks.Instance.DeterminingAllCrossBlocks(GridBlocks.Instance.FindPosition(block));
         if (blocks.Length > 0)
-        {
+        {            
+            GameObject effekt = new GameObject();
+            SpriteRenderer spriteRenderer = effekt.AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = preparedInstrument.Image.sprite;
+            spriteRenderer.sortingLayerName = "Magic";
+            
+            //находим первый существующий блок, для первичной установки инструмента
+            int iteration = 0;
+            do
+            {
+                if (blocks[iteration] != null)
+                {
+                    effekt.transform.position = blocks[iteration].transform.position;
+                    break;
+                }
+                iteration++;
+            } while (iteration < blocks.Length);
+
+            //если сетка выполняет действия, то ожидаем
+            do
+            {
+                yield return new WaitForSeconds(0.01f);
+            } while (GridBlocks.Instance.blockedForMove);
+
             block.Hit();
             foreach (Block curBlock in blocks)
             {
                 if (curBlock != null)
                 {
+                    MainAnimator.Instance.AddElementForSmoothMove(effekt.transform, curBlock.transform.position, 1, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.8f, addToQueue: false);
+                    //ожидаем передвижения эффекта к текущему блоку
+                    do
+                    {
+                        yield return new WaitForSeconds(0.01f);
+                    } while (effekt.transform.position != curBlock.transform.position);
                     curBlock.Hit();
-                }                
+                }
             }
-            return true;
+            Destroy(effekt);
+            successfulActivation = true;
+            yield break;
         }
-        return false;
+        successfulActivation = false;
     }
 
     //активация вихря
     //перемешивает стандартные незаблокированные элементы
-    private bool ActivateVortex(Block block)
+    private IEnumerator ActivateVortex(Block block)
     {
         Block[] blocks = GridBlocks.Instance.ReturnAllBlocksWithStandartElements();
         if (blocks.Length > 1)
         {
             GridBlocks.Instance.MixStandartElements();
-            return true;
+            yield return new WaitForSeconds(0.03f);
+            successfulActivation = true;
+            yield break;
         }
-        return false;
+        successfulActivation = false;
     }
 
     //активация перекраски 
     //перекрашивает 10 стандартных элементов
-    private bool ActivateRepainting(Block block)
+    private IEnumerator ActivateRepainting(Block block)
     {
         if (GridBlocks.Instance.ThisBlockWithStandartElement(block))
         {
@@ -163,6 +206,7 @@ public class InstrumentsManager : MonoBehaviour
                     if (curBlock.Element.Shape != block.Element.Shape)
                     {
                         //создаем новый элемент
+                        yield return new WaitForSeconds(0.03f);
                         curBlock.CreatElement(GridBlocks.Instance.prefabElement, block.Element.Shape, block.Element.Type);
                         repainted++;
                     }
@@ -175,15 +219,11 @@ public class InstrumentsManager : MonoBehaviour
                 //если перекрасили хоть один элемент
                 if (repainted != 0)
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }                
+                    successfulActivation = true;
+                    yield break;
+                }            
             }
-            return false;
         }
-        return false;
+        successfulActivation = false;
     }
 }

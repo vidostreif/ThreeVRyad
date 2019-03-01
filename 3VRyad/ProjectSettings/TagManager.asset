@@ -60,6 +60,9 @@ TagManager:
   - name: Blocking element
     uniqueID: 1153518651
     locked: 0
+  - name: Magic
+    uniqueID: 4227154297
+    locked: 0
   - name: Menu
     uniqueID: 3674702191
     locked: 0
