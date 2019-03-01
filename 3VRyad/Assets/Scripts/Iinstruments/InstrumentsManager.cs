@@ -116,7 +116,7 @@ public class InstrumentsManager : MonoBehaviour
         if (GridBlocks.Instance.ThisBlockWithMortalElement(block))
         {
             block.Hit();
-            yield return new WaitForSeconds(0.03f);
+            yield return new WaitForSeconds(0.3f);
             successfulActivation = true;
             yield break;
         }
@@ -130,8 +130,10 @@ public class InstrumentsManager : MonoBehaviour
         Block[] blocks = GridBlocks.Instance.DeterminingAllCrossBlocks(GridBlocks.Instance.FindPosition(block));
         if (blocks.Length > 0)
         {            
-            GameObject effekt = new GameObject();
-            SpriteRenderer spriteRenderer = effekt.AddComponent<SpriteRenderer>();
+            GameObject instrumentGO = new GameObject();
+            //добавляем эффект
+            Instantiate(MainParticleSystem.Instance.prefabMagicalTail, instrumentGO.transform);
+            SpriteRenderer spriteRenderer = instrumentGO.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = preparedInstrument.Image.sprite;
             spriteRenderer.sortingLayerName = "Magic";
             
@@ -141,7 +143,7 @@ public class InstrumentsManager : MonoBehaviour
             {
                 if (blocks[iteration] != null)
                 {
-                    effekt.transform.position = blocks[iteration].transform.position;
+                    instrumentGO.transform.position = blocks[iteration].transform.position;
                     break;
                 }
                 iteration++;
@@ -158,16 +160,17 @@ public class InstrumentsManager : MonoBehaviour
             {
                 if (curBlock != null)
                 {
-                    MainAnimator.Instance.AddElementForSmoothMove(effekt.transform, curBlock.transform.position, 1, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.8f, addToQueue: false);
+                    MainAnimator.Instance.AddElementForSmoothMove(instrumentGO.transform, curBlock.transform.position, 1, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.3f, addToQueue: false);
                     //ожидаем передвижения эффекта к текущему блоку
                     do
                     {
                         yield return new WaitForSeconds(0.01f);
-                    } while (effekt.transform.position != curBlock.transform.position);
+                    } while (instrumentGO.transform.position != curBlock.transform.position);
                     curBlock.Hit();
                 }
             }
-            Destroy(effekt);
+            spriteRenderer.sprite = null;
+            Destroy(instrumentGO, 3);
             successfulActivation = true;
             yield break;
         }
@@ -181,8 +184,14 @@ public class InstrumentsManager : MonoBehaviour
         Block[] blocks = GridBlocks.Instance.ReturnAllBlocksWithStandartElements();
         if (blocks.Length > 1)
         {
+            //если сетка выполняет действия, то ожидаем
+            do
+            {
+                yield return new WaitForSeconds(0.01f);
+            } while (GridBlocks.Instance.blockedForMove);
+
             GridBlocks.Instance.MixStandartElements();
-            yield return new WaitForSeconds(0.03f);
+            yield return new WaitForSeconds(0.3f);
             successfulActivation = true;
             yield break;
         }
@@ -200,15 +209,26 @@ public class InstrumentsManager : MonoBehaviour
             int repainted = 0;
             if (blocks.Length > 1)
             {
+                //если сетка выполняет действия, то ожидаем
+                do
+                {
+                    yield return new WaitForSeconds(0.01f);
+                } while (GridBlocks.Instance.blockedForMove);
+
                 SupportFunctions.MixArray(blocks);
                 foreach (Block curBlock in blocks)
                 {
                     if (curBlock.Element.Shape != block.Element.Shape)
                     {
                         //создаем новый элемент
-                        yield return new WaitForSeconds(0.03f);
                         curBlock.CreatElement(GridBlocks.Instance.prefabElement, block.Element.Shape, block.Element.Type);
+                        curBlock.Element.transform.position = block.transform.position;
+                        //добавляем эффект
+                        GameObject effect = Instantiate(MainParticleSystem.Instance.prefabMagicalTail, curBlock.Element.transform);
+                        Destroy(effect, 4);
+
                         repainted++;
+                        yield return new WaitForSeconds(0.15f);
                     }
 
                     if (quantity <= repainted)

@@ -117,8 +117,15 @@ public class Block : MonoBehaviour {
                 DestroyImmediate(element.gameObject);
             }
 
+            //если позиция создания элемента совпадает с позицией блока и блок создает новые элементы
+            float addY = 0;
+            if (/*position == thisTransform.position &&*/ generatorElements)
+            {
+                addY = 1;
+            }
+
             //создаем новый элемент
-            GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + 1, thisTransform.position.z), Quaternion.identity);
+            GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), Quaternion.identity);
             Element curElement;
                     
             if (typeElementsEnum == ElementsTypeEnum.Standard)
