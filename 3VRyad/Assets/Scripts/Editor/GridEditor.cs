@@ -11,7 +11,7 @@ public class GridEditor : Editor
     GridBlocks grid;
 
     void OnEnable() {
-        EditorApplication.update += Update;
+        //EditorApplication.update += Update;
         grid = (GridBlocks)target;
         grid.thisTransform = grid.transform;
     }
@@ -53,7 +53,7 @@ public class GridEditor : Editor
     //    //grid = GameObject.Find("Grid").GetComponent<Grid>();
     //}
 
-    void Update()
+    public override void OnInspectorGUI()
     {
         //base.OnInspectorGUI();
         if (grid != null)

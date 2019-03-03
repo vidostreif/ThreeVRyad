@@ -5,9 +5,17 @@ using UnityEngine;
 
 public class LevelMenu : MonoBehaviour
 {
-
     [SerializeField] public List<Region> regionsList;
-    
+    private Level lastLoadLevel = null;
+
+    public Level LastLoadLevel
+    {
+        get
+        {
+            return lastLoadLevel;
+        }
+    }
+
     public void LoadXml(Level inLevel) {
         for (int i = 0; i < regionsList.Count; i++)
         {
@@ -16,6 +24,7 @@ public class LevelMenu : MonoBehaviour
                 if (regionsList[i].levelList[j] == inLevel)
                 {
                     SaveAndLoadScene.Instance.LoadXml(inLevel.xmlDocument.name, "Region_" + i);
+                    lastLoadLevel = inLevel;
                     break;
                 }
             }
@@ -69,63 +78,25 @@ public class LevelMenu : MonoBehaviour
             }
         }
     }
-
 }
 
-//#if UNITY_EDITOR
-//[CustomEditor(typeof(LevelMenu))]
-//public class LevelMenuEditor : Editor
-//{
-//    Grid grid;
+#if UNITY_EDITOR
+[CustomEditor(typeof(LevelMenu))]
+public class LevelMenuEditor : Editor
+{
+    LevelMenu levelMenu;
+    public override void OnInspectorGUI()
+    {
+        levelMenu = (LevelMenu)target;
+        DrawDefaultInspector();
 
-//    public override void OnInspectorGUI()
-//    {
-//        DrawDefaultInspector();
-//        LevelMenu levelMenu = (LevelMenu)target;
-
-//        SaveAndLoadScene myScript = (SaveAndLoadScene)target;
-
-//        string datapath = Application.dataPath + "/Resources/SaveScenes/" + saveAndLoadScene.SceneName + ".xml";
-
-//        foreach (Region region in levelMenu.regionsList)
-//        {
-//            foreach (Level level in region.levelList)
-//            {
-//                level.xmlDocument = EditorGUILayout.ObjectField("Имя файла", level.xmlDocument, typeof(Object), false);
-
-//                if (level.xmlDocument != null)
-//                {
-//                    if (levelMenu.curLevel != level.xmlDocument)
-//                    {
-//                        if (GUILayout.Button("Загрузить"))
-//                        {
-//                            levelMenu.LoadXml(level.xmlDocument);
-//                            levelMenu.curLevel = level.xmlDocument;
-//                        }
-//                    }
-//                    else
-//                    {
-//                        if (GUILayout.Button("Сохранить"))
-//                        {
-//                            levelMenu.SaveXml(level.xmlDocument);
-//                        }
-//                    }
-
-//                }
-//                else
-//                {
-//                    if (GUILayout.Button("Создать"))
-//                    {
-//                        levelMenu.CreateXml(level.xmlDocument);
-//                        levelMenu.curLevel = level.xmlDocument;
-//                    }
-//                }
-
-//            }
-//        }
-
-//        EditorUtility.SetDirty(levelMenu);
-//    }
-
-//}
-//#endif
+        if (SaveAndLoadScene.Instance.xmlDocument != null && levelMenu.LastLoadLevel != null)
+        {
+            if (GUILayout.Button("Сохранить"))
+            {                
+                levelMenu.SaveXml(levelMenu.LastLoadLevel);
+            }
+        }
+    }
+}
+#endif

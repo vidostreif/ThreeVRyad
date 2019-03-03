@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 public class SaveAndLoadScene : MonoBehaviour {
     public static SaveAndLoadScene Instance; // Синглтон
     public string SceneName;
-    private string saveFolder = "SaveScenes";
+    private string allSaveFolder = "SaveScenes";
     [SerializeField] public UnityEngine.Object xmlDocument = null;
 
     void Awake()
@@ -76,7 +76,7 @@ public class SaveAndLoadScene : MonoBehaviour {
 
         //var bytes = RawDeserializeEx(System.IO.File.ReadAllBytes(datapath), typeof(UnityEngine.Object));
         AssetDatabase.Refresh();
-        xmlDocument = Resources.Load(saveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
+        xmlDocument = Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
         return xmlDocument;
     }
 
@@ -102,12 +102,12 @@ public class SaveAndLoadScene : MonoBehaviour {
         }
 
         GenerateScene(root);
-        xmlDocument = Resources.Load(saveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
+        xmlDocument = Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
     }
 
     public UnityEngine.Object GetXmlDocument(string name = "null", string folder = "")
     {
-        return Resources.Load(saveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
+        return Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
     }
 
     private string GetDatapath(string name = "null", string folder = "") {
@@ -124,7 +124,7 @@ public class SaveAndLoadScene : MonoBehaviour {
             folder = folder + "/";
         }
 
-        string curFolder = Application.dataPath + "/Resources/" + saveFolder + "/" + folder;
+        string curFolder = Application.dataPath + "/Resources/" + allSaveFolder + "/" + folder;
         System.IO.Directory.CreateDirectory(curFolder);
 
         return curFolder + SceneName + ".xml";
