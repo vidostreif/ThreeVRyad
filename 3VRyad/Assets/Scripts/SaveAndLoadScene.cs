@@ -11,32 +11,34 @@ using System.Linq;
 
 [ExecuteInEditMode]
 public class SaveAndLoadScene : MonoBehaviour {
-
-    //public Grid grid;
-    //public Tasks tasks;
+    public static SaveAndLoadScene Instance; // Синглтон
     public string SceneName;
-    [SerializeField] public UnityEngine.Object xmlDocument;
-    // Use this for initialization
-    void Start () {
-        //grid = GameObject.Find("Grid").GetComponent<Grid>();
-        //tasks = GameObject.Find("Tasks").GetComponent<Tasks>();
-        //xDocument = new UnityEngine.Object();
+    [SerializeField] public UnityEngine.Object xmlDocument = null;
+
+    void Awake()
+    {
+        // регистрация синглтона
+        if (Instance != null)
+        {
+            Debug.LogError("Несколько экземпляров SaveAndLoadScene!");
+        }
+
+        Instance = this;
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 
-    public void SaveXml(string name = "null")
+    public void SaveXml(string name = "null", string folder = "")
     {
         if (name == "null")
         {
             SceneName = this.xmlDocument.name;
         }
+        if (folder != "")
+        {
+            folder = folder + "/";
+        }
 
-        string datapath = Application.dataPath + "/Resources/SaveScenes/" + SceneName + ".xml";
+        string datapath = Application.dataPath + "/Resources/SaveScenes/" + folder + SceneName + ".xml";
 
         XElement root = new XElement("root");
 
@@ -74,9 +76,12 @@ public class SaveAndLoadScene : MonoBehaviour {
         xmlDocument = Resources.Load("SaveScenes/" + SceneName, typeof(UnityEngine.Object)) as UnityEngine.Object;
     }
 
-    public void LoadXml()
+    public void LoadXml(string name = "null")
     {
-        SceneName = this.xmlDocument.name;
+        if (name == "null")
+        {
+            SceneName = this.xmlDocument.name;
+        }
         string datapath = Application.dataPath + "/Resources/SaveScenes/" + SceneName + ".xml";
 
         XElement root = null;
@@ -97,10 +102,12 @@ public class SaveAndLoadScene : MonoBehaviour {
         }
 
         GenerateScene(root);
-
     }
 
-    private void GenerateScene(XElement root) {
+    public void CreateXml(string name = "null")
+    { }
+
+        private void GenerateScene(XElement root) {
 
 
         //grid.RecoverFromXElement(root.Element("Grid"));

@@ -6669,6 +6669,33 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1323739975}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &713935759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 713935758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ba1ec0d274a73499b2e03184485449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  regionsList:
+  - name: 
+    levelList:
+    - xmlDocument: {fileID: 0}
+    - xmlDocument: {fileID: 0}
+    - xmlDocument: {fileID: 0}
+    - xmlDocument: {fileID: 4900000, guid: 76df9ac9541cc214e91b5e9bef33ed9a, type: 3}
+    - xmlDocument: {fileID: 0}
+  - name: 
+    levelList:
+    - xmlDocument: {fileID: 0}
+    - xmlDocument: {fileID: 0}
+    - xmlDocument: {fileID: 0}
+    - xmlDocument: {fileID: 4900000, guid: 76df9ac9541cc214e91b5e9bef33ed9a, type: 3}
+    - xmlDocument: {fileID: 0}
 --- !u!114 &713935765
 MonoBehaviour:
   m_ObjectHideFlags: 0
