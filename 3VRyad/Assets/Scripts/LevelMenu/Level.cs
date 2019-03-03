@@ -10,15 +10,28 @@ using UnityEngine;
 public class Level
 {
     [SerializeField] public UnityEngine.Object xmlDocument = null;
-    [SerializeField] public string region = null;
+    //private int timeUpdate = 15;
+    //private float lastUpdate;
 
-    public Level(string region)
-    {
-        this.region = region;
-    }
+    //public int TimeUpdate
+    //{
+    //    get
+    //    {
+    //        return timeUpdate;
+    //    }
+    //}
 
-    //public Level GetLevelRef() {
-    //    return this;
+    //public float LastUpdate
+    //{
+    //    get
+    //    {
+    //        return lastUpdate;
+    //    }
+
+    //    set
+    //    {
+    //        lastUpdate = value;
+    //    }
     //}
 }
 
@@ -70,12 +83,19 @@ public class LevelDrawer : PropertyDrawer
         }
         else
         {
-            if (GUI.Button(buttonRect, "Создать"))
-            {
-                LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
-                Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
+            LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
+            Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
 
-                levelMenu.CreateXml(myDataClass);
+            if (myDataClass != null)
+            {
+                levelMenu.GetXmlDocument(myDataClass);
+                if (myDataClass.xmlDocument == null)
+                {
+                    if (GUI.Button(buttonRect, "Создать"))
+                    {
+                        levelMenu.CreateXml(myDataClass);
+                    }
+                }
             }
         }
 
@@ -120,7 +140,11 @@ public class PropertyDrawerUtility
             //Debug.Log(index);
             //Debug.Log(index2);
 
-            actualObject = obj.regionsList[index].levelList[index2];
+            if (obj.regionsList.Count > index && obj.regionsList[index].levelList.Count > index2)
+            {
+                actualObject = obj.regionsList[index].levelList[index2];
+            }
+            
         }
         return actualObject;
     }

@@ -28,6 +28,16 @@ public class SaveAndLoadScene : MonoBehaviour {
         Instance = this;
     }
 
+#if UNITY_EDITOR
+    void Update()
+    {
+        // регистрация синглтона
+        if (Instance == null)
+        {
+            Instance = this;
+        }        
+    }
+#endif
 
     public UnityEngine.Object SaveXml(string name = "null", string folder = "")
     {
@@ -95,28 +105,9 @@ public class SaveAndLoadScene : MonoBehaviour {
         xmlDocument = Resources.Load(saveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
     }
 
-    //public UnityEngine.Object CreateXml(string name = "null", string folder = "")
-    //{
-    //    string datapath = GetDatapath(name, folder);
-
-    //    XElement root = new XElement("root");
-    //    XDocument xDocument = new XDocument(root);
-
-    //    File.WriteAllText(datapath, xDocument.ToString());
-    //    xmlDocument = Resources.Load(datapath, typeof(UnityEngine.Object)) as UnityEngine.Object;
-    //    return xmlDocument;
-    //}
-
-    public static object RawDeserializeEx(byte[] rawdatas, Type anytype)
+    public UnityEngine.Object GetXmlDocument(string name = "null", string folder = "")
     {
-        int rawsize = Marshal.SizeOf(anytype);
-        if (rawsize > rawdatas.Length)
-            return null;
-        GCHandle handle = GCHandle.Alloc(rawdatas, GCHandleType.Pinned);
-        IntPtr buffer = handle.AddrOfPinnedObject();
-        object retobj = Marshal.PtrToStructure(buffer, anytype);
-        handle.Free();
-        return retobj;
+        return Resources.Load(saveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
     }
 
     private string GetDatapath(string name = "null", string folder = "") {

@@ -7,8 +7,7 @@ public class LevelMenu : MonoBehaviour
 {
 
     [SerializeField] public List<Region> regionsList;
-    //public Object curLevel = null;
-
+    
     public void LoadXml(Level inLevel) {
         for (int i = 0; i < regionsList.Count; i++)
         {
@@ -46,7 +45,25 @@ public class LevelMenu : MonoBehaviour
             {
                 if (regionsList[i].levelList[j] == inLevel)
                 {
+                    //сначала пробуем загрузить
+                    SaveAndLoadScene.Instance.LoadXml("Level_" + j, "Region_" + i);
+
                     inLevel.xmlDocument = SaveAndLoadScene.Instance.SaveXml("Level_" + j, "Region_" + i);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void GetXmlDocument(Level inLevel)
+    {
+        for (int i = 0; i < regionsList.Count; i++)
+        {
+            for (int j = 0; j < regionsList[i].levelList.Count; j++)
+            {
+                if (regionsList[i].levelList[j] == inLevel)
+                {
+                    inLevel.xmlDocument = SaveAndLoadScene.Instance.GetXmlDocument("Level_" + j, "Region_" + i);
                     break;
                 }
             }
