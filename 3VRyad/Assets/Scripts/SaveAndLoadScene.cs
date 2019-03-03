@@ -8,11 +8,13 @@ using System.IO;
 using System.Xml.Linq;
 using System.Reflection;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 [ExecuteInEditMode]
 public class SaveAndLoadScene : MonoBehaviour {
     public static SaveAndLoadScene Instance; // Синглтон
     public string SceneName;
+    private string saveFolder = "SaveScenes";
     [SerializeField] public UnityEngine.Object xmlDocument = null;
 
     void Awake()
@@ -27,18 +29,9 @@ public class SaveAndLoadScene : MonoBehaviour {
     }
 
 
-    public void SaveXml(string name = "null", string folder = "")
+    public UnityEngine.Object SaveXml(string name = "null", string folder = "")
     {
-        if (name == "null")
-        {
-            SceneName = this.xmlDocument.name;
-        }
-        if (folder != "")
-        {
-            folder = folder + "/";
-        }
-
-        string datapath = Application.dataPath + "/Resources/SaveScenes/" + folder + SceneName + ".xml";
+        string datapath = GetDatapath(name, folder);
 
         XElement root = new XElement("root");
 
@@ -47,8 +40,6 @@ public class SaveAndLoadScene : MonoBehaviour {
                         where t.GetInterfaces().Contains(typeof(IESaveAndLoad))
                           && t.GetConstructor(Type.EmptyTypes) != null
                         select Activator.CreateInstance(t) as IESaveAndLoad;
-
-        //List<GameObject> objectsToInteract = new List<GameObject>();//список найденных объектов  
 
         foreach (var instance in instances)
         {
@@ -59,7 +50,7 @@ public class SaveAndLoadScene : MonoBehaviour {
             if (findeObjects.GetLength(0) > 1)
             {
                 Debug.LogError("Объектов типа: " + component.ToString() + ", больше одного на сцене! Сохранение прервано.");
-                return;
+                return null;
             }
 
             foreach (var currentObject in findeObjects) //для каждого объекта в массиве
@@ -67,22 +58,21 @@ public class SaveAndLoadScene : MonoBehaviour {
                 root.Add(currentObject.GetXElement()); // where Foo is a method of ISomething 
             }            
         }
-
-
+        
         XDocument xDocument = new XDocument(root);
         File.WriteAllText(datapath, xDocument.ToString());
+        
         Debug.Log("Сохранили в " + datapath);
 
-        xmlDocument = Resources.Load("SaveScenes/" + SceneName, typeof(UnityEngine.Object)) as UnityEngine.Object;
+        //var bytes = RawDeserializeEx(System.IO.File.ReadAllBytes(datapath), typeof(UnityEngine.Object));
+
+        xmlDocument = Resources.Load(saveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
+        return xmlDocument;
     }
 
-    public void LoadXml(string name = "null")
+    public void LoadXml(string name = "null", string folder = "")
     {
-        if (name == "null")
-        {
-            SceneName = this.xmlDocument.name;
-        }
-        string datapath = Application.dataPath + "/Resources/SaveScenes/" + SceneName + ".xml";
+        string datapath = GetDatapath(name, folder);
 
         XElement root = null;
 
@@ -102,12 +92,54 @@ public class SaveAndLoadScene : MonoBehaviour {
         }
 
         GenerateScene(root);
+        xmlDocument = Resources.Load(saveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
     }
 
-    public void CreateXml(string name = "null")
-    { }
+    //public UnityEngine.Object CreateXml(string name = "null", string folder = "")
+    //{
+    //    string datapath = GetDatapath(name, folder);
 
-        private void GenerateScene(XElement root) {
+    //    XElement root = new XElement("root");
+    //    XDocument xDocument = new XDocument(root);
+
+    //    File.WriteAllText(datapath, xDocument.ToString());
+    //    xmlDocument = Resources.Load(datapath, typeof(UnityEngine.Object)) as UnityEngine.Object;
+    //    return xmlDocument;
+    //}
+
+    public static object RawDeserializeEx(byte[] rawdatas, Type anytype)
+    {
+        int rawsize = Marshal.SizeOf(anytype);
+        if (rawsize > rawdatas.Length)
+            return null;
+        GCHandle handle = GCHandle.Alloc(rawdatas, GCHandleType.Pinned);
+        IntPtr buffer = handle.AddrOfPinnedObject();
+        object retobj = Marshal.PtrToStructure(buffer, anytype);
+        handle.Free();
+        return retobj;
+    }
+
+    private string GetDatapath(string name = "null", string folder = "") {
+        if (name == "null")
+        {
+            SceneName = this.xmlDocument.name;
+        }
+        else
+        {
+            SceneName = name;
+        }
+        if (folder != "")
+        {
+            folder = folder + "/";
+        }
+
+        string curFolder = Application.dataPath + "/Resources/" + saveFolder + "/" + folder;
+        System.IO.Directory.CreateDirectory(curFolder);
+
+        return curFolder + SceneName + ".xml";
+    }
+
+    private void GenerateScene(XElement root) {
 
 
         //grid.RecoverFromXElement(root.Element("Grid"));

@@ -45,45 +45,39 @@ public class LevelDrawer : PropertyDrawer
 
         var xmlDocument = property.FindPropertyRelative("xmlDocument").objectReferenceValue;
 
-        //Level thisLevel = null;
-
-            if (xmlDocument != null)
+        if (xmlDocument != null)
+        {
+            if (SaveAndLoadScene.Instance.xmlDocument != xmlDocument)
             {
-                if (SaveAndLoadScene.Instance.xmlDocument != xmlDocument)
+                if (GUI.Button(buttonRect, "Загрузить"))
                 {
-                    if (GUI.Button(buttonRect, "Загрузить"))
-                    {
-                        //Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
-                        //Debug.Log(myDataClass.xmlDocument);
+                    LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
+                    Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
 
-                        SaveAndLoadScene.Instance.xmlDocument = xmlDocument;
-                        SaveAndLoadScene.Instance.LoadXml(xmlDocument.name);
-                    }
-                }
-                else
-                {
-                    if (GUI.Button(buttonRect, "Сохранить"))
-                    {
-                        LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
-                        Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
-                        if (myDataClass != null)
-                        {
-                             Debug.Log(myDataClass.xmlDocument);
-                        }
-                                            
-                        SaveAndLoadScene.Instance.xmlDocument = xmlDocument;
-                        levelMenu.SaveXml(myDataClass);
-                    }
+                    levelMenu.LoadXml(myDataClass);
                 }
             }
             else
             {
-                if (GUI.Button(buttonRect, "Создать"))
+                if (GUI.Button(buttonRect, "Сохранить"))
                 {
-                    SaveAndLoadScene.Instance.CreateXml(xmlDocument.name);
-                    SaveAndLoadScene.Instance.xmlDocument = xmlDocument;
+                    LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
+                    Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
+
+                    levelMenu.SaveXml(myDataClass);
                 }
             }
+        }
+        else
+        {
+            if (GUI.Button(buttonRect, "Создать"))
+            {
+                LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
+                Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
+
+                levelMenu.CreateXml(myDataClass);
+            }
+        }
 
         EditorGUI.indentLevel = indent;
         EditorGUI.EndProperty();
@@ -97,7 +91,7 @@ public class PropertyDrawerUtility
         LevelMenu obj = property.serializedObject.targetObject as LevelMenu;
         if (obj == null) { return null; }
         Level actualObject = null;
-        
+
         if (obj.regionsList.Count > 0)
         {
             string @int = string.Empty;

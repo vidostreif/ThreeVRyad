@@ -80,6 +80,8 @@ GameObject:
   - component: {fileID: 114988500668735914}
   - component: {fileID: 114191125961773848}
   - component: {fileID: 114031967854233578}
+  - component: {fileID: 713935759}
+  - component: {fileID: 713935765}
   m_Layer: 0
   m_Name: GameHelper
   m_TagString: GameController
@@ -162,4 +164,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabCanvasEndGameMenu: {fileID: 6577434973905200748, guid: 1dc5341ed8052334388bc69bdfb10467,
+    type: 3}
+--- !u!114 &713935759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234334804531704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ba1ec0d274a73499b2e03184485449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  regionsList:
+  - name: 
+    levelList:
+    - xmlDocument: {fileID: 0}
+      region: 
+    - xmlDocument: {fileID: 0}
+      region: 
+    - xmlDocument: {fileID: 0}
+      region: 
+    - xmlDocument: {fileID: 4900000, guid: 76df9ac9541cc214e91b5e9bef33ed9a, type: 3}
+      region: 
+    - xmlDocument: {fileID: 0}
+      region: 
+  - name: 
+    levelList:
+    - xmlDocument: {fileID: 0}
+      region: 
+    - xmlDocument: {fileID: 0}
+      region: 
+    - xmlDocument: {fileID: 0}
+      region: 
+    - xmlDocument: {fileID: 4900000, guid: 76df9ac9541cc214e91b5e9bef33ed9a, type: 3}
+      region: 
+    - xmlDocument: {fileID: 0}
+      region: 
+--- !u!114 &713935765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234334804531704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0ba9119ac108c4785a28b9d9525e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabMagicalTail: {fileID: 3255581534497179977, guid: ef7b6435c945fca4cbc2a2b98bf820b5,
     type: 3}

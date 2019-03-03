@@ -3085,6 +3085,11 @@ PrefabInstance:
       propertyPath: tasks
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 47804590683754226, guid: 0caa77b6e936f3e47ae9e4d1ae030266,
+        type: 3}
+      propertyPath: xmlDocument
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0caa77b6e936f3e47ae9e4d1ae030266, type: 3}
 --- !u!1 &242374056
@@ -6663,53 +6668,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!1 &713935758 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1234334804531704, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
-    type: 3}
-  m_PrefabInstance: {fileID: 1323739975}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &713935759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 713935758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ba1ec0d274a73499b2e03184485449, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  regionsList:
-  - name: 
-    levelList:
-    - xmlDocument: {fileID: 0}
-    - xmlDocument: {fileID: 0}
-    - xmlDocument: {fileID: 0}
-    - xmlDocument: {fileID: 4900000, guid: 76df9ac9541cc214e91b5e9bef33ed9a, type: 3}
-    - xmlDocument: {fileID: 0}
-  - name: 
-    levelList:
-    - xmlDocument: {fileID: 0}
-    - xmlDocument: {fileID: 0}
-    - xmlDocument: {fileID: 0}
-    - xmlDocument: {fileID: 4900000, guid: 76df9ac9541cc214e91b5e9bef33ed9a, type: 3}
-    - xmlDocument: {fileID: 0}
---- !u!114 &713935765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 713935758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf0ba9119ac108c4785a28b9d9525e94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabMagicalTail: {fileID: 3255581534497179977, guid: ef7b6435c945fca4cbc2a2b98bf820b5,
-    type: 3}
 --- !u!1 &723421964
 GameObject:
   m_ObjectHideFlags: 0

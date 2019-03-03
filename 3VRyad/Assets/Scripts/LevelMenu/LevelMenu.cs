@@ -9,28 +9,48 @@ public class LevelMenu : MonoBehaviour
     [SerializeField] public List<Region> regionsList;
     //public Object curLevel = null;
 
-    public void LoadXml(Object xmlDocument) {
-
-    }
-
-    public void SaveXml(Level inLevel)
-    {
-        foreach (Region region in regionsList)
+    public void LoadXml(Level inLevel) {
+        for (int i = 0; i < regionsList.Count; i++)
         {
-            foreach (Level level in region.levelList)
+            for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
-                if (level == inLevel)
+                if (regionsList[i].levelList[j] == inLevel)
                 {
-                    SaveAndLoadScene.Instance.SaveXml(inLevel.xmlDocument.name, region.name);
+                    SaveAndLoadScene.Instance.LoadXml(inLevel.xmlDocument.name, "Region_" + i);
                     break;
                 }
             }
         }
     }
 
-    public void CreateXml(Object xmlDocument)
+    public void SaveXml(Level inLevel)
     {
+        for (int i = 0; i < regionsList.Count; i++)
+        {
+            for (int j = 0; j < regionsList[i].levelList.Count; j++)
+            {
+                if (regionsList[i].levelList[j] == inLevel)
+                {
+                    inLevel.xmlDocument = SaveAndLoadScene.Instance.SaveXml(inLevel.xmlDocument.name, "Region_" + i);
+                    break;
+                }
+            }
+        }
+    }
 
+    public void CreateXml(Level inLevel)
+    {
+        for (int i = 0; i < regionsList.Count; i++)
+        {
+            for (int j = 0; j < regionsList[i].levelList.Count; j++)
+            {
+                if (regionsList[i].levelList[j] == inLevel)
+                {
+                    inLevel.xmlDocument = SaveAndLoadScene.Instance.SaveXml("Level_" + j, "Region_" + i);
+                    break;
+                }
+            }
+        }
     }
 
 }
