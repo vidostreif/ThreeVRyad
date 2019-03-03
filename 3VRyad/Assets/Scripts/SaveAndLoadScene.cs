@@ -65,7 +65,7 @@ public class SaveAndLoadScene : MonoBehaviour {
         Debug.Log("Сохранили в " + datapath);
 
         //var bytes = RawDeserializeEx(System.IO.File.ReadAllBytes(datapath), typeof(UnityEngine.Object));
-
+        AssetDatabase.Refresh();
         xmlDocument = Resources.Load(saveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
         return xmlDocument;
     }
