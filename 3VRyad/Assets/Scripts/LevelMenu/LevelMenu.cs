@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class LevelMenu : MonoBehaviour
 {
     public static LevelMenu Instance; // Синглтон
+    [SerializeField] private bool active;
     [SerializeField] public List<Region> regionsList;
     private Level lastLoadLevel = null;
 
@@ -17,13 +18,23 @@ public class LevelMenu : MonoBehaviour
 
     void Awake()
     {
-        // регистрация синглтона
-        if (Instance != null)
+        if (active)
         {
-            Debug.LogError("Несколько экземпляров LevelMenu!");
-        }
+            // регистрация синглтона
+            if (Instance != null)
+            {
+                Debug.LogError("Несколько экземпляров LevelMenu!");
+            }
 
-        Instance = this;
+            Instance = this;
+
+            //загрузить файл с настройками уровней
+        }
+        else
+        {
+            Destroy(this);
+        }
+        
     }
 
     public Level LastLoadLevel

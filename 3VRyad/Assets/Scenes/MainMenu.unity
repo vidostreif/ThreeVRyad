@@ -371,6 +371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ba1ec0d274a73499b2e03184485449, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  active: 1
   regionsList:
   - name: "\u041E\u0434\u0438\u043D"
     levelList:
