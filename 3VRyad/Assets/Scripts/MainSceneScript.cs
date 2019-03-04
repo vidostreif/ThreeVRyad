@@ -27,6 +27,9 @@ public class MainSceneScript : MonoBehaviour {
         string name = GameMetaData.GetInstance().GetString("name_scene");
         string folder = GameMetaData.GetInstance().GetString("folder_scene");
         SaveAndLoadScene.Instance.LoadXml(name, folder);
+        Tasks.Instance.UpdateMovesText();
+        Tasks.Instance.CreateCollectedElements();
+        BorderGrid.CircleGrid(GridBlocks.Instance);
         GridBlocks.Instance.StartFilling();
         GridBlocks.Instance.Move();
     }

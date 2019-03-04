@@ -10,6 +10,9 @@ public class LevelMenu : MonoBehaviour
     public static LevelMenu Instance; // Синглтон
     [SerializeField] public List<Region> regionsList;
     private Level lastLoadLevel = null;
+
+    private GameObject canvasRegions = null;
+    private GameObject canvasLevels = null;
     //private AsyncOperation async;
 
     void Awake()
@@ -21,13 +24,6 @@ public class LevelMenu : MonoBehaviour
         }
 
         Instance = this;
-    }
-
-    private void Update()
-    {
-        //if ()
-        //    async.allowSceneActivation = true;
-        //LoadXml(inLevel);
     }
 
     public Level LastLoadLevel
@@ -136,7 +132,20 @@ public class LevelMenu : MonoBehaviour
 
     public void CreateLevelMenu(Region region)
     {
-        Transform LevelsCountTransform = transform.Find("Levels");
+        if (canvasRegions != null)
+        {
+            Destroy(canvasRegions);
+        }
+        canvasLevels = Instantiate(PrefabBank.Instance.levelsCanvasPrefab, transform);
+
+        //настройки кнопки назад
+        Transform returnButtonTransform = canvasLevels.transform.Find("ReturnButton");
+        //добавляем действие к кнопке
+        Button returnButton = returnButtonTransform.GetComponent(typeof(Button)) as Button;
+        returnButton.onClick.AddListener(delegate { CreateRegionMenu(); });
+
+        //список уровней
+        Transform LevelsCountTransform = canvasLevels.transform.Find("Viewport/Content");
         foreach (Level level in region.levelList)
         {
             GameObject elementGameObject = Instantiate(PrefabBank.Instance.levelButtonPrefab, LevelsCountTransform);
@@ -145,6 +154,27 @@ public class LevelMenu : MonoBehaviour
             //instruments[i].Image = image;
             elementGameObject.GetComponentInChildren<Text>().text = level.xmlDocument.name;
             level.AddAction(elementGameObject);
+        }
+    }
+
+    public void CreateRegionMenu()
+    {
+        if (canvasLevels != null)
+        {
+            Destroy(canvasLevels);
+        }
+        canvasRegions = Instantiate(PrefabBank.Instance.regionsCanvasPrefab, transform);
+        Transform contentTransform = canvasRegions.transform.Find("Viewport/Content");
+
+        //список регионов
+        foreach (Region region in regionsList)
+        {
+            GameObject regionelementGameObject = Instantiate(PrefabBank.Instance.regionButtonPrefab, contentTransform);
+            //Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
+            //image.sprite = SpriteBank.SetShape(instruments[i].Type);
+            //instruments[i].Image = image;
+            regionelementGameObject.GetComponentInChildren<Text>().text = region.name;
+            region.AddAction(regionelementGameObject);
         }
     }
 }

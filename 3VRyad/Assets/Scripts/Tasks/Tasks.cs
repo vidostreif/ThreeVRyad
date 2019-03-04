@@ -40,14 +40,13 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     }
 
     void Start()
-    {
-        
-        UpdateMovesText();
-        CreateCollectedElements();
+    {        
+        //UpdateMovesText();
+        //CreateCollectedElements();
     }
 
     //создание коллекции целей
-    private void CreateCollectedElements() {
+    public void CreateCollectedElements() {
         //смещение по y
         float startingYPoint = thisTransform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;       
 
@@ -132,7 +131,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         }
     }
     //обнолвление текста количества ходов
-    private void UpdateMovesText() {
+    public void UpdateMovesText() {
         movesText.text = "Ходы:" + moves;
     }
 

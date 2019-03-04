@@ -40,7 +40,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         Instance = this;
         thisTransform = transform;
         blockedForMove = false;
-        BorderGrid.CircleGrid(this);
+        //BorderGrid.CircleGrid(this);
     }
 
     public GameObject GatPrefab(CollectionTypesEnum collectionTypes)
