@@ -23,6 +23,10 @@ public class MainSceneScript : MonoBehaviour {
 
     void Start()
     {
+        //восстанавливаем настройки сцены
+        string name = GameMetaData.GetInstance().GetString("name_scene");
+        string folder = GameMetaData.GetInstance().GetString("folder_scene");
+        SaveAndLoadScene.Instance.LoadXml(name, folder);
         GridBlocks.Instance.StartFilling();
         GridBlocks.Instance.Move();
     }

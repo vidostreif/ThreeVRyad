@@ -5,34 +5,73 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class Level
 {
     [SerializeField] public UnityEngine.Object xmlDocument = null;
-    //private int timeUpdate = 15;
-    //private float lastUpdate;
+    private Image image;
+    private Text text;
+    private Button button;
 
-    //public int TimeUpdate
-    //{
-    //    get
-    //    {
-    //        return timeUpdate;
-    //    }
-    //}
+    public Text Text
+    {
+        get
+        {
+            return text;
+        }
 
-    //public float LastUpdate
-    //{
-    //    get
-    //    {
-    //        return lastUpdate;
-    //    }
+        set
+        {
+            text = value;
+            UpdateText();
+        }
+    }
+    public Image Image
+    {
+        get
+        {
+            return image;
+        }
 
-    //    set
-    //    {
-    //        lastUpdate = value;
-    //    }
-    //}
+        set
+        {
+            image = value;
+        }
+    }
+    public Button Button
+    {
+        get
+        {
+            return button;
+        }
+
+        set
+        {
+            button = value;
+        }
+    }
+
+    public void AddAction(GameObject elementGameObject)
+    {
+        //добавляем действие к кнопке
+        Button = elementGameObject.GetComponent(typeof(Button)) as Button;
+        Button.onClick.AddListener(delegate { Action(); });
+    }
+
+    //действие при нажатии
+    public void Action()
+    {
+            Debug.Log(text);
+            LevelMenu.Instance.LoadLevel(this);
+    }
+
+    //обнолвление текста
+    private void UpdateText()
+    {
+        text.text = "" + text;
+    }
 }
 
 
