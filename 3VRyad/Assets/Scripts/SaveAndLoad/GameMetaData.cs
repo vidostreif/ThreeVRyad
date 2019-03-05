@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//передает данные между сценами
 public class GameMetaData
 {
     private Dictionary<string, string> string_parameters; //сохраненные параметры
+    //private Level lastLoadLevel;
     private static GameMetaData Instance;
 
     public GameMetaData()

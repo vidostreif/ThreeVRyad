@@ -24,9 +24,10 @@ public class MainSceneScript : MonoBehaviour {
     void Start()
     {
         //восстанавливаем настройки сцены
-        string name = GameMetaData.GetInstance().GetString("name_scene");
-        string folder = GameMetaData.GetInstance().GetString("folder_scene");
-        SaveAndLoadScene.Instance.LoadXml(name, folder);
+        //string name = GameMetaData.GetInstance().GetString("name_scene");
+        //string folder = GameMetaData.GetInstance().GetString("folder_scene");
+        //SaveAndLoadScene.Instance.LoadXml(name, folder);
+        LevelMenu.Instance.LoadXml(LevelMenu.Instance.LastLoadLevel);
         Tasks.Instance.UpdateMovesText();
         Tasks.Instance.CreateCollectedElements();
         BorderGrid.CircleGrid(GridBlocks.Instance);
@@ -51,6 +52,7 @@ public class MainSceneScript : MonoBehaviour {
         {
             //победа
             textEndGame.text = "Победа!";
+            LevelMenu.Instance.SetLevelPassed();
         }
         else
         {

@@ -22,31 +22,6 @@ public class GridEditor : Editor
     //    new GameObject("Grid By Kilosoft", typeof(Grid));
     //}
 
-    //public override void OnInspectorGUI()
-    //{
-    //    grid = (GridBlocks)target;
-
-    //    EditorGUILayout.LabelField("Настройка шага:", EditorStyles.boldLabel);
-    //    grid.Width = EditorGUILayout.FloatField("По оси X", grid.Width);
-    //    grid.Height = EditorGUILayout.FloatField("По оси Y", grid.Height);
-    //    grid.Draw = EditorGUILayout.Toggle("Показывать", grid.Draw);
-
-    //    EditorGUILayout.LabelField("Настройка сетки:", EditorStyles.boldLabel);
-    //    grid.CountLines = EditorGUILayout.IntSlider("Кол-во линий", (int)grid.CountLines, 1, 1000);
-
-    //    EditorGUILayout.LabelField("Выбранные объекты:", EditorStyles.boldLabel);
-    //    foreach (var obj in Selection.objects)
-    //    {
-    //        EditorGUILayout.TextField("Имя объекта:", obj.name);
-    //    }
-
-    //    grid.name = "Grid By Kilosoft";
-    //    EditorUtility.SetDirty(grid);
-
-    //    EditorGUILayout.LabelField("О программе:", EditorStyles.boldLabel);
-    //    EditorGUILayout.LabelField("Name: Grid By Kilosoft\nAuthor: Kilosoft\nVersion: 0.1", EditorStyles.helpBox);
-    //}
-
 
     //void Awake()
     //{
@@ -55,7 +30,8 @@ public class GridEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        //base.OnInspectorGUI();
+        base.OnInspectorGUI();
+        grid = (GridBlocks)target;
         if (grid != null)
         {
             //работаем только с объектом у которого есть BlockField
@@ -94,10 +70,8 @@ public class GridEditor : Editor
 
                 }
             }
-
             EditorUtility.SetDirty(grid);
         }
-
         
     }
 }

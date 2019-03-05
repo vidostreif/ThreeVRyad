@@ -16,26 +16,46 @@ public class LevelMenu : MonoBehaviour
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
 
-    void Awake()
+
+    public void OnEnable()
     {
-        if (active)
-        {
-            // регистрация синглтона
-            if (Instance != null)
-            {
-                Debug.LogError("Несколько экземпляров LevelMenu!");
-            }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
 
-            Instance = this;
 
-            //загрузить файл с настройками уровней
-        }
-        else
-        {
-            Destroy(this);
-        }
-        
+        //!!!сделать заполнение regionsList из существующих файлов
+
+
+        //загрузить данных из сохранения
+        JsonSaveAndLoad.LoadSave(regionsList);
+        regionsList[0].levelList[0].open = true;
     }
+
+    public void Awake()
+    {
+        if (Instance) DestroyImmediate(this);
+    }
+
+    //void Awake()
+    //{
+    //    //if (active)
+    //    //{
+    //        // регистрация синглтона
+    //        if (Instance != null)
+    //        {
+    //            Debug.LogError("Несколько экземпляров LevelMenu!");
+    //        }
+
+    //        Instance = this;
+
+            
+    //    //}
+    //    //else
+    //    //{
+    //    //    Destroy(this);
+    //    //}
+        
+    //}
 
     public Level LastLoadLevel
     {
@@ -43,6 +63,20 @@ public class LevelMenu : MonoBehaviour
         {
             return lastLoadLevel;
         }
+    }
+
+    private Level FoundLevelInRegionsList(Level inLevel) {
+        for (int i = 0; i < regionsList.Count; i++)
+        {
+            for (int j = 0; j < regionsList[i].levelList.Count; j++)
+            {
+                if (regionsList[i].levelList[j] == inLevel)
+                {
+                    return regionsList[i].levelList[j];
+                }
+            }
+        }
+        return null;
     }
 
     public void LoadXml(Level inLevel) {
@@ -108,6 +142,65 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
+    private void SetOpenNextLevel()
+    {
+        if (lastLoadLevel != null)
+        {
+            bool found = false;
+            for (int i = 0; i < regionsList.Count; i++)
+            {
+                for (int j = 0; j < regionsList[i].levelList.Count; j++)
+                {
+                    if (found)
+                    {
+                        regionsList[i].levelList[j].open = true;
+                        JsonSaveAndLoad.RecordSave(regionsList[i].levelList, i);
+                        break;
+                    }
+                    if (regionsList[i].levelList[j] == lastLoadLevel)
+                    {
+                        found = true;
+                        //если последний уровень в регионе
+                        if ((j + 1) == regionsList[i].levelList.Count)
+                        {
+                            JsonSaveAndLoad.RecordSave(regionsList[i].levelList, i, false);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void SetLevelPassed()
+    {
+        lastLoadLevel.passed = true;
+        SetOpenNextLevel();        
+    }
+
+    //загрузить следующий уровень
+    public void LoadNextLevel()
+    {
+        if (lastLoadLevel != null)
+        {
+            bool found = false;
+            for (int i = 0; i < regionsList.Count; i++)
+            {
+                for (int j = 0; j < regionsList[i].levelList.Count; j++)
+                {
+                    if (found)
+                    {
+                        LoadXml(regionsList[i].levelList[j]);
+                        break;
+                    }
+                    if (regionsList[i].levelList[j] == lastLoadLevel)
+                    {
+                        found = true;
+                    }
+                }
+            }
+        }
+    }
+
     public void LoadLevel(Level inLevel) {
         StartCoroutine(curLoadLevel(inLevel));
     }
@@ -119,7 +212,7 @@ public class LevelMenu : MonoBehaviour
             {
                 if (regionsList[i].levelList[j] == inLevel)
                 {
-                    SaveAndLoadScene.Instance.LoadXml(inLevel.xmlDocument.name, "Region_" + i);
+                    //SaveAndLoadScene.Instance.LoadXml(inLevel.xmlDocument.name, "Region_" + i);
 
                     GameMetaData.GetInstance().SetString("name_scene", inLevel.xmlDocument.name);
                     GameMetaData.GetInstance().SetString("folder_scene", "Region_" + i);
@@ -132,8 +225,11 @@ public class LevelMenu : MonoBehaviour
     private IEnumerator curLoadLevel(Level inLevel) {
         //загружаем уровень
         //SceneManager.LoadScene("SampleScene");
-        SaveNameScene(inLevel);
+        //SaveNameScene(inLevel);
         SceneManager.LoadSceneAsync("SampleScene");
+        lastLoadLevel = inLevel;
+        Destroy(canvasRegions);
+        Destroy(canvasLevels);
         yield return true;
         //async.allowSceneActivation = false;
         ////восстанавливаем настройки уровня
@@ -164,7 +260,9 @@ public class LevelMenu : MonoBehaviour
             //image.sprite = SpriteBank.SetShape(instruments[i].Type);
             //instruments[i].Image = image;
             elementGameObject.GetComponentInChildren<Text>().text = level.xmlDocument.name;
-            level.AddAction(elementGameObject);
+            level.GetButtonFrom(elementGameObject);
+
+            
         }
     }
 

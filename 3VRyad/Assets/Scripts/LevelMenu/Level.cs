@@ -11,6 +11,9 @@ using UnityEngine.UI;
 public class Level
 {
     [SerializeField] public UnityEngine.Object xmlDocument = null;
+    public bool open = false;//открыт
+    public bool passed = false;//пройден
+
     private Image image;
     private Text text;
     private Button button;
@@ -46,18 +49,21 @@ public class Level
         {
             return button;
         }
-
-        set
-        {
-            button = value;
-        }
     }
 
-    public void AddAction(GameObject elementGameObject)
+    public void GetButtonFrom(GameObject elementGameObject)
     {
         //добавляем действие к кнопке
-        Button = elementGameObject.GetComponent(typeof(Button)) as Button;
-        Button.onClick.AddListener(delegate { Action(); });
+        button = elementGameObject.GetComponent(typeof(Button)) as Button;
+        if (open)
+        {
+            Button.onClick.AddListener(delegate { Action(); });
+        }
+        else
+        {
+            button.interactable = false;
+        }
+        
     }
 
     //действие при нажатии

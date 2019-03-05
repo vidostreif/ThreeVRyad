@@ -11,7 +11,6 @@ using System.Linq;
 [InitializeOnLoad]
 #endif
 public class GridBlocks : MonoBehaviour, IESaveAndLoad
-
 {
     public static GridBlocks Instance; // Синглтон
     public float blockSize = 1;
@@ -43,7 +42,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //BorderGrid.CircleGrid(this);
     }
 
-    public GameObject GatPrefab(CollectionTypesEnum collectionTypes)
+    //void Start()
+    //{
+
+    //}
+
+        public GameObject GatPrefab(CollectionTypesEnum collectionTypes)
     {
         if (collectionTypes == CollectionTypesEnum.Element)
         {
