@@ -18,6 +18,16 @@ public class Level
     private Text text;
     private Button button;
 
+    //public Level()
+    //{
+    //    LevelMenu.Instance.GetXmlDocument(this);
+    //}
+
+    public Level(UnityEngine.Object xmlDocument)
+    {
+        this.xmlDocument = xmlDocument;
+    }
+
     public Text Text
     {
         get

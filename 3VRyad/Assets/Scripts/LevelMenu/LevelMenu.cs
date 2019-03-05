@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[ExecuteInEditMode]
 public class LevelMenu : MonoBehaviour
 {
     public static LevelMenu Instance; // Синглтон
-    [SerializeField] private bool active;
+    //[SerializeField] private bool active;
     [SerializeField] public List<Region> regionsList;
     private Level lastLoadLevel = null;
 
@@ -16,15 +17,12 @@ public class LevelMenu : MonoBehaviour
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
 
-
     public void OnEnable()
     {
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-
         //!!!сделать заполнение regionsList из существующих файлов
-
+        CreateRegionsListFromFiles();
 
         //загрузить данных из сохранения
         JsonSaveAndLoad.LoadSave(regionsList);
@@ -36,26 +34,40 @@ public class LevelMenu : MonoBehaviour
         if (Instance) DestroyImmediate(this);
     }
 
-    //void Awake()
-    //{
-    //    //if (active)
-    //    //{
-    //        // регистрация синглтона
-    //        if (Instance != null)
-    //        {
-    //            Debug.LogError("Несколько экземпляров LevelMenu!");
-    //        }
-
-    //        Instance = this;
-
-            
-    //    //}
-    //    //else
-    //    //{
-    //    //    Destroy(this);
-    //    //}
-        
-    //}
+    private void CreateRegionsListFromFiles() {
+        List<Region> regionsList = new List<Region>();
+        UnityEngine.Object xmlDocument = null;
+        Level level = null;
+        int r = 0;
+        int l = 0;
+        do
+        {
+            if (SaveAndLoadScene.Instance.SaveDirectoryExist("Region_" + r))
+            {
+                regionsList.Add(new Region());
+                do
+                {
+                    xmlDocument = SaveAndLoadScene.Instance.GetXmlDocument("Level_" + l, "Region_" + r);
+                    if (xmlDocument != null)
+                    {
+                        level = new Level(xmlDocument);
+                        //level.xmlDocument = xmlDocument;
+                        regionsList[r].levelList.Add(level);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    l++;
+                } while (true);
+            }
+            else
+            {
+                break;
+            }
+            r++;
+        } while (true);
+    }
 
     public Level LastLoadLevel
     {

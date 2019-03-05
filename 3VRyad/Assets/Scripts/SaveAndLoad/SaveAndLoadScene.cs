@@ -110,6 +110,11 @@ public class SaveAndLoadScene : MonoBehaviour {
         return Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
     }
 
+    public bool SaveDirectoryExist(string folder)
+    {
+        return System.IO.Directory.Exists(allSaveFolder + "/" + folder);
+    }
+
     private string GetDatapath(string name = "null", string folder = "") {
         if (name == "null")
         {
