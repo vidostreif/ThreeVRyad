@@ -18,10 +18,13 @@ public class Level
     private Text text;
     private Button button;
 
-    //public Level()
-    //{
-    //    LevelMenu.Instance.GetXmlDocument(this);
-    //}
+    public Level()
+    {
+        if (LevelMenu.Instance != null)
+        {
+            LevelMenu.Instance.GetXmlDocument(this);
+        }        
+    }
 
     public Level(UnityEngine.Object xmlDocument)
     {
@@ -94,6 +97,20 @@ public class Level
 [CustomPropertyDrawer(typeof(Level))]
 public class LevelDrawer : PropertyDrawer
 {
+    LevelMenu levelMenu = null;
+    Level level = null;
+
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        GetValues(property);
+
+        if (levelMenu.ItLastLevelOnRegion(level))
+        {
+            return 36;
+        }
+        return 17;
+    }
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
 
@@ -101,8 +118,16 @@ public class LevelDrawer : PropertyDrawer
         position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
         var indent = EditorGUI.indentLevel;
         EditorGUI.indentLevel = 0;
-        Rect xmlDocumentRect = new Rect(position.x, position.y, 110, position.height);
-        Rect buttonRect = new Rect(position.x + 120, position.y, 100, position.height);
+        GetValues(property);
+        bool lastLevelOnRegion = levelMenu.ItLastLevelOnRegion(level);
+        float height;
+        if (lastLevelOnRegion)
+            height = position.height / 2 - 2;
+        else
+            height = position.height;
+
+        Rect xmlDocumentRect = new Rect(position.x, position.y, 110, height);
+        Rect buttonRect = new Rect(position.x + 120, position.y, 100, height);
 
         EditorGUI.BeginChangeCheck();
         EditorGUI.PropertyField(xmlDocumentRect, property.FindPropertyRelative("xmlDocument"), GUIContent.none);
@@ -113,49 +138,66 @@ public class LevelDrawer : PropertyDrawer
 
         var xmlDocument = property.FindPropertyRelative("xmlDocument").objectReferenceValue;
 
+        
+
         if (xmlDocument != null)
         {
-            if (SaveAndLoadScene.Instance.xmlDocument != xmlDocument)
+            if (SaveAndLoadScene.Instance().xmlDocument != xmlDocument)
             {
                 if (GUI.Button(buttonRect, "Загрузить"))
                 {
-                    LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
-                    Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
-
-                    levelMenu.LoadXml(myDataClass);
+                    levelMenu.LoadXml(level);
                 }
             }
             else
             {
                 if (GUI.Button(buttonRect, "Сохранить"))
                 {
-                    LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
-                    Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
-
-                    levelMenu.SaveXml(myDataClass);
+                    levelMenu.SaveXml(level);
                 }
             }
         }
         else
         {
-            LevelMenu levelMenu = property.serializedObject.targetObject as LevelMenu;
-            Level myDataClass = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
-
-            if (myDataClass != null)
+            if (level != null)
             {
-                levelMenu.GetXmlDocument(myDataClass);
-                if (myDataClass.xmlDocument == null)
+                levelMenu.GetXmlDocument(level);
+                if (level.xmlDocument == null)
                 {
                     if (GUI.Button(buttonRect, "Создать"))
                     {
-                        levelMenu.CreateXml(myDataClass);
+                        levelMenu.CreateXml(level);
                     }
                 }
             }
         }
 
+        if (lastLevelOnRegion)
+        {
+            Rect butDel = new Rect(position.x, position.y + height + 2, 110, height);
+            Rect butAdd = new Rect(position.x + 120, position.y + height + 2, 100, height);
+
+            if (GUI.Button(butDel, "Удалить"))
+            {
+                levelMenu.DellLevelOnRegion(level);
+            }
+
+            if (GUI.Button(butAdd, "Добавить"))
+            {
+                levelMenu.AddLevelOnRegion(level);
+            }
+        }
+
         EditorGUI.indentLevel = indent;
         EditorGUI.EndProperty();
+    }
+
+    private void GetValues(SerializedProperty property) {
+        //if (levelMenu == null || myDataClass == null)
+        //{
+            levelMenu = property.serializedObject.targetObject as LevelMenu;
+            level = PropertyDrawerUtility.GetActualObjectForSerializedProperty<Level>(fieldInfo, property);
+        //}        
     }
 }
 

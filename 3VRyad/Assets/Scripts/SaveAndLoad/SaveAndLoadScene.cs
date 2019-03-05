@@ -10,34 +10,44 @@ using System.Reflection;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-[ExecuteInEditMode]
-public class SaveAndLoadScene : MonoBehaviour {
-    public static SaveAndLoadScene Instance; // Синглтон
-    public string SceneName;
+//[ExecuteInEditMode]
+public class SaveAndLoadScene
+{
+    private static SaveAndLoadScene instance; // Синглтон
+    private string SceneName;
     private string allSaveFolder = "SaveScenes";
-    [SerializeField] public UnityEngine.Object xmlDocument = null;
+    /*[SerializeField] */
+    public UnityEngine.Object xmlDocument = null;
 
-    void Awake()
+    //    void Awake()
+    //    {
+    //        // регистрация синглтона
+    //        if (Instance != null)
+    //        {
+    //            Debug.LogError("Несколько экземпляров SaveAndLoadScene!");
+    //        }
+
+    //        Instance = this;
+    //    }
+
+    //#if UNITY_EDITOR
+    //    void Update()
+    //    {
+    //        // регистрация синглтона
+    //        if (Instance == null)
+    //        {
+    //            Instance = this;
+    //        }        
+    //    }
+    //#endif
+
+    public static SaveAndLoadScene Instance()
     {
-        // регистрация синглтона
-        if (Instance != null)
-        {
-            Debug.LogError("Несколько экземпляров SaveAndLoadScene!");
-        }
+        if (instance == null)
+            instance = new SaveAndLoadScene();
 
-        Instance = this;
+        return instance;
     }
-
-#if UNITY_EDITOR
-    void Update()
-    {
-        // регистрация синглтона
-        if (Instance == null)
-        {
-            Instance = this;
-        }        
-    }
-#endif
 
     public UnityEngine.Object SaveXml(string name = "null", string folder = "")
     {
@@ -54,7 +64,7 @@ public class SaveAndLoadScene : MonoBehaviour {
         foreach (var instance in instances)
         {
             Type component = instance.GetClassName();
-            IESaveAndLoad[] findeObjects = FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
+            IESaveAndLoad[] findeObjects = UnityEngine.Object.FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
 
             //!!! потом можноо переделать что бы сохранялись все объекты даже если тип объектов несколько. Сохранять можно по имени.
             if (findeObjects.GetLength(0) > 1)
@@ -112,7 +122,7 @@ public class SaveAndLoadScene : MonoBehaviour {
 
     public bool SaveDirectoryExist(string folder)
     {
-        return System.IO.Directory.Exists(allSaveFolder + "/" + folder);
+        return System.IO.Directory.Exists(Application.dataPath + "/Resources/" + allSaveFolder + "/" + folder);
     }
 
     private string GetDatapath(string name = "null", string folder = "") {
@@ -146,7 +156,7 @@ public class SaveAndLoadScene : MonoBehaviour {
         foreach (XElement ListXElement in root.Elements())
         {
             Type component = Type.GetType(ListXElement.Name.ToString());
-            IESaveAndLoad[] findeObjects = FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
+            IESaveAndLoad[] findeObjects = UnityEngine.Object.FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
 
             //!!! потом можноо переделать что бы загружались все объекты даже если тип объектов несколько. Загружать можно по имени.
             if (findeObjects.GetLength(0) > 1)
@@ -165,50 +175,50 @@ public class SaveAndLoadScene : MonoBehaviour {
 }
 
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(SaveAndLoadScene))]
-public class SaveAndLoadSceneEditor : Editor
-{
-    //Grid grid;
+//#if UNITY_EDITOR
+//[CustomEditor(typeof(SaveAndLoadScene))]
+//public class SaveAndLoadSceneEditor : Editor
+//{
+//    //Grid grid;
 
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        //this.grid = GameObject.Find("Grid").GetComponent<Grid>();
-        SaveAndLoadScene saveAndLoadScene = (SaveAndLoadScene)target;
+//    public override void OnInspectorGUI()
+//    {
+//        DrawDefaultInspector();
+//        //this.grid = GameObject.Find("Grid").GetComponent<Grid>();
+//        SaveAndLoadScene saveAndLoadScene = (SaveAndLoadScene)target;
 
-        SaveAndLoadScene myScript = (SaveAndLoadScene)target;
+//        SaveAndLoadScene myScript = (SaveAndLoadScene)target;
 
         
-        //string datapath = Application.dataPath + "/Resources/SaveScenes/" + saveAndLoadScene.SceneName + ".xml";
+//        //string datapath = Application.dataPath + "/Resources/SaveScenes/" + saveAndLoadScene.SceneName + ".xml";
 
-        if (GUILayout.Button("Save"))
-        {
-            myScript.SaveXml();
-        }
-
-
-        //окно выбора файла!!!
+//        if (GUILayout.Button("Save"))
+//        {
+//            myScript.SaveXml();
+//        }
 
 
-        if (GUILayout.Button("Load"))
-        {
-            myScript.LoadXml();
-        }
+//        //окно выбора файла!!!
 
-        if (GUILayout.Button("Save as"))
-        {
-            myScript.SaveXml(saveAndLoadScene.SceneName);
-        }
 
-        saveAndLoadScene.SceneName = EditorGUILayout.TextField("Имя файла", saveAndLoadScene.SceneName);
-        EditorUtility.SetDirty(saveAndLoadScene);
+//        if (GUILayout.Button("Load"))
+//        {
+//            myScript.LoadXml();
+//        }
 
-        //if (GUILayout.Button("Dell"))
-        //{
-        //    myScript.DeXml(datapath);
-        //}
-    }
+//        if (GUILayout.Button("Save as"))
+//        {
+//            myScript.SaveXml(saveAndLoadScene.SceneName);
+//        }
 
-}
-#endif
+//        saveAndLoadScene.SceneName = EditorGUILayout.TextField("Имя файла", saveAndLoadScene.SceneName);
+//        EditorUtility.SetDirty(saveAndLoadScene);
+
+//        //if (GUILayout.Button("Dell"))
+//        //{
+//        //    myScript.DeXml(datapath);
+//        //}
+//    }
+
+//}
+//#endif
