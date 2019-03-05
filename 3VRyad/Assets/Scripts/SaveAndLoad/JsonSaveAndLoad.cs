@@ -47,7 +47,7 @@ public static class JsonSaveAndLoad
             {
                 for (int l = 0; l < regionsList[r].levelList.Count; l++)
                 {
-                        if (save.regionSave.Count >= r && save.regionSave[r].levelSave.Count >= l)
+                        if (save.regionSave.Count > r && save.regionSave[r].levelSave.Count > l)
                         {
                             regionsList[r].levelList[l].open = save.regionSave[r].levelSave[l].open;
                             regionsList[r].levelList[l].passed = save.regionSave[r].levelSave[l].passed;

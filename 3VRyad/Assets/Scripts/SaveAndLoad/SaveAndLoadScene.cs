@@ -16,30 +16,7 @@ public class SaveAndLoadScene
     private static SaveAndLoadScene instance; // Синглтон
     private string SceneName;
     private string allSaveFolder = "SaveScenes";
-    /*[SerializeField] */
     public UnityEngine.Object xmlDocument = null;
-
-    //    void Awake()
-    //    {
-    //        // регистрация синглтона
-    //        if (Instance != null)
-    //        {
-    //            Debug.LogError("Несколько экземпляров SaveAndLoadScene!");
-    //        }
-
-    //        Instance = this;
-    //    }
-
-    //#if UNITY_EDITOR
-    //    void Update()
-    //    {
-    //        // регистрация синглтона
-    //        if (Instance == null)
-    //        {
-    //            Instance = this;
-    //        }        
-    //    }
-    //#endif
 
     public static SaveAndLoadScene Instance()
     {

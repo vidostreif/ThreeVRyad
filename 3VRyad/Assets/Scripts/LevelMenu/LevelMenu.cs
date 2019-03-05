@@ -16,19 +16,28 @@ public class LevelMenu : MonoBehaviour
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
 
-    public void OnEnable()
-    {
-        Instance = this;
-    }
+    //public void OnEnable()
+    //{
+    //    Instance = this;
+    //}
 
     public void Awake()
     {
-        if (Instance) DestroyImmediate(this);
+        if (Instance)
+        {
+            Destroy(this); //Delete duplicate
+            return;
+        }
+        else
+        {
+            Instance = this; //Make this object the only instance
+#if !UNITY_EDITOR
+            DontDestroyOnLoad(gameObject); //Set as do not destroy
+#endif
+        }
 
-        //DontDestroyOnLoad(gameObject);
-        //!!!сделать заполнение regionsList из существующих файлов
+        //заполнение regionsList из существующих файлов
         CreateRegionsListFromFiles();
-
         //загрузить данных из сохранения
         JsonSaveAndLoad.LoadSave(regionsList);
         regionsList[0].levelList[0].open = true;
@@ -46,6 +55,7 @@ public class LevelMenu : MonoBehaviour
             if (SaveAndLoadScene.Instance().SaveDirectoryExist("Region_" + r))
             {
                 regionsList.Add(new Region());
+                regionsList[r].name = "Region_" + r;
                 do
                 {
                     xmlDocument = SaveAndLoadScene.Instance().GetXmlDocument("Level_" + l, "Region_" + r);
@@ -367,7 +377,7 @@ public class LevelMenuEditor : Editor
         if (SaveAndLoadScene.Instance().xmlDocument != null && levelMenu.LastLoadLevel != null)
         {
             if (GUILayout.Button("Сохранить"))
-            {                
+            {
                 levelMenu.SaveXml(levelMenu.LastLoadLevel);
             }
         }

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5605447330356066441}
   - component: {fileID: 5605447329317330089}
   - component: {fileID: 796646571376334108}
-  - component: {fileID: 47804590683754226}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -211,18 +210,3 @@ MonoBehaviour:
   - type: 7
     shape: 12
     cost: 6
---- !u!114 &47804590683754226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5605447330363217281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f15f03027c2f59848bed823c68bcffbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grid: {fileID: 0}
-  SceneName: 111
-  xmlDocument: {fileID: 4900000, guid: 76df9ac9541cc214e91b5e9bef33ed9a, type: 3}
