@@ -9,6 +9,7 @@ public class MainSceneScript : MonoBehaviour {
     private float timeUnpause; //время когда нужно снять игру с паузы
     public static MainSceneScript Instance; // Синглтон
     public GameObject prefabCanvasEndGameMenu;
+    private GameObject CanvasMenu;
 
     void Awake()
     {
@@ -27,7 +28,11 @@ public class MainSceneScript : MonoBehaviour {
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
             LevelMenu.Instance.LoadXml(LevelMenu.Instance.LastLoadLevel);
-        }        
+        }
+        Prepare();
+    }
+
+    public void Prepare() {
         Tasks.Instance.UpdateMovesText();
         Tasks.Instance.CreateCollectedElements();
         BorderGrid.CircleGrid(GridBlocks.Instance);
@@ -37,7 +42,7 @@ public class MainSceneScript : MonoBehaviour {
 
     public void CompleteGame()
     {
-        GameObject CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
+        CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
         Text textEndGame = gOtextEndGame.GetComponent(typeof(Text)) as Text;
@@ -50,7 +55,6 @@ public class MainSceneScript : MonoBehaviour {
         Transform gOExitButton = PanelMenu.transform.Find("ExitButton");
         Button exitButton = gOExitButton.GetComponent<Button>();
         exitButton.onClick.AddListener(delegate { ExitToMenu(); });
-
 
         //если выполнили все задания
         if (Tasks.Instance.collectedAll)
@@ -79,11 +83,14 @@ public class MainSceneScript : MonoBehaviour {
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Destroy(CanvasMenu);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
     }
 
     public void NextLevel()
     {
+        Destroy(CanvasMenu);
         LevelMenu.Instance.LoadNextLevel();
     }
 

@@ -9,10 +9,10 @@ using UnityEngine.UI;
 public class Target
 {
     private Image image;
+    private GameObject gameObject;
     public AllShapeEnum elementsShape;//какой вид элементов собераем
     [SerializeField] private bool collectEverything;//признак, что нужно собрать все элементы на поле
     [SerializeField] private int goal;//необходимо собрать
-    //public int alreadyCollected = 0;//собрано
     private Text text;
     private bool collected = false; //признак, что коллекция собрана
 
@@ -85,7 +85,20 @@ public class Target
             image = value;
         }
     }
-       
+
+    public GameObject GameObject
+    {
+        get
+        {
+            return gameObject;
+        }
+
+        set
+        {
+            gameObject = value;
+        }
+    }
+
     //если элемент подошел то возвращаем истину
     public bool Collect(AllShapeEnum Shape) {
         if (Shape == elementsShape && goal > 0)

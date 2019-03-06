@@ -52,8 +52,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
         for (int i = 0; i < targets.Length; i++)
         {
-            GameObject elementGameObject = Instantiate(prefabcollectedElements, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenTargets)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
-            Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
+            targets[i].GameObject = Instantiate(prefabcollectedElements, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenTargets)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
+            Image image = targets[i].GameObject.GetComponent(typeof(Image)) as Image;
             image.sprite = SpriteBank.SetShape(targets[i].elementsShape);
             targets[i].Image = image;
             targets[i].Text = image.GetComponentInChildren<Text>();
@@ -181,6 +181,11 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
     public void RecoverFromXElement(XElement tasksXElement)
     {
+        //удаляем GameObject
+        foreach (Target target in targets)
+        {
+            Destroy(target.GameObject);
+        }
         //восстанавливаем значения
         this.moves = int.Parse(tasksXElement.Element("moves").Value);
         int sizeTargets = int.Parse(tasksXElement.Element("sizeTargets").Value);

@@ -263,7 +263,7 @@ public class LevelMenu : MonoBehaviour
                         //если уровень открыт
                         if (regionsList[i].levelList[j].open)
                         {
-                            LoadLevel(regionsList[i].levelList[j]);
+                                LoadLevel(regionsList[i].levelList[j]);
                             return;
                         }                        
                     }
@@ -341,13 +341,20 @@ public class LevelMenu : MonoBehaviour
 
     private IEnumerator curLoadLevel(Level inLevel) {
         //загружаем уровень
-        //SceneManager.LoadScene("SampleScene");
-        //SaveNameScene(inLevel);
-        lastLoadLevel = inLevel;
-        Destroy(canvasRegions);
-        Destroy(canvasLevels);
-        SceneManager.LoadSceneAsync("SampleScene"); 
-        yield return true;
+        if (SceneManager.GetActiveScene().name == "SampleScene")
+        {
+            LoadXml(inLevel);
+            MainSceneScript.Instance.Prepare();
+        }
+        else
+        {
+            lastLoadLevel = inLevel;
+            Destroy(canvasRegions);
+            Destroy(canvasLevels);
+            SceneManager.LoadSceneAsync("SampleScene");
+            yield return true;
+        }
+        
         //async.allowSceneActivation = false;
         ////восстанавливаем настройки уровня
         ////LoadXml(inLevel);
