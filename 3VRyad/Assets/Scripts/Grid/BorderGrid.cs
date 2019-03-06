@@ -7,14 +7,26 @@ public static class BorderGrid
     ////обвести сетку
     public static void CircleGrid(GridBlocks grid)
     {
-
-        GameObject borderGrid = new GameObject();
-        borderGrid.name = "BorderGrid";
+        string borderName = "BorderGrid";
+        GameObject borderGrid;
+        Transform borderGridTransform = grid.transform.Find(borderName);
+        if (borderGridTransform == null)
+        {
+            borderGrid = new GameObject();
+            borderGrid.name = borderName;
+        }
+        else
+        {
+            borderGrid = borderGridTransform.gameObject;
+            //удаляем существующую сетку
+            foreach (Transform child in borderGrid.transform) {
+                Object.Destroy(child.gameObject);
+            }            
+        }
+        
         borderGrid.transform.parent = grid.transform;
         borderGrid.transform.localRotation = new Quaternion(0, 0, 0, 0);
         borderGrid.transform.localPosition = new Vector3(0 - grid.blockSize * 0.25f, 0 - grid.blockSize * 0.25f, 0);
-
-        //MonoBehaviour.Instantiate(prefabElement, thisTransform.position, Quaternion.identity);
 
         for (int x = 0; x < grid.containers.GetLength(0) + 1; x++)
         {

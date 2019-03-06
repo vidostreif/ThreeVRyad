@@ -122,7 +122,6 @@ GameObject:
   m_Component:
   - component: {fileID: 41151144}
   - component: {fileID: 41151143}
-  - component: {fileID: 41151145}
   m_Layer: 0
   m_Name: GameHelper
   m_TagString: Untagged
@@ -164,18 +163,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &41151145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 41151141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f229f5b2072805b4e9279cc18889a567, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &630875481
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,22 +338,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1832049357}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7ba1ec0d274a73499b2e03184485449, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   regionsList:
-  - name: 
+  - name: Region_0
     levelList:
     - xmlDocument: {fileID: 4900000, guid: 992518209d9f18e41904fa68f9623119, type: 3}
-      open: 1
-      passed: 1
+      open: 0
+      passed: 0
     - xmlDocument: {fileID: 4900000, guid: 2a48b0f72c57bd241b79e75865d69b64, type: 3}
-      open: 1
-      passed: 1
+      open: 0
+      passed: 0
     - xmlDocument: {fileID: 4900000, guid: 351932dc137792543b1213d5ae32fe2c, type: 3}
-      open: 1
+      open: 0
       passed: 0
     - xmlDocument: {fileID: 4900000, guid: 54498fc43ec39b842b14273089149bcf, type: 3}
       open: 0
@@ -383,25 +370,10 @@ MonoBehaviour:
     - xmlDocument: {fileID: 4900000, guid: 86222b3cbc65a264c80ede4ed46122f3, type: 3}
       open: 0
       passed: 0
-    - xmlDocument: {fileID: 4900000, guid: 6eb075931d804aa4385ebf43244aeb40, type: 3}
-      open: 0
-      passed: 0
-    - xmlDocument: {fileID: 4900000, guid: 9fd352bf0af73f44b8be0b4b61fb3eda, type: 3}
-      open: 0
-      passed: 0
-    - xmlDocument: {fileID: 4900000, guid: d789d10a3f3c52442acaa84f8f3078e4, type: 3}
-      open: 0
-      passed: 0
-    - xmlDocument: {fileID: 4900000, guid: 1e079dc8208cc1548a6d008acd3d1ba1, type: 3}
-      open: 0
-      passed: 0
-    - xmlDocument: {fileID: 4900000, guid: 255d5b7c56046c74482bffe1f43665d2, type: 3}
-      open: 0
-      passed: 0
-  - name: 
+  - name: Region_1
     levelList:
     - xmlDocument: {fileID: 4900000, guid: b8f818ca39cbe2347b965b23492dcec5, type: 3}
-      open: 1
+      open: 0
       passed: 0
     - xmlDocument: {fileID: 4900000, guid: b2e5671b127b5264cb5841da7d0aa21e, type: 3}
       open: 0
@@ -418,21 +390,30 @@ MonoBehaviour:
     - xmlDocument: {fileID: 4900000, guid: fee8bdfe28c9f2b41b2d6eff3ff01fdb, type: 3}
       open: 0
       passed: 0
-    - xmlDocument: {fileID: 4900000, guid: c9c54d72541c70e4fa39a28b0dfc21b8, type: 3}
+  - name: Region_2
+    levelList:
+    - xmlDocument: {fileID: 4900000, guid: 37873bb385e917c4584da79bef40fb90, type: 3}
       open: 0
       passed: 0
-    - xmlDocument: {fileID: 4900000, guid: 32f488fd52be0b64dadce57fcf52c74a, type: 3}
+    - xmlDocument: {fileID: 4900000, guid: a9b3022c82d2c504fa4739d3c418368e, type: 3}
       open: 0
       passed: 0
-    - xmlDocument: {fileID: 4900000, guid: 3864810bdf7d1e94d9c664b51c091dd8, type: 3}
+    - xmlDocument: {fileID: 4900000, guid: 72d8079788180c14dbf7cb12d9f42eff, type: 3}
       open: 0
       passed: 0
-  - name: 
-    levelList: []
-  - name: 
+    - xmlDocument: {fileID: 4900000, guid: 85ef9df2b50cf2f42a5759f230d1d989, type: 3}
+      open: 0
+      passed: 0
+    - xmlDocument: {fileID: 4900000, guid: b6d7ea57782c76749872a01f0762d0c9, type: 3}
+      open: 0
+      passed: 0
+    - xmlDocument: {fileID: 4900000, guid: 995adf19b7e1a7f4fa986b2ba6b05a0b, type: 3}
+      open: 0
+      passed: 0
+  - name: Region_3
     levelList:
     - xmlDocument: {fileID: 4900000, guid: 83c757e9c2652b24e8526333e5357b71, type: 3}
-      open: 1
+      open: 0
       passed: 0
     - xmlDocument: {fileID: 4900000, guid: 02fa91917396030458b8633e9ebb67f9, type: 3}
       open: 0
@@ -447,6 +428,9 @@ MonoBehaviour:
       open: 0
       passed: 0
     - xmlDocument: {fileID: 4900000, guid: 65b0d260b3169cd4dbcbc77e6e70f2f4, type: 3}
+      open: 0
+      passed: 0
+    - xmlDocument: {fileID: 4900000, guid: 81140ec56f96521458ff44b1d6aed879, type: 3}
       open: 0
       passed: 0
 --- !u!114 &1832049359

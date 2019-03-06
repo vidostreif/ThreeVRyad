@@ -24,9 +24,6 @@ public class MainSceneScript : MonoBehaviour {
     void Start()
     {
         //восстанавливаем настройки сцены
-        //string name = GameMetaData.GetInstance().GetString("name_scene");
-        //string folder = GameMetaData.GetInstance().GetString("folder_scene");
-        //SaveAndLoadScene.Instance.LoadXml(name, folder);
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
             LevelMenu.Instance.LoadXml(LevelMenu.Instance.LastLoadLevel);
@@ -38,17 +35,22 @@ public class MainSceneScript : MonoBehaviour {
         GridBlocks.Instance.Move();
     }
 
-    public void CompleteGame() {
-
+    public void CompleteGame()
+    {
         GameObject CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
         Text textEndGame = gOtextEndGame.GetComponent(typeof(Text)) as Text;
 
-        //добавляем действие к кнопке
+        //добавляем действие к кнопкам
         Transform gORestartButton = PanelMenu.transform.Find("RestartButton");
         Button restartButton = gORestartButton.GetComponent<Button>();
         restartButton.onClick.AddListener(delegate { RestartLevel(); });
+
+        Transform gOExitButton = PanelMenu.transform.Find("ExitButton");
+        Button exitButton = gOExitButton.GetComponent<Button>();
+        exitButton.onClick.AddListener(delegate { ExitToMenu(); });
+
 
         //если выполнили все задания
         if (Tasks.Instance.collectedAll)
@@ -56,6 +58,17 @@ public class MainSceneScript : MonoBehaviour {
             //победа
             textEndGame.text = "Победа!";
             LevelMenu.Instance.SetLevelPassed();
+
+            Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
+            if (LevelMenu.Instance.NextLevelIsOpen())
+            {
+                Button nextLevelButton = gONextLevelButton.GetComponent<Button>();
+                nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
+            }
+            else
+            {
+                Destroy(gONextLevelButton.gameObject);
+            }
         }
         else
         {
@@ -67,6 +80,16 @@ public class MainSceneScript : MonoBehaviour {
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void NextLevel()
+    {
+        LevelMenu.Instance.LoadNextLevel();
+    }
+
+    public void ExitToMenu()
+    {
+        LevelMenu.Instance.LoadMainMenu();
     }
 
     public void Pause(float time)
