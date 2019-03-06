@@ -39,15 +39,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         Instance = this;
         thisTransform = transform;
         blockedForMove = false;
-        //BorderGrid.CircleGrid(this);
     }
 
-    //void Start()
-    //{
-
-    //}
-
-        public GameObject GatPrefab(CollectionTypesEnum collectionTypes)
+    public GameObject GatPrefab(CollectionTypesEnum collectionTypes)
     {
         if (collectionTypes == CollectionTypesEnum.Element)
         {
@@ -1693,28 +1687,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     public void RecoverFromXElement(XElement gridXElement)
     {
-
-        this.blockSize = float.Parse(gridXElement.Element("blockSize").Value);
-        int XSize = int.Parse(gridXElement.Element("XSize").Value);
-        int YSize = int.Parse(gridXElement.Element("YSize").Value);
-
-        //string dir = "Prefabs/";
-        //prefabBlock = Resources.Load<GameObject>(dir + gridXElement.Element("prefabBlock").Value);
-        //prefabElement = Resources.Load(dir + gridXElement.Element("prefabElement").Value, typeof(GameObject)) as GameObject;
-        //prefabBlockingWall = Resources.Load(gridXElement.Element(dir + "prefabBlockingWall").Value, typeof(GameObject)) as GameObject;
-
-        //int shapeSize = int.Parse(gridXElement.Element("shapeSize").Value);
-        elementsPriority.Clear();
-        //восстанавливаем все блоки и элементы
-        foreach (XElement shapeAndPriority in gridXElement.Element("elementsShape").Elements("shapeAndPriority"))
-        {
-            ElementsShapeEnum shape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shapeAndPriority.Attribute("shape").Value);
-            ElementsTypeEnum type = (ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), shapeAndPriority.Attribute("type").Value);
-            int priority = int.Parse(shapeAndPriority.Attribute("priority").Value);
-            ElementsPriority curShapeAndPriority = new ElementsPriority(shape, type, priority);
-            this.elementsPriority.Add(curShapeAndPriority);
-        }
-
+        //Сбрасываем значения
+        blockedForMove = false;
+        elementsForMix = new List<Element>();
+        elementsForMove = new List<Blocks>();
+        needFilling = false;
+        elementsPriority = new List<ElementsPriority>();
         //очищаем сетку
         for (int x = 0; x < containers.GetLength(0); x++)
         {
@@ -1727,6 +1705,25 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     DestroyImmediate(containers[x].block[y].gameObject);
                 }
             }
+        }
+
+        this.blockSize = float.Parse(gridXElement.Element("blockSize").Value);
+        int XSize = int.Parse(gridXElement.Element("XSize").Value);
+        int YSize = int.Parse(gridXElement.Element("YSize").Value);
+
+        //string dir = "Prefabs/";
+        //prefabBlock = Resources.Load<GameObject>(dir + gridXElement.Element("prefabBlock").Value);
+        //prefabElement = Resources.Load(dir + gridXElement.Element("prefabElement").Value, typeof(GameObject)) as GameObject;
+        //prefabBlockingWall = Resources.Load(gridXElement.Element(dir + "prefabBlockingWall").Value, typeof(GameObject)) as GameObject;
+        
+        //восстанавливаем все блоки и элементы
+        foreach (XElement shapeAndPriority in gridXElement.Element("elementsShape").Elements("shapeAndPriority"))
+        {
+            ElementsShapeEnum shape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shapeAndPriority.Attribute("shape").Value);
+            ElementsTypeEnum type = (ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), shapeAndPriority.Attribute("type").Value);
+            int priority = int.Parse(shapeAndPriority.Attribute("priority").Value);
+            ElementsPriority curShapeAndPriority = new ElementsPriority(shape, type, priority);
+            this.elementsPriority.Add(curShapeAndPriority);
         }
 
         //создаем массив массивов блоков

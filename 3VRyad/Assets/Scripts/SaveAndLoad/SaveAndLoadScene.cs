@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using System.Reflection;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Xml;
 
 //[ExecuteInEditMode]
 public class SaveAndLoadScene
@@ -26,6 +27,7 @@ public class SaveAndLoadScene
         return instance;
     }
 
+#if UNITY_EDITOR
     public UnityEngine.Object SaveXml(string name = "null", string folder = "")
     {
         string datapath = GetDatapath(name, folder);
@@ -62,29 +64,39 @@ public class SaveAndLoadScene
         Debug.Log("Сохранили в " + datapath);
 
         //var bytes = RawDeserializeEx(System.IO.File.ReadAllBytes(datapath), typeof(UnityEngine.Object));
+
         AssetDatabase.Refresh();
+
         xmlDocument = Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
         return xmlDocument;
     }
+#endif
 
     public void LoadXml(string name = "null", string folder = "")
     {
-        string datapath = GetDatapath(name, folder);
+        //string datapath = GetDatapath(name, folder);
 
         XElement root = null;
 
-        if (!File.Exists(datapath))
-        {
-            Debug.Log("Файл не найден!");
-        }
-        else
-        {
-            root = XDocument.Parse(File.ReadAllText(datapath)).Element("root");
-        }
+        //if (!File.Exists(datapath))
+        //{
+        //    Debug.Log("Файл не найден!");
+        //}
+        //else
+        //{
+            //string fileXmlPath = Application.dataPath;
+            //fileXmlPath += "/Data/Spells.xml";
+            TextAsset txt = Resources.Load<TextAsset>(allSaveFolder + "/" + folder + "/" + name);
+            //XmlDocument xml = new XmlDocument();
+            //xml.LoadXml(ta.text);
+
+            root = XDocument.Parse(txt.text).Element("root");
+        //}
 
         if (root == null)
         {
             Debug.Log("Не удалось загрузить файл!");
+            MessageArray.message.Add("Не удалось загрузить файл!");
             return;
         }
 
@@ -97,9 +109,19 @@ public class SaveAndLoadScene
         return Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
     }
 
-    public bool SaveDirectoryExist(string folder)
+    public bool LevelFileExist(string name, string folder)
     {
-        return System.IO.Directory.Exists(Application.dataPath + "/Resources/" + allSaveFolder + "/" + folder);
+        TextAsset txt = Resources.Load<TextAsset>(allSaveFolder + "/" + folder + "/" + name);
+        if (txt != null)
+        {
+            XElement root = null;
+            root = XDocument.Parse(txt.text).Element("root");
+            if (root != null)
+            {
+                return true;
+            }
+        }        
+        return false;
     }
 
     private string GetDatapath(string name = "null", string folder = "") {

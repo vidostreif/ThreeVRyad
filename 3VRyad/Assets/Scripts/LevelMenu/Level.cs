@@ -93,7 +93,7 @@ public class Level
     }
 }
 
-
+#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(Level))]
 public class LevelDrawer : PropertyDrawer
 {
@@ -246,3 +246,4 @@ public class PropertyDrawerUtility
         return actualObject;
     }
 }
+#endif

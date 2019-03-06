@@ -181,6 +181,9 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
     public void RecoverFromXElement(XElement tasksXElement)
     {
+        //Сбрасываем значения
+        endGame = false;
+        collectedAll = false;
         //удаляем GameObject
         foreach (Target target in targets)
         {

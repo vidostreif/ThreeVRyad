@@ -25,15 +25,19 @@ public class LevelMenu : MonoBehaviour
         }
         else
         {
-            Instance = this; //Make this object the only instance
-            //заполнение regionsList из существующих файлов
-            CreateRegionsListFromFiles();
-            //если в игре
-            if (Application.isPlaying)
-            {
-                Prepare();
-            }
-         }      
+            Instance = this; //Make this object the only instance            
+        }      
+    }
+
+    void Start()
+    {
+        ////заполнение regionsList из существующих файлов
+        CreateRegionsListFromFiles();
+        ////если в игре
+        if (Application.isPlaying)
+        {
+            Prepare();
+        }
     }
 
     private void Prepare() {
@@ -53,13 +57,14 @@ public class LevelMenu : MonoBehaviour
         this.regionsList = new List<Region>();
         UnityEngine.Object xmlDocument = null;
         Level level = null;
-
+        MessageArray.message.Add("Создаем регионы:");
         int r = 0;        
         do
         {
             int l = 0;
-            if (SaveAndLoadScene.Instance().SaveDirectoryExist("Region_" + r))
+            if (SaveAndLoadScene.Instance().LevelFileExist("Level_" + l, "Region_" + r))
             {
+                MessageArray.message.Add("Region_" + r);
                 regionsList.Add(new Region());
                 regionsList[r].name = "Region_" + r;
                 do
@@ -68,7 +73,6 @@ public class LevelMenu : MonoBehaviour
                     if (xmlDocument != null)
                     {
                         level = new Level(xmlDocument);
-                        //level.xmlDocument = xmlDocument;
                         regionsList[r].levelList.Add(level);
                     }
                     else
@@ -123,6 +127,7 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     public void SaveXml(Level inLevel)
     {
         for (int i = 0; i < regionsList.Count; i++)
@@ -137,7 +142,6 @@ public class LevelMenu : MonoBehaviour
             }
         }
     }
-
     public void CreateXml(Level inLevel)
     {
         for (int i = 0; i < regionsList.Count; i++)
@@ -155,6 +159,7 @@ public class LevelMenu : MonoBehaviour
             }
         }
     }
+#endif
 
     public void GetXmlDocument(Level inLevel)
     {
@@ -170,7 +175,7 @@ public class LevelMenu : MonoBehaviour
             }
         }
     }
-
+    
     private void SaveNameScene(Level inLevel)
     {
         for (int i = 0; i < regionsList.Count; i++)
