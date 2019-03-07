@@ -187,7 +187,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         //удаляем GameObject
         foreach (Target target in targets)
         {
-            Destroy(target.GameObject);
+            DestroyImmediate(target.GameObject);
         }
         //восстанавливаем значения
         this.moves = int.Parse(tasksXElement.Element("moves").Value);

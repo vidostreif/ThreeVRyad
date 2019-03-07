@@ -25,6 +25,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
     private List<Element> elementsForMix = new List<Element>();//элементы для замены во время микса
     private List<Blocks> elementsForMove = new List<Blocks>();//элементы для последовательного выполнения ходов
+    private List<Block> blockFields = new List<Block>();// найденные блоки для удара
     private bool needFilling = false;
     private System.Random random;
 
@@ -39,22 +40,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         Instance = this;
         thisTransform = transform;
         blockedForMove = false;
-    }
-
-    public GameObject GatPrefab(CollectionTypesEnum collectionTypes)
-    {
-        if (collectionTypes == CollectionTypesEnum.Element)
-        {
-            return prefabElement;
-        }
-        else if (collectionTypes == CollectionTypesEnum.BlockingElement)
-        {
-            return prefabBlockingWall;
-        }
-        else
-        {
-            return null;
-        }
     }
 
     //заполнение стандартные блоки элементами из списка
@@ -84,7 +69,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
                 //если стандартный блок и в нем нет элемента
-                if (ThisStandardBlockWithoutElement(containers[x].block[y]))
+                if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y]))
                 {
                     bool elementfound = false;
                     ElementsPriority elementsPriority = null;
@@ -178,7 +163,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             {
                 StartCoroutine(GridBlocks.Instance.MakeMove(touchingBlock, destinationBlock));
             }
-        }        
+        }
+        else if ((touchingBlock != null && destinationBlock != null))
+        {
+            ExchangeElements(touchingBlock, destinationBlock);
+        }
     }
 
     //выполняем ход
@@ -201,7 +190,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                 //повторяем итерации заполнения и поиска совпадений, пока совпадения не будут найдены
                 int iteration = 1;
-                List<Block> blockFields;
+                //List<Block> blockFields;
                 bool matchFound;
                 bool makeActionElementsAfterMove = false;
                 do
@@ -321,6 +310,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     PerformActionElementsAfterMove();
                 }
 
+                blockFields.Clear();
                 //обновляем данные по коллекциям
                 Tasks.Instance.UpdateAllGoal();
             }
@@ -403,6 +393,25 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
     }
 
+    //проверяет нахождение блока в массивах для обработки
+    public bool BlockInProcessing(Block inBlock) {
+        if (blockFields.Contains(inBlock))
+        {
+            return true;
+        }
+        foreach (Blocks blocks in elementsForMove)
+        {
+            foreach (Block block in blocks.block)
+            {
+                if (block == inBlock)
+                {
+
+                }
+            }
+        }
+        return false;
+    }
+
     //проверка совпадений по всей сетке, возвращает массив найденых блоков
     private List<Block> CheckMatchingLine()
     {
@@ -422,7 +431,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (x != 0 && x != containers.GetLength(0) - 1)
                 {
                     //проверяем что соседние блоки существуют
-                    if (ThisStandardBlockWithElement(neighboringBlocks.Left) && ThisStandardBlockWithElement(neighboringBlocks.Right) && ThisStandardBlockWithElement(containers[x].block[y]))
+                    if (BlockCheck.ThisStandardBlockWithElement(neighboringBlocks.Left) && BlockCheck.ThisStandardBlockWithElement(neighboringBlocks.Right) && BlockCheck.ThisStandardBlockWithElement(containers[x].block[y]))
                     {
                         ////проверяем что элементы существуют в блоках
                         if (neighboringBlocks.Left.Element.speed == 0 && neighboringBlocks.Right.Element.speed == 0 && containers[x].block[y].Element.speed == 0)
@@ -453,7 +462,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (y != 0 && y != containers[x].block.GetLength(0) - 1)
                 {
                     //Проверяем что соседние блоки существуют
-                    if (ThisStandardBlockWithElement(neighboringBlocks.Up) && ThisStandardBlockWithElement(neighboringBlocks.Down) && ThisStandardBlockWithElement(containers[x].block[y]))
+                    if (BlockCheck.ThisStandardBlockWithElement(neighboringBlocks.Up) && BlockCheck.ThisStandardBlockWithElement(neighboringBlocks.Down) && BlockCheck.ThisStandardBlockWithElement(containers[x].block[y]))
                     {
                         if (neighboringBlocks.Up.Element.speed == 0 && neighboringBlocks.Down.Element.speed == 0 && containers[x].block[y].Element.speed == 0)
                         {
@@ -501,17 +510,17 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             foreach (Block blockField in listForCheck)
             {
                 //добавляем первые элементы                
-                if (ThisStandardBlockWithStandartElementCanMove(blockField))
+                if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(blockField))
                 {
                     NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(FindPosition(blockField));
                     foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
                     {
                         //если блок находится по соседству и в нем такой же элемент
-                        if (listForCheck.Contains(neighboringBlock) && ThisStandardBlockWithStandartElementCanMove(neighboringBlock) && blockField.Element.Shape == neighboringBlock.Element.Shape)
+                        if (listForCheck.Contains(neighboringBlock) && BlockCheck.ThisStandardBlockWithStandartElementCanMove(neighboringBlock) && blockField.Element.Shape == neighboringBlock.Element.Shape)
                         {
                             //и если противоположный блок имеет такой же элемент
                             Block OppositeBlock = neighboringBlocks.GetOppositeBlock(neighboringBlock);
-                            if (listForCheck.Contains(OppositeBlock) && ThisStandardBlockWithStandartElementCanMove(OppositeBlock) && blockField.Element.Shape == OppositeBlock.Element.Shape)
+                            if (listForCheck.Contains(OppositeBlock) && BlockCheck.ThisStandardBlockWithStandartElementCanMove(OppositeBlock) && blockField.Element.Shape == OppositeBlock.Element.Shape)
                             {
                                 if (blocksInLine.Count == 0)
                                 {
@@ -558,50 +567,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //    break;
             }
 
-
-            //do
-            //{
-            //    findedBlocks.Clear();
-            //    //foreach (Block blockField in listForCheck)
-            //    //{
-            //    //    if (ThisStandardBlockWithStandartElementCanMove(blockField))
-            //    //    {
-            //            foreach (Block blockField in blocksInLine)
-            //            {
-            //                //if (blockField != item && blockField.Element.Shape == item.Element.Shape)
-            //                //{
-            //                    NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(FindPosition(blockField));
-
-            //                    foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
-            //                    {                                    
-            //                        //если блок находится в основном массиве
-            //                        if (listForCheck.Contains(neighboringBlock) && ThisStandardBlockWithStandartElementCanMove(neighboringBlock) && blockField.Element.Shape == neighboringBlock.Element.Shape)
-            //                        {
-            //                            //Если противоположный блок имеет такой же элемент
-            //                            Block OppositeBlock = neighboringBlocks.GetOppositeBlock(neighboringBlock);
-            //                            if (listForCheck.Contains(OppositeBlock) && ThisStandardBlockWithStandartElementCanMove(OppositeBlock) && blockField.Element.Shape == OppositeBlock.Element.Shape)
-            //                            {
-            //                                //проверяем что блок еще не добавили в массив
-            //                                if (!blocksInLine.Contains(neighboringBlock) && !findedBlocks.Contains(neighboringBlock))
-            //                                    findedBlocks.Add(neighboringBlock);
-            //                                //добавляем противоположный блок
-            //                                if (!blocksInLine.Contains(OppositeBlock) && !findedBlocks.Contains(OppositeBlock))
-            //                                    findedBlocks.Add(OppositeBlock);
-
-            //                            }                                        
-            //                        }
-            //                    }
-            //                //}
-            //            }
-            //    //    }
-            //    //}
-            //    //переносим найденные блоки в основной массив
-            //    foreach (Block item in findedBlocks)
-            //    {
-            //        blocksInLine.Add(item);
-            //    }
-            //} while (findedBlocks.Count > 0);
-
             if (blocksInLine.Count > 3)
             {
                 Debug.Log("Найдено блоков в линии:" + blocksInLine.Count);
@@ -633,7 +598,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
                 //если стандартный блок и в нем есть элемент
-                if (ThisStandardBlockWithElement(containers[x].block[y]))
+                if (BlockCheck.ThisStandardBlockWithElement(containers[x].block[y]))
                 {
                     for (int j = 0; j < 2; j++)
                     {
@@ -671,7 +636,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     continue;
                                 if (curBlock != null && curBlock.Type != BlockTypeEnum.Standard)//если тип не стандартный
                                     continue;
-                                if (ThisBlockWithElementCantMove(curBlock))//если элемент заблокирован для движения
+                                if (BlockCheck.ThisBlockWithElementCantMove(curBlock))//если элемент заблокирован для движения
                                     continue;
 
                                 Position position = new Position(posX, posY);
@@ -732,7 +697,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         {
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
-                if (ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]))
+                if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]))
                 {
                     ElementsPriority elementsSAndP = listPriority.Find(item => item.elementsShape == containers[x].block[y].Element.Shape);
                     if (elementsSAndP == null)
@@ -756,160 +721,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
         //перезаполняем новыми элементами
         StartFilling(listPriority);
-    }
-
-    public bool ThisBlockWithoutElement(Block block)
-    {
-
-        if (block != null && (block.Element == null || block.Element.Destroyed))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisBlockWithElement(Block block)
-    {
-
-        if (block != null && block.Element != null && !block.Element.Destroyed)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisBlockWithMortalElement(Block block)
-    {
-
-        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Immortal == false)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisBlockWithStandartElement(Block block)
-    {
-
-        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.Standard)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisBlockWithDestroyElement(Block block)
-    {
-
-        if (block != null && block.Element != null && block.Element.Destroyed)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisStandardBlockWithoutElement(Block block)
-    {
-
-        if (block != null && block.Type == BlockTypeEnum.Standard && (block.Element == null || block.Element.Destroyed))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisStandardBlockWithElement(Block block)
-    {
-
-        if (block != null && block.Type == BlockTypeEnum.Standard && block.Element != null && !block.Element.Destroyed)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisStandardBlockWithStandartElementCanMove(Block block)
-    {
-
-        if (block != null && block.Type == BlockTypeEnum.Standard && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.Standard && !block.Element.LockedForMove)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisBlockWithElementCanMove(Block block)
-    {
-
-        if (block != null && block.Element != null && !block.Element.Destroyed && !block.Element.LockedForMove)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisBlockWithElementCantMove(Block block)
-    {
-        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.LockedForMove)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisBlockWithElementAndBlockingElement(Block block)
-    {
-        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.BlockingElement != null && !block.Element.BlockingElement.Destroyed)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool ThisBlockWithBehindElement(Block block)
-    {
-
-        if (block != null && block.BehindElement != null && !block.BehindElement.Destroyed)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     //элементы совпадают
@@ -1257,7 +1068,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 for (int y = 0; y < containers[x].block.GetLength(0); y++)
                 {
                     //если блок существует по данному адресу и в нем есть элемент и блокирующий элемент
-                    if (ThisBlockWithElementAndBlockingElement(containers[x].block[y]))
+                    if (BlockCheck.ThisBlockWithElementAndBlockingElement(containers[x].block[y]))
                     {
                         if (containers[x].block[y].Element.BlockingElement.Shape == (BlockingElementsShapeEnum)Enum.Parse(typeof(BlockingElementsShapeEnum), shape.ToString()))
                         {
@@ -1274,7 +1085,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 for (int y = 0; y < containers[x].block.GetLength(0); y++)
                 {
                     //если блок существует по данному адресу и в нем есть элемент и блокирующий элемент
-                    if (ThisBlockWithElement(containers[x].block[y]))
+                    if (BlockCheck.ThisBlockWithElement(containers[x].block[y]))
                     {
                         if (containers[x].block[y].Element.Shape == (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shape.ToString()))
                         {
@@ -1308,7 +1119,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 for (int y = 0; y < containers[x].block.GetLength(0); y++)
                 {
                     //если блок существует по данному адресу и в нем есть элемент и блокирующий элемент
-                    if (ThisBlockWithBehindElement(containers[x].block[y]))
+                    if (BlockCheck.ThisBlockWithBehindElement(containers[x].block[y]))
                     {
                         if (containers[x].block[y].BehindElement.Shape == (BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), shape.ToString()))
                         {
@@ -1331,7 +1142,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
                 //если блок существует по данному адресу и в нем есть стандартный элемент
-                if (ThisBlockWithStandartElement(containers[x].block[y]))
+                if (BlockCheck.ThisBlockWithStandartElement(containers[x].block[y]))
                 {
                     blocks.Add(containers[x].block[y]);
                 }
@@ -1385,11 +1196,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (currentBlock != null && !blockFields.Contains(currentBlock))
                 {
                     //если пустой блок и не умеет генерировать элемент, идем дальше
-                    if (ThisBlockWithoutElement(currentBlock) && !currentBlock.GeneratorElements)
+                    if (BlockCheck.ThisBlockWithoutElement(currentBlock) && !currentBlock.GeneratorElements)
                     { continue; }
 
                     //если пустой блок и умеет генерировать элемент, то предварительно создаем случайный элемент
-                    else if (ThisBlockWithoutElement(currentBlock) && currentBlock.GeneratorElements)
+                    else if (BlockCheck.ThisBlockWithoutElement(currentBlock) && currentBlock.GeneratorElements)
                     {
                         elementPriority = ProportionalWheelSelection.SelectElement(elementsPriority);
                         currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
@@ -1402,20 +1213,20 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     }
 
                     //если текущий элемент заблокирован для движения, то переходим к следующему
-                    else if (ThisBlockWithElementCantMove(currentBlock))
+                    else if (BlockCheck.ThisBlockWithElementCantMove(currentBlock))
                     { continue; }
 
                     if (y > 0)
                     {
                         //ищем место для смещения
                         //если нижний блок не имеет элемента, то смещаем к нему
-                        if (ThisStandardBlockWithoutElement(containers[x].block[y - 1]))
+                        if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y - 1]))
                         {
                             Block newBlock = containers[x].block[y - 1];
                             int distance = 1;
                             for (int i = y - 2; i >= 0; i--)
                             {
-                                if (ThisStandardBlockWithoutElement(containers[x].block[i]))
+                                if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[i]))
                                 {
                                     newBlock = containers[x].block[i];
                                     distance++;
@@ -1433,7 +1244,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
 
                         //иначе, проверяем правый нижний блок по диагонали, при условии, что справа нет элементов в блоках
-                        if ((x < containers.GetLength(0) - 1) && ThisStandardBlockWithoutElement(containers[x + 1].block[y - 1]))
+                        if ((x < containers.GetLength(0) - 1) && BlockCheck.ThisStandardBlockWithoutElement(containers[x + 1].block[y - 1]))
                         {
                             bool moveRight = false;
                             for (int i = y; i < containers[x].block.GetLength(0); i++)
@@ -1443,12 +1254,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     moveRight = false;
                                     break;
                                 }
-                                if (ThisBlockWithElementCanMove(containers[x + 1].block[i]))
+                                if (BlockCheck.ThisBlockWithElementCanMove(containers[x + 1].block[i]))
                                 {
                                     moveRight = false;
                                     break;
                                 }
-                                if (ThisBlockWithElementCantMove(containers[x + 1].block[i]) || containers[x + 1].block[i] == null)
+                                if (BlockCheck.ThisBlockWithElementCantMove(containers[x + 1].block[i]) || containers[x + 1].block[i] == null)
                                 {
                                     //if (currentBlock == containers[x].block[i])
                                     //{
@@ -1492,7 +1303,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                                 ExchangeElements(currentBlock, containers[x + 1].block[y - 1]);
                                 MainAnimator.Instance.AddElementForSmoothMove(containers[x + 1].block[y - 1].Element.thisTransform, new Vector3(containers[x + 1].block[y - 1].thisTransform.position.x + 0.1f, containers[x + 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x + 1].block[y - 1].thisTransform.position.z), 2, smoothEnum, smoothTime: speed + 1 * 0.015f, addToQueue: !createdElement);
-                                if (y > 1 && (((x < containers.GetLength(0) - 2) && ThisStandardBlockWithoutElement(containers[x + 2].block[y - 2])) || ThisStandardBlockWithoutElement(containers[x + 1].block[y - 2])))
+                                if (y > 1 && (((x < containers.GetLength(0) - 2) && BlockCheck.ThisStandardBlockWithoutElement(containers[x + 2].block[y - 2])) || BlockCheck.ThisStandardBlockWithoutElement(containers[x + 1].block[y - 2])))
                                 {
                                     containers[x + 1].block[y - 1].Element.speed = 1;
                                 }
@@ -1506,7 +1317,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             }
                         }
                         //иначе, проверяем левый нижний блок по диагонали , при условии, что слева нет элементов в блоках
-                        if ((x > 0) && ThisStandardBlockWithoutElement(containers[x - 1].block[y - 1]))
+                        if ((x > 0) && BlockCheck.ThisStandardBlockWithoutElement(containers[x - 1].block[y - 1]))
                         {
                             bool moveLeft = false;
                             for (int i = y; i < containers[x].block.GetLength(0); i++)
@@ -1516,12 +1327,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     moveLeft = false;
                                     break;
                                 }
-                                if (ThisBlockWithElementCanMove(containers[x - 1].block[i]))
+                                if (BlockCheck.ThisBlockWithElementCanMove(containers[x - 1].block[i]))
                                 {
                                     moveLeft = false;
                                     break;
                                 }
-                                if (ThisBlockWithElementCantMove(containers[x - 1].block[i]) || containers[x - 1].block[i] == null)
+                                if (BlockCheck.ThisBlockWithElementCantMove(containers[x - 1].block[i]) || containers[x - 1].block[i] == null)
                                 {
                                     //if (currentBlock == containers[x].block[i] && !ThisBlockWithElementCanMove(GetBlock(x - 2, i)))
                                     //{
@@ -1563,7 +1374,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 //}
                                 ExchangeElements(currentBlock, containers[x - 1].block[y - 1]);
                                 MainAnimator.Instance.AddElementForSmoothMove(containers[x - 1].block[y - 1].Element.thisTransform, new Vector3(containers[x - 1].block[y - 1].thisTransform.position.x - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.y - 0.1f, containers[x - 1].block[y - 1].thisTransform.position.z), 2, smoothEnum, smoothTime: speed + 1 * 0.015f, addToQueue: !createdElement);
-                                if (y > 1 && ((x > 1 && ThisStandardBlockWithoutElement(containers[x - 2].block[y - 2])) || ThisStandardBlockWithoutElement(containers[x - 1].block[y - 2])))
+                                if (y > 1 && ((x > 1 && BlockCheck.ThisStandardBlockWithoutElement(containers[x - 2].block[y - 2])) || BlockCheck.ThisStandardBlockWithoutElement(containers[x - 1].block[y - 2])))
                                 {
                                     containers[x - 1].block[y - 1].Element.speed = 1;
                                 }
@@ -1693,19 +1504,32 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         elementsForMove = new List<Blocks>();
         needFilling = false;
         elementsPriority = new List<ElementsPriority>();
-        //очищаем сетку
-        for (int x = 0; x < containers.GetLength(0); x++)
+
+        //удаляем все блоки
+        string blocksName = "Blocks";        
+        Transform blocksTransform = transform.Find(blocksName);
+        if (blocksTransform != null)
         {
-            for (int y = 0; y < containers[x].block.GetLength(0); y++)
-            {
-                //если блок существует по данному адресу
-                if (containers[x].block[y] != null)
-                {
-                    //удаляем блок
-                    DestroyImmediate(containers[x].block[y].gameObject);
-                }
-            }
+            DestroyImmediate(blocksTransform.gameObject);
         }
+        GameObject blocks;
+        blocks = new GameObject();
+        blocks.name = blocksName;
+        blocks.transform.parent = transform;
+
+        ////очищаем сетку
+        //for (int x = 0; x < containers.GetLength(0); x++)
+        //{
+        //    for (int y = 0; y < containers[x].block.GetLength(0); y++)
+        //    {
+        //        //если блок существует по данному адресу
+        //        if (containers[x].block[y] != null)
+        //        {
+        //            //удаляем блок
+        //            DestroyImmediate(containers[x].block[y].gameObject);
+        //        }
+        //    }
+        //}
 
         this.blockSize = float.Parse(gridXElement.Element("blockSize").Value);
         int XSize = int.Parse(gridXElement.Element("XSize").Value);
@@ -1754,7 +1578,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //создаем блок
                 GameObject blockGameObject = Instantiate(prefabBlock, position, Quaternion.identity);
                 blockGameObject.name = "Block_" + posX + "_" + posY;
-                blockGameObject.transform.parent = this.transform;
+                blockGameObject.transform.parent = blocks.transform;
 
                 Block blockField = blockGameObject.GetComponent<Block>();
                 blockField.GeneratorElements = generatorElements;

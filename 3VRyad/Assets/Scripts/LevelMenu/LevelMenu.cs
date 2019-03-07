@@ -11,7 +11,7 @@ public class LevelMenu : MonoBehaviour
     public static LevelMenu Instance; // Синглтон
     [SerializeField] public List<Region> regionsList;
 
-    private Level lastLoadLevel = null;
+    [SerializeField] private Level lastLoadLevel = null;
     private GameObject canvasRegions = null;
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
@@ -57,14 +57,14 @@ public class LevelMenu : MonoBehaviour
         this.regionsList = new List<Region>();
         UnityEngine.Object xmlDocument = null;
         Level level = null;
-        MessageArray.message.Add("Создаем регионы:");
+        //MessageArray.message.Add("Создаем регионы:");
         int r = 0;        
         do
         {
             int l = 0;
             if (SaveAndLoadScene.Instance().LevelFileExist("Level_" + l, "Region_" + r))
             {
-                MessageArray.message.Add("Region_" + r);
+                //MessageArray.message.Add("Region_" + r);
                 regionsList.Add(new Region());
                 regionsList[r].name = "Region_" + r;
                 do

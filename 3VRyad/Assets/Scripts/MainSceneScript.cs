@@ -84,8 +84,14 @@ public class MainSceneScript : MonoBehaviour {
     public void RestartLevel()
     {
         Destroy(CanvasMenu);
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
+        if (LevelMenu.Instance.LastLoadLevel != null)
+        {
+            LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     public void NextLevel()

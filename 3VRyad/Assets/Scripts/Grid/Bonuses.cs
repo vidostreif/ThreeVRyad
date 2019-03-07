@@ -37,7 +37,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         {
             //определяем место выдачи бонуса
             Block blockToCreateBonus = null;
-            if (GridBlocks.Instance.ThisStandardBlockWithoutElement(destinationBlock) || GridBlocks.Instance.ThisStandardBlockWithoutElement(touchingBlock))
+            if (BlockCheck.ThisStandardBlockWithoutElement(destinationBlock) || BlockCheck.ThisStandardBlockWithoutElement(touchingBlock))
             {
                 //ищем блок куда переместили элемент в массиве
                 blockToCreateBonus = findedBlockInLine.Find(item => item == destinationBlock);
@@ -52,7 +52,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
                 //пробегаемся по всему массиву и находим блок на пересечении
                 foreach (Block item in findedBlockInLine)
                 {
-                    if (GridBlocks.Instance.ThisStandardBlockWithoutElement(item))//если блок без элемента
+                    if (BlockCheck.ThisStandardBlockWithoutElement(item))//если блок без элемента
                     {
                         NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(GridBlocks.Instance.FindPosition(item));
                         List<Block> matchedBlocks = new List<Block>();

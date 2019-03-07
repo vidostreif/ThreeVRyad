@@ -231,17 +231,16 @@ public class PropertyDrawerUtility
                     }
                 }
 
-            int index = int.Parse(@int);//234
-            int index2 = int.Parse(@int2);//234
+            int index;//234
+            int index2;//234
 
-            //Debug.Log(index);
-            //Debug.Log(index2);
-
-            if (obj.regionsList.Count > index && obj.regionsList[index].levelList.Count > index2)
+            if (int.TryParse(@int, out index) && int.TryParse(@int2, out index2))
             {
-                actualObject = obj.regionsList[index].levelList[index2];
+                if (obj.regionsList.Count > index && obj.regionsList[index].levelList.Count > index2)
+                {
+                    actualObject = obj.regionsList[index].levelList[index2];
+                }
             }
-            
         }
         return actualObject;
     }

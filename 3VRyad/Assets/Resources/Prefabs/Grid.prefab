@@ -174,7 +174,7 @@ MonoBehaviour:
     type: 3}
   elementsPriority:
   - elementsType: 1
-    elementsShape: 10
+    elementsShape: 13
     priority: 10
   - elementsType: 1
     elementsShape: 11

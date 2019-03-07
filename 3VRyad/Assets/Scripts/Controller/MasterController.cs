@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MasterController : MonoBehaviour
-{    
+{
     public static MasterController Instance; // Синглтон
 
     private Transform transforForLocalDAndD = null;
@@ -38,12 +38,17 @@ public class MasterController : MonoBehaviour
 
     public void DragLocalObject(Transform gameObjectTransform)//записываем данные для последующего перемещения объекта за мышкой или пальцем
     {
-        //если сетка не заблокирована и мы не перетаскиваем другой объект
-        //if (!Grid.Instance.blockedForMove && transforForLocalDAndD == null)
-        //{
-            if (transforForLocalDAndD == null)
+
+        if (transforForLocalDAndD == null)
+        {
+            //проверяем что блока нет в текущих массивах для обработки
+            blockFieldDAndD = gameObjectTransform.GetComponentInParent<Block>();
+            if (GridBlocks.Instance.BlockInProcessing(blockFieldDAndD))
             {
-                transforForLocalDAndD = gameObjectTransform;
+                return;
+            }
+
+            transforForLocalDAndD = gameObjectTransform;
             startPositionLocalDAndD = gameObjectTransform.position;//позиция
 
             //вычисляем позицию пальца для записи отклонения курсора
@@ -61,7 +66,7 @@ public class MasterController : MonoBehaviour
             maxDistanceToMove = GridBlocks.Instance.blockSize;
 
             //Находим позицию блока в сетке
-            blockFieldDAndD = gameObjectTransform.GetComponentInParent<Block>();
+            
             gridPositionDAndD = GridBlocks.Instance.FindPosition(blockFieldDAndD);
             //Определяем соседние блоки
             neighboringBlocksDAndD = GridBlocks.Instance.DeterminingNeighboringBlocks(gridPositionDAndD);
@@ -70,10 +75,10 @@ public class MasterController : MonoBehaviour
             {
                 RecordStartPosition();
             }
-        }                
+        }
     }
 
-    
+
 
     public void DropLocalObject()// удаляем данные об объекте который перемещяли мышкой или пальцем и возвращаем его на место
     {
@@ -93,7 +98,7 @@ public class MasterController : MonoBehaviour
             //}
 
         }
-        else if(transforForLocalDAndD != null)
+        else if (transforForLocalDAndD != null)
         {
             //возвращаем на стартовую позицию
             transforForLocalDAndD.position = startPosition;
@@ -121,8 +126,8 @@ public class MasterController : MonoBehaviour
             float offsetDistance = translation.magnitude;
             //нормализируем вектор для упрощения вычисления направления
             Vector3 direction = translation / offsetDistance;
-            
-            // Если растояние меньше допистимого то смещаем объект за пальцем
+
+            // Если растояние меньше допустимого то смещаем объект за пальцем
             //уменьшить вектор до нужного размера, что бы смещать элемент на нужное растояние
             if (offsetDistance > maxDistanceToMove)
             {
@@ -156,19 +161,24 @@ public class MasterController : MonoBehaviour
             Block neighboringBlock = neighboringBlocksDAndD.GetBlock(offsetDirection);
             if (neighboringBlock != null)
             {
+                //проверяем что блока нет в текущих массивах для обработки
+                if (GridBlocks.Instance.BlockInProcessing(neighboringBlock))
+                {
+                    return;
+                }
                 //Если в соседнем блоке есть элемент и он не заблокирован, то смещаем его к нашему блоку на тоже растояние
                 //или если нет элемента
                 if ((neighboringBlock.Element != null && !neighboringBlock.Element.LockedForMove) || neighboringBlock.Element == null)
                 {
                     //записываем достаточно ли мы сместили объект, что бы поменять его с соседним
                     //или если прошло очень мало времени, то меняем элементы
-                    if (offsetDistance > maxDistanceToMove * 0.4f || Time.time - startDragMoment < 0.3f)
+                    if (offsetDistance > maxDistanceToMove * 0.1f || Time.time - startDragMoment < 0.3f)
                         change = true;
                     else
                         change = false;
 
                     //тащим элемент за пальцем
-                    transforForLocalDAndD.position = newPosition;                                      
+                    transforForLocalDAndD.position = newPosition;
 
                     //Если в соседнем блоке есть элемент, то смещаем его к нашему блоку на тоже растояние
                     if (neighboringBlock.Element != null && offsetDistance > maxDistanceToMove * 0.2f)

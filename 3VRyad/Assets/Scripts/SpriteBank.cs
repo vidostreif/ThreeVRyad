@@ -116,7 +116,7 @@ public class SpriteBank : MonoBehaviour
         //        return null;
         //}
 
-        return Resources.Load<Sprite>("Sprites/BehindElements/" + shape.ToString()) as Sprite;
+        return Resources.Load<Sprite>("Sprites/BlockingElement/" + shape.ToString()) as Sprite;
     }
 
     public static Sprite SetShape(InstrumentsEnum shape)

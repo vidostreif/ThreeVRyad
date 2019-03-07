@@ -21,7 +21,7 @@ public class DirtBehindElement : BehindElement
                 foreach (Block block in neighboringBlocks.allBlockField)
                 {
                     //находим не заблокированный элемент
-                    if (GridBlocks.Instance.ThisStandardBlockWithStandartElementCanMove(block))
+                    if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(block))
                     {
                         if (block.BehindElement == null || block.BehindElement.Destroyed)
                         {

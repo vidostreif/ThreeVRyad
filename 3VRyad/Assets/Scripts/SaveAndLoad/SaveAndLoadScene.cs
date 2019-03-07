@@ -34,6 +34,8 @@ public class SaveAndLoadScene
 
         XElement root = new XElement("root");
 
+        //!!!Переделать - получать все объекты на сцене и в них уже искать IESaveAndLoad
+
         //сохраняем данные из других классов
         var instances = from t in Assembly.GetExecutingAssembly().GetTypes()
                         where t.GetInterfaces().Contains(typeof(IESaveAndLoad))

@@ -113,7 +113,7 @@ public class InstrumentsManager : MonoBehaviour
     //активация лопаты
     //ударяет по одному блоку
     private IEnumerator ActivateShovel(Block block) {
-        if (GridBlocks.Instance.ThisBlockWithMortalElement(block))
+        if (BlockCheck.ThisBlockWithMortalElement(block))
         {
             block.Hit();
             yield return new WaitForSeconds(0.3f);
@@ -202,7 +202,7 @@ public class InstrumentsManager : MonoBehaviour
     //перекрашивает 10 стандартных элементов
     private IEnumerator ActivateRepainting(Block block)
     {
-        if (GridBlocks.Instance.ThisBlockWithStandartElement(block))
+        if (BlockCheck.ThisBlockWithStandartElement(block))
         {
             Block[] blocks = GridBlocks.Instance.ReturnAllBlocksWithStandartElements();
             int quantity = 10;//количество перекрашиваемых элементов
