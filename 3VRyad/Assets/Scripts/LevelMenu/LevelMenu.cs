@@ -11,7 +11,7 @@ public class LevelMenu : MonoBehaviour
     public static LevelMenu Instance; // Синглтон
     [SerializeField] public List<Region> regionsList;
 
-    [SerializeField] private Level lastLoadLevel = null;
+    [SerializeField] private Level lastLoadLevel;
     private GameObject canvasRegions = null;
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
@@ -45,6 +45,8 @@ public class LevelMenu : MonoBehaviour
         //загрузить данных из сохранения
         JsonSaveAndLoad.LoadSave(regionsList);
         regionsList[0].levelList[0].open = true;
+        lastLoadLevel = null;
+
 
         //если запустились на сцене меню
         if (SceneManager.GetActiveScene().name == "MainMenu")

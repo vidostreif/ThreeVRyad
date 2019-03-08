@@ -98,7 +98,6 @@ public class SaveAndLoadScene
         if (root == null)
         {
             Debug.Log("Не удалось загрузить файл!");
-            MessageArray.message.Add("Не удалось загрузить файл!");
             return;
         }
 

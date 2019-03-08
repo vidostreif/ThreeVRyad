@@ -4,15 +4,16 @@ using System.Collections.Generic;
 
 public class MessageArray : MonoBehaviour
 {
-
-    public static List<string> message;
+    public static List<DebugMessage> debugMessage = new List<DebugMessage>();
+    public static bool debug = false;
+    [SerializeField] private bool debugMod = true;
 
     public RectTransform messageBlock;
     public int blockCount = 10;
     public float timeout = 0.2f;
     public float shift = 5;
     public float lifetime = 10;
-    public bool moveUp = true;
+    public bool moveUp = true;    
 
     private float curTimeout;
     private RectTransform[] tmp;
@@ -21,22 +22,34 @@ public class MessageArray : MonoBehaviour
     void Awake()
     {
         messageBlock.gameObject.SetActive(false);
-        message = new List<string>();
+        //debugMessage = new List<DebugMessage>();
         tmp = new RectTransform[blockCount];
         curTimeout = timeout;
+        debug = debugMod;
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoad(gameObject); //Set as do not destroy
+        }
+    }
+
+    public static void AddDebugMessage(string message, Color color) {
+        if (debugMessage != null)
+        {
+            debugMessage.Add(new DebugMessage(message, color));
+        }
     }
 
     void ClearArray()
     {
         bool active = false;
-        foreach (string mess in message)
+        foreach (DebugMessage debugMessage in debugMessage)
         {
-            if (mess != string.Empty) active = true;
+            if (debugMessage.Message != string.Empty) active = true;
         }
-        if (!active) message = new List<string>();
+        if (!active) debugMessage = new List<DebugMessage>();
     }
 
-    void AddNewMessage(string text)
+    void AddNewMessage(string text, Color color)
     {
         RectTransform block = Instantiate(messageBlock) as RectTransform;
         block.gameObject.SetActive(true);
@@ -44,6 +57,7 @@ public class MessageArray : MonoBehaviour
         block.anchoredPosition = messageBlock.anchoredPosition;
         block.GetComponent<MessageBlock>().message = text;
         block.GetComponent<MessageBlock>().lifetime = lifetime;
+        block.GetComponent<MessageBlock>().color = color;
         if (blockCount > 1)
         {
             for (int i = 0; i < tmp.Length; i++)
@@ -73,27 +87,64 @@ public class MessageArray : MonoBehaviour
 
     void Update()
     {
-        if (message.Count > 0)
+        if (debug)
         {
-            curTimeout += Time.deltaTime;
-            if (curTimeout > timeout)
+            if (debugMessage.Count > 0)
             {
-                for (int j = 0; j < message.Count; j++)
+                curTimeout += Time.deltaTime;
+                if (curTimeout > timeout)
                 {
-                    if (message[j] != string.Empty)
+                    for (int j = 0; j < debugMessage.Count; j++)
                     {
-                        AddNewMessage(message[j]);
-                        message[j] = string.Empty;
-                        curTimeout = 0;
-                        return;
+                        if (debugMessage[j].Message != string.Empty)
+                        {
+                            AddNewMessage(debugMessage[j].Message, debugMessage[j].Color);
+                            debugMessage[j].Message = string.Empty;
+                            curTimeout = 0;
+                            return;
+                        }
                     }
+                    ClearArray();
                 }
-                ClearArray();
+            }
+            else
+            {
+                curTimeout = timeout;
             }
         }
-        else
+       
+    }
+}
+
+public class DebugMessage {
+
+    string message;
+    Color color;
+
+    public DebugMessage(string message, Color color)
+    {
+        this.message = message;
+        this.color = color;
+    }
+
+    public string Message
+    {
+        get
         {
-            curTimeout = timeout;
+            return message;
+        }
+
+        set
+        {
+            message = value;
+        }
+    }
+
+    public Color Color
+    {
+        get
+        {
+            return color;
         }
     }
 }
