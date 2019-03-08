@@ -17,7 +17,15 @@ public static class Debug
         if (MessageArray.debug)
         {
             UnityEngine.Debug.Log(message);
-            MessageArray.AddDebugMessage(message.ToString(), Color.black);
+            try
+            {
+                MessageArray.AddDebugMessage((string)message, Color.black);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }            
         }
     }
 
@@ -26,7 +34,15 @@ public static class Debug
         if (MessageArray.debug)
         {
             UnityEngine.Debug.Log(message, context);
-            MessageArray.AddDebugMessage(message.ToString(), Color.black);
+            try
+            {
+                MessageArray.AddDebugMessage((string)message, Color.black);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 
@@ -35,7 +51,15 @@ public static class Debug
         if (MessageArray.debug)
         {
             UnityEngine.Debug.LogError(message);
-            MessageArray.AddDebugMessage(message.ToString(), Color.red);
+            try
+            {
+                MessageArray.AddDebugMessage((string)message, Color.red);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 
@@ -44,7 +68,15 @@ public static class Debug
         if (MessageArray.debug)
         {
             UnityEngine.Debug.LogError(message, context);
-            MessageArray.AddDebugMessage(message.ToString(), Color.red);
+            try
+            {
+                MessageArray.AddDebugMessage((string)message, Color.red);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 
@@ -53,7 +85,15 @@ public static class Debug
         if (MessageArray.debug)
         {
             UnityEngine.Debug.LogWarning(message.ToString());
-            MessageArray.AddDebugMessage(message.ToString(), Color.yellow);
+            try
+            {
+                MessageArray.AddDebugMessage((string)message, Color.yellow);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 
@@ -62,7 +102,15 @@ public static class Debug
         if (MessageArray.debug)
         {
             UnityEngine.Debug.LogWarning(message.ToString(), context);
-            MessageArray.AddDebugMessage(message.ToString(), Color.yellow);
+            try
+            {
+                MessageArray.AddDebugMessage((string)message, Color.yellow);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 

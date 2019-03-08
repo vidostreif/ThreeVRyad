@@ -11,7 +11,7 @@ public class LevelMenu : MonoBehaviour
     public static LevelMenu Instance; // Синглтон
     [SerializeField] public List<Region> regionsList;
 
-    [SerializeField] private Level lastLoadLevel;
+    private Level lastLoadLevel;
     private GameObject canvasRegions = null;
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
@@ -46,7 +46,6 @@ public class LevelMenu : MonoBehaviour
         JsonSaveAndLoad.LoadSave(regionsList);
         regionsList[0].levelList[0].open = true;
         lastLoadLevel = null;
-
 
         //если запустились на сцене меню
         if (SceneManager.GetActiveScene().name == "MainMenu")
@@ -252,7 +251,7 @@ public class LevelMenu : MonoBehaviour
 
     //работа с переходом между уровнями
     public void LoadLevel(Level inLevel) {
-        StartCoroutine(curLoadLevel(inLevel));
+        StartCoroutine(CurLoadLevel(inLevel));
     }
 
     //загрузить следующий уровень
@@ -342,11 +341,14 @@ public class LevelMenu : MonoBehaviour
 
     public void SetLevelPassed()
     {
-        lastLoadLevel.passed = true;
-        SetOpenNextLevel();
+        if (lastLoadLevel != null)
+        {
+            lastLoadLevel.passed = true;
+            SetOpenNextLevel();
+        }        
     }
 
-    private IEnumerator curLoadLevel(Level inLevel) {
+    private IEnumerator CurLoadLevel(Level inLevel) {
         //загружаем уровень
         if (SceneManager.GetActiveScene().name == "SampleScene")
         {
@@ -358,8 +360,12 @@ public class LevelMenu : MonoBehaviour
             lastLoadLevel = inLevel;
             Destroy(canvasRegions);
             Destroy(canvasLevels);
-            SceneManager.LoadSceneAsync("SampleScene");
-            yield return true;
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("SampleScene");
+            //ожидаем загрузки уровня
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
         }
         
         //async.allowSceneActivation = false;
@@ -418,11 +424,23 @@ public class LevelMenu : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        StartCoroutine(CurLoadMainMenu());
+    }
+
+    private IEnumerator CurLoadMainMenu()
+    {
         //если на ходимся не на сцене меню, то сначала подгружаем сцену
         if (SceneManager.GetActiveScene().name != "MainMenu")
         {
-            SceneManager.LoadSceneAsync("MainMenu");
-        }        
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
+            //yield return true;
+            //ожидаем загрузки уровня
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+
+        }
         //если выходим из уровня то загружаем регион с этим уровнем
         if (lastLoadLevel != null)
         { 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class MessageArray : MonoBehaviour
 {
+    public static MessageArray Instance; // Синглтон
     public static List<DebugMessage> debugMessage = new List<DebugMessage>();
     public static bool debug = false;
     [SerializeField] private bool debugMod = true;
@@ -21,8 +22,16 @@ public class MessageArray : MonoBehaviour
 
     void Awake()
     {
+        if (Instance)
+        {
+            Destroy(this); //Delete duplicate
+            return;
+        }
+        else
+        {
+            Instance = this; //Make this object the only instance            
+        }
         messageBlock.gameObject.SetActive(false);
-        //debugMessage = new List<DebugMessage>();
         tmp = new RectTransform[blockCount];
         curTimeout = timeout;
         debug = debugMod;

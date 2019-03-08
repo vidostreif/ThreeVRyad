@@ -99,10 +99,11 @@
   </GridBlocks>
   <Tasks>
     <moves>20</moves>
-    <sizeTargets>2</sizeTargets>
+    <sizeTargets>3</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Orange" goal="10" collectEverything="false" />
-      <shapeAndGoal shape="Apple" goal="10" collectEverything="false" />
+      <shapeAndGoal shape="Grass" goal="10" collectEverything="true" />
+      <shapeAndGoal shape="Wall" goal="10" collectEverything="true" />
+      <shapeAndGoal shape="Liana" goal="10" collectEverything="true" />
     </targets>
   </Tasks>
 </root>
