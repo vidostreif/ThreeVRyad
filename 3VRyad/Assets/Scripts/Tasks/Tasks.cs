@@ -48,11 +48,22 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     //создание коллекции целей
     public void CreateCollectedElements() {
         //смещение по y
-        float startingYPoint = thisTransform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;       
+        float startingYPoint = transform.position.y - ((1 + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;
+        //удаляем все задания
+        string targetsName = "Targets";
+        Transform targetsTransform = transform.Find(targetsName);
+        if (targetsTransform != null)
+        {
+            DestroyImmediate(targetsTransform.gameObject);
+        }
+        GameObject targetsParent;
+        targetsParent = new GameObject();
+        targetsParent.name = targetsName;
+        targetsParent.transform.SetParent(transform, false);
 
         for (int i = 0; i < targets.Length; i++)
         {
-            targets[i].GameObject = Instantiate(prefabcollectedElements, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenTargets)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
+            targets[i].GameObject = Instantiate(prefabcollectedElements, new Vector3(transform.position.x, startingYPoint + (i * (1 + distanceBetweenTargets)), transform.position.z), Quaternion.identity, targetsParent.transform);
             Image image = targets[i].GameObject.GetComponent(typeof(Image)) as Image;
             image.sprite = SpriteBank.SetShape(targets[i].elementsShape);
             targets[i].Image = image;
@@ -204,5 +215,6 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             this.targets[iteration] = target;
             iteration++;
         }
+        CreateCollectedElements();
     }
 }

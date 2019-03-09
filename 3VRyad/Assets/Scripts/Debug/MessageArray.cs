@@ -62,7 +62,7 @@ public class MessageArray : MonoBehaviour
     {
         RectTransform block = Instantiate(messageBlock) as RectTransform;
         block.gameObject.SetActive(true);
-        block.SetParent(transform);
+        block.SetParent(transform, false);
         block.anchoredPosition = messageBlock.anchoredPosition;
         block.GetComponent<MessageBlock>().message = text;
         block.GetComponent<MessageBlock>().lifetime = lifetime;

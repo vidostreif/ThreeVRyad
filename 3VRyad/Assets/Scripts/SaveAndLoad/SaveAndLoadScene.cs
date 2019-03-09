@@ -17,7 +17,9 @@ public class SaveAndLoadScene
     private static SaveAndLoadScene instance; // Синглтон
     private string SceneName;
     private string allSaveFolder = "SaveScenes";
-    public UnityEngine.Object xmlDocument = null;
+
+    public UnityEngine.Object lastLoadXmlDocument = null;
+    public String lastLoadFolder = null;
 
     public static SaveAndLoadScene Instance()
     {
@@ -69,8 +71,8 @@ public class SaveAndLoadScene
 
         AssetDatabase.Refresh();
 
-        xmlDocument = Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
-        return xmlDocument;
+        lastLoadXmlDocument = Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
+        return lastLoadXmlDocument;
     }
 #endif
 
@@ -102,7 +104,8 @@ public class SaveAndLoadScene
         }
 
         GenerateScene(root);
-        xmlDocument = Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
+        lastLoadXmlDocument = Resources.Load(allSaveFolder + "/" + folder + "/" + name, typeof(UnityEngine.Object)) as UnityEngine.Object;
+        lastLoadFolder = folder;
     }
 
     public UnityEngine.Object GetXmlDocument(string name = "null", string folder = "")
@@ -128,7 +131,7 @@ public class SaveAndLoadScene
     private string GetDatapath(string name = "null", string folder = "") {
         if (name == "null")
         {
-            SceneName = this.xmlDocument.name;
+            SceneName = this.lastLoadXmlDocument.name;
         }
         else
         {
@@ -156,18 +159,24 @@ public class SaveAndLoadScene
         foreach (XElement ListXElement in root.Elements())
         {
             Type component = Type.GetType(ListXElement.Name.ToString());
-            IESaveAndLoad[] findeObjects = UnityEngine.Object.FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
+            Component[] findeObjects = UnityEngine.Object.FindObjectsOfType(component) as Component[]; //находим всех объекты с компонентом и создаём массив из них
+            IESaveAndLoad[] findeIESaveAndLoad = UnityEngine.Object.FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
 
             //!!! потом можноо переделать что бы загружались все объекты даже если тип объектов несколько. Загружать можно по имени.
-            if (findeObjects.GetLength(0) > 1)
+            if (findeIESaveAndLoad.GetLength(0) > 1)
             {
                 Debug.LogError("Объектов типа: " + component.ToString() + ", больше одного на сцене! Загрузка прервана.");
                 return;
             }
 
+            foreach (var currentObject in findeIESaveAndLoad) //для каждого объекта в массиве
+            {
+                currentObject.RecoverFromXElement(ListXElement);
+            }
+
             foreach (var currentObject in findeObjects) //для каждого объекта в массиве
             {
-                currentObject.RecoverFromXElement(ListXElement); 
+                EditorUtility.SetDirty(currentObject);
             }
         }
     }

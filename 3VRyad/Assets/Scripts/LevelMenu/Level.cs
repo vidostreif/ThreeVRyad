@@ -142,11 +142,18 @@ public class LevelDrawer : PropertyDrawer
 
         if (xmlDocument != null)
         {
-            if (SaveAndLoadScene.Instance().xmlDocument != xmlDocument)
+            if (SaveAndLoadScene.Instance().lastLoadXmlDocument != xmlDocument)
             {
                 if (GUI.Button(buttonRect, "Загрузить"))
-                {
-                    levelMenu.LoadXml(level);
+                {                    
+                    if (Application.isPlaying)
+                    {
+                        levelMenu.LoadLevel(level);
+                    }
+                    else
+                    {
+                        levelMenu.LoadXml(level);
+                    }
                 }
             }
             else

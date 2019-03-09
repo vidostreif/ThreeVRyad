@@ -7,9 +7,10 @@ using System.Xml.Linq;
 using System;
 using System.Linq;
 
-#if UNITY_EDITOR
-[InitializeOnLoad]
-#endif
+//#if UNITY_EDITOR
+//[InitializeOnLoad]
+//#endif
+[ExecuteInEditMode]
 public class GridBlocks : MonoBehaviour, IESaveAndLoad
 {
     public static GridBlocks Instance; // Синглтон
@@ -1491,7 +1492,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         gridXElement.Add(blocksXElement);
 
-        Debug.Log(gridXElement);
+        Debug.Log(gridXElement.ToString());
 
         return gridXElement;
     }
@@ -1530,6 +1531,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //        }
         //    }
         //}
+        
 
         this.blockSize = float.Parse(gridXElement.Element("blockSize").Value);
         int XSize = int.Parse(gridXElement.Element("XSize").Value);
@@ -1603,5 +1605,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
             }
         }
+        EditorUtility.SetDirty(this);
     }
 }

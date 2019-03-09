@@ -12,6 +12,8 @@ public class LevelMenu : MonoBehaviour
     [SerializeField] public List<Region> regionsList;
 
     private Level lastLoadLevel;
+    public string lastLoadXmlDocument = null;
+    public string lastLoadFolder = null;
     private GameObject canvasRegions = null;
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
@@ -20,7 +22,7 @@ public class LevelMenu : MonoBehaviour
     {
         if (Instance)
         {
-            Destroy(this); //Delete duplicate
+            Destroy(this.gameObject); //Delete duplicate
             return;
         }
         else
@@ -32,7 +34,7 @@ public class LevelMenu : MonoBehaviour
     void Start()
     {
         ////заполнение regionsList из существующих файлов
-        CreateRegionsListFromFiles();
+        CreateRegionsListFromFiles();      
         ////если в игре
         if (Application.isPlaying)
         {
@@ -122,6 +124,8 @@ public class LevelMenu : MonoBehaviour
                 {
                     SaveAndLoadScene.Instance().LoadXml(inLevel.xmlDocument.name, "Region_" + i);
                     lastLoadLevel = inLevel;
+                    lastLoadXmlDocument = inLevel.xmlDocument.name;
+                    lastLoadFolder = "Region_" + i;
                     return;
                 }
             }
@@ -453,23 +457,23 @@ public class LevelMenu : MonoBehaviour
     }
 }
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(LevelMenu))]
-public class LevelMenuEditor : Editor
-{
-    LevelMenu levelMenu;
-    public override void OnInspectorGUI()
-    {
-        levelMenu = (LevelMenu)target;
-        DrawDefaultInspector();
+//#if UNITY_EDITOR
+//[CustomEditor(typeof(LevelMenu))]
+//public class LevelMenuEditor : Editor
+//{
+//    LevelMenu levelMenu;
+//    public override void OnInspectorGUI()
+//    {
+//        levelMenu = (LevelMenu)target;
+//        DrawDefaultInspector();
 
-        if (SaveAndLoadScene.Instance().xmlDocument != null && levelMenu.LastLoadLevel != null)
-        {
-            if (GUILayout.Button("Сохранить"))
-            {
-                levelMenu.SaveXml(levelMenu.LastLoadLevel);
-            }
-        }
-    }
-}
-#endif
+//        if (SaveAndLoadScene.Instance().lastLoadXmlDocument != null && levelMenu.LastLoadLevel != null)
+//        {
+//            if (GUILayout.Button("Сохранить"))
+//            {
+//                levelMenu.SaveXml(levelMenu.LastLoadLevel);
+//            }
+//        }
+//    }
+//}
+//#endif

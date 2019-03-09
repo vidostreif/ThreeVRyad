@@ -74,6 +74,30 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &1605710234250639592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3704721726496616311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceadadda27ccaa5439e81d15a936a136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisTransform: {fileID: 0}
+  prefabcollectedElements: {fileID: 1061130453393650, guid: 4558552d778ba2740b6c83312f2929c9,
+    type: 3}
+  distanceBetweenTargets: 2
+  targets:
+  - elementsShape: 10
+    collectEverything: 0
+    goal: 10
+  - elementsShape: 3
+    collectEverything: 0
+    goal: 10
+  moves: 20
 --- !u!1 &3706334145065158582
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,7 +151,7 @@ Canvas:
   m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -287,13 +311,13 @@ MonoBehaviour:
   prefabInstrument: {fileID: 1061130453393650, guid: bc4b4ceb5fdbadb4ca8579eac98a182d,
     type: 3}
   instruments:
-  - elementsType: 1
+  - type: 1
     quantity: 5
-  - elementsType: 2
+  - type: 2
     quantity: 4
-  - elementsType: 3
+  - type: 3
     quantity: 3
-  - elementsType: 4
+  - type: 4
     quantity: 2
 --- !u!1001 &3706334145361901507
 PrefabInstance:
@@ -413,6 +437,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8110c872837aac442987e947c8db8d82, type: 3}
+--- !u!1 &3704721726496616311 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1789509040789684, guid: 8110c872837aac442987e947c8db8d82,
+    type: 3}
+  m_PrefabInstance: {fileID: 3706334145361901507}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3491249188100367301 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224304663647065094, guid: 8110c872837aac442987e947c8db8d82,
@@ -535,14 +565,7 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.50000006
       objectReference: {fileID: 0}
-    - target: {fileID: 114013765681295424, guid: 8110c872837aac442987e947c8db8d82,
-        type: 3}
-      propertyPath: prefabcollectedElements
-      value: 
-      objectReference: {fileID: 1061130453393650, guid: bc4b4ceb5fdbadb4ca8579eac98a182d,
-        type: 3}
-    m_RemovedComponents:
-    - {fileID: 114013765681295424, guid: 8110c872837aac442987e947c8db8d82, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8110c872837aac442987e947c8db8d82, type: 3}
 --- !u!1 &8699951726688259201 stripped
 GameObject:
