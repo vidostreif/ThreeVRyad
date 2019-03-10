@@ -151,9 +151,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public void Move(Block touchingBlock = null, Block destinationBlock = null)
     {
         //если остались ходы и нет подготовленных для действия инструментов
-        if (!Tasks.Instance.endGame && !InstrumentsManager.Instance.InstrumentPrepared)
-        {
-            Tasks.Instance.SubMoves();//минус ход
+        if (!Tasks.Instance.endGame && !InstrumentsManager.Instance.InstrumentPrepared && (Tasks.Instance.Moves - elementsForMove.Count) > 0)
+        {            
             Blocks blocks = new Blocks();
             blocks.block = new Block[2];
             blocks.block[0] = touchingBlock;
@@ -277,6 +276,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     //создаем бонусы
                     if (iteration == 1 && matchFound)
                     {
+                        //минус ход
+                        Tasks.Instance.SubMoves();
+
                         foreach (List<Block> item in findedBlockInLine)
                             Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
                         yield return new WaitForSeconds(0.07f);

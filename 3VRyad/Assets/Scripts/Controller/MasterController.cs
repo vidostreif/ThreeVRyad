@@ -172,7 +172,7 @@ public class MasterController : MonoBehaviour
                 {
                     //записываем достаточно ли мы сместили объект, что бы поменять его с соседним
                     //или если прошло очень мало времени, то меняем элементы
-                    if (offsetDistance > maxDistanceToMove * 0.1f || Time.time - startDragMoment < 0.3f)
+                    if (offsetDistance > maxDistanceToMove * 0.4f || Time.time - startDragMoment < 0.3f)
                         change = true;
                     else
                         change = false;
@@ -181,17 +181,17 @@ public class MasterController : MonoBehaviour
                     transforForLocalDAndD.position = newPosition;
 
                     //Если в соседнем блоке есть элемент, то смещаем его к нашему блоку на тоже растояние
-                    if (neighboringBlock.Element != null && offsetDistance > maxDistanceToMove * 0.2f)
+                    if (neighboringBlock.Element != null && offsetDistance > maxDistanceToMove * 0.3f)
                     {
                         //расчитываем вектор смещения для соседнего элемента
                         Vector3 neighboringTranslation = newPosition - startPosition;
-                        neighboringBlock.Element.transform.position = neighboringBlock.transform.position - neighboringTranslation;
+                        Vector3 newNeighboringPosition = neighboringBlock.transform.position - neighboringTranslation;
+                        MainAnimator.Instance.AddElementForSmoothMove(neighboringBlock.Element.transform, newNeighboringPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
                         neighboringBlock.Element.drag = true;
 
                         //если изменился соседний блок к которому движемся, то у предыдущего блока сбрасываем что он перетаскивается
                         if (processedNeighboringElement != neighboringBlock.Element)
                         {
-                            //BlockField oldNeighboringBlock = neighboringBlocksDAndD.GetBlock(oldDirection);
                             if (processedNeighboringElement != null)
                             {
                                 processedNeighboringElement.drag = false;
@@ -199,6 +199,28 @@ public class MasterController : MonoBehaviour
                         }
                         processedNeighboringElement = neighboringBlock.Element;
                     }
+                    else if (processedNeighboringElement != null)
+                    {
+                        processedNeighboringElement.drag = false;
+                    }
+                }
+                else
+                {
+                    //возвращаем элементы на свои позиции
+                    transforForLocalDAndD.position = startPosition;
+                    if (processedNeighboringElement != null)
+                    {
+                        processedNeighboringElement.drag = false;
+                    }
+                }
+            }
+            else
+            {
+                //возвращаем элементы на свои позиции
+                transforForLocalDAndD.position = startPosition;
+                if (processedNeighboringElement != null)
+                {
+                    processedNeighboringElement.drag = false;
                 }
             }
         }

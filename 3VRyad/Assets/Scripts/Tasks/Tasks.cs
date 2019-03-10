@@ -24,6 +24,14 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     [SerializeField] private int moves; //количество ходов
     public bool endGame { get; protected set; } //признак что можно выполнить ход    
 
+    public int Moves
+    {
+        get
+        {
+            return moves;
+        }
+    }
+
     void Awake()
     {
         // регистрация синглтона
@@ -143,7 +151,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     }
     //обнолвление текста количества ходов
     public void UpdateMovesText() {
-        movesText.text = "Ходы:" + moves;
+        movesText.text = "Ходы:" + Moves;
     }
 
     //ход
@@ -153,11 +161,11 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             moves--;
             UpdateMovesText();
-        }
-        else
-        {
-            endGame = true;
-        }
+            if (moves == 0)
+            {
+                endGame = true;
+            }
+        }        
     }
     
     //сохранение и заргрузка
@@ -170,7 +178,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     {
         XElement tasksXElement = new XElement(this.GetType().ToString());
 
-        tasksXElement.Add(new XElement("moves", moves));//количество ходов
+        tasksXElement.Add(new XElement("moves", Moves));//количество ходов
         tasksXElement.Add(new XElement("sizeTargets", targets.GetLength(0)));//записываем количество заданий
 
         //записываем все внешности и количество

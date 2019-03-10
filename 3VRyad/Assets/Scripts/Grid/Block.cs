@@ -106,6 +106,22 @@ public class Block : MonoBehaviour {
         }
     }
 
+    void Awake()
+    {
+        thisTransform = transform;
+        spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //если есть элемент и он не на позиции нашего блока то медлено премещаем его к блоку
+        if (MainAnimator.Instance != null && this.Element != null && this.Element.thisTransform.position != thisTransform.position && !this.Element.drag && !this.Element.Destroyed)
+        {
+            MainAnimator.Instance.AddElementForSmoothMove(this.Element.thisTransform, thisTransform.position, 1, SmoothEnum.InLine, smoothTime: 0.1f);
+        }
+    }
+
     public void CreatElement(GameObject prefabElement, ElementsShapeEnum shape, ElementsTypeEnum typeElementsEnum)
     {
         //создаем элемент у блока
@@ -235,18 +251,4 @@ public class Block : MonoBehaviour {
         }
     }
 
-    void Awake()
-    {
-        thisTransform = transform;
-        spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
-    }
-    	
-	// Update is called once per frame
-	void Update () {
-        //если есть элемент и он не на позиции нашего блока то медлено премещаем его к блоку
-        if (MainAnimator.Instance != null && this.Element != null && this.Element.thisTransform.position != thisTransform.position && !this.Element.drag && !this.Element.Destroyed)
-        {
-            MainAnimator.Instance.AddElementForSmoothMove(this.Element.thisTransform, thisTransform.position, 1, SmoothEnum.InLine, smoothTime: 0.1f);
-        }        
-    }
 }

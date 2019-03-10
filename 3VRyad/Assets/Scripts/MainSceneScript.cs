@@ -56,14 +56,15 @@ public class MainSceneScript : MonoBehaviour {
         Button exitButton = gOExitButton.GetComponent<Button>();
         exitButton.onClick.AddListener(delegate { ExitToMenu(); });
 
+        Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
+
         //если выполнили все задания
         if (Tasks.Instance.collectedAll)
         {
             //победа
             textEndGame.text = "Победа!";
             LevelMenu.Instance.SetLevelPassed();
-
-            Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
+            
             if (LevelMenu.Instance.NextLevelIsOpen())
             {
                 Button nextLevelButton = gONextLevelButton.GetComponent<Button>();
@@ -78,6 +79,7 @@ public class MainSceneScript : MonoBehaviour {
         {
             //поражение
             textEndGame.text = "Поражение!";
+            Destroy(gONextLevelButton.gameObject);
         }
     }
 

@@ -103,7 +103,7 @@
     <targets>
       <shapeAndGoal shape="Grass" goal="11" collectEverything="true" />
       <shapeAndGoal shape="Wall" goal="3" collectEverything="true" />
-      <shapeAndGoal shape="Liana" goal="2" collectEverything="true" />
+      <shapeAndGoal shape="Dirt" goal="2" collectEverything="true" />
     </targets>
   </Tasks>
 </root>
