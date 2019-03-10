@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,20 +16,10 @@ public class ElementWall : Element {
                 //если элемент не бессмертный
                 if (!Immortal)
                 {
-                    destroyed = true;
-                    Tasks.Instance.Collect(this);
-                    AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-                    animatorElement.PlayDestroyAnimation();                    
-                    //return null;
+                    base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
                 }
             }
-            //return this;
-        }
-        //else
-        //{
-        //    return null;
-        //}
-        
+        }       
     }
 
     public override BlockingElement BlockingElement

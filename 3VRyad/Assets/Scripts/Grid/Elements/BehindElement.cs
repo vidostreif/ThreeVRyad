@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,7 +39,7 @@ public class BehindElement : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(BehindElementsTypeEnum type, bool immortal, int life, bool actionAfterMove, int actionDelay = 0)
+    public void InitialSettings(BehindElementsTypeEnum type, bool immortal, int life, bool actionAfterMove, int actionDelay, int score)
     {
         this.type = type;
         this.actionAfterMove = actionAfterMove;
@@ -46,7 +47,7 @@ public class BehindElement : BaseElement
         this.startingActionDelay = actionDelay;
         this.immortal = immortal;
         this.life = life;
-
+        this.score = score;
         UpdateSpriteAlfa();
     }
 
@@ -59,12 +60,7 @@ public class BehindElement : BaseElement
         }
         if (life <= 0)
         {
-            destroyed = true;
-            if (!Tasks.Instance.Collect(this))
-            {
-                AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-                animatorElement.PlayDestroyAnimation();
-            }
+            base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
         }
     }
 

@@ -9,6 +9,7 @@ public class BaseElement : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     [SerializeField] protected bool destroyed;//признак что элемент был уничтожен
     [SerializeField] protected int life;
+    [SerializeField] protected int score;//количество очков за уничтожение элемента
     [SerializeField] protected bool immortal;//признак бессмертия
     [SerializeField] protected bool actionAfterMove;//признак активируемости по окончанию хода
     [SerializeField] protected int actionDelay;//задержка перед активированием
@@ -54,5 +55,16 @@ public class BaseElement : MonoBehaviour
     public virtual void PerformActionAfterMove()
     {
     }
-    
+
+    protected virtual void DestroyElement(AllShapeEnum allShapeEnum)
+    {
+        destroyed = true;
+        Score.Instance.CreatreScoreElement(transform.position, score);
+        if (!Tasks.Instance.Collect(allShapeEnum, transform))
+        {
+            AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+            animatorElement.PlayDestroyAnimation();
+        }
+    }
+
 }

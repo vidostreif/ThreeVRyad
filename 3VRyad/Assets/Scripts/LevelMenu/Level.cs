@@ -13,6 +13,8 @@ public class Level
     [SerializeField] public UnityEngine.Object xmlDocument = null;
     public bool open = false;//открыт
     public bool passed = false;//пройден
+    private int stars = 0;//количество звезд
+    public int score = 0;//количество очков
 
     private Image image;
     private Text text;
@@ -61,6 +63,27 @@ public class Level
         get
         {
             return button;
+        }
+    }
+
+    public int Stars
+    {
+        get
+        {
+            return stars;
+        }
+
+        set
+        {
+            if (value > 3)
+            {
+                stars = 3;
+            }
+            else
+            {
+                stars = value;
+            }
+            
         }
     }
 

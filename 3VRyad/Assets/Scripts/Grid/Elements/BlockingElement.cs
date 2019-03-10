@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,12 +30,13 @@ public class BlockingElement : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(BlockingElementsTypeEnum type, bool actionAfterMove, bool immortal, int life)
+    public void InitialSettings(BlockingElementsTypeEnum type, bool actionAfterMove, bool immortal, int life, int score)
     {
         this.type = type;
         this.life = life;
         this.immortal = immortal;
         this.actionAfterMove = actionAfterMove;
+        this.score = score;
     }
 
     //удар элементу
@@ -48,12 +50,7 @@ public class BlockingElement : BaseElement
         //если елемент убили, то возвращаем null
         if (life <= 0)
         {
-            destroyed = true;
-            if (!Tasks.Instance.Collect(this))
-            {
-                AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-                animatorElement.PlayDestroyAnimation();
-            }
+            base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
         }
     }
 

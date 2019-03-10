@@ -96,7 +96,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         return Collect((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()), element.transform);
     }
 
-    private bool Collect(AllShapeEnum allShape, Transform transformElement)
+    public bool Collect(AllShapeEnum allShape, Transform transformElement)
     {
         foreach (Target target in targets)
         {

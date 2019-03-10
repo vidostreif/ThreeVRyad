@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -85,13 +86,14 @@ public class Element : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, HitTypeEnum hitTypeEnum) {
+    public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, HitTypeEnum hitTypeEnum, int score) {
         this.type = type;
         this.lockedForMove = lockedForMove;
         this.immortal = immortal;
         this.createLine = createLine;
         this.activated = activated;
         this.thisHitTypeEnum = hitTypeEnum;
+        this.score = score;
         actionAfterMove = false;
         DopSettings();
     }
@@ -127,20 +129,20 @@ public class Element : BaseElement
                     //если элемент не бессмертный
                     if (!Immortal)
                     {
-                        //воздействие на соседние блоки
-                        destroyed = true;
+
+                        base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
+                        
                         if (hitType == HitTypeEnum.Standart)
                             HitNeighboringBlocks(thisHitTypeEnum);
-                        if (!Tasks.Instance.Collect(this))
-                        {
-                            AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-                            animatorElement.PlayDestroyAnimation();
-                        }
                     }
                 }
             }
         }
     }
+
+    //protected override void DestroyElement(AllShapeEnum allShapeEnum) {
+    //    base.DestroyElement(allShapeEnum);
+    //}
 
     public virtual BlockingElement BlockingElement
     {
@@ -195,7 +197,7 @@ public class Element : BaseElement
             if (typeBlockingElementsEnum == BlockingElementsTypeEnum.Standard)
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
-                curElement.InitialSettings(typeBlockingElementsEnum, false, false, 1);
+                curElement.InitialSettings(typeBlockingElementsEnum, false, false, 1, 100);
                 lockedForMove = true;
             }
             //else if (typeBlockingElementsEnum == BlockingElementsTypeEnum.CrushableWall)

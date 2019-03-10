@@ -10,6 +10,8 @@ public class PrefabBank : MonoBehaviour
     public GameObject levelButtonPrefab;
     public GameObject regionButtonPrefab;
 
+    public GameObject scoreElementPrefab;
+
     void Awake()
     {
         // регистрация синглтона

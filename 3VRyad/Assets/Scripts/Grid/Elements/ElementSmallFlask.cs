@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,25 +38,14 @@ public class ElementSmallFlask : Element
                     //если элемент не бессмертный
                     if (!Immortal)
                     {
-                        //воздействие на соседние блоки
-                        destroyed = true;
+                        base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
                         MainAnimator.Instance.AddExplosionEffect(thisTransform.position, explosionRadius);
                         HitNeighboringBlocks(thisHitTypeEnum);
-                        if (!Tasks.Instance.Collect(this))
-                        {
-                            AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-                            animatorElement.PlayDestroyAnimation();
-                        }
                     }
                 }
             }
         }  
     }
-
-    //public override void Activate()
-    //{
-    //    Hit();
-    //}
 
     //ударяем по соседним блокам
     protected override void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)
