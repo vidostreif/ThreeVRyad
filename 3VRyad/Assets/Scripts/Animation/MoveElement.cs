@@ -7,7 +7,9 @@ public class MoveElement {
 
     public Transform thisTransform;
     public Vector3 targetPosition;
+    //public Vector3 startPosition;    
     public float smoothTime;//скорость перемещения элемента к блоку
+    //public float startTime;//начало передвижения
     public int priority;//приоритет
     public SmoothEnum smoothEnum;
     public bool destroyAfterMoving;
@@ -21,5 +23,7 @@ public class MoveElement {
         this.smoothEnum = smoothEnum;
         this.priority = priority;
         this.destroyAfterMoving = destroyAfterMoving;
+        //this.startTime = Time.realtimeSinceStartup;
+        //this.startPosition = thisTransform.position;
     }
 }

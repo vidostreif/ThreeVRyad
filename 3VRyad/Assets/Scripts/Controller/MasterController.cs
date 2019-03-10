@@ -178,7 +178,8 @@ public class MasterController : MonoBehaviour
                         change = false;
 
                     //тащим элемент за пальцем
-                    transforForLocalDAndD.position = newPosition;
+                    //transforForLocalDAndD.position = newPosition;
+                    MainAnimator.Instance.AddElementForSmoothMove(transforForLocalDAndD, newPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
 
                     //Если в соседнем блоке есть элемент, то смещаем его к нашему блоку на тоже растояние
                     if (neighboringBlock.Element != null && offsetDistance > maxDistanceToMove * 0.3f)
@@ -207,7 +208,8 @@ public class MasterController : MonoBehaviour
                 else
                 {
                     //возвращаем элементы на свои позиции
-                    transforForLocalDAndD.position = startPosition;
+                    //transforForLocalDAndD.position = startPosition;
+                    MainAnimator.Instance.AddElementForSmoothMove(transforForLocalDAndD, startPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
                     if (processedNeighboringElement != null)
                     {
                         processedNeighboringElement.drag = false;
@@ -217,7 +219,8 @@ public class MasterController : MonoBehaviour
             else
             {
                 //возвращаем элементы на свои позиции
-                transforForLocalDAndD.position = startPosition;
+                //transforForLocalDAndD.position = startPosition;
+                MainAnimator.Instance.AddElementForSmoothMove(transforForLocalDAndD, startPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
                 if (processedNeighboringElement != null)
                 {
                     processedNeighboringElement.drag = false;

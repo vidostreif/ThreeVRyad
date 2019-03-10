@@ -174,10 +174,12 @@ public class SaveAndLoadScene
                 currentObject.RecoverFromXElement(ListXElement);
             }
 
+#if UNITY_EDITOR
             foreach (var currentObject in findeObjects) //для каждого объекта в массиве
             {
                 EditorUtility.SetDirty(currentObject);
             }
+#endif
         }
     }
 

@@ -60,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.9811321, g: 0.041651815, b: 0.041651815, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -299,6 +299,8 @@ MonoBehaviour:
     - xmlDocument: {fileID: 4900000, guid: 81140ec56f96521458ff44b1d6aed879, type: 3}
       open: 0
       passed: 0
+  lastLoadXmlDocument: 
+  lastLoadFolder: 
 --- !u!114 &1359592381
 MonoBehaviour:
   m_ObjectHideFlags: 0
