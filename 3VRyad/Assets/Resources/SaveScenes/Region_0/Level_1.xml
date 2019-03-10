@@ -101,8 +101,8 @@
     <moves>20</moves>
     <sizeTargets>2</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Orange" goal="10" collectEverything="false" />
-      <shapeAndGoal shape="Apple" goal="10" collectEverything="false" />
+      <shapeAndGoal shape="Orange" goal="50" collectEverything="false" />
+      <shapeAndGoal shape="Apple" goal="50" collectEverything="false" />
     </targets>
   </Tasks>
 </root>
