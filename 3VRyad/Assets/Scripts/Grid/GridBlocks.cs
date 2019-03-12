@@ -43,6 +43,15 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         blockedForMove = false;
     }
 
+    void Update()
+    {
+        //в режиме редактора
+        if (!Application.isPlaying)
+        {
+            SettingBlocksOnPosition();
+        }
+    }
+
     //заполнение стандартные блоки элементами из списка
     public void StartFilling(List<ElementsPriority> elementsSAndP = null)
     {
@@ -1360,6 +1369,46 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             needFilling = true;
             //yield break;
         }
+    }
+
+    private void SettingBlocksOnPosition()
+    {
+            //работаем только с объектом у которого есть BlockField
+            foreach (var obj in Selection.GetFiltered(typeof(Block), SelectionMode.Assets))
+            {
+                //записать данные о позиции объекта
+                Vector3 pos = (obj as Block).transform.position;
+                Vector3 posGrid = transform.position;
+                pos.x = Mathf.CeilToInt(pos.x / blockSize) * blockSize + (float)(posGrid.x - Math.Truncate(posGrid.x));
+                pos.y = Mathf.CeilToInt(pos.y / blockSize) * blockSize + (float)(posGrid.y - Math.Truncate(posGrid.y));
+                pos.z = posGrid.z;
+
+
+                //выполняем если изменилась позиция
+                if (pos != (obj as Block).transform.position)
+                {
+                    //Определяем на какой позиции он должен быть 
+                    Position newPosition;
+                    //Vector3 posAfterAdaptation = (obj as BlockField).transform.position;
+                    newPosition.posX = (int)(pos.x - posGrid.x);
+                    newPosition.posY = (int)(pos.y - posGrid.y);
+
+                    //если позиция не занята в сетке другим блоком
+                    if (GetBlock(newPosition) == null || GetBlock(newPosition) == (obj as Block))
+                    {
+                        //добавляем блок в сетку
+                        AddBlockToPosition(obj as Block, newPosition);
+                        //если блок есть в сетке, то двигаем его по ней
+                        if (SearchBlock(obj as Block))
+                        {
+                            (obj as Block).transform.position = pos;
+                        }
+
+                    }
+
+
+                }
+            }
     }
 
     //передаем данные о на стройках в xml формате

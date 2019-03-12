@@ -140,8 +140,6 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         }
         bonusesXElement.Add(bonusesListXElement);
 
-        Debug.Log(bonusesXElement);
-
         return bonusesXElement;
     }
 
