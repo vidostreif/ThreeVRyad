@@ -97,6 +97,11 @@
       <block posX="10" posY="8" blockType="Standard" generatorElements="true" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
     </blocks>
   </GridBlocks>
+  <Score>
+    <scoreForFirstStar>27000</scoreForFirstStar>
+    <scoreForSecondStar>30000</scoreForSecondStar>
+    <scoreForThirdStar>39000</scoreForThirdStar>
+  </Score>
   <Tasks>
     <moves>20</moves>
     <sizeTargets>3</sizeTargets>

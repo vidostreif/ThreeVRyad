@@ -43,4 +43,12 @@ public static class SupportFunctions
         //color.a = 1f; // value between 0 and 1, where 1 is opaque
         image.color = new Color(image.color.r, image.color.g, image.color.b, alfa);
     }
+
+    public static void ChangeAlfa(Text text, float alfa)
+    {
+        //изменяем альфу image
+        //Color color = new Color();
+        //color.a = 1f; // value between 0 and 1, where 1 is opaque
+        text.color = new Color(text.color.r, text.color.g, text.color.b, alfa);
+    }
 }

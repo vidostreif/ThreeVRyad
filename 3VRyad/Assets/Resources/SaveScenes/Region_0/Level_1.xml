@@ -98,16 +98,16 @@
     </blocks>
   </GridBlocks>
   <Score>
-    <scoreForFirstStar>27000</scoreForFirstStar>
-    <scoreForSecondStar>30000</scoreForSecondStar>
-    <scoreForThirdStar>39000</scoreForThirdStar>
+    <scoreForFirstStar>500</scoreForFirstStar>
+    <scoreForSecondStar>1000</scoreForSecondStar>
+    <scoreForThirdStar>2000</scoreForThirdStar>
   </Score>
   <Tasks>
     <moves>30</moves>
     <sizeTargets>2</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Orange" goal="50" collectEverything="false" />
-      <shapeAndGoal shape="Apple" goal="50" collectEverything="false" />
+      <shapeAndGoal shape="Orange" goal="5" collectEverything="false" />
+      <shapeAndGoal shape="Apple" goal="5" collectEverything="false" />
     </targets>
   </Tasks>
 </root>

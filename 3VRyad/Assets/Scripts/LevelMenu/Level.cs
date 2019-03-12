@@ -11,8 +11,8 @@ using UnityEngine.UI;
 public class Level
 {
     [SerializeField] public UnityEngine.Object xmlDocument = null;
-    public bool open = false;//открыт
-    public bool passed = false;//пройден
+    private bool open = false;//открыт
+    private bool passed = false;//пройден
     private int stars = 0;//количество звезд
     private int score = 0;//количество очков
 
@@ -73,7 +73,7 @@ public class Level
             return stars;
         }
 
-        set
+        private set
         {
             if (value > stars)
             {
@@ -96,13 +96,41 @@ public class Level
             return score;
         }
 
-        set
+        private set
         {
             if (value > score)
             {
                 score = value;
             }
         }
+    }
+
+    public bool Passed
+    {
+        get
+        {
+            return passed;
+        }
+    }
+
+    public bool Open
+    {
+        get
+        {
+            return open;
+        }
+    }
+
+    public void SetLevelOpend()
+    {
+        open = true;
+    }
+
+    public void SetLevelPassed(int stars, int score)
+    {
+        passed = true;
+        Stars = stars;
+        Score = score;            
     }
 
     public void GetButtonFrom(GameObject elementGameObject)

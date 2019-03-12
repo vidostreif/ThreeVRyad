@@ -47,12 +47,16 @@ public static class JsonSaveAndLoad
             {
                 for (int l = 0; l < regionsList[r].levelList.Count; l++)
                 {
-                        if (save.regionSave.Count > r && save.regionSave[r].levelSave.Count > l)
+                    if (save.regionSave.Count > r && save.regionSave[r].levelSave.Count > l)
+                    {
+                        if (save.regionSave[r].levelSave[l].open)
                         {
-                            regionsList[r].levelList[l].open = save.regionSave[r].levelSave[l].open;
-                            regionsList[r].levelList[l].passed = save.regionSave[r].levelSave[l].passed;
-                            regionsList[r].levelList[l].Stars = save.regionSave[r].levelSave[l].stars;
-                            regionsList[r].levelList[l].Score = save.regionSave[r].levelSave[l].score;
+                            regionsList[r].levelList[l].SetLevelOpend();
+                        }
+                        if (save.regionSave[r].levelSave[l].passed)
+                        {
+                            regionsList[r].levelList[l].SetLevelPassed(save.regionSave[r].levelSave[l].stars, save.regionSave[r].levelSave[l].score);
+                        }
                     }
                 }
             }
@@ -77,7 +81,7 @@ public static class JsonSaveAndLoad
         //записываем новые данные
         foreach (Level level in levelList)
         {
-            save.regionSave[region].levelSave.Add(new LevelSave(level.open, level.passed, level.Stars, level.Score));
+            save.regionSave[region].levelSave.Add(new LevelSave(level.Open, level.Passed, level.Stars, level.Score));
         }
 
         if (setSaveToFile)

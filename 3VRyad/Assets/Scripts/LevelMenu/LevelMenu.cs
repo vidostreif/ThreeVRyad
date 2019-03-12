@@ -53,7 +53,7 @@ public class LevelMenu : MonoBehaviour
         DontDestroyOnLoad(gameObject); //Set as do not destroy
         //загрузить данных из сохранения
         JsonSaveAndLoad.LoadSave(regionsList);
-        regionsList[0].levelList[0].open = true;
+        regionsList[0].levelList[0].SetLevelOpend();
         lastLoadLevel = null;
 
         //если запустились на сцене меню
@@ -151,11 +151,13 @@ public class LevelMenu : MonoBehaviour
                     lastLoadLevel = inLevel;
                     lastLoadXmlDocument = inLevel.xmlDocument.name;
                     lastLoadFolder = "Region_" + i;
+#if UNITY_EDITOR
                     //сохраняем параметры в редакторе
                     if (!Application.isPlaying)
                     {
                         EditorUtility.SetDirty(this);
                     }
+#endif
                     return;
                 }
             }
@@ -301,9 +303,9 @@ public class LevelMenu : MonoBehaviour
                     if (found)
                     {
                         //если уровень открыт
-                        if (regionsList[i].levelList[j].open)
+                        if (regionsList[i].levelList[j].Open)
                         {
-                                LoadLevel(regionsList[i].levelList[j]);
+                            LoadLevel(regionsList[i].levelList[j]);
                             return;
                         }                        
                     }
@@ -328,7 +330,7 @@ public class LevelMenu : MonoBehaviour
                     if (found)
                     {
                         //если уровень открыт
-                        if (regionsList[i].levelList[j].open)
+                        if (regionsList[i].levelList[j].Open)
                         {
                             return true;
                         }
@@ -355,7 +357,7 @@ public class LevelMenu : MonoBehaviour
                 {
                     if (found)
                     {
-                        regionsList[i].levelList[j].open = true;
+                        regionsList[i].levelList[j].SetLevelOpend();
                         JsonSaveAndLoad.RecordSave(regionsList[i].levelList, i);
                         return;
                     }
@@ -377,9 +379,7 @@ public class LevelMenu : MonoBehaviour
     {
         if (lastLoadLevel != null)
         {
-            lastLoadLevel.Stars = stars;
-            lastLoadLevel.Score = score;
-            lastLoadLevel.passed = true;
+            lastLoadLevel.SetLevelPassed(stars, score);
             SetOpenNextLevel();
         }        
     }
@@ -426,14 +426,30 @@ public class LevelMenu : MonoBehaviour
 
         //список уровней
         Transform LevelsCountTransform = canvasLevels.transform.Find("Viewport/Content");
+        int levelNumber = 1;
         foreach (Level level in region.levelList)
         {
-            GameObject elementGameObject = Instantiate(PrefabBank.Instance.levelButtonPrefab, LevelsCountTransform);
+            GameObject levelGameObject = Instantiate(PrefabBank.Instance.levelButtonPrefab, LevelsCountTransform);
             //Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
             //image.sprite = SpriteBank.SetShape(instruments[i].Type);
             //instruments[i].Image = image;
-            elementGameObject.GetComponentInChildren<Text>().text = level.xmlDocument.name;
-            level.GetButtonFrom(elementGameObject);            
+
+            //Выдаем звезды
+            for (int i = 1; i <= level.Stars; i++)
+            {
+                Transform starTransform = levelGameObject.transform.Find("Star" + i);
+                Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
+                starImage.color = Color.white;
+                //SupportFunctions.ChangeAlfa(starImage, 1);
+            }
+
+            levelGameObject.GetComponentInChildren<Text>().text = levelNumber.ToString();
+            if (level.Open)
+            {
+                SupportFunctions.ChangeAlfa(levelGameObject.GetComponentInChildren<Text>(), 1);
+            }
+            level.GetButtonFrom(levelGameObject);
+            levelNumber++;
         }
     }
 
@@ -450,10 +466,20 @@ public class LevelMenu : MonoBehaviour
         foreach (Region region in regionsList)
         {
             GameObject regionelementGameObject = Instantiate(PrefabBank.Instance.regionButtonPrefab, contentTransform);
-            //Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
-            //image.sprite = SpriteBank.SetShape(instruments[i].Type);
-            //instruments[i].Image = image;
-            regionelementGameObject.GetComponentInChildren<Text>().text = region.name;
+            Transform textNameTransform = regionelementGameObject.transform.Find("TextName");
+            textNameTransform.GetComponentInChildren<Text>().text = region.name;
+
+            Transform textStarsTransform = regionelementGameObject.transform.Find("TextStars");
+
+            int stars = 0;
+            int allStars = 0;
+            foreach (Level level in region.levelList)
+            {
+                stars += level.Stars;
+                allStars += 3;
+            }
+            textStarsTransform.GetComponentInChildren<Text>().text = stars + " / " + allStars;
+
             region.AddAction(regionelementGameObject);
         }
     }

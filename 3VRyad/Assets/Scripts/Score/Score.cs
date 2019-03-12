@@ -125,7 +125,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
         if (Application.isPlaying)
         {
-            UpdateText();
+            //UpdateText();
         }
         else
         {
