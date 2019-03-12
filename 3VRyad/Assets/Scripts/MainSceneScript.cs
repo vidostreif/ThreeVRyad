@@ -43,10 +43,11 @@ public class MainSceneScript : MonoBehaviour {
     public void CompleteGame()
     {
         CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
+
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
         Text textEndGame = gOtextEndGame.GetComponent(typeof(Text)) as Text;
-
+                
         //добавляем действие к кнопкам
         Transform gORestartButton = PanelMenu.transform.Find("RestartButton");
         Button restartButton = gORestartButton.GetComponent<Button>();
@@ -62,9 +63,26 @@ public class MainSceneScript : MonoBehaviour {
         if (Tasks.Instance.collectedAll)
         {
             //победа
-            textEndGame.text = "Победа!";
-            LevelMenu.Instance.SetLevelPassed();
-            
+            textEndGame.text = "Победа!";            
+                        
+            //Выдаем звезды
+            int stars = Score.Instance.NumberOfStarsReceived();
+
+            for (int i = 1; i <= stars; i++)
+            {
+                Transform starTransform = PanelMenu.transform.Find("Star" + i);
+                Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
+                SupportFunctions.ChangeAlfa(starImage, 1);
+            }
+
+            //if (LevelMenu.Instance.LastLoadLevel != null)
+            //{
+            //    LevelMenu.Instance.LastLoadLevel.Stars = stars;
+            //    LevelMenu.Instance.LastLoadLevel.score = Score.Instance.getScore();
+            //}
+
+            LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore());
+
             if (LevelMenu.Instance.NextLevelIsOpen())
             {
                 Button nextLevelButton = gONextLevelButton.GetComponent<Button>();

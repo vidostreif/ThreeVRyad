@@ -12,8 +12,8 @@ public class LevelMenu : MonoBehaviour
     [SerializeField] public List<Region> regionsList;
 
     private Level lastLoadLevel;
-    public string lastLoadXmlDocument = null;
-    public string lastLoadFolder = null;
+    public string lastLoadXmlDocument;
+    public string lastLoadFolder;
     private GameObject canvasRegions = null;
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
@@ -39,6 +39,13 @@ public class LevelMenu : MonoBehaviour
         if (Application.isPlaying)
         {
             Prepare();
+        }
+        else
+        {
+            if (lastLoadXmlDocument != null && lastLoadFolder != null)
+            {
+                LoadXml(FoundLevel(lastLoadXmlDocument, lastLoadFolder));
+            }
         }
     }
 
@@ -115,6 +122,24 @@ public class LevelMenu : MonoBehaviour
         return null;
     }
 
+    private Level FoundLevel(string xmlName, string regionName)
+    {
+        for (int i = 0; i < regionsList.Count; i++)
+        {
+            if (regionsList[i].name == regionName)
+            {
+                for (int j = 0; j < regionsList[i].levelList.Count; j++)
+                {
+                    if (regionsList[i].levelList[j].xmlDocument.name == xmlName)
+                    {
+                        return regionsList[i].levelList[j];
+                    }
+                }
+            }            
+        }
+        return null;
+    }
+
     public void LoadXml(Level inLevel) {
         for (int i = 0; i < regionsList.Count; i++)
         {
@@ -126,6 +151,11 @@ public class LevelMenu : MonoBehaviour
                     lastLoadLevel = inLevel;
                     lastLoadXmlDocument = inLevel.xmlDocument.name;
                     lastLoadFolder = "Region_" + i;
+                    //сохраняем параметры в редакторе
+                    if (!Application.isPlaying)
+                    {
+                        EditorUtility.SetDirty(this);
+                    }
                     return;
                 }
             }
@@ -343,10 +373,12 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
-    public void SetLevelPassed()
+    public void SetLevelPassed(int stars, int score)
     {
         if (lastLoadLevel != null)
         {
+            lastLoadLevel.Stars = stars;
+            lastLoadLevel.Score = score;
             lastLoadLevel.passed = true;
             SetOpenNextLevel();
         }        

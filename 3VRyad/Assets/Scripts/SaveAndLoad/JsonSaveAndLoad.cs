@@ -51,7 +51,9 @@ public static class JsonSaveAndLoad
                         {
                             regionsList[r].levelList[l].open = save.regionSave[r].levelSave[l].open;
                             regionsList[r].levelList[l].passed = save.regionSave[r].levelSave[l].passed;
-                        }
+                            regionsList[r].levelList[l].Stars = save.regionSave[r].levelSave[l].stars;
+                            regionsList[r].levelList[l].Score = save.regionSave[r].levelSave[l].score;
+                    }
                 }
             }
         }
@@ -75,7 +77,7 @@ public static class JsonSaveAndLoad
         //записываем новые данные
         foreach (Level level in levelList)
         {
-            save.regionSave[region].levelSave.Add(new LevelSave(level.open, level.passed));
+            save.regionSave[region].levelSave.Add(new LevelSave(level.open, level.passed, level.Stars, level.Score));
         }
 
         if (setSaveToFile)
@@ -103,10 +105,15 @@ public class LevelSave
     //public int level;
     public bool open;//открыт
     public bool passed;//пройден
+    public int stars = 0;//количество звезд
+    public int score = 0;//количество очков
 
-    public LevelSave(bool open, bool passed)
+    public LevelSave(bool open, bool passed, int stars, int score)
     {
         this.open = open;
         this.passed = passed;
+        this.stars = stars;
+        this.score = score;
+
     }
 }

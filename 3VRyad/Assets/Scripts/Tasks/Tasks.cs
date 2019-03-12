@@ -193,8 +193,6 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         }
         tasksXElement.Add(targetsXElement);
 
-        Debug.Log(tasksXElement);
-
         return tasksXElement;
     }
 

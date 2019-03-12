@@ -59,7 +59,7 @@ public class BaseElement : MonoBehaviour
     protected virtual void DestroyElement(AllShapeEnum allShapeEnum)
     {
         destroyed = true;
-        Score.Instance.CreatreScoreElement(transform.position, score);
+        Score.Instance.CreateScoreElement(transform.position, score);
         if (!Tasks.Instance.Collect(allShapeEnum, transform))
         {
             AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();

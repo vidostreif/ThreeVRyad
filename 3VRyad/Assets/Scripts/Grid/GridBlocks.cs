@@ -1443,8 +1443,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         gridXElement.Add(blocksXElement);
 
-        Debug.Log(gridXElement.ToString());
-
         return gridXElement;
     }
 

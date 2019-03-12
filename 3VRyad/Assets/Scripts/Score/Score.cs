@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Score : MonoBehaviour
+public class Score : MonoBehaviour, IESaveAndLoad
 {
     public static Score Instance; // Синглтон
+    public int scoreForFirstStar; //Количество очков для поллучения первой звезды
+    public int scoreForSecondStar;//Количество очков для поллучения второй звезды
+    public int scoreForThirdStar;//Количество очков для поллучения третьей звезды
     private int score = 0;
     private int addScore = 0;
     private Text text;
+
+    public int getScore()
+    {
+            return score + addScore;
+    }
 
     void Awake()
     {
@@ -31,24 +40,7 @@ public class Score : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        //if (addScore > 1000)
-        //{
-        //    double i = addScore / 15;
-        //    double add = Math.Round((double)i/100, MidpointRounding.AwayFromZero) * 100;
-        //    score += (int)add;
-        //    addScore -= (int)add;
-        //    UpdateText();
-        //}
-        //else if (addScore > 500)
-        //{
-        //    double i = addScore / 15;
-        //    double add = Math.Round((double)i / 50, MidpointRounding.AwayFromZero) * 50;
-        //    score += (int)add;
-        //    addScore -= (int)add;
-        //    UpdateText();
-        //}
-        //else 
+    { 
         if (addScore > 50)
         {
             int i = addScore / 15;
@@ -65,7 +57,7 @@ public class Score : MonoBehaviour
         }
     }
 
-    public void CreatreScoreElement(Vector3 position, int score)
+    public void CreateScoreElement(Vector3 position, int score)
     {
         GameObject scoreElement = Instantiate(PrefabBank.Instance.scoreElementPrefab, transform);
         scoreElement.transform.position = position;
@@ -84,5 +76,61 @@ public class Score : MonoBehaviour
     private void UpdateText()
     {
         text.text = "Количество очков: " + score;
+    }
+
+    //количество полученных звезд
+    public int NumberOfStarsReceived() {
+        if (score + addScore >= scoreForThirdStar)
+        {
+            return 3;
+        }
+        else if (score + addScore >= scoreForSecondStar)
+        {
+            return 2;
+        }
+        else if (score + addScore >= scoreForFirstStar)
+        {
+            return 1;
+        }
+        return 0;
+    }
+
+    //сохранение и заргрузка
+    public Type GetClassName()
+    {
+        return this.GetType();
+    }
+    //передаем данные о на стройках в xml формате
+    public XElement GetXElement()
+    {
+        XElement mainXElement = new XElement(this.GetType().ToString());
+
+        mainXElement.Add(new XElement("scoreForFirstStar", scoreForFirstStar));
+        mainXElement.Add(new XElement("scoreForSecondStar", scoreForSecondStar));
+        mainXElement.Add(new XElement("scoreForThirdStar", scoreForThirdStar));
+
+        return mainXElement;
+    }
+
+    public void RecoverFromXElement(XElement tasksXElement)
+    {
+        //Сбрасываем значения
+        score = 0;
+        addScore = 0;
+
+        //восстанавливаем значения
+        this.scoreForFirstStar = int.Parse(tasksXElement.Element("scoreForFirstStar").Value);
+        this.scoreForSecondStar = int.Parse(tasksXElement.Element("scoreForSecondStar").Value);
+        this.scoreForThirdStar = int.Parse(tasksXElement.Element("scoreForThirdStar").Value);
+
+        if (Application.isPlaying)
+        {
+            UpdateText();
+        }
+        else
+        {
+            text = transform.GetComponentInChildren<Text>();
+            text.text = "Для первой " + scoreForFirstStar + "\nДля второй " + scoreForSecondStar + "\nДля третьей " + scoreForThirdStar;
+        }
     }
 }

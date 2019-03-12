@@ -14,7 +14,7 @@ public class Level
     public bool open = false;//открыт
     public bool passed = false;//пройден
     private int stars = 0;//количество звезд
-    public int score = 0;//количество очков
+    private int score = 0;//количество очков
 
     private Image image;
     private Text text;
@@ -75,15 +75,33 @@ public class Level
 
         set
         {
-            if (value > 3)
+            if (value > stars)
             {
-                stars = 3;
-            }
-            else
+                if (value > 3)
+                {
+                    stars = 3;
+                }
+                else
+                {
+                    stars = value;
+                }
+            } 
+        }
+    }
+
+    public int Score
+    {
+        get
+        {
+            return score;
+        }
+
+        set
+        {
+            if (value > score)
             {
-                stars = value;
+                score = value;
             }
-            
         }
     }
 
