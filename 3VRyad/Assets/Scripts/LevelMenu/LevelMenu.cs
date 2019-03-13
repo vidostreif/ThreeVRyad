@@ -52,7 +52,7 @@ public class LevelMenu : MonoBehaviour
     private void Prepare() {
         DontDestroyOnLoad(gameObject); //Set as do not destroy
         //загрузить данных из сохранения
-        JsonSaveAndLoad.LoadSave(regionsList);
+        LoadSave();
         regionsList[0].levelList[0].SetLevelOpend();
         lastLoadLevel = null;
 
@@ -63,18 +63,35 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
+    private void LoadSave() {
+        Save save = JsonSaveAndLoad.LoadSave();
+        if (save.regionSave.Count > 0)
+        {
+            for (int r = 0; r < regionsList.Count; r++)
+            {
+                for (int l = 0; l < regionsList[r].levelList.Count; l++)
+                {
+                    if (save.regionSave.Count > r && save.regionSave[r].levelSave.Count > l)
+                    {
+                        regionsList[r].levelList[l].LoadSave(save.regionSave[r].levelSave[l].open, save.regionSave[r].levelSave[l].passed,
+                            save.regionSave[r].levelSave[l].stars, save.regionSave[r].levelSave[l].score);
+                    }
+                }
+            }
+        }
+    }
+
     private void CreateRegionsListFromFiles() {
         this.regionsList = new List<Region>();
         UnityEngine.Object xmlDocument = null;
         Level level = null;
-        //MessageArray.message.Add("Создаем регионы:");
+        
         int r = 0;        
         do
         {
             int l = 0;
             if (SaveAndLoadScene.Instance().LevelFileExist("Level_" + l, "Region_" + r))
-            {
-                //MessageArray.message.Add("Region_" + r);
+            {                
                 regionsList.Add(new Region());
                 regionsList[r].name = "Region_" + r;
                 do
@@ -367,7 +384,7 @@ public class LevelMenu : MonoBehaviour
                         //если последний уровень в регионе
                         if ((j + 1) == regionsList[i].levelList.Count)
                         {
-                            JsonSaveAndLoad.RecordSave(regionsList[i].levelList, i, false);
+                            JsonSaveAndLoad.RecordSave(regionsList[i].levelList, i);
                         }
                     }
                 }

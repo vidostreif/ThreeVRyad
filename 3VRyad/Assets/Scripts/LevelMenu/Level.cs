@@ -72,21 +72,6 @@ public class Level
         {
             return stars;
         }
-
-        private set
-        {
-            if (value > stars)
-            {
-                if (value > 3)
-                {
-                    stars = 3;
-                }
-                else
-                {
-                    stars = value;
-                }
-            } 
-        }
     }
 
     public int Score
@@ -94,14 +79,6 @@ public class Level
         get
         {
             return score;
-        }
-
-        private set
-        {
-            if (value > score)
-            {
-                score = value;
-            }
         }
     }
 
@@ -121,6 +98,13 @@ public class Level
         }
     }
 
+    public void LoadSave(bool open, bool passed, int stars, int score) {
+        this.open = open;
+        this.passed = passed;
+        this.stars = stars;
+        this.score = score;
+    }
+
     public void SetLevelOpend()
     {
         open = true;
@@ -129,8 +113,21 @@ public class Level
     public void SetLevelPassed(int stars, int score)
     {
         passed = true;
-        Stars = stars;
-        Score = score;            
+
+            if (this.stars < stars)
+            {
+                if (stars > 3)
+                {
+                stars = 3;
+                }
+            Shop.Instance.ExchangeStarsForCoins(this, stars);
+                this.stars = stars;
+            }
+
+        if (this.score < score)
+        {
+            this.score = score;
+        }                   
     }
 
     public void GetButtonFrom(GameObject elementGameObject)

@@ -7,6 +7,7 @@ using System;
 public static class JsonSaveAndLoad 
 {
     private static Save save;
+    private static bool saveIsChanged = false;
     private static bool saveFromFileLoad = false;//попытка загрузки из файла произведена
     private static string path;
 
@@ -33,38 +34,23 @@ public static class JsonSaveAndLoad
         saveFromFileLoad = true;
     }
 
-    private static void SetSaveToFile()
+    public static void SetSaveToFile()
     {
-        File.WriteAllText(path, JsonUtility.ToJson(save));
+        if (saveIsChanged)
+        {
+            File.WriteAllText(path, JsonUtility.ToJson(save));
+            saveIsChanged = false;
+        }        
     }
 
     //загрузка сохранений уровней
-    public static void LoadSave(List<Region> regionsList) {
+    public static Save LoadSave() {
         GateSaveFromFile();
-        if (save.regionSave.Count > 0)
-        {
-            for (int r = 0; r < regionsList.Count; r++)
-            {
-                for (int l = 0; l < regionsList[r].levelList.Count; l++)
-                {
-                    if (save.regionSave.Count > r && save.regionSave[r].levelSave.Count > l)
-                    {
-                        if (save.regionSave[r].levelSave[l].open)
-                        {
-                            regionsList[r].levelList[l].SetLevelOpend();
-                        }
-                        if (save.regionSave[r].levelSave[l].passed)
-                        {
-                            regionsList[r].levelList[l].SetLevelPassed(save.regionSave[r].levelSave[l].stars, save.regionSave[r].levelSave[l].score);
-                        }
-                    }
-                }
-            }
-        }
+        return save;
     }
 
     //запись сохранений уровней
-    public static void RecordSave(List<Level> levelList, int region, bool setSaveToFile = true)
+    public static void RecordSave(List<Level> levelList, int region)
     {
         GateSaveFromFile();
         //если в нашем сохранении недостаточно регионов
@@ -84,9 +70,15 @@ public static class JsonSaveAndLoad
             save.regionSave[region].levelSave.Add(new LevelSave(level.Open, level.Passed, level.Stars, level.Score));
         }
 
-        if (setSaveToFile)
-            SetSaveToFile();
+        saveIsChanged = true;
+    }
 
+    //запись сохранений уровней
+    public static void RecordSave(Shop shop)
+    {
+        GateSaveFromFile();
+        save.shopSave.coins = shop.Coins;
+        saveIsChanged = true;
     }
 }
 
@@ -94,6 +86,7 @@ public static class JsonSaveAndLoad
 public class Save
 {
     public List<RegionSave> regionSave = new List<RegionSave>();
+    public ShopSave shopSave = new ShopSave();
 }
 
 [Serializable]
@@ -121,3 +114,10 @@ public class LevelSave
 
     }
 }
+
+[Serializable]
+public class ShopSave
+{
+    public int coins = 0;//количество монет
+}
+

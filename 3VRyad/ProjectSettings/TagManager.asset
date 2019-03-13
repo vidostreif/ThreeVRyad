@@ -63,6 +63,9 @@ TagManager:
   - name: Magic
     uniqueID: 4227154297
     locked: 0
+  - name: Shop
+    uniqueID: 400564007
+    locked: 0
   - name: Menu
     uniqueID: 3674702191
     locked: 0

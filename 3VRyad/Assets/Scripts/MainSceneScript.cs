@@ -75,12 +75,6 @@ public class MainSceneScript : MonoBehaviour {
                 SupportFunctions.ChangeAlfa(starImage, 1);
             }
 
-            //if (LevelMenu.Instance.LastLoadLevel != null)
-            //{
-            //    LevelMenu.Instance.LastLoadLevel.Stars = stars;
-            //    LevelMenu.Instance.LastLoadLevel.score = Score.Instance.getScore();
-            //}
-
             LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore());
 
             if (LevelMenu.Instance.NextLevelIsOpen())
@@ -92,6 +86,8 @@ public class MainSceneScript : MonoBehaviour {
             {
                 Destroy(gONextLevelButton.gameObject);
             }
+
+            JsonSaveAndLoad.SetSaveToFile();
         }
         else
         {
