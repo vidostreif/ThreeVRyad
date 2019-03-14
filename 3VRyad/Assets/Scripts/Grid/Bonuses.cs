@@ -150,7 +150,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         foreach (XElement bonusesListXElement in bonusesXElement.Element("bonusesList").Elements("bonus"))
         {
             ElementsTypeEnum type = (ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), bonusesListXElement.Attribute("type").Value);
-            ElementsShapeEnum shape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), bonusesListXElement.Attribute("shape").Value);
+            AllShapeEnum shape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), bonusesListXElement.Attribute("shape").Value);
             int cost = int.Parse(bonusesListXElement.Attribute("cost").Value);
             Bonus bonus = new Bonus(type, shape, cost);
             this.bonusesList.Add(bonus);

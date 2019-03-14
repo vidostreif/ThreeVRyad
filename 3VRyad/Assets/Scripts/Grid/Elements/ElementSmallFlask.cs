@@ -13,7 +13,7 @@ public class ElementSmallFlask : Element
         explosionRadius = 1;
     }
 
-    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
+    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
     {
         if (!destroyed)
         {

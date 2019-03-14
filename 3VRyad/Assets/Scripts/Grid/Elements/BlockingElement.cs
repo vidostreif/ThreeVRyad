@@ -6,7 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class BlockingElement : BaseElement
 {
-    [SerializeField] protected BlockingElementsShapeEnum shape;//форма элемента
+    //[SerializeField] protected BlockingElementsShapeEnum shape;//форма элемента
     [SerializeField] protected BlockingElementsTypeEnum type;//тип элемента
     public virtual BlockingElementsTypeEnum Type
     {
@@ -15,19 +15,19 @@ public class BlockingElement : BaseElement
             return type;
         }
     }
-    public virtual BlockingElementsShapeEnum Shape
-    {
-        get
-        {
-            return shape;
-        }
+    //public virtual BlockingElementsShapeEnum Shape
+    //{
+    //    get
+    //    {
+    //        return shape;
+    //    }
 
-        set
-        {
-            shape = value;
-            spriteRenderer.sprite = SpriteBank.SetShape(value);
-        }
-    }
+    //    set
+    //    {
+    //        shape = value;
+    //        spriteRenderer.sprite = SpriteBank.SetShape(value);
+    //    }
+    //}
 
     //установка настроек элементов
     public void InitialSettings(BlockingElementsTypeEnum type, bool actionAfterMove, bool immortal, int life, int score)

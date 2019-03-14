@@ -6,7 +6,7 @@ using UnityEngine;
 public class ElementWall : Element {
 
 
-    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
+    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
     {
         if (!destroyed)
         {
@@ -30,7 +30,7 @@ public class ElementWall : Element {
         }
     }
 
-    public override void CreatBlockingElement(GameObject prefabBlockingElement, BlockingElementsShapeEnum shape, BlockingElementsTypeEnum typeBlockingElementsEnum)
+    public override void CreatBlockingElement(GameObject prefabBlockingElement, AllShapeEnum shape, BlockingElementsTypeEnum typeBlockingElementsEnum)
     {
 
     }

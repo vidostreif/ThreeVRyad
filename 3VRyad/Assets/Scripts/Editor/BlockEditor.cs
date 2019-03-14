@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,7 +39,7 @@ public class BlockEditor : Editor
             else
             {
                 BehindelementType = block.BehindElement.Type;
-                BehindelementShape = block.BehindElement.Shape;
+                BehindelementShape = (BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), block.BehindElement.Shape.ToString());
             }
             BehindelementType = (BehindElementsTypeEnum)EditorGUILayout.EnumPopup("  Тип элемента", BehindelementType);
             BehindelementShape = (BehindElementsShapeEnum)EditorGUILayout.EnumPopup("  Внешность элемента", BehindelementShape);
@@ -47,7 +48,7 @@ public class BlockEditor : Editor
             if (BehindelementType != BehindElementsTypeEnum.Empty && block.BehindElement == null)
             {
                 //подгрузить префаб из настроек сетки
-                block.CreatBehindElement(grid.prefabElement, BehindelementShape, BehindelementType);
+                block.CreatBehindElement(grid.prefabElement, (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), BehindelementShape.ToString()), BehindelementType);
             }
             else if (BehindelementType == BehindElementsTypeEnum.Empty && block.BehindElement != null)
             {
@@ -60,12 +61,12 @@ public class BlockEditor : Editor
                 //удаляем элемент
                 DestroyImmediate(block.BehindElement.gameObject);
                 //подгрузить префаб из настроек сетки
-                block.CreatBehindElement(grid.prefabElement, BehindelementShape, BehindelementType);
+                block.CreatBehindElement(grid.prefabElement, (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), BehindelementShape.ToString()), BehindelementType);
             }
 
-            if (block.BehindElement != null && block.BehindElement.Shape != BehindelementShape)
+            if (block.BehindElement != null && block.BehindElement.Shape != (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), BehindelementShape.ToString()))
             {
-                block.BehindElement.Shape = BehindelementShape;
+                block.BehindElement.Shape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), BehindelementShape.ToString());
             }
 
             //условия для указания элемента в блоке, иначе элемент удаляем
@@ -78,15 +79,15 @@ public class BlockEditor : Editor
             }
             else {
                 elementType = block.Element.Type;
-                elementShape = block.Element.Shape;
+                elementShape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), block.Element.Shape.ToString());
             }                
             elementType = (ElementsTypeEnum)EditorGUILayout.EnumPopup("  Тип элемента", elementType);      
-            elementShape = (ElementsShapeEnum)EditorGUILayout.EnumPopup("  Внешность элемента", elementShape);        
+            elementShape = (ElementsShapeEnum)EditorGUILayout.EnumPopup("  Внешность элемента", elementShape );        
             
             //создаем элемент если нужно
             if (elementType != ElementsTypeEnum.Empty && block.Element == null) {
                 //подгрузить префаб из настроек сетки
-                block.CreatElement(grid.prefabElement, elementShape, elementType);
+                block.CreatElement(grid.prefabElement, (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), elementShape.ToString()), elementType);
             }
             else if (elementType == ElementsTypeEnum.Empty && block.Element != null)
             {
@@ -98,11 +99,11 @@ public class BlockEditor : Editor
                 //удаляем элемент
                 DestroyImmediate(block.Element.gameObject);
                 //подгрузить префаб из настроек сетки
-                block.CreatElement(grid.prefabElement, elementShape, elementType);
+                block.CreatElement(grid.prefabElement, (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), elementShape.ToString()), elementType);
             }
 
-            if (block.Element != null && block.Element.Shape != elementShape) {
-                block.Element.Shape = elementShape;
+            if (block.Element != null && block.Element.Shape != (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), elementShape.ToString())) {
+                block.Element.Shape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), elementShape.ToString());
             }
                        
             //условия для указания блокирующего элемента, иначе элемент удаляем
@@ -118,7 +119,7 @@ public class BlockEditor : Editor
                 }                    
                 else {
                     blockingElementType = element.BlockingElement.Type;
-                    blockingElementShape = element.BlockingElement.Shape;
+                    blockingElementShape = (BlockingElementsShapeEnum)Enum.Parse(typeof(BlockingElementsShapeEnum), element.BlockingElement.Shape.ToString());
                 }
                 blockingElementType = (BlockingElementsTypeEnum)EditorGUILayout.EnumPopup("  Тип блокирующего элемента", blockingElementType);
                 blockingElementShape = (BlockingElementsShapeEnum)EditorGUILayout.EnumPopup("  Внешность блокирующего элемента", blockingElementShape);
@@ -126,7 +127,7 @@ public class BlockEditor : Editor
                 //создаем элемент если нужно
                 if (blockingElementType != BlockingElementsTypeEnum.Empty && element.BlockingElement == null) {
                     //подгрузить префаб из настроек сетки
-                    element.CreatBlockingElement(grid.prefabBlockingWall, blockingElementShape, blockingElementType);
+                    element.CreatBlockingElement(grid.prefabBlockingWall, (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), blockingElementShape.ToString()), blockingElementType);
                 }
                 else if (blockingElementType == BlockingElementsTypeEnum.Empty && element.BlockingElement != null) {
                     //удаляем элемент
@@ -137,11 +138,11 @@ public class BlockEditor : Editor
                     //удаляем элемент
                     DestroyImmediate(element.BlockingElement.gameObject);
                     //подгрузить префаб из настроек сетки
-                    element.CreatBlockingElement(grid.prefabBlockingWall, blockingElementShape, blockingElementType);
+                    element.CreatBlockingElement(grid.prefabBlockingWall, (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), blockingElementShape.ToString()), blockingElementType);
                 }
 
-                if (element.BlockingElement != null && element.BlockingElement.Shape != blockingElementShape) {
-                    element.BlockingElement.Shape = blockingElementShape;
+                if (element.BlockingElement != null && element.BlockingElement.Shape != (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), blockingElementShape.ToString())) {
+                    element.BlockingElement.Shape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), blockingElementShape.ToString());
                 }
             }
             else if (block.Element != null && block.Element.Type == ElementsTypeEnum.Empty && block.Element.BlockingElement != null) {

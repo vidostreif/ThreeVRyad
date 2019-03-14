@@ -135,8 +135,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -150, y: -30}
-  m_SizeDelta: {x: 145, y: 50}
+  m_AnchoredPosition: {x: -223.6, y: -51.299988}
+  m_SizeDelta: {x: 138.87, y: 50}
   m_Pivot: {x: 0.000000018626451, y: 0.5}
 --- !u!222 &3438553013409150381
 CanvasRenderer:
@@ -179,9 +179,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u0414\u043B\u044F \u043F\u0435\u0440\u0432\u043E\u0439 27000\n \u0414\u043B\u044F
-    \u0432\u0442\u043E\u0440\u043E\u0439 30000\n \u0414\u043B\u044F \u0442\u0440\u0435\u0442\u044C\u0435\u0439
-    35000"
+  m_Text: "\u0414\u043B\u044F \u043F\u0435\u0440\u0432\u043E\u0439 500\n\u0414\u043B\u044F
+    \u0432\u0442\u043E\u0440\u043E\u0439 1000\n\u0414\u043B\u044F \u0442\u0440\u0435\u0442\u044C\u0435\u0439
+    2000"
 --- !u!114 &3438553013409150355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,9 +194,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2039d5d79a337048821e915a8b576b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreForFirstStar: 27000
-  scoreForSecondStar: 30000
-  scoreForThirdStar: 35000
+  scoreForFirstStar: 500
+  scoreForSecondStar: 1000
+  scoreForThirdStar: 2000
 --- !u!114 &3438553013409150382
 MonoBehaviour:
   m_ObjectHideFlags: 0

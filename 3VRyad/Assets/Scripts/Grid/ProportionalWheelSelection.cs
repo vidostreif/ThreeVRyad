@@ -8,19 +8,18 @@ public class ProportionalWheelSelection
 
     // Static method for using from anywhere. You can make its overload for accepting not only List, but arrays also: 
     // функция поиска элемента в соответствии с указанным приоритетом
-    public static ElementsPriority SelectElement(List<ElementsPriority> elementsShapeAndPriority, GridBlocks grid)
+    public static ElementsPriority SelectElement(List<ElementsPriority> elementsShapeAndPriority)
     {
         // Суммируем все приоритеты
         int poolSize = 0;
         for (int i = 0; i < elementsShapeAndPriority.Count; i++)
         {
             //берем только те элементы, которые можно создавать
-            if (elementsShapeAndPriority[i].limitOnAmountCreated > 0 && elementsShapeAndPriority[i].maxAmountOnField > ElementList.)
+            if (elementsShapeAndPriority[i].limitOnAmountCreated > 0 && elementsShapeAndPriority[i].maxAmountOnField > ElementsList.GetAmountOfThisShapeElemets(elementsShapeAndPriority[i].ElementsShape))
             {
                 //складываем все приоритеты
                 poolSize += elementsShapeAndPriority[i].priority;
-            }
-            
+            }            
         }
 
         // Get a random integer from 0 to PoolSize.
@@ -30,9 +29,13 @@ public class ProportionalWheelSelection
         int accumulatedProbability = 0;
         for (int i = 0; i < elementsShapeAndPriority.Count; i++)
         {
-            accumulatedProbability += elementsShapeAndPriority[i].priority;
-            if (randomNumber <= accumulatedProbability)
-                return elementsShapeAndPriority[i];
+            //берем только те элементы, которые можно создавать
+            if (elementsShapeAndPriority[i].limitOnAmountCreated > 0 && elementsShapeAndPriority[i].maxAmountOnField > ElementsList.GetAmountOfThisShapeElemets(elementsShapeAndPriority[i].ElementsShape))
+            {
+                accumulatedProbability += elementsShapeAndPriority[i].priority;
+                if (randomNumber <= accumulatedProbability)
+                    return elementsShapeAndPriority[i];
+            }
         }
         return null; 
     }

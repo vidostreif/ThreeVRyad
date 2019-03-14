@@ -18,7 +18,7 @@ public static class SupportFunctions
         }
     }
 
-    //public static void MixArray(List<MonoBehaviour> arr)
+    //public static void MixArray(List<ElementsPriority> arr)
     //{
     //    for (int i = (arr.Count - 1); i >= 1; i--)
     //    {
@@ -28,6 +28,21 @@ public static class SupportFunctions
     //        arr[i] = temp;
     //    }
     //}
+
+
+    public static void MixArray<T>(List<T> list)
+        {
+            System.Random rand = new System.Random();
+
+            for (int i = list.Count - 1; i >= 1; i--)
+            {
+                int j = rand.Next(i + 1);
+
+                T tmp = list[j];
+                list[j] = list[i];
+                list[i] = tmp;
+            }
+        }
 
     public static void ChangeAlfa(SpriteRenderer spriteRenderer, float alfa) {
         //изменяем альфу спрайта

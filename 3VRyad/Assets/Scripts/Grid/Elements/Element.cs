@@ -16,7 +16,7 @@ public class Element : BaseElement
     public bool drag; //элемент перетаскивается
     public float speed = 0; //скорость
     [SerializeField] protected ElementsTypeEnum type;//тип элемента
-    [SerializeField] protected ElementsShapeEnum shape;//форма элемента
+    
     [SerializeField] protected BlockingElement blockingElement;// блокирующий элемент
     [SerializeField] protected bool lockedForMove;//признак что элемент заблокирован для передвижения
     [SerializeField] protected bool createLine;//признак что элемент создает линию
@@ -49,19 +49,7 @@ public class Element : BaseElement
             return type;
         }
     }
-    public ElementsShapeEnum Shape
-    {
-        get
-        {
-            return shape;
-        }
 
-        set
-        {
-            shape = value;
-            spriteRenderer.sprite = SpriteBank.SetShape(value);
-        }
-    }
     public HitTypeEnum HitTypeEnum
     {
         get
@@ -104,7 +92,7 @@ public class Element : BaseElement
     }
 
     //удар по элементу
-    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty)
+    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
     {
         if (!destroyed)
         {
@@ -179,7 +167,7 @@ public class Element : BaseElement
     }
 
 
-    public virtual void CreatBlockingElement(GameObject prefabBlockingElement, BlockingElementsShapeEnum shape, BlockingElementsTypeEnum typeBlockingElementsEnum)
+    public virtual void CreatBlockingElement(GameObject prefabBlockingElement, AllShapeEnum shape, BlockingElementsTypeEnum typeBlockingElementsEnum)
     {
         //создаем элемент у блока
         if (this.Type != ElementsTypeEnum.Empty)
@@ -208,7 +196,7 @@ public class Element : BaseElement
             }
 
             curElement.Shape = shape;
-            ElementsList.AddElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), curElement.Shape.ToString()));
+            //ElementsList.AddElement(shape);
             //Добавляем в элемент
             this.BlockingElement = curElement;
         }        

@@ -123,7 +123,7 @@ public class Block : MonoBehaviour {
         }
     }
 
-    public void CreatElement(GameObject prefabElement, ElementsShapeEnum shape, ElementsTypeEnum typeElementsEnum)
+    public void CreatElement(GameObject prefabElement, AllShapeEnum shape, ElementsTypeEnum typeElementsEnum)
     {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
@@ -131,8 +131,8 @@ public class Block : MonoBehaviour {
             //если уже есть элемент то удаляем его
             if (element != null)
             {
-                ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()));
-                DestroyImmediate(element.gameObject);
+                //ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()));
+                DellElement();
             }
 
             //если позиция создания элемента совпадает с позицией блока и блок создает новые элементы
@@ -184,23 +184,23 @@ public class Block : MonoBehaviour {
             }
 
             curElement.Shape = shape;
-            ElementsList.AddElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString())); 
+            //ElementsList.AddElement(shape); 
             //Добавляем в блок
             this.Element = curElement;
 
         }
     }
 
-    public void DellElement() {
+    private void DellElement() {
         if (element != null)
         {
-            ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()));
+            //ElementsList.DellElement(element.Shape);
             DestroyImmediate(element.gameObject);
         }
         element = null;
     }
 
-    public void CreatBehindElement(GameObject prefabElement, BehindElementsShapeEnum shape, BehindElementsTypeEnum typeElementsEnum)
+    public void CreatBehindElement(GameObject prefabElement, AllShapeEnum shape, BehindElementsTypeEnum typeElementsEnum)
     {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
@@ -227,24 +227,14 @@ public class Block : MonoBehaviour {
             }
 
             curElement.Shape = shape;
-            ElementsList.AddElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), curElement.Shape.ToString()));
+            //ElementsList.AddElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), curElement.Shape.ToString()));
             //Добавляем в блок
             this.BehindElement = curElement;
         }
     }
-
-    public void DellBehindElement()
-    {
-        if (behindElement != null)
-        {
-            ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), behindElement.Shape.ToString()));
-            DestroyImmediate(behindElement.gameObject);
-        }
-        behindElement = null;
-    }
     
     //удар по блоку
-    public void Hit(HitTypeEnum hitTypeEnum = HitTypeEnum.Standart, ElementsShapeEnum hitElementShape = ElementsShapeEnum.Empty) {
+    public void Hit(HitTypeEnum hitTypeEnum = HitTypeEnum.Standart, AllShapeEnum hitElementShape = AllShapeEnum.Empty) {
 
         if (element != null && !element.Destroyed)
         {

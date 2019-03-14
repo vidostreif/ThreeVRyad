@@ -4,6 +4,7 @@ using UnityEngine;
 
 using System;
 using UnityEngine.UI;
+using UnityEditor;
 
 [System.Serializable]
 public class Target
@@ -47,7 +48,7 @@ public class Target
         //если нужно собрать все элементы на поле, то проверяем поле и обновляем счетчик
         if (collectEverything)
         {
-            goal = GridBlocks.Instance.DetermineNumberElements(elementsShape);
+            goal = ElementsList.GetAmountOfThisShapeElemets(elementsShape);
             UpdateText();
         }
     }
@@ -123,4 +124,5 @@ public class Target
         }
     }
 }
+
 

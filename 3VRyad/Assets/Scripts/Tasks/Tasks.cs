@@ -201,11 +201,11 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         //Сбрасываем значения
         endGame = false;
         collectedAll = false;
-        //удаляем GameObject
-        foreach (Target target in targets)
-        {
-            DestroyImmediate(target.GameObject);
-        }
+        ////удаляем GameObject
+        //foreach (Target target in targets)
+        //{
+        //    DestroyImmediate(target.GameObject);
+        //}
         //восстанавливаем значения
         this.moves = int.Parse(tasksXElement.Element("moves").Value);
         int sizeTargets = int.Parse(tasksXElement.Element("sizeTargets").Value);
@@ -222,5 +222,26 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             iteration++;
         }
         CreateCollectedElements();
+    }
+}
+
+[CustomEditor(typeof(Tasks), true)]
+public class TasksEditor : Editor
+{
+    Tasks thisTasks;
+
+    void OnEnable()
+    {
+        thisTasks = (Tasks)target;
+    }
+
+    public override void OnInspectorGUI()
+    {
+        EditorGUILayout.LabelField("Настройка заданий:", EditorStyles.boldLabel);
+        base.OnInspectorGUI();
+        if (GUILayout.Button("Обновить"))
+        {
+            thisTasks.CreateCollectedElements();
+        }
     }
 }

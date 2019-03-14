@@ -97,13 +97,18 @@
       <block posX="10" posY="8" blockType="Standard" generatorElements="true" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
     </blocks>
   </GridBlocks>
+  <Score>
+    <scoreForFirstStar>500</scoreForFirstStar>
+    <scoreForSecondStar>1000</scoreForSecondStar>
+    <scoreForThirdStar>2000</scoreForThirdStar>
+  </Score>
   <Tasks>
     <moves>20</moves>
     <sizeTargets>3</sizeTargets>
     <targets>
       <shapeAndGoal shape="Grass" goal="11" collectEverything="true" />
       <shapeAndGoal shape="Wall" goal="3" collectEverything="true" />
-      <shapeAndGoal shape="Dirt" goal="2" collectEverything="true" />
+      <shapeAndGoal shape="Dirt" goal="3" collectEverything="true" />
     </targets>
   </Tasks>
 </root>

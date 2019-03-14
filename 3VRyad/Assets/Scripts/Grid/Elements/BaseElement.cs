@@ -7,7 +7,8 @@ public class BaseElement : MonoBehaviour
     public Transform thisTransform;
     //protected SpriteBank objectManagement;
     protected SpriteRenderer spriteRenderer;
-    [SerializeField] protected bool destroyed;//признак что элемент был уничтожен
+    [SerializeField] protected AllShapeEnum shape;//форма элемента
+    [SerializeField] protected bool destroyed = false;//признак что элемент был уничтожен
     [SerializeField] protected int life;
     [SerializeField] protected int score;//количество очков за уничтожение элемента
     [SerializeField] protected bool immortal;//признак бессмертия
@@ -43,13 +44,31 @@ public class BaseElement : MonoBehaviour
             return actionAfterMove;
         }
     }
+    public AllShapeEnum Shape
+    {
+        get
+        {
+            return shape;
+        }
+
+        set
+        {
+            //if (shape != AllShapeEnum.Empty)
+            //{
+            //    ElementsList.DellElement(shape);
+            //}
+            shape = value;
+            ElementsList.AddElement(shape);
+            spriteRenderer.sprite = SpriteBank.SetShape(value);
+        }
+    }
 
     //удар элементу
     public virtual void Hit()
     {
     }
 
-    public virtual void Hit(HitTypeEnum hitType, ElementsShapeEnum hitElementShape)
+    public virtual void Hit(HitTypeEnum hitType, AllShapeEnum hitElementShape)
     { }
 
     public virtual void PerformActionAfterMove()
@@ -73,4 +92,12 @@ public class BaseElement : MonoBehaviour
         }
     }
 
+    //public void OnDestroy()
+    //{
+    //    //если элемент небыл уничтожен обычным способом
+    //    if (!destroyed)
+    //    {
+    //        ElementsList.DellElement(shape);
+    //    }        
+    //}
 }

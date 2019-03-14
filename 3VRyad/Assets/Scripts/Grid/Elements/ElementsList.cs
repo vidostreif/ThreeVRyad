@@ -8,16 +8,29 @@ public static class ElementsList
     private static QuantityElement[] elementsOnField;
 
     private static void CreateElementsOnField() {
-
+        //Debug.Log("Создание elementsOnField");
         elementsOnField = new QuantityElement[Enum.GetNames(typeof(AllShapeEnum)).Length];
 
         int i = 0;
         foreach (AllShapeEnum ShapeEnum in Enum.GetValues(typeof(AllShapeEnum)))
         {
-            elementsOnField[i].shape = ShapeEnum;
-            elementsOnField[i].quantity = 0;
+            elementsOnField[i] = new QuantityElement(ShapeEnum, 0);
             i++;
         }
+
+        //наоходим все объекты с базовым элементом и подсчитываем количество элементов каждого вида
+        BaseElement[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
+
+        foreach (BaseElement item in findeObjects)
+        {
+            AddElement(item.Shape);
+        }
+    }
+
+    public static void ClearElementsOnField()
+    {
+        //Debug.Log("Уничтожение elementsOnField");
+        elementsOnField = null;
     }
 
     //добавляем количество элементов на поле
@@ -26,16 +39,10 @@ public static class ElementsList
         {
             CreateElementsOnField();
         }
-
-        QuantityElement quantityElement = elementsOnField.Find(item => item.shape == shape);
-        if (quantityElement != null)
-        {
-            quantityElement.quantity += quantity;
-        }
         else
         {
-            elementsOnField.Add(new QuantityElement(shape, quantity));
-        }        
+            elementsOnField[(int)shape].quantity += quantity;
+        }          
     }
 
     //удаление элементов с поля
@@ -46,15 +53,7 @@ public static class ElementsList
             CreateElementsOnField();
         }
 
-        QuantityElement quantityElement = elementsOnField.Find(item => item.shape == shape);
-        if (quantityElement != null)
-        {
-            quantityElement.quantity -= quantity;
-        }
-        else
-        {
-            Debug.Log("Удаляем не существующий в ElementsList элемент!");
-        }
+        elementsOnField[(int)shape].quantity -= quantity;
     }
 
     public static int GetAmountOfThisShapeElemets(AllShapeEnum shape) {
@@ -63,17 +62,8 @@ public static class ElementsList
         {
             CreateElementsOnField();
         }
-        QuantityElement quantityElement = elementsOnField.Find(item => item.shape == shape);
-            
-            if (quantityElement != null)
-            {
-                return quantityElement.quantity;
-            }
-            else
-            {
-                Debug.Log("запрошено количество не существующего элемента!");
-                return 0;
-            }
+
+        return elementsOnField[(int)shape].quantity;
     }
 }
 

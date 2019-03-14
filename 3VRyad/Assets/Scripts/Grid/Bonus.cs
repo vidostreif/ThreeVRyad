@@ -6,10 +6,10 @@ using UnityEngine;
 public class Bonus{
 
     [SerializeField] private ElementsTypeEnum type;//тип
-    [SerializeField] private ElementsShapeEnum shape;//внешний вид
+    [SerializeField] private AllShapeEnum shape;//внешний вид
     [SerializeField] private int cost;//стоимость
 
-    public Bonus(ElementsTypeEnum type, ElementsShapeEnum shape, int cost)
+    public Bonus(ElementsTypeEnum type, AllShapeEnum shape, int cost)
     {
         this.type = type;
         this.shape = shape;
@@ -24,7 +24,7 @@ public class Bonus{
         }
     }
 
-    public ElementsShapeEnum Shape
+    public AllShapeEnum Shape
     {
         get
         {

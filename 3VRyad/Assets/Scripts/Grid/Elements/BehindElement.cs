@@ -7,7 +7,7 @@ using UnityEngine;
 public class BehindElement : BaseElement
 {
     [SerializeField] protected BehindElementsTypeEnum type;//тип элемента
-    [SerializeField] protected BehindElementsShapeEnum shape;//форма элемента
+    //[SerializeField] protected BehindElementsShapeEnum shape;//форма элемента
 
     public BehindElementsTypeEnum Type
     {
@@ -16,19 +16,19 @@ public class BehindElement : BaseElement
             return type;
         }
     }
-    public BehindElementsShapeEnum Shape
-    {
-        get
-        {
-            return shape;
-        }
+    //public BehindElementsShapeEnum Shape
+    //{
+    //    get
+    //    {
+    //        return shape;
+    //    }
 
-        set
-        {
-            shape = value;
-            spriteRenderer.sprite = SpriteBank.SetShape(value);
-        }
-    }
+    //    set
+    //    {
+    //        shape = value;
+    //        spriteRenderer.sprite = SpriteBank.SetShape(value);
+    //    }
+    //}
 
     public virtual void Awake()
     {
