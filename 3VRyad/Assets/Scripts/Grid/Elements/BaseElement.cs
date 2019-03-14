@@ -56,9 +56,15 @@ public class BaseElement : MonoBehaviour
     {
     }
 
+    //protected virtual void CreateElement(AllShapeEnum allShapeEnum)
+    //{
+    //    ElementsList.AddElement(allShapeEnum);
+    //}
+
     protected virtual void DestroyElement(AllShapeEnum allShapeEnum)
     {
         destroyed = true;
+        ElementsList.DellElement(allShapeEnum);
         Score.Instance.CreateScoreElement(transform.position, score);
         if (!Tasks.Instance.Collect(allShapeEnum, transform))
         {

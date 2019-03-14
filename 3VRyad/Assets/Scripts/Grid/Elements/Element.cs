@@ -200,16 +200,6 @@ public class Element : BaseElement
                 curElement.InitialSettings(typeBlockingElementsEnum, false, false, 1, 100);
                 lockedForMove = true;
             }
-            //else if (typeBlockingElementsEnum == BlockingElementsTypeEnum.CrushableWall)
-            //{
-            //    curElement = elementGameObject.AddComponent<ElementWall>();
-            //    curElement.InitialSettings(typeBlockingElementsEnum, true, false, false);
-            //}
-            //else if (typeBlockingElementsEnum == BlockingElementsTypeEnum.ImmortalWall)
-            //{
-            //    curElement = elementGameObject.AddComponent<ElementWall>();
-            //    curElement.InitialSettings(typeBlockingElementsEnum, true, true, false);
-            //}
             else
             {
                 Debug.LogError("У элемента " + this.name + " не удалось определить тип создаваемого блокирующего элемента");
@@ -218,6 +208,7 @@ public class Element : BaseElement
             }
 
             curElement.Shape = shape;
+            ElementsList.AddElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), curElement.Shape.ToString()));
             //Добавляем в элемент
             this.BlockingElement = curElement;
         }        

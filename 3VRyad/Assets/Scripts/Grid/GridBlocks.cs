@@ -92,7 +92,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         iteration--;
                         //выбираем случайное число для выбора типа элемента из списка
                         //int random = UnityEngine.Random.Range(0, elementsShapeAndPriority.Count);
-                        elementsPriority = ProportionalWheelSelection.SelectElement(elementsSAndP);
+                        elementsPriority = ProportionalWheelSelection.SelectElement(elementsSAndP, this);
 
                         //проверяем элементы слева и снизу, что бы небыло 3 одинаковых элемента подряд
                         //по горизонтали проверяем со второго элемента
@@ -1108,23 +1108,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
             }
         }
-        //else if (Enum.IsDefined(typeof(BlockTypeEnum), shape.ToString()))
-        //{
-        //    for (int x = 0; x < containers.GetLength(0); x++)
-        //    {
-        //        for (int y = 0; y < containers[x].block.GetLength(0); y++)
-        //        {
-        //            //если блок существует по данному адресу и в нем есть элемент и блокирующий элемент
-        //            if (containers[x].block[y] != null)
-        //            {
-        //                if (containers[x].block[y].Shape == (BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), shape.ToString()))
-        //                {
-        //                    number++;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
         else if (Enum.IsDefined(typeof(BehindElementsShapeEnum), shape.ToString()))
         {
             for (int x = 0; x < containers.GetLength(0); x++)
@@ -1209,7 +1192,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         currentBlock.CreatElement(prefabElement, elementPriority.elementsShape, elementPriority.elementsType);
                         MainAnimator.Instance.AddElementForSmoothMove(currentBlock.Element.thisTransform, new Vector3(currentBlock.thisTransform.position.x, currentBlock.thisTransform.position.y - 0.2f, currentBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithOneSpeed, smoothTime: speed + iteration * 0.0009f, addToQueue: true);
 
-                        //currentBlock.Element.speed = 1;
                         needIteration = true;
                         createdElement = true;
                     }

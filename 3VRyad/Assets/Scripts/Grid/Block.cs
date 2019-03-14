@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -130,6 +131,7 @@ public class Block : MonoBehaviour {
             //если уже есть элемент то удаляем его
             if (element != null)
             {
+                ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()));
                 DestroyImmediate(element.gameObject);
             }
 
@@ -182,6 +184,7 @@ public class Block : MonoBehaviour {
             }
 
             curElement.Shape = shape;
+            ElementsList.AddElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString())); 
             //Добавляем в блок
             this.Element = curElement;
 
@@ -191,6 +194,7 @@ public class Block : MonoBehaviour {
     public void DellElement() {
         if (element != null)
         {
+            ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()));
             DestroyImmediate(element.gameObject);
         }
         element = null;
@@ -223,6 +227,7 @@ public class Block : MonoBehaviour {
             }
 
             curElement.Shape = shape;
+            ElementsList.AddElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), curElement.Shape.ToString()));
             //Добавляем в блок
             this.BehindElement = curElement;
         }
@@ -232,6 +237,7 @@ public class Block : MonoBehaviour {
     {
         if (behindElement != null)
         {
+            ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), behindElement.Shape.ToString()));
             DestroyImmediate(behindElement.gameObject);
         }
         behindElement = null;

@@ -8,13 +8,19 @@ public class ProportionalWheelSelection
 
     // Static method for using from anywhere. You can make its overload for accepting not only List, but arrays also: 
     // функция поиска элемента в соответствии с указанным приоритетом
-    public static ElementsPriority SelectElement(List<ElementsPriority> elementsShapeAndPriority)
+    public static ElementsPriority SelectElement(List<ElementsPriority> elementsShapeAndPriority, GridBlocks grid)
     {
         // Суммируем все приоритеты
         int poolSize = 0;
         for (int i = 0; i < elementsShapeAndPriority.Count; i++)
         {
-            poolSize += elementsShapeAndPriority[i].priority;
+            //берем только те элементы, которые можно создавать
+            if (elementsShapeAndPriority[i].limitOnAmountCreated > 0 && elementsShapeAndPriority[i].maxAmountOnField > ElementList.)
+            {
+                //складываем все приоритеты
+                poolSize += elementsShapeAndPriority[i].priority;
+            }
+            
         }
 
         // Get a random integer from 0 to PoolSize.
