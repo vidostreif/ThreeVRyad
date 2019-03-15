@@ -109,12 +109,12 @@ public class BaseElement : MonoBehaviour
     }
 
     //добавляем в коллекцию элемент
-    public bool AddToCollection(AllShapeEnum elementShape, Transform elementTransform)
+    public virtual bool AddToCollection(AllShapeEnum elementShape, Transform elementTransform)
     {
         if (!this.destroyed && this.collector && elementShape == this.collectShape && this.numberOfElementCollected > 0)
         {
             //перемещаем элемент к себе
-            MainAnimator.Instance.AddElementForSmoothMove(elementTransform, this.transform.position, 10, SmoothEnum.InArc, 0.1f, true);
+            MainAnimator.Instance.AddElementForSmoothMove(elementTransform, this.transform.position, 10, SmoothEnum.InLineWithAcceleration, 0.1f, true);
 
             numberOfElementCollected--;
             //если собрали колецию
@@ -154,7 +154,7 @@ public class BaseElement : MonoBehaviour
         Block[] blocksAround = GridBlocks.Instance.DeterminingAroundBlocks(GridBlocks.Instance.FindPosition(this));
         foreach (Block item in blocksAround)
         {
-            if (BlockCheck.ThisBlockWithCollectorElement(item))
+            if (BlockCheck.ThisBlockWithCollectorElementAndNoBlockingElement(item))
             {
                 //если добавили элемент в коллекцию то выходим
                 if (item.Element.AddToCollection(this.shape, this.transform))

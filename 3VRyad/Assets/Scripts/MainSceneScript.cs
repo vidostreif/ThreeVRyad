@@ -42,8 +42,9 @@ public class MainSceneScript : MonoBehaviour {
 
     public void CompleteGame()
     {
-        CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
+        InstrumentsManager.Instance.DeactivateInstrument();
 
+        CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
         Text textEndGame = gOtextEndGame.GetComponent(typeof(Text)) as Text;

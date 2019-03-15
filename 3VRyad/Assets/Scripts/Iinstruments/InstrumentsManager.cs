@@ -64,6 +64,12 @@ public class InstrumentsManager : MonoBehaviour
         preparedInstrument = instrument;
     }
 
+    public void DeactivateInstrument()
+    {
+        instrumentPrepared = false;
+        preparedInstrument = null;
+    }
+
     public void ActivateInstrument(Block block) {
         StartCoroutine(Activate(block));
     }
@@ -103,6 +109,7 @@ public class InstrumentsManager : MonoBehaviour
 
             if (successfulActivation)
             {
+                Debug.Log("Инструмент активирован!");
                 preparedInstrument.SubQuantity();
                 GridBlocks.Instance.Move();
                 successfulActivation = false;
@@ -153,6 +160,12 @@ public class InstrumentsManager : MonoBehaviour
             do
             {
                 yield return new WaitForSeconds(0.01f);
+                //если инструмент был деактивирован
+                if (instrumentPrepared == false)
+                {
+                    successfulActivation = false;
+                    yield break;
+                }
             } while (GridBlocks.Instance.blockedForMove);
 
             block.Hit();
@@ -188,6 +201,12 @@ public class InstrumentsManager : MonoBehaviour
             do
             {
                 yield return new WaitForSeconds(0.01f);
+                //если инструмент был деактивирован
+                if (instrumentPrepared == false)
+                {
+                    successfulActivation = false;
+                    yield break;
+                }
             } while (GridBlocks.Instance.blockedForMove);
 
             GridBlocks.Instance.MixStandartElements();
@@ -213,6 +232,12 @@ public class InstrumentsManager : MonoBehaviour
                 do
                 {
                     yield return new WaitForSeconds(0.01f);
+                    //если инструмент был деактивирован
+                    if (instrumentPrepared == false)
+                    {
+                        successfulActivation = false;
+                        yield break;
+                    }
                 } while (GridBlocks.Instance.blockedForMove);
 
                 SupportFunctions.MixArray(blocks);

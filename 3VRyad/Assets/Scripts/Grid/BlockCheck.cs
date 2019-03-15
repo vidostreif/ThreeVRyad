@@ -56,9 +56,10 @@ public static class BlockCheck
         }
     }
 
-    public static bool ThisBlockWithCollectorElement(Block block)
+    public static bool ThisBlockWithCollectorElementAndNoBlockingElement(Block block)
     {
-        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Collector)
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Collector
+            && (block.Element.BlockingElement == null || (block.Element.BlockingElement != null && block.Element.BlockingElement.Destroyed)))
         {
             return true;
         }
