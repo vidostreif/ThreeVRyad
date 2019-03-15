@@ -16,7 +16,7 @@ public class ElementWall : Element {
                 //если элемент не бессмертный
                 if (!Immortal)
                 {
-                    base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
+                    base.DestroyElement();
                 }
             }
         }       

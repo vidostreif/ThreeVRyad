@@ -56,6 +56,18 @@ public static class BlockCheck
         }
     }
 
+    public static bool ThisBlockWithCollectorElement(Block block)
+    {
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Collector)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static bool ThisBlockWithDestroyElement(Block block)
     {
 

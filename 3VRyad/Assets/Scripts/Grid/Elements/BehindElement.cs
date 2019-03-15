@@ -39,12 +39,9 @@ public class BehindElement : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(BehindElementsTypeEnum type, bool immortal, int life, bool actionAfterMove, int actionDelay, int score)
+    public void InitialSettings(BehindElementsTypeEnum type, bool immortal, int life, int score)
     {
         this.type = type;
-        this.actionAfterMove = actionAfterMove;
-        this.actionDelay = actionDelay;
-        this.startingActionDelay = actionDelay;
         this.immortal = immortal;
         this.life = life;
         this.score = score;
@@ -60,7 +57,7 @@ public class BehindElement : BaseElement
         }
         if (life <= 0)
         {
-            base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
+            base.DestroyElement();
         }
     }
 

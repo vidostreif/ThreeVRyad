@@ -750,19 +750,27 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
         if (increasePriority)
         {
+            //мешаем массив
             SupportFunctions.MixArray(listPriority);
             for (int i = 0; i < listPriority.Count; i++)
             {
+                //ищем нет ли такого элемента в заданиях
+                bool found = false;
                 foreach (Target item in Tasks.Instance.targets)
                 {
                     if (item.elementsShape == listPriority[i].ElementsShape)
                     {
-                        continue;
+                        found = true;
+                        break;
                     }
                 }
-                listPriority[i].priority++;
-                listPriority[i].limitOnAmountCreated++;
-                break;
+                //если не нашли
+                if (!found)
+                {
+                    listPriority[i].priority++;
+                    listPriority[i].limitOnAmountCreated++;
+                    break;
+                }                
             }            
         }
 
@@ -969,7 +977,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //функцию поиска позиции по элементу
-    public Position FindPosition(Element element)
+    public Position FindPosition(BaseElement element)
     {
         int positionX = -1;
         int positionY = -1;
@@ -1425,6 +1433,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     XAttribute behindElementsShape = new XAttribute("behindElementsShape", BehindElementsShapeEnum.Empty);
                     XAttribute elementType = new XAttribute("elementType", ElementsTypeEnum.Empty);
                     XAttribute elementShape = new XAttribute("elementShape", ElementsShapeEnum.Empty);
+                    XAttribute dopShape = new XAttribute("dopShape", ElementsShapeEnum.Empty);
                     XAttribute blockingElementType = new XAttribute("blockingElementType", BlockingElementsTypeEnum.Empty);
                     XAttribute blockingElementShape = new XAttribute("blockingElementShape", BlockingElementsShapeEnum.Empty);
 
@@ -1440,6 +1449,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     {
                         elementType = new XAttribute("elementType", containers[x].block[y].Element.Type);
                         elementShape = new XAttribute("elementShape", containers[x].block[y].Element.Shape);
+                        dopShape = new XAttribute("dopShape", containers[x].block[y].Element.CollectShape);
 
                         //если в в элементе есть блокирующий элемент
                         if (containers[x].block[y].Element.BlockingElement != null)
@@ -1449,7 +1459,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                     }
 
-                    XElement blockXElement = new XElement("block", posX, posY, blockType, generatorElements, behindElementsType, behindElementsShape, elementType, elementShape, blockingElementType, blockingElementShape);
+                    XElement blockXElement = new XElement("block", posX, posY, blockType, generatorElements, behindElementsType, behindElementsShape, elementType, elementShape, dopShape, blockingElementType, blockingElementShape);
                     blocksXElement.Add(blockXElement);
                 }
             }
@@ -1513,6 +1523,16 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             AllShapeEnum behindElementsShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), block.Attribute("behindElementsShape").Value);
             ElementsTypeEnum elementType = (ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), block.Attribute("elementType").Value);
             AllShapeEnum elementShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), block.Attribute("elementShape").Value);
+
+            AllShapeEnum dopShape = AllShapeEnum.Empty;
+            try
+            {
+                dopShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), block.Attribute("dopShape").Value);
+            }
+            catch (Exception)
+            {
+            }
+                        
             BlockingElementsTypeEnum blockingElementType = (BlockingElementsTypeEnum)Enum.Parse(typeof(BlockingElementsTypeEnum), block.Attribute("blockingElementType").Value);
             AllShapeEnum blockingElementShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), block.Attribute("blockingElementShape").Value);
 
@@ -1539,7 +1559,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //создаем элемент
                 if (elementType != ElementsTypeEnum.Empty)
                 {
-                    blockField.CreatElement(prefabElement, elementShape, elementType);
+                    blockField.CreatElement(prefabElement, elementShape, elementType, dopShape);
                     //создаем блокирующий элемент
                     if (blockingElementType != BlockingElementsTypeEnum.Empty)
                     {

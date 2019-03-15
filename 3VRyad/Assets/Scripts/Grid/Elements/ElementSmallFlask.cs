@@ -38,7 +38,7 @@ public class ElementSmallFlask : Element
                     //если элемент не бессмертный
                     if (!Immortal)
                     {
-                        base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
+                        base.DestroyElement();
                         MainAnimator.Instance.AddExplosionEffect(thisTransform.position, explosionRadius);
                         HitNeighboringBlocks(thisHitTypeEnum);
                     }

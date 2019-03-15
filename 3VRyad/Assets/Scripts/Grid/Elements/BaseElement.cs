@@ -12,9 +12,14 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected int life;
     [SerializeField] protected int score;//количество очков за уничтожение элемента
     [SerializeField] protected bool immortal;//признак бессмертия
-    [SerializeField] protected bool actionAfterMove;//признак активируемости по окончанию хода
+
+    [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода
     [SerializeField] protected int actionDelay;//задержка перед активированием
     [SerializeField] protected int startingActionDelay;//запоминает первичную задержку для расчетов
+
+    [SerializeField] protected bool collector = false;//признак что элемент коллекционирует другие элементы
+    [SerializeField] protected AllShapeEnum collectShape;//форма коллекционированого элемента
+    [SerializeField] protected int numberOfElementCollected;//количество коллекционируемых элементов
 
     public bool Destroyed
     {
@@ -62,6 +67,65 @@ public class BaseElement : MonoBehaviour
             spriteRenderer.sprite = SpriteBank.SetShape(value);
         }
     }
+    public bool Collector
+    {
+        get
+        {
+            return collector;
+        }
+    }
+    public AllShapeEnum CollectShape
+    {
+        get
+        {
+            return collectShape;
+        }
+        set
+        {
+            MakeCollector(value, this.numberOfElementCollected);
+        }
+    }
+    public int NumberOfElementCollected
+    {
+        get
+        {
+            return numberOfElementCollected;
+        }
+    }
+
+    //делаем элемент активным после хода
+    public virtual void MakeActionAfterMove(int actionDelay)
+    {
+        this.actionAfterMove = true;
+        this.actionDelay = actionDelay;
+        this.startingActionDelay = actionDelay;
+    }
+
+    //делаем элемент коллекционером
+    public virtual void MakeCollector(AllShapeEnum collectShape, int numberOfElementCollected) {
+        this.collector = true;
+        this.collectShape = collectShape;
+        this.numberOfElementCollected = numberOfElementCollected;
+    }
+
+    //добавляем в коллекцию элемент
+    public bool AddToCollection(AllShapeEnum elementShape, Transform elementTransform)
+    {
+        if (!this.destroyed && this.collector && elementShape == this.collectShape && this.numberOfElementCollected > 0)
+        {
+            //перемещаем элемент к себе
+            MainAnimator.Instance.AddElementForSmoothMove(elementTransform, this.transform.position, 10, SmoothEnum.InArc, 0.1f, true);
+
+            numberOfElementCollected--;
+            //если собрали колецию
+            if (numberOfElementCollected == 0)
+            {
+                DestroyElement();
+            }
+            return true;
+        }
+        return false;
+    }
 
     //удар элементу
     public virtual void Hit()
@@ -80,24 +144,39 @@ public class BaseElement : MonoBehaviour
     //    ElementsList.AddElement(allShapeEnum);
     //}
 
-    protected virtual void DestroyElement(AllShapeEnum allShapeEnum)
+    protected virtual void DestroyElement()
     {
         destroyed = true;
-        ElementsList.DellElement(allShapeEnum);
+        ElementsList.DellElement(shape);
         Score.Instance.CreateScoreElement(transform.position, score);
-        if (!Tasks.Instance.Collect(allShapeEnum, transform))
+
+        //определяем есть ли вокруг элементы коллекционирующие наш вид элемента
+        Block[] blocksAround = GridBlocks.Instance.DeterminingAroundBlocks(GridBlocks.Instance.FindPosition(this));
+        foreach (Block item in blocksAround)
+        {
+            if (BlockCheck.ThisBlockWithCollectorElement(item))
+            {
+                //если добавили элемент в коллекцию то выходим
+                if (item.Element.AddToCollection(this.shape, this.transform))
+                {
+                    return;
+                }  
+            }
+        }
+        //проверяем по заданиям
+        if (!Tasks.Instance.Collect(shape, transform))
         {
             AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
             animatorElement.PlayDestroyAnimation();
         }
     }
 
-    //public void OnDestroy()
-    //{
-    //    //если элемент небыл уничтожен обычным способом
-    //    if (!destroyed)
-    //    {
-    //        ElementsList.DellElement(shape);
-    //    }        
-    //}
-}
+        //public void OnDestroy()
+        //{
+        //    //если элемент небыл уничтожен обычным способом
+        //    if (!destroyed)
+        //    {
+        //        ElementsList.DellElement(shape);
+        //    }        
+        //}
+    }

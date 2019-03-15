@@ -12,6 +12,7 @@ public enum ElementsTypeEnum
     MediumFlask, //фласка средняя
     SmallFlask, //фласка малая
     BigFlask,//фласка большая
+    SeedBarrel,//бочка собирающая элементы
 }//Типы элементов
 
 public enum ElementsShapeEnum
@@ -30,6 +31,7 @@ public enum ElementsShapeEnum
     Plum, //слива
     BigFlask,//фласка большая
     Mushroom,//гриб
+    SeedBarrel,//бочка
 }//Внешние виды элементов
 
 public enum BehindElementsTypeEnum
@@ -78,6 +80,7 @@ public enum AllShapeEnum
     Grass, //трава
     Dirt, //грязь
     Mushroom,//гриб
+    SeedBarrel,//бочка
 }//Внешние виды элементов
 
 public enum BlockTypeEnum

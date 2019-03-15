@@ -123,7 +123,7 @@ public class Block : MonoBehaviour {
         }
     }
 
-    public void CreatElement(GameObject prefabElement, AllShapeEnum shape, ElementsTypeEnum typeElementsEnum)
+    public void CreatElement(GameObject prefabElement, AllShapeEnum shape, ElementsTypeEnum typeElementsEnum, AllShapeEnum dopShape = AllShapeEnum.Empty)
     {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
@@ -176,6 +176,12 @@ public class Block : MonoBehaviour {
                 curElement = elementGameObject.AddComponent<ElementSmallFlask>();
                 curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 300);
             }
+            else if (typeElementsEnum == ElementsTypeEnum.SeedBarrel)
+            {
+                curElement = elementGameObject.AddComponent<SeedBarrelElement>();
+                curElement.InitialSettings(typeElementsEnum, true, true, false, false, HitTypeEnum.Empty, 1200);
+                curElement.MakeCollector(dopShape, 3);
+            }
             else
             {
                 Debug.LogError("У блока " + this.name + " не удалось определить тип создаваемого элемента");
@@ -212,12 +218,13 @@ public class Block : MonoBehaviour {
             if (typeElementsEnum == BehindElementsTypeEnum.Standard)
             {
                 curElement = elementGameObject.AddComponent<BehindElement>();
-                curElement.InitialSettings(typeElementsEnum, false, 1, false, 0, 100);
+                curElement.InitialSettings(typeElementsEnum, false, 1, 100);
             }
             else if(typeElementsEnum == BehindElementsTypeEnum.Dirt)
             {
                 curElement = elementGameObject.AddComponent<DirtBehindElement>();
-                curElement.InitialSettings(typeElementsEnum, false, 1, true, 2, 100);
+                curElement.InitialSettings(typeElementsEnum, false, 1, 100);
+                curElement.MakeActionAfterMove(2);
             }
             else
             {

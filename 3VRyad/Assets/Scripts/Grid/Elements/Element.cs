@@ -15,8 +15,7 @@ public class Element : BaseElement
 {
     public bool drag; //элемент перетаскивается
     public float speed = 0; //скорость
-    [SerializeField] protected ElementsTypeEnum type;//тип элемента
-    
+    [SerializeField] protected ElementsTypeEnum type;//тип элемента    
     [SerializeField] protected BlockingElement blockingElement;// блокирующий элемент
     [SerializeField] protected bool lockedForMove;//признак что элемент заблокирован для передвижения
     [SerializeField] protected bool createLine;//признак что элемент создает линию
@@ -82,7 +81,6 @@ public class Element : BaseElement
         this.activated = activated;
         this.thisHitTypeEnum = hitTypeEnum;
         this.score = score;
-        actionAfterMove = false;
         DopSettings();
     }
 
@@ -117,8 +115,7 @@ public class Element : BaseElement
                     //если элемент не бессмертный
                     if (!Immortal)
                     {
-
-                        base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
+                        base.DestroyElement();
                         
                         if (hitType == HitTypeEnum.Standart)
                             HitNeighboringBlocks(thisHitTypeEnum);
@@ -185,7 +182,7 @@ public class Element : BaseElement
             if (typeBlockingElementsEnum == BlockingElementsTypeEnum.Standard)
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
-                curElement.InitialSettings(typeBlockingElementsEnum, false, false, 1, 100);
+                curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 100);
                 lockedForMove = true;
             }
             else

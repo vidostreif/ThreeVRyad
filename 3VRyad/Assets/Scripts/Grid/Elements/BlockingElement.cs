@@ -30,12 +30,11 @@ public class BlockingElement : BaseElement
     //}
 
     //установка настроек элементов
-    public void InitialSettings(BlockingElementsTypeEnum type, bool actionAfterMove, bool immortal, int life, int score)
+    public void InitialSettings(BlockingElementsTypeEnum type, bool immortal, int life, int score)
     {
         this.type = type;
         this.life = life;
         this.immortal = immortal;
-        this.actionAfterMove = actionAfterMove;
         this.score = score;
     }
 
@@ -50,7 +49,7 @@ public class BlockingElement : BaseElement
         //если елемент убили, то возвращаем null
         if (life <= 0)
         {
-            base.DestroyElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), Shape.ToString()));
+            base.DestroyElement();
         }
     }
 
