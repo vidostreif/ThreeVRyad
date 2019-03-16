@@ -54,7 +54,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
                 {
                     if (BlockCheck.ThisStandardBlockWithoutElement(item))//если блок без элемента
                     {
-                        NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(GridBlocks.Instance.FindPosition(item));
+                        NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(item.PositionInGrid);
                         List<Block> matchedBlocks = new List<Block>();
                         foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
                         {

@@ -134,7 +134,7 @@ public class InstrumentsManager : MonoBehaviour
     //ударяет крест на крест по всем блокам от указанного блока 
     private IEnumerator ActivateHoe(Block block)
     {
-        Block[] blocks = GridBlocks.Instance.DeterminingAllCrossBlocks(GridBlocks.Instance.FindPosition(block));
+        Block[] blocks = GridBlocks.Instance.DeterminingAllCrossBlocks(block.PositionInGrid);
         if (blocks.Length > 0)
         {            
             GameObject instrumentGO = new GameObject();

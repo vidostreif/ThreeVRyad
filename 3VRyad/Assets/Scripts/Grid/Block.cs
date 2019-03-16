@@ -12,6 +12,7 @@ public class Block : MonoBehaviour {
     [SerializeField] protected BehindElement behindElement;// элемент на блоке за основным элементом
     [SerializeField] protected bool generatorElements; //признак, что блок генерирует новые элементы
     [SerializeField] protected SpriteRenderer spriteRenderer;
+    [SerializeField] private Position positionInGrid;//позиция в сетке
 
     public BlockTypeEnum Type
     {
@@ -73,6 +74,7 @@ public class Block : MonoBehaviour {
                 if (value != null)
                 {
                     element = value;
+                    element.PositionInGrid = positionInGrid;
                     element.thisTransform.parent = thisTransform;                    
                 }
                 else if (value == null)
@@ -88,6 +90,7 @@ public class Block : MonoBehaviour {
             else if (value == null)
             {
                 element = value;
+                element.PositionInGrid = positionInGrid;
                 element.thisTransform.parent = thisTransform;
             }
         }
@@ -103,7 +106,29 @@ public class Block : MonoBehaviour {
         set
         {
             behindElement = value;
+            behindElement.PositionInGrid = positionInGrid;
             behindElement.thisTransform.parent = thisTransform;
+        }
+    }
+
+    public Position PositionInGrid
+    {
+        get
+        {
+            return positionInGrid;
+        }
+
+        set
+        {
+            positionInGrid = value;
+            if (element != null)
+            {
+                element.PositionInGrid = value;
+            }
+            if (behindElement != null)
+            {
+                behindElement.PositionInGrid = value;
+            }
         }
     }
 

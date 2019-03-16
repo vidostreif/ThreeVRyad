@@ -67,7 +67,7 @@ public class MasterController : MonoBehaviour
 
             //Находим позицию блока в сетке
             
-            gridPositionDAndD = GridBlocks.Instance.FindPosition(blockFieldDAndD);
+            gridPositionDAndD = blockFieldDAndD.PositionInGrid;
             //Определяем соседние блоки
             neighboringBlocksDAndD = GridBlocks.Instance.DeterminingNeighboringBlocks(gridPositionDAndD);
             //если стартовая позиция мыши нулевая
@@ -241,7 +241,7 @@ public class MasterController : MonoBehaviour
         startPosition = new Vector3(0, 0, 0);
         startPositionLocalDAndD = new Vector3(0, 0, 0);
         //cursorDeviation = new Vector3(0, 0, 0);
-        gridPositionDAndD = new Position();
+        gridPositionDAndD = null;
         neighboringBlocksDAndD = new NeighboringBlocks();
         change = false;
 

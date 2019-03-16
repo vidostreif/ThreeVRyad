@@ -15,7 +15,7 @@ public class DirtBehindElement : BehindElement
                 UpdateSpriteAlfa();
 
                 //распространение на соседний блок
-                NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(GridBlocks.Instance.FindPosition(this));
+                NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(this.PositionInGrid);
                 SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
 
                 foreach (Block block in neighboringBlocks.allBlockField)

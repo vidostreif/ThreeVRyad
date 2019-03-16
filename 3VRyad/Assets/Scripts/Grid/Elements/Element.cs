@@ -22,7 +22,22 @@ public class Element : BaseElement
     [SerializeField] protected bool activated;//признак что элемент активируемый
     [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у элемента
 
+    public override Position PositionInGrid
+    {
+        get
+        {
+            return positionInGrid;
+        }
 
+        set
+        {
+            positionInGrid = value;
+            if (blockingElement != null)
+            {
+                blockingElement.PositionInGrid = value;
+            }
+        }
+    }
     public bool LockedForMove {
         get
         {
@@ -216,7 +231,7 @@ public class Element : BaseElement
     protected virtual void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)
 {
     //Находим позицию блока в сетке
-    Position gridPosition = GridBlocks.Instance.FindPosition(this);
+    Position gridPosition = this.PositionInGrid;
     //Определяем соседние блоки
     NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(gridPosition);
 

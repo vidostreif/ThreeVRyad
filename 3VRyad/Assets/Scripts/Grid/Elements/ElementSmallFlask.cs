@@ -51,7 +51,7 @@ public class ElementSmallFlask : Element
     protected override void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)
     {
         //Находим позицию блока в сетке
-        Position gridPosition = GridBlocks.Instance.FindPosition(this);
+        Position gridPosition = this.PositionInGrid;
         //Определяем блоки вокруг
         Block[] aroundBlocks = DeterminingBlocksForHit(gridPosition, explosionRadius);
 

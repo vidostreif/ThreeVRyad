@@ -41,6 +41,18 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         Instance = this;
         thisTransform = transform;
         blockedForMove = false;
+
+        //заполнение у блоков позиции
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                if (containers[x].block[y] != null)
+                {
+                    containers[x].block[y].PositionInGrid = new Position(x, y);
+                }                
+            }
+        }
     }
 
     void Update()
@@ -534,7 +546,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //добавляем первые элементы                
                 if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(blockField))
                 {
-                    NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(FindPosition(blockField));
+                    NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(blockField.PositionInGrid);
                     foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
                     {
                         //если блок находится по соседству и в нем такой же элемент
@@ -801,105 +813,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         return false;
     }
-
-    //устанавливаем блок на определенную позицию в сетке
-    //возвращает истину если удалось поставить элемент на новую позицию?
-    public bool AddBlockToPosition(Block Block, Position newPosition)
-    {
-
-        //находим текущую позицию в сетке
-        Position oldPosition = this.FindPosition(Block);
-
-        //если позиция в рамках размера нашей сетки
-        if (newPosition.posX >= 0 && newPosition.posX < containers.GetLength(0) &&
-            newPosition.posY >= 0 && newPosition.posY < containers[newPosition.posX].block.GetLength(0))
-        {
-            //если позиция занята, то выходим
-            if (GetBlock(newPosition) != null)
-            {
-                return false;
-            }
-
-            //если не тажа позиция на которой блок уже стоит
-            if (newPosition.posX != oldPosition.posX || newPosition.posY != oldPosition.posY)
-            {
-                //и удаляем со старой если такая была
-                if (oldPosition.posX != -1 || oldPosition.posY != -1)
-                {
-                    DelBlock(Block);
-                    //Debug.LogAssertion("1 Удалили блок с позиции: " + oldPosition.posX + " " + oldPosition.posY);
-                }
-
-                //ставим блок на новую позицию
-                containers[newPosition.posX].block[newPosition.posY] = Block;
-                //Debug.LogAssertion("Поставили блок на позицию: " + newPosition.posX + " " + newPosition.posY);
-
-                //переместить блок на новую позицию в соответствии с позицией в сетке
-                //Block.transform.parent = this.transform;
-                Block.transform.position = new Vector3(this.transform.localPosition.x + newPosition.posX * blockSize, this.transform.localPosition.y + newPosition.posY * blockSize, this.transform.localPosition.z);
-                Block.name = "Block_" + newPosition.posX + "_" + newPosition.posY;
-                //Block.transform.parent = this.transform;
-                //Block.transform.SetParent(this.transform, false);
-
-                return true;
-            }
-        }
-        else if (oldPosition.posX != -1 || oldPosition.posY != -1)//иначе значит элемент вышел за пределы сетки и его нужно удалить из нее
-        {
-            DelBlock(Block);
-            //Debug.LogAssertion("2 Удалили блок с позиции: " + oldPosition.posX + " " + oldPosition.posY);
-            Block.name = "Block_Free";
-            //Vector3 savePosition =this.transform.position + Block.transform.localPosition;
-            //Block.transform.parent = null;
-            //Block.transform.position = savePosition;
-            //Block.transform.SetParent(null, false);
-        }
-
-        return false;
-    }
-
-    //удаляем все вхождения блока в массив, и если нужно удаляем сам блок
-    public void DelBlock(Block block, bool dellGameObject = false)
-    {
-        //ищем объект
-        for (int x = 0; x < containers.GetLength(0); x++)
-        {
-            for (int y = 0; y < containers[x].block.GetLength(0); y++)
-            {
-                //если нашли наш тоу даляем его из массива
-                if (containers[x].block[y] == block)
-                {
-                    containers[x].block[y] = null;
-
-                    //если указано, то удаляем объект
-                    if (dellGameObject)
-                    {
-                        Destroy(block.gameObject);
-                    }
-                }
-            }
-        }
-    }
-
-    //поиск блока в массиве
-    public bool SearchBlock(Block block)
-    {
-        //ищем объект
-        for (int x = 0; x < containers.GetLength(0); x++)
-        {
-            for (int y = 0; y < containers[x].block.GetLength(0); y++)
-            {
-                //если нашли наш то
-                if (containers[x].block[y] == block)
-                {
-                    return true;
-
-                }
-            }
-        }
-        return false;
-    }
-
+    
     //возвращает блок на указанной позиции
     public Block GetBlock(Position position)
     {
@@ -955,76 +869,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         return null;
     }
-
-    //функцию поиска позиции оп блоку
-    public Position FindPosition(Block block)
-    {
-        int positionX = -1;
-        int positionY = -1;
-
-        //ищем объект
-        for (int x = 0; x < containers.GetLength(0); x++)
-        {
-            for (int y = 0; y < containers[x].block.GetLength(0); y++)
-            {
-                //если нашли наш блок то возвращаем его позицию
-                if (containers[x].block[y] == block)
-                    return new Position(x, y);
-            }
-        }
-
-        //если ничего не нашли, то возвращаем -1 -1
-        return new Position(positionX, positionY);
-    }
-
-    //функцию поиска позиции по элементу
-    public Position FindPosition(BaseElement element)
-    {
-        int positionX = -1;
-        int positionY = -1;
-
-        //ищем объект
-        for (int x = 0; x < containers.GetLength(0); x++)
-        {
-            for (int y = 0; y < containers[x].block.GetLength(0); y++)
-            {
-                //если нашли наш блок то возвращаем его позицию
-                if (containers[x].block[y] != null)
-                {
-                    if (containers[x].block[y].Element == element)
-                        return new Position(x, y);
-                }
-            }
-        }
-
-        //если ничего не нашли, то возвращаем -1 -1
-        return new Position(positionX, positionY);
-    }
-
-    //функцию поиска позиции по элементу на заднем плане
-    public Position FindPosition(BehindElement behindElement)
-    {
-        int positionX = -1;
-        int positionY = -1;
-
-        //ищем объект
-        for (int x = 0; x < containers.GetLength(0); x++)
-        {
-            for (int y = 0; y < containers[x].block.GetLength(0); y++)
-            {
-                //если нашли наш блок то возвращаем его позицию
-                if (containers[x].block[y] != null)
-                {
-                    if (containers[x].block[y].BehindElement == behindElement)
-                        return new Position(x, y);
-                }
-            }
-        }
-
-        //если ничего не нашли, то возвращаем -1 -1
-        return new Position(positionX, positionY);
-    }
-
+    
     //определяем соседние блоки
     public NeighboringBlocks DeterminingNeighboringBlocks(Position position)
     {
@@ -1033,7 +878,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         Block LeftBlock = null;
         Block RightBlock = null;
 
-        if (position.posX != -1 || position.posY != -1)
+        if (position != null)
         {
             //определяем блоки
             if (position.posX - 1 >= 0)
@@ -1054,7 +899,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     {
         Block[] blocks = new Block[8];
 
-        if (position.posX != -1 || position.posY != -1)
+        if (position != null)
         {
             int iteration = 0;
             int posX;
@@ -1086,7 +931,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     {
         Block[] blocks = new Block[0];
 
-        if (position.posX != -1 || position.posY != -1)
+        if (position != null)
         {
             blocks = new Block[containers.GetLength(0) + containers[position.posX].block.GetLength(0) - 2];
             int iteration = 0;
@@ -1345,49 +1190,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //yield break;
         }
     }
-
-    #if UNITY_EDITOR
-    private void SettingBlocksOnPosition()
-    {
-        //работаем только с объектом у которого есть BlockField
-        foreach (var obj in Selection.GetFiltered(typeof(Block), SelectionMode.Assets))
-        {
-            //записать данные о позиции объекта
-            Vector3 pos = (obj as Block).transform.position;
-            Vector3 posGrid = transform.position;
-            pos.x = Mathf.CeilToInt(pos.x / blockSize) * blockSize + (float)(posGrid.x - Math.Truncate(posGrid.x));
-            pos.y = Mathf.CeilToInt(pos.y / blockSize) * blockSize + (float)(posGrid.y - Math.Truncate(posGrid.y));
-            pos.z = posGrid.z;
-
-
-            //выполняем если изменилась позиция
-            if (pos != (obj as Block).transform.position)
-            {
-                //Определяем на какой позиции он должен быть 
-                Position newPosition;
-                //Vector3 posAfterAdaptation = (obj as BlockField).transform.position;
-                newPosition.posX = (int)(pos.x - posGrid.x);
-                newPosition.posY = (int)(pos.y - posGrid.y);
-
-                //если позиция не занята в сетке другим блоком
-                if (GetBlock(newPosition) == null || GetBlock(newPosition) == (obj as Block))
-                {
-                    //добавляем блок в сетку
-                    AddBlockToPosition(obj as Block, newPosition);
-                    //если блок есть в сетке, то двигаем его по ней
-                    if (SearchBlock(obj as Block))
-                    {
-                        (obj as Block).transform.position = pos;
-                    }
-
-                }
-
-
-            }
-        }
-    }
-    #endif
-
+    
     //передаем данные о на стройках в xml формате
     public Type GetClassName()
     {
@@ -1496,7 +1299,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         int XSize = int.Parse(gridXElement.Element("XSize").Value);
         int YSize = int.Parse(gridXElement.Element("YSize").Value);
         
-        //восстанавливаем все блоки и элементы
+        //восстанавливаем приоритеты
         foreach (XElement shapeAndPriority in gridXElement.Element("elementsShape").Elements("shapeAndPriority"))
         {
             ElementsShapeEnum shape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shapeAndPriority.Attribute("shape").Value);
@@ -1549,6 +1352,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 Block blockField = blockGameObject.GetComponent<Block>();
                 blockField.GeneratorElements = generatorElements;
                 blockField.Type = blockType;
+                blockField.PositionInGrid = new Position(posX, posY);
                 //добавляем блок в массив блоков
                 containers[posX].block[posY] = blockField;
 
@@ -1570,4 +1374,146 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
         }
     }
+    
+
+#if UNITY_EDITOR
+    //устанавливаем блок на определенную позицию в сетке
+    //возвращает истину если удалось поставить элемент на новую позицию?
+    public bool AddBlockToPosition(Block Block, Position newPosition)
+    {
+
+        //находим текущая позиция в сетке
+        Position oldPosition = Block.PositionInGrid;
+
+        //если позиция в рамках размера нашей сетки
+        if (newPosition.posX >= 0 && newPosition.posX < containers.GetLength(0) &&
+            newPosition.posY >= 0 && newPosition.posY < containers[newPosition.posX].block.GetLength(0))
+        {
+            //если позиция занята, то выходим
+            if (GetBlock(newPosition) != null)
+            {
+                return false;
+            }
+
+            //если не тажа позиция на которой блок уже стоит
+            if (oldPosition == null || (oldPosition != null && (newPosition.posX != oldPosition.posX || newPosition.posY != oldPosition.posY)))
+            {
+                //и удаляем со старой если такая была
+                if (oldPosition != null)
+                {
+                    DelBlock(Block);
+                    //Debug.LogAssertion("1 Удалили блок с позиции: " + oldPosition.posX + " " + oldPosition.posY);
+                }
+
+                //ставим блок на новую позицию
+                containers[newPosition.posX].block[newPosition.posY] = Block;
+                Block.PositionInGrid = newPosition;
+                //Debug.LogAssertion("Поставили блок на позицию: " + newPosition.posX + " " + newPosition.posY);
+
+                //переместить блок на новую позицию в соответствии с позицией в сетке
+                //Block.transform.parent = this.transform;
+                Block.transform.position = new Vector3(this.transform.localPosition.x + newPosition.posX * blockSize, this.transform.localPosition.y + newPosition.posY * blockSize, this.transform.localPosition.z);
+                Block.name = "Block_" + newPosition.posX + "_" + newPosition.posY;
+                //Block.transform.parent = this.transform;
+                //Block.transform.SetParent(this.transform, false);
+
+                return true;
+            }
+        }
+        else if (oldPosition != null)//иначе значит элемент вышел за пределы сетки и его нужно удалить из нее
+        {
+            DelBlock(Block);
+            //Debug.LogAssertion("2 Удалили блок с позиции: " + oldPosition.posX + " " + oldPosition.posY);
+            Block.name = "Block_Free";
+            //Vector3 savePosition =this.transform.position + Block.transform.localPosition;
+            //Block.transform.parent = null;
+            //Block.transform.position = savePosition;
+            //Block.transform.SetParent(null, false);
+        }
+
+        return false;
+    }
+
+    private void SettingBlocksOnPosition()
+    {
+        //работаем только с объектом у которого есть BlockField
+        foreach (var obj in Selection.GetFiltered(typeof(Block), SelectionMode.Assets))
+        {
+            //записать данные о позиции объекта
+            Vector3 pos = (obj as Block).transform.position;
+            Vector3 posGrid = transform.position;
+            pos.x = Mathf.CeilToInt(pos.x / blockSize) * blockSize + (float)(posGrid.x - Math.Truncate(posGrid.x));
+            pos.y = Mathf.CeilToInt(pos.y / blockSize) * blockSize + (float)(posGrid.y - Math.Truncate(posGrid.y));
+            pos.z = posGrid.z;
+
+
+            //выполняем если изменилась позиция
+            if (pos != (obj as Block).transform.position)
+            {
+                //Определяем на какой позиции он должен быть 
+                Position newPosition = new Position((int)(pos.x - posGrid.x), (int)(pos.y - posGrid.y));
+                //Vector3 posAfterAdaptation = (obj as BlockField).transform.position;
+                //newPosition.posX = (int)(pos.x - posGrid.x);
+                //newPosition.posY = (int)(pos.y - posGrid.y);
+
+                //если позиция не занята в сетке другим блоком
+                if (GetBlock(newPosition) == null || GetBlock(newPosition) == (obj as Block))
+                {
+                    //добавляем блок в сетку
+                    AddBlockToPosition(obj as Block, newPosition);
+                    //если блок есть в сетке, то двигаем его по ней
+                    if (SearchBlock(obj as Block))
+                    {
+                        (obj as Block).transform.position = pos;
+                    }
+
+                }
+
+
+            }
+        }
+    }
+
+    //удаляем все вхождения блока в массив, и если нужно удаляем сам блок
+    public void DelBlock(Block block, bool dellGameObject = false)
+    {
+        //ищем объект
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если нашли наш то даляем его из массива
+                if (containers[x].block[y] == block)
+                {
+                    containers[x].block[y].PositionInGrid = null;
+                    containers[x].block[y] = null;
+                    //если указано, то удаляем объект
+                    if (dellGameObject)
+                    {
+                        Destroy(block.gameObject);
+                    }
+                }
+            }
+        }
+    }
+
+    //поиск блока в массиве
+    public bool SearchBlock(Block block)
+    {
+        //ищем объект
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если нашли наш то
+                if (containers[x].block[y] == block)
+                {
+                    return true;
+
+                }
+            }
+        }
+        return false;
+    }
+#endif
 }

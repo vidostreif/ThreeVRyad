@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //структура в которой сохраняются позиция элемента
-public struct Position
+public class Position
 {
     public int posX;
     public int posY;
+
+    //public Position()
+    //{
+    //    this.posX = -1;
+    //    this.posY = -1;
+    //}
 
     public Position(int posX, int posY)
     {

@@ -64,9 +64,9 @@ public class BlockController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Double click");
-                    Block block = GridBlocks.Instance.GetBlock(ThisBlock.Element);
-                    GridBlocks.Instance.Move(block);
+                    //Debug.Log("Double click");
+                    //Block block = GridBlocks.Instance.GetBlock(ThisBlock.Element);
+                    GridBlocks.Instance.Move(ThisBlock);
                 }
             }
         }

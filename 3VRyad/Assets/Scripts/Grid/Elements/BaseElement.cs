@@ -7,6 +7,7 @@ public class BaseElement : MonoBehaviour
     public Transform thisTransform;
     //protected SpriteBank objectManagement;
     protected SpriteRenderer spriteRenderer;
+    [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected AllShapeEnum shape;//форма элемента
     [SerializeField] protected bool destroyed = false;//признак что элемент был уничтожен
     [SerializeField] protected int life;
@@ -21,6 +22,18 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected AllShapeEnum collectShape;//форма коллекционированого элемента
     [SerializeField] protected int numberOfElementCollected;//количество коллекционируемых элементов
 
+    public virtual Position PositionInGrid
+    {
+        get
+        {
+            return positionInGrid;
+        }
+
+        set
+        {
+            positionInGrid = value;
+        }
+    }
     public bool Destroyed
     {
         get
@@ -151,7 +164,7 @@ public class BaseElement : MonoBehaviour
         Score.Instance.CreateScoreElement(transform.position, score);
 
         //определяем есть ли вокруг элементы коллекционирующие наш вид элемента
-        Block[] blocksAround = GridBlocks.Instance.DeterminingAroundBlocks(GridBlocks.Instance.FindPosition(this));
+        Block[] blocksAround = GridBlocks.Instance.DeterminingAroundBlocks(this.PositionInGrid);
         foreach (Block item in blocksAround)
         {
             if (BlockCheck.ThisBlockWithCollectorElementAndNoBlockingElement(item))
