@@ -182,6 +182,19 @@ public class LevelMenu : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    //void OnDisable()
+    //{
+    //    if (!Application.isPlaying)
+    //    {
+    //        if (lastLoadLevel != null && lastLoadXmlDocument != "" && lastLoadFolder != "")
+    //        {
+    //            //SaveXml(lastLoadLevel);
+    //            Debug.Log("save");
+    //            SaveAndLoadScene.Instance().SaveXml(lastLoadXmlDocument, lastLoadFolder);
+    //        }
+    //    }
+    //}
+
     public void SaveXml(Level inLevel)
     {
         for (int i = 0; i < regionsList.Count; i++)

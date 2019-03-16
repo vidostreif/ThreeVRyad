@@ -1472,6 +1472,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
             }
         }
+
+        EditorUtility.SetDirty(this);
     }
 
     //удаляем все вхождения блока в массив, и если нужно удаляем сам блок
