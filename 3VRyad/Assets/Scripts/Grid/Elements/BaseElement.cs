@@ -9,6 +9,7 @@ public class BaseElement : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected AllShapeEnum shape;//форма элемента
+    [SerializeField] protected HitTypeEnum[] vulnerabilityTypeEnum;//уязвимость к типам удара
     [SerializeField] protected bool destroyed = false;//признак что элемент был уничтожен
     [SerializeField] protected int life;
     [SerializeField] protected int score;//количество очков за уничтожение элемента
@@ -21,6 +22,8 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected bool collector = false;//признак что элемент коллекционирует другие элементы
     [SerializeField] protected AllShapeEnum collectShape;//форма коллекционированого элемента
     [SerializeField] protected int numberOfElementCollected;//количество коллекционируемых элементов
+
+    [SerializeField] protected bool drop = false;//сбрасываемый элемент
 
     public virtual Position PositionInGrid
     {
@@ -105,6 +108,13 @@ public class BaseElement : MonoBehaviour
             return numberOfElementCollected;
         }
     }
+    public bool Drop
+    {
+        get
+        {
+            return drop;
+        }
+    }
 
     //делаем элемент активным после хода
     public virtual void MakeActionAfterMove(int actionDelay)
@@ -119,6 +129,13 @@ public class BaseElement : MonoBehaviour
         this.collector = true;
         this.collectShape = collectShape;
         this.numberOfElementCollected = numberOfElementCollected;
+    }
+
+    //делаем элемент сбрасываемым
+    public virtual void MakeDrop()
+    {
+        this.drop = true;
+        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Drop };
     }
 
     //добавляем в коллекцию элемент

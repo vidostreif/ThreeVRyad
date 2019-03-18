@@ -27,8 +27,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     private List<Element> elementsForMixList = new List<Element>();//элементы для замены во время микса
     private List<Blocks> elementsForMoveList = new List<Blocks>();//элементы для последовательного выполнения ходов
     private List<Block> blockFieldsList = new List<Block>();// найденные блоки для удара
+    private List<Block> droppingBlockList = new List<Block>();// список сбрасывающих блоков
     private bool needFilling = false;
-    //private System.Random random;
 
     void Awake()
     {
@@ -66,7 +66,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 #endif
     }
 
-    //заполнение стандартные блоки элементами из списка
+    //стартовое заполнение сетки и параметров
     public void StartFilling(List<ElementsPriority> elementsSAndP = null)
     {
         ElementsList.ClearElementsOnField();
@@ -93,6 +93,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         {
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
+                //заполняем список сбрасываемых блоков
+                if (BlockCheck.ThisBlockDroping(containers[x].block[y]))
+                {
+                    droppingBlockList.Add(containers[x].block[y]);
+                }
                 //если стандартный блок и в нем нет элемента
                 if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y]))
                 {
@@ -281,6 +286,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     foreach (Block blockField in blockFieldsList)
                         blockField.Hit();
 
+                    //получаем список сбрасывающих блоков и ударяеем по ним если в них есть сбрасываемый элемент
+                    ProcessingDroppingBlock();
+
                     if (iteration == 1)
                     {
                         //активируем активируемые элементы
@@ -382,6 +390,18 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         blockedForMove = false;
     }
 
+    //обработка сбрасывающих блоков
+    private void ProcessingDroppingBlock() {
+        foreach (Block item in droppingBlockList)
+        {
+            //сбрасывающий блок со сбрасываемым элементом
+            if (BlockCheck.ThisBlockDropingWithDropElement(item))
+            {
+                item.Hit(HitTypeEnum.Drop);
+            }
+        }                
+    }
+
     //действия элементов после хода
     private void PerformActionElementsAfterMove() {
 
@@ -396,31 +416,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 elementsForAction.Add(item);
             }
         }
-
-        //for (int x = 0; x < containers.GetLength(0); x++)
-        //{
-        //    for (int y = 0; y < containers[x].block.GetLength(0); y++)
-        //    {
-        //        if (containers[x].block[y] != null)
-        //        {
-        //            if (containers[x].block[y].Element != null)
-        //            {
-        //                if (containers[x].block[y].Element.ActionAfterMove)
-        //                {
-        //                    elementsForAction.Add(containers[x].block[y].Element);
-        //                }
-        //                if (containers[x].block[y].Element.BlockingElement != null && containers[x].block[y].Element.BlockingElement.ActionAfterMove)
-        //                {
-        //                    elementsForAction.Add(containers[x].block[y].Element.BlockingElement);
-        //                }
-        //            }
-        //            if (containers[x].block[y].BehindElement != null && containers[x].block[y].BehindElement.ActionAfterMove)
-        //            {
-        //                elementsForAction.Add(containers[x].block[y].BehindElement);
-        //            }
-        //        }
-        //    }
-        //}
         //выполняем действия
         foreach (BaseElement item in elementsForAction)
         {
@@ -453,7 +448,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //matchFound = false;
         List<Block> blockFieldsToRemoveElement = new List<Block>();
         //List<Block> blockedBlockElement = new List<Block>();//блокирующий список
-
 
         //ищем
         for (int x = 0; x < containers.GetLength(0); x++)
@@ -1233,6 +1227,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     XAttribute posY = new XAttribute("posY", y);
                     XAttribute blockType = new XAttribute("blockType", containers[x].block[y].Type);
                     XAttribute generatorElements = new XAttribute("generatorElements", containers[x].block[y].GeneratorElements);
+                    XAttribute dropping = new XAttribute("dropping", containers[x].block[y].Dropping);
                     XAttribute behindElementsType = new XAttribute("behindElementsType", BehindElementsTypeEnum.Empty);
                     XAttribute behindElementsShape = new XAttribute("behindElementsShape", BehindElementsShapeEnum.Empty);
                     XAttribute elementType = new XAttribute("elementType", ElementsTypeEnum.Empty);
@@ -1263,7 +1258,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                     }
 
-                    XElement blockXElement = new XElement("block", posX, posY, blockType, generatorElements, behindElementsType, behindElementsShape, elementType, elementShape, dopShape, blockingElementType, blockingElementShape);
+                    XElement blockXElement = new XElement("block", posX, posY, blockType, generatorElements, dropping, behindElementsType, behindElementsShape, elementType, elementShape, dopShape, blockingElementType, blockingElementShape);
                     blocksXElement.Add(blockXElement);
                 }
             }
@@ -1322,6 +1317,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             int posX = int.Parse(block.Attribute("posX").Value);
             int posY = int.Parse(block.Attribute("posY").Value);
             bool generatorElements = bool.Parse(block.Attribute("generatorElements").Value);
+            bool dropping = false;
+            try{dropping = bool.Parse(block.Attribute("dropping").Value);}catch (Exception){}                        
             BlockTypeEnum blockType = (BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), block.Attribute("blockType").Value);
             BehindElementsTypeEnum behindElementsType = (BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), block.Attribute("behindElementsType").Value);
             AllShapeEnum behindElementsShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), block.Attribute("behindElementsShape").Value);
@@ -1351,6 +1348,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                 Block blockField = blockGameObject.GetComponent<Block>();
                 blockField.GeneratorElements = generatorElements;
+                blockField.Dropping = dropping;
                 blockField.Type = blockType;
                 blockField.PositionInGrid = new Position(posX, posY);
                 //добавляем блок в массив блоков

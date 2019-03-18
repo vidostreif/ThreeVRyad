@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 //маленькая фласка уничтожает 4 соседних элемента
@@ -11,16 +12,16 @@ public class ElementSmallFlask : Element
     protected override void DopSettings()
     {
         explosionRadius = 1;
+        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Standart, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick };
     }
 
     public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
     {
         if (!destroyed)
         {
-            //если прямой удар или взрыв
-            if (hitType == HitTypeEnum.Standart || hitType == HitTypeEnum.Explosion || hitType == HitTypeEnum.DoubleClick)
+            //если праввильный тип удара
+            if (vulnerabilityTypeEnum.Contains(hitType))
             {
-                //Debug.LogWarning("Удар по элементу " + this.transform.parent.name);
                 //если стоит блокировка на элементе, то пытаемся ее снять
                 if (BlockingElementExists())
                 {
@@ -44,7 +45,15 @@ public class ElementSmallFlask : Element
                     }
                 }
             }
-        }  
+        }
+    }
+
+    //действие после удара
+    protected override void ActionAfterHitting(HitTypeEnum hitType)
+    {
+        base.DestroyElement();
+        MainAnimator.Instance.AddExplosionEffect(thisTransform.position, explosionRadius);
+        HitNeighboringBlocks(thisHitTypeEnum);
     }
 
     //ударяем по соседним блокам
@@ -98,6 +107,5 @@ public class ElementSmallFlask : Element
         }
         return blocks;
     }
-
 
 }

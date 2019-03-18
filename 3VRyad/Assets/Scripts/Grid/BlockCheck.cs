@@ -170,4 +170,31 @@ public static class BlockCheck
             return false;
         }
     }
+
+    //сбрасывающий блок со сбрасываемым элементом
+    public static bool ThisBlockDropingWithDropElement(Block block)
+    {
+
+        if (block != null && block.Dropping && block.Element != null && !block.Element.Destroyed && block.Element.Drop)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    //сбрасывающий блок
+    public static bool ThisBlockDroping(Block block)
+    {
+        if (block != null && block.Dropping)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

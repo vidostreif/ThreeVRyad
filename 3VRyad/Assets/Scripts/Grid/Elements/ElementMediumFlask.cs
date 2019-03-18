@@ -8,6 +8,7 @@ public class ElementMediumFlask : ElementSmallFlask
 {
     protected override void DopSettings()
     {
+        base.DopSettings();
         explosionRadius = 2;
     }
 }

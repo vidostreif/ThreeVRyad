@@ -25,6 +25,7 @@ public class BlockEditor : Editor
 
         if (block.Type == BlockTypeEnum.Standard) {
             block.GeneratorElements = EditorGUILayout.Toggle("Генератор элементов", block.GeneratorElements);
+            block.Dropping = EditorGUILayout.Toggle("Сбрасываает элементы", block.Dropping);
 
             //условия для указания элемента на заднем фоне, иначе элемент удаляем
             EditorGUILayout.LabelField("Настройка элемента на заднем плане:", EditorStyles.boldLabel);

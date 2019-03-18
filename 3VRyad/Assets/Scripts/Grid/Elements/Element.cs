@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]// требуем наличие у объекта SpriteRenderer
@@ -21,6 +21,7 @@ public class Element : BaseElement
     [SerializeField] protected bool createLine;//признак что элемент создает линию
     [SerializeField] protected bool activated;//признак что элемент активируемый
     [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у элемента
+    
 
     public override Position PositionInGrid
     {
@@ -63,7 +64,6 @@ public class Element : BaseElement
             return type;
         }
     }
-
     public HitTypeEnum HitTypeEnum
     {
         get
@@ -101,7 +101,7 @@ public class Element : BaseElement
 
     protected virtual void DopSettings()
     {
-        
+        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Standart, HitTypeEnum.Explosion };
     }
 
     //удар по элементу
@@ -110,9 +110,8 @@ public class Element : BaseElement
         if (!destroyed)
         {
             //если прямой удар или взрыв
-            if (hitType == HitTypeEnum.Standart || hitType == HitTypeEnum.Explosion)
+            if (vulnerabilityTypeEnum.Contains(hitType))
             {
-                //Debug.LogWarning("Удар по элементу " + this.transform.parent.name);
                 //если стоит блокировка на элементе, то пытаемся ее снять
                 if (BlockingElementExists())
                 {
@@ -130,19 +129,20 @@ public class Element : BaseElement
                     //если элемент не бессмертный
                     if (!Immortal)
                     {
-                        base.DestroyElement();
-                        
-                        if (hitType == HitTypeEnum.Standart)
-                            HitNeighboringBlocks(thisHitTypeEnum);
+                        ActionAfterHitting(hitType);
                     }
                 }
             }
         }
     }
 
-    //protected override void DestroyElement(AllShapeEnum allShapeEnum) {
-    //    base.DestroyElement(allShapeEnum);
-    //}
+    //действие после удара
+    protected virtual void ActionAfterHitting(HitTypeEnum hitType) {
+        base.DestroyElement();
+
+        if (hitType == HitTypeEnum.Standart)
+            HitNeighboringBlocks(thisHitTypeEnum);
+    }
 
     public virtual BlockingElement BlockingElement
     {
@@ -177,8 +177,7 @@ public class Element : BaseElement
             }
         }
     }
-
-
+    
     public virtual void CreatBlockingElement(GameObject prefabBlockingElement, AllShapeEnum shape, BlockingElementsTypeEnum typeBlockingElementsEnum)
     {
         //создаем элемент у блока

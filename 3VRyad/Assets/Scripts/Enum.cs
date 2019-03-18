@@ -13,6 +13,7 @@ public enum ElementsTypeEnum
     SmallFlask, //фласка малая
     BigFlask,//фласка большая
     SeedBarrel,//бочка собирающая элементы
+    Drop,//сбрасваемый элемент
 }//Типы элементов
 
 public enum ElementsShapeEnum
@@ -97,7 +98,6 @@ public enum InstrumentsEnum
     Hoe, //мотыга
     Vortex, //вихрь
     Repainting, //перекраска
-
 }//инсструменты
 
 public enum HitTypeEnum
@@ -107,21 +107,13 @@ public enum HitTypeEnum
     HitFromNearbyElement, //удар от соседнего элемента
     Explosion, //взрыв
     DoubleClick, //двойной клик по элементу
+    Drop, //сброс
 }//Типы ударов по блоку
 
 public enum CollectionTypesEnum {
     Element,
-    BlockingElement
-
+    BlockingElement,
 }//Типы коллекций
-
-//public enum BonusesEnum
-//{
-//    Empty,
-//    Bomb,//бомба
-//    Wall//стена
-
-//}//Типы бонусов
 
 public enum DirectionEnum
 {

@@ -12,7 +12,9 @@ public class Block : MonoBehaviour {
     [SerializeField] protected BehindElement behindElement;// элемент на блоке за основным элементом
     [SerializeField] protected bool generatorElements; //признак, что блок генерирует новые элементы
     [SerializeField] protected SpriteRenderer spriteRenderer;
-    [SerializeField] private Position positionInGrid;//позиция в сетке
+    [SerializeField] protected Position positionInGrid;//позиция в сетке
+    [SerializeField] protected bool dropping;//сбрасывающий блок
+
 
     public BlockTypeEnum Type
     {
@@ -27,8 +29,7 @@ public class Block : MonoBehaviour {
             spriteRenderer.sprite = SpriteBank.SetShape(value);
             //objectManagement.SetShape(value);
         }
-    }
-    
+    }    
     public bool GeneratorElements
     {
         get
@@ -57,8 +58,7 @@ public class Block : MonoBehaviour {
             }
             
         }
-    }
-        
+    }        
     public Element Element
     {
         get
@@ -95,7 +95,6 @@ public class Block : MonoBehaviour {
             }
         }
     }
-
     public BehindElement BehindElement
     {
         get
@@ -110,7 +109,6 @@ public class Block : MonoBehaviour {
             behindElement.thisTransform.parent = thisTransform;
         }
     }
-
     public Position PositionInGrid
     {
         get
@@ -129,6 +127,18 @@ public class Block : MonoBehaviour {
             {
                 behindElement.PositionInGrid = value;
             }
+        }
+    }
+    public bool Dropping
+    {
+        get
+        {
+            return dropping;
+        }
+
+        set
+        {
+            dropping = value;
         }
     }
 
@@ -206,6 +216,12 @@ public class Block : MonoBehaviour {
                 curElement = elementGameObject.AddComponent<SeedBarrelElement>();
                 curElement.InitialSettings(typeElementsEnum, true, true, false, false, HitTypeEnum.Empty, 1200);
                 curElement.MakeCollector(dopShape, 9);
+            }
+            else if (typeElementsEnum == ElementsTypeEnum.Drop)
+            {
+                curElement = elementGameObject.AddComponent<Element>();
+                curElement.InitialSettings(typeElementsEnum, false, false, false, false, HitTypeEnum.Empty, 1200);
+                curElement.MakeDrop();
             }
             else
             {

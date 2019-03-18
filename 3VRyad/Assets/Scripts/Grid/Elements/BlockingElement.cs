@@ -15,19 +15,6 @@ public class BlockingElement : BaseElement
             return type;
         }
     }
-    //public virtual BlockingElementsShapeEnum Shape
-    //{
-    //    get
-    //    {
-    //        return shape;
-    //    }
-
-    //    set
-    //    {
-    //        shape = value;
-    //        spriteRenderer.sprite = SpriteBank.SetShape(value);
-    //    }
-    //}
 
     //установка настроек элементов
     public void InitialSettings(BlockingElementsTypeEnum type, bool immortal, int life, int score)
