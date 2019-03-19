@@ -7,8 +7,6 @@ using UnityEngine;
 public class BehindElement : BaseElement
 {
     [SerializeField] protected BehindElementsTypeEnum type;//тип элемента
-    //[SerializeField] protected BehindElementsShapeEnum shape;//форма элемента
-
     public BehindElementsTypeEnum Type
     {
         get
@@ -16,19 +14,6 @@ public class BehindElement : BaseElement
             return type;
         }
     }
-    //public BehindElementsShapeEnum Shape
-    //{
-    //    get
-    //    {
-    //        return shape;
-    //    }
-
-    //    set
-    //    {
-    //        shape = value;
-    //        spriteRenderer.sprite = SpriteBank.SetShape(value);
-    //    }
-    //}
 
     public virtual void Awake()
     {
@@ -45,7 +30,7 @@ public class BehindElement : BaseElement
         this.immortal = immortal;
         this.life = life;
         this.score = score;
-        UpdateSpriteAlfa();
+        //UpdateSpriteAlfa();
     }
 
     public override void Hit()
@@ -61,14 +46,4 @@ public class BehindElement : BaseElement
         }
     }
 
-    protected void UpdateSpriteAlfa()
-    {
-        if (startingActionDelay != 0)
-        {
-            //изменяем альфу спрайта
-            float dActionDelay = actionDelay;
-            float dStartingActionDelay = startingActionDelay;
-            SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
-        }
-    }
 }

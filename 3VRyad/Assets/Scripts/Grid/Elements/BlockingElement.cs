@@ -23,6 +23,7 @@ public class BlockingElement : BaseElement
         this.life = life;
         this.immortal = immortal;
         this.score = score;
+        
     }
 
     //удар элементу

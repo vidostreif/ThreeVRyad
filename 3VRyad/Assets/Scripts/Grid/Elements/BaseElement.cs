@@ -122,6 +122,7 @@ public class BaseElement : MonoBehaviour
         this.actionAfterMove = true;
         this.actionDelay = actionDelay;
         this.startingActionDelay = actionDelay;
+        UpdateSpriteAlfa();
     }
 
     //делаем элемент коллекционером
@@ -165,14 +166,10 @@ public class BaseElement : MonoBehaviour
     public virtual void Hit(HitTypeEnum hitType, AllShapeEnum hitElementShape)
     { }
 
+    //действие после хода
     public virtual void PerformActionAfterMove()
     {
     }
-
-    //protected virtual void CreateElement(AllShapeEnum allShapeEnum)
-    //{
-    //    ElementsList.AddElement(allShapeEnum);
-    //}
 
     protected virtual void DestroyElement()
     {
@@ -201,12 +198,15 @@ public class BaseElement : MonoBehaviour
         }
     }
 
-        //public void OnDestroy()
-        //{
-        //    //если элемент небыл уничтожен обычным способом
-        //    if (!destroyed)
-        //    {
-        //        ElementsList.DellElement(shape);
-        //    }        
-        //}
+    protected virtual void UpdateSpriteAlfa()
+    {
+        if (startingActionDelay != 0)
+        {
+            //изменяем альфу спрайта
+            float dActionDelay = actionDelay;
+            float dStartingActionDelay = startingActionDelay;
+            SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
+        }
     }
+
+}

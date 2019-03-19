@@ -197,6 +197,13 @@ public class Element : BaseElement
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
                 curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 100);
+                lockedForMove = true;                
+            }
+            else if(typeBlockingElementsEnum == BlockingElementsTypeEnum.Spread)
+            {
+                curElement = blockingElementGameObject.AddComponent<SpreadBlockingElement>();
+                curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 300);
+                curElement.MakeActionAfterMove(2);
                 lockedForMove = true;
             }
             else
@@ -207,7 +214,6 @@ public class Element : BaseElement
             }
 
             curElement.Shape = shape;
-            //ElementsList.AddElement(shape);
             //Добавляем в элемент
             this.BlockingElement = curElement;
         }        

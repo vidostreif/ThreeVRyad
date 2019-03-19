@@ -52,7 +52,8 @@ public enum BehindElementsShapeEnum
 public enum BlockingElementsTypeEnum
 {
     Empty, //пустой элемент
-    Standard, //стандарртный блокирующий элемент   
+    Standard, //стандарртный блокирующий элемент
+    Spread, //распространяемый
 }//Типы блокирующих элементов
 
 public enum BlockingElementsShapeEnum
