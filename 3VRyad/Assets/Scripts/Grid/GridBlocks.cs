@@ -241,10 +241,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     if (blockFieldsList.Count > 0)
                     {
                         matchFound = true;
-                        
+
                         if (iteration != 1)
                         {
-                            int countblockFields = 0;                            
+                            int countblockFields = 0;
                             while (countblockFields < blockFieldsList.Count)
                             {
                                 iteration++;
@@ -263,8 +263,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             {
                                 for (int i = 0; i < 2; i++)
                                 {
-                                iteration++;
-                                yield return StartCoroutine(Filling(false, iteration));
+                                    iteration++;
+                                    yield return StartCoroutine(Filling(false, iteration));
                                 }
                                 if (CountElementsForMove < elementsForMoveList.Count)
                                     break;
@@ -277,17 +277,26 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         else
                         {
                             makeActionElementsAfterMove = true;
-                        } 
+                        }
                     }
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFieldsList);
 
                     //ударяем по найденным блокам
-                    foreach (Block blockField in blockFieldsList)
-                        blockField.Hit();
+                    foreach (Block blockField in blockFieldsList) { 
+                        //сбрасывающий блок со сбрасываемым элементом
+                        if (BlockCheck.ThisBlockDropingWithDropElement(blockField))
+                        {
+                            blockField.Hit(HitTypeEnum.Drop);
+                        }
+                        else
+                        {
+                            blockField.Hit();
+                        }                        
+                    }
 
-                    //получаем список сбрасывающих блоков и ударяеем по ним если в них есть сбрасываемый элемент
-                    ProcessingDroppingBlock();
+                    ////получаем список сбрасывающих блоков и ударяеем по ним если в них есть сбрасываемый элемент
+                    //ProcessingDroppingBlock();
 
                     if (iteration == 1)
                     {
@@ -390,17 +399,17 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         blockedForMove = false;
     }
 
-    //обработка сбрасывающих блоков
-    private void ProcessingDroppingBlock() {
-        foreach (Block item in droppingBlockList)
-        {
-            //сбрасывающий блок со сбрасываемым элементом
-            if (BlockCheck.ThisBlockDropingWithDropElement(item))
-            {
-                item.Hit(HitTypeEnum.Drop);
-            }
-        }                
-    }
+    ////обработка сбрасывающих блоков
+    //private void ProcessingDroppingBlock() {
+    //    foreach (Block item in droppingBlockList)
+    //    {
+    //        //сбрасывающий блок со сбрасываемым элементом
+    //        if (BlockCheck.ThisBlockDropingWithDropElement(item))
+    //        {
+    //            item.Hit(HitTypeEnum.Drop);
+    //        }
+    //    }                
+    //}
 
     //действия элементов после хода
     private void PerformActionElementsAfterMove() {
@@ -512,6 +521,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             }
                         }
                     }
+                }
+
+                //сбрасывающий блок со сбрасываемым элементом
+                if (BlockCheck.ThisBlockDropingWithDropElement(containers[x].block[y]))
+                {
+                    if (!blockFieldsToRemoveElement.Contains(containers[x].block[y]))
+                        blockFieldsToRemoveElement.Add(containers[x].block[y]);
                 }
             }
         }
