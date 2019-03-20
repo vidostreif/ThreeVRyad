@@ -6,20 +6,18 @@ public class MasterController : MonoBehaviour
 {
     public static MasterController Instance; // Синглтон
 
-    private Transform transforForLocalDAndD = null;
+    private Transform transforForLocal = null;
     private Vector3 startPosition = new Vector3(0, 0, 0);
-    private Vector3 startPositionLocalDAndD;
-    //private Vector3 cursorDeviation; //отклонение курсора
+    private Vector3 startPositionLocal;
     private float startDragMoment;//момент взятия элемента
     private float maxDistanceToMove;//максимальная дистанция для перемещения
     private readonly double angle = 0.75;// оптимальное значение для вычисление направления смещения елемента
-    private Position gridPositionDAndD; //позиция блока в сетке
-    private NeighboringBlocks neighboringBlocksDAndD; //соседние блоки
+    private NeighboringBlocks neighboringBlocks; //соседние блоки
     private Element processedNeighboringElement; // соседний элемент с которым мы взаимодействуем
-    private Block blockFieldDAndD;
+    private Block block;
+    private BlockController blockController;
     private bool change = false;//признак для определения того, что мы будем заменять элемент с соседним
     private DirectionEnum offsetDirection;//направление движения
-    //bool matchFound;
 
     void Awake()
     {
@@ -33,23 +31,24 @@ public class MasterController : MonoBehaviour
 
     void Update()
     {
-        MoveDragObject();//процедура перемещения взятого объекта
+        MoveElement();//процедура перемещения взятого объекта
     }
 
-    public void DragLocalObject(Transform gameObjectTransform)//записываем данные для последующего перемещения объекта за мышкой или пальцем
+    public void DragElement(BlockController blockController)//записываем данные для последующего перемещения объекта за мышкой или пальцем
     {
 
-        if (transforForLocalDAndD == null)
+        if (transforForLocal == null)
         {
+            this.blockController = blockController;
             //проверяем что блока нет в текущих массивах для обработки
-            blockFieldDAndD = gameObjectTransform.GetComponentInParent<Block>();
-            if (GridBlocks.Instance.BlockInProcessing(blockFieldDAndD))
+            block = blockController.GetComponentInParent<Block>();
+            if (GridBlocks.Instance.BlockInProcessing(block))
             {
                 return;
             }
 
-            transforForLocalDAndD = gameObjectTransform;
-            startPositionLocalDAndD = gameObjectTransform.position;//позиция
+            transforForLocal = blockController.thisBlock.Element.thisTransform;
+            startPositionLocal = transforForLocal.position;//позиция
 
             //вычисляем позицию пальца для записи отклонения курсора
             Vector3 touchPosition;
@@ -67,9 +66,9 @@ public class MasterController : MonoBehaviour
 
             //Находим позицию блока в сетке
             
-            gridPositionDAndD = blockFieldDAndD.PositionInGrid;
+            //gridPosition = block.PositionInGrid;
             //Определяем соседние блоки
-            neighboringBlocksDAndD = GridBlocks.Instance.DeterminingNeighboringBlocks(gridPositionDAndD);
+            neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(block.PositionInGrid);
             //если стартовая позиция мыши нулевая
             if (startPosition == new Vector3(0, 0, 0))
             {
@@ -77,39 +76,30 @@ public class MasterController : MonoBehaviour
             }
         }
     }
-
-
-
-    public void DropLocalObject()// удаляем данные об объекте который перемещяли мышкой или пальцем и возвращаем его на место
+       
+    public void DropElement()// удаляем данные об объекте который перемещяли мышкой или пальцем и возвращаем его на место
     {
         //если определились, что хотим поменять с соседним объектом
         if (change)
         {
             //перемещаем елементы на новую позицию
-            GridBlocks.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
+            GridBlocks.Instance.ExchangeElements(neighboringBlocks.GetBlock(offsetDirection), block);
 
             //ищем совпавшие линии             
-            GridBlocks.Instance.Move(blockFieldDAndD, neighboringBlocksDAndD.GetBlock(offsetDirection));
-
-            ////если совпадение не нашли, то возвращаем элементы обратно
-            //if (!matchFound)
-            //{
-            //    Grid.Instance.ExchangeElements(neighboringBlocksDAndD.GetBlock(offsetDirection), blockFieldDAndD);
-            //}
-
+            GridBlocks.Instance.Move(block, neighboringBlocks.GetBlock(offsetDirection));
         }
-        else if (transforForLocalDAndD != null)
+        else if (transforForLocal != null)
         {
             //возвращаем на стартовую позицию
-            transforForLocalDAndD.position = startPosition;
+            transforForLocal.position = startPosition;
         }
 
         Reset();//Обнуляем Данные
     }
 
-    private void MoveDragObject()//процедура перемещения взятого объекта
+    private void MoveElement()//процедура перемещения взятого объекта
     {
-        if (transforForLocalDAndD != null)
+        if (transforForLocal != null)
         {
             Vector3 touchPosition;
             if (Input.touchCount > 0)
@@ -118,7 +108,6 @@ public class MasterController : MonoBehaviour
                 touchPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
             //вычисляем позицию пальца
-            //touchPosition = touchPosition - cursorDeviation;
             touchPosition.z = startPosition.z;
             //расчитываем вектор смещения
             Vector3 translation = touchPosition - startPosition;
@@ -136,7 +125,7 @@ public class MasterController : MonoBehaviour
 
             //передаем координаты взятому объекту
             // направляем строго влево или вправо или вверх или вниз
-            Vector3 newPosition = transforForLocalDAndD.position;
+            Vector3 newPosition = transforForLocal.position;
             //DirectionEnum oldDirection = offsetDirection; // записываем старое направление
             if (direction.x > angle || direction.x < -angle)
             {
@@ -157,9 +146,24 @@ public class MasterController : MonoBehaviour
                     offsetDirection = DirectionEnum.Down;
             }
 
-            //узнаем заблокирован ли элемент в укзанном направлении
-            Block neighboringBlock = neighboringBlocksDAndD.GetBlock(offsetDirection);
-            if (neighboringBlock != null)
+            //разрешено ли нам двигаться в данном направлении?
+            bool canMove;
+            if (blockController.permittedDirection == DirectionEnum.All)
+            {
+                canMove = true;
+            }
+            else if (blockController.permittedDirection == offsetDirection)
+            {
+                canMove = true;
+            }
+            else
+            {
+                canMove = false;
+            }
+
+            //узнаем заблокирован ли элемент в укзанном направлении 
+            Block neighboringBlock = neighboringBlocks.GetBlock(offsetDirection);
+            if (neighboringBlock != null && canMove)
             {
                 //проверяем что блока нет в текущих массивах для обработки
                 if (GridBlocks.Instance.BlockInProcessing(neighboringBlock))
@@ -178,8 +182,7 @@ public class MasterController : MonoBehaviour
                         change = false;
 
                     //тащим элемент за пальцем
-                    //transforForLocalDAndD.position = newPosition;
-                    MainAnimator.Instance.AddElementForSmoothMove(transforForLocalDAndD, newPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
+                    MainAnimator.Instance.AddElementForSmoothMove(transforForLocal, newPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
 
                     //Если в соседнем блоке есть элемент, то смещаем его к нашему блоку на тоже растояние
                     if (neighboringBlock.Element != null && offsetDistance > maxDistanceToMove * 0.3f)
@@ -208,8 +211,7 @@ public class MasterController : MonoBehaviour
                 else
                 {
                     //возвращаем элементы на свои позиции
-                    //transforForLocalDAndD.position = startPosition;
-                    MainAnimator.Instance.AddElementForSmoothMove(transforForLocalDAndD, startPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
+                    MainAnimator.Instance.AddElementForSmoothMove(transforForLocal, startPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
                     if (processedNeighboringElement != null)
                     {
                         processedNeighboringElement.drag = false;
@@ -219,8 +221,7 @@ public class MasterController : MonoBehaviour
             else
             {
                 //возвращаем элементы на свои позиции
-                //transforForLocalDAndD.position = startPosition;
-                MainAnimator.Instance.AddElementForSmoothMove(transforForLocalDAndD, startPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
+                MainAnimator.Instance.AddElementForSmoothMove(transforForLocal, startPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
                 if (processedNeighboringElement != null)
                 {
                     processedNeighboringElement.drag = false;
@@ -232,17 +233,16 @@ public class MasterController : MonoBehaviour
     private void RecordStartPosition()//записываем стартовую позицию мыши или пальца
     {
         //записываем стартовое положение объекта (потом привезать к родителю)
-        startPosition = startPositionLocalDAndD;
+        startPosition = startPositionLocal;
     }
 
     private void Reset()//обнуляем значение стартовой позиции
     {
-        transforForLocalDAndD = null;
+        transforForLocal = null;
         startPosition = new Vector3(0, 0, 0);
-        startPositionLocalDAndD = new Vector3(0, 0, 0);
-        //cursorDeviation = new Vector3(0, 0, 0);
-        gridPositionDAndD = null;
-        neighboringBlocksDAndD = new NeighboringBlocks();
+        startPositionLocal = new Vector3(0, 0, 0);
+        blockController = null;
+        neighboringBlocks = new NeighboringBlocks();
         change = false;
 
         if (processedNeighboringElement != null)

@@ -118,10 +118,12 @@ public enum CollectionTypesEnum {
 
 public enum DirectionEnum
 {
+    Empty,
     Left,
     Right,
     Up,
-    Down
+    Down,
+    All
 }//направление
 
 public enum BorderEnum

@@ -211,14 +211,14 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //принимаем параметры - 1. Блок с которого передвигаем элемент 2. Блок к которому передвигаем элемент 
     private IEnumerator MakeMove(Block touchingBlock = null, Block destinationBlock = null)
     {
-        //if (blockedForMove)
-        //    yield break;
-
         blockedForMove = true;
         if (elementsForMoveList.Count > 0)
         {
             while (elementsForMoveList.Count > 0)
             {
+                //убрать
+                HelpToPlayer.DellGameHelp();
+
                 Blocks blocks = elementsForMoveList[0];
                 touchingBlock = blocks.block[0];
                 destinationBlock = blocks.block[1];
@@ -294,9 +294,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             blockField.Hit();
                         }                        
                     }
-
-                    ////получаем список сбрасывающих блоков и ударяеем по ним если в них есть сбрасываемый элемент
-                    //ProcessingDroppingBlock();
 
                     if (iteration == 1)
                     {
@@ -375,13 +372,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
 
             //проверка, что остались доступные ходы
-            List<Element> elementsForNextMove;
+            ElementsForNextMove elementsForNextMove;
             int iteration2 = 1;
             do
             {
                 elementsForNextMove = CheckElementsForNextMove();
                 //Если нет доступных ходов, то перемешиваем поле
-                if (elementsForNextMove.Count == 0)
+                if (elementsForNextMove.elementsList.Count == 0)
                     MixStandartElements();
 
                 if (iteration2 > 4)
@@ -391,10 +388,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
                 iteration2++;
 
-            } while (elementsForNextMove.Count == 0);//повторяем проверку
+            } while (elementsForNextMove.elementsList.Count == 0);//повторяем проверку
 
             MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
-
+            //убрать
+            HelpToPlayer.CreateGameHelp(ElementsTypeEnum.Standard);
         }
         blockedForMove = false;
     }
@@ -633,9 +631,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     //возвращает массив элементов которые могут составить линию в следующем ходу
     //можно использовать как подсказку игроку
-    private List<Element> CheckElementsForNextMove()
+    private ElementsForNextMove CheckElementsForNextMove()
     {
-        List<Element> elementsList = new List<Element>();
+        ElementsForNextMove elementsForNextMove = new ElementsForNextMove();
+        //List<Element> elementsList = elementsForNextMove.elementsList;
 
         for (int x = 0; x < containers.GetLength(0); x++)
         {
@@ -646,7 +645,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 {
                     for (int j = 0; j < 2; j++)
                     {
-                        elementsList.Add(containers[x].block[y].Element);
+                        elementsForNextMove.elementsList.Add(containers[x].block[y].Element);
                         bool elementForMoveFound = false;
 
                         for (int i = -1; i < 2; i = i + 2)
@@ -666,9 +665,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 int posY = y + iterationY;
                                 Block curBlock = GetBlock(posX, posY);
 
-                                if (ElementsMatch(curBlock, containers[x].block[y]) && curBlock.Element != elementsList.Last())
+                                if (ElementsMatch(curBlock, containers[x].block[y]) && curBlock.Element != elementsForNextMove.elementsList.Last())
                                 {
-                                    elementsList.Add(curBlock.Element);
+                                    elementsForNextMove.elementsList.Add(curBlock.Element);
                                     elementFound = true;
                                     //Debug.Log("В линии" + curBlock);
                                     continue;
@@ -699,9 +698,15 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                                 foreach (Block block in blocks)
                                 {
-                                    if (ElementsMatch(block, containers[x].block[y]) && block.Element != elementsList.Last() && !block.Element.LockedForMove)
+                                    //ищем элемент для смещения
+                                    if (ElementsMatch(block, containers[x].block[y]) && block.Element != elementsForNextMove.elementsList.Last() && !block.Element.LockedForMove)
                                     {
-                                        elementsList.Add(block.Element);
+                                        elementsForNextMove.elementsList.Add(block.Element);
+                                        elementsForNextMove.elementForMove = block.Element;
+                                        elementsForNextMove.blockElementForMove = block;
+                                        elementsForNextMove.directionForMove = neighboringBlocks.GetOppositeDirection(block);
+                                        elementsForNextMove.oppositeDirectionForMove = neighboringBlocks.GetDirection(block);
+                                        elementsForNextMove.targetBlock = curBlock;
                                         elementForMoveFound = true;
                                         elementFound = true;
                                         //Debug.Log("Смещенный" + block);
@@ -712,22 +717,22 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             } while (elementFound);
                         }
                         //если количество найденных элементов больше двух то останавливаем поиск
-                        if (elementsList.Count > 2)
+                        if (elementsForNextMove.elementsList.Count > 2)
                             break;
                         else
-                            elementsList.Clear();
+                            elementsForNextMove.elementsList.Clear();
                     }
                 }
                 //если количество найденных элементов больше двух то останавливаем поиск
-                if (elementsList.Count > 2)
+                if (elementsForNextMove.elementsList.Count > 2)
                     break;
             }
             //если количество найденных элементов больше двух то останавливаем поиск
-            if (elementsList.Count > 2)
+            if (elementsForNextMove.elementsList.Count > 2)
                 break;
         }
 
-        return elementsList;
+        return elementsForNextMove;
     }
 
     //перемешать стандартные элементы

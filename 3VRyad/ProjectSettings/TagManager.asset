@@ -69,3 +69,6 @@ TagManager:
   - name: Menu
     uniqueID: 3674702191
     locked: 0
+  - name: Help
+    uniqueID: 4001305209
+    locked: 0

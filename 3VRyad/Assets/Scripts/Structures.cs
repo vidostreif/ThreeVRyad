@@ -62,7 +62,7 @@ public struct NeighboringBlocks
         return block;
     }
 
-    //выдает блок в указанном направлении
+    //выдает противоположный блок
     public Block GetOppositeBlock(DirectionEnum direction)
     {
         Block block = null;
@@ -78,7 +78,7 @@ public struct NeighboringBlocks
         return block;
     }
 
-    //выдает блок в указанном направлении
+    //выдает противоположный блок
     public Block GetOppositeBlock(Block inBlock)
     {
         Block block = null;
@@ -92,6 +92,38 @@ public struct NeighboringBlocks
             block = this.Left;
 
         return block;
+    }
+
+    //возвращает направление для указанного блока
+    public DirectionEnum GetDirection(Block inBlock)
+    {
+        DirectionEnum directionEnum = DirectionEnum.Empty;
+        if (inBlock == this.Up)
+            directionEnum = DirectionEnum.Up;
+        else if (inBlock == this.Down)
+            directionEnum = DirectionEnum.Down;
+        else if (inBlock == this.Left)
+            directionEnum = DirectionEnum.Left;
+        else if (inBlock == this.Right)
+            directionEnum = DirectionEnum.Right;
+
+        return directionEnum;
+    }
+
+    //возвращает противоположное направление блоку
+    public DirectionEnum GetOppositeDirection(Block inBlock)
+    {
+        DirectionEnum directionEnum = DirectionEnum.Empty;
+        if (inBlock == this.Up)
+            directionEnum = DirectionEnum.Down;
+        else if (inBlock == this.Down)
+            directionEnum = DirectionEnum.Up;
+        else if (inBlock == this.Left)
+            directionEnum = DirectionEnum.Right;
+        else if (inBlock == this.Right)
+            directionEnum = DirectionEnum.Left;
+
+        return directionEnum;
     }
 
     public void Info()

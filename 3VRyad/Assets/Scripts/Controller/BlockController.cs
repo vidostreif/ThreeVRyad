@@ -7,14 +7,15 @@ using UnityEngine.EventSystems;
 
 public class BlockController : MonoBehaviour
 {
-    public Block ThisBlock { protected get; set; }
+    public Block thisBlock;
+    public DirectionEnum permittedDirection = DirectionEnum.All; //разрешенное направление для смещения
     private Element dragElement = null;
     private float timeFirstClick = 0;
     private readonly float timeBetweenClicks = 0.5f;
 
     void Start()
     {
-        ThisBlock = GetComponent<Block>();
+        thisBlock = GetComponent<Block>();
         EventTrigger trigger = GetComponent<EventTrigger>();
 
         EventTrigger.Entry entryPointerEnter = new EventTrigger.Entry();
@@ -52,11 +53,11 @@ public class BlockController : MonoBehaviour
         //если есть активный инструмент
         if (InstrumentsManager.Instance.InstrumentPrepared)
         {
-            InstrumentsManager.Instance.ActivateInstrument(ThisBlock);
+            InstrumentsManager.Instance.ActivateInstrument(thisBlock);
         }
         else
         {
-            if (ThisBlock.Element != null && ThisBlock.Element.Activated && !ThisBlock.Element.LockedForMove && !ThisBlock.Element.Destroyed)
+            if (thisBlock.Element != null && thisBlock.Element.Activated && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
             {
                 if (Time.time > timeFirstClick + timeBetweenClicks)
                 {
@@ -66,7 +67,7 @@ public class BlockController : MonoBehaviour
                 {
                     //Debug.Log("Double click");
                     //Block block = GridBlocks.Instance.GetBlock(ThisBlock.Element);
-                    GridBlocks.Instance.Move(ThisBlock);
+                    GridBlocks.Instance.Move(thisBlock);
                 }
             }
         }
@@ -76,10 +77,10 @@ public class BlockController : MonoBehaviour
     {
         if (!InstrumentsManager.Instance.InstrumentPrepared)
         {
-            if (ThisBlock.Element != null && !ThisBlock.Element.LockedForMove && !ThisBlock.Element.Destroyed)
+            if (thisBlock.Element != null && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
             {
-                MasterController.Instance.DragLocalObject(ThisBlock.Element.thisTransform);
-                dragElement = ThisBlock.Element;
+                MasterController.Instance.DragElement(this);
+                dragElement = thisBlock.Element;
                 dragElement.drag = true;
             }
         }
@@ -89,9 +90,9 @@ public class BlockController : MonoBehaviour
     {
         if (!InstrumentsManager.Instance.InstrumentPrepared)
         {
-            if (ThisBlock.Element != null && !ThisBlock.Element.LockedForMove && !ThisBlock.Element.Destroyed)
+            if (thisBlock.Element != null && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
             {
-                MasterController.Instance.DropLocalObject();
+                MasterController.Instance.DropElement();
                 if (dragElement != null)
                 {
                     dragElement.drag = false;

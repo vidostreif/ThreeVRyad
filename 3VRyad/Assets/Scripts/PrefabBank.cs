@@ -12,6 +12,8 @@ public class PrefabBank : MonoBehaviour
 
     public GameObject scoreElementPrefab;
 
+    public GameObject canvasHelpToPlayer;
+
     void Awake()
     {
         // регистрация синглтона

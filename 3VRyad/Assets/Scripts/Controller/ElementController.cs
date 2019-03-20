@@ -33,7 +33,7 @@ public class ElementController : MonoBehaviour {
     {
         if (!ThisElement.LockedForMove && !ThisElement.Destroyed)
         {
-            MasterController.Instance.DragLocalObject(transform);
+            //MasterController.Instance.DragElement(transform);
             ThisElement.drag = true;
         }
     }
@@ -42,7 +42,7 @@ public class ElementController : MonoBehaviour {
     {
         if (!ThisElement.LockedForMove && !ThisElement.Destroyed)
         {
-            MasterController.Instance.DropLocalObject();
+            MasterController.Instance.DropElement();
             ThisElement.drag = false;
         }
     }

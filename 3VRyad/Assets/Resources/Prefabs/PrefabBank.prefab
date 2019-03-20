@@ -53,3 +53,5 @@ MonoBehaviour:
     type: 3}
   scoreElementPrefab: {fileID: 117811080947788871, guid: a205143d57c405547a4d1232b52256d3,
     type: 3}
+  canvasHelpToPlayer: {fileID: 650881581553827240, guid: 72ad9d3f0fe88e749a803220bb397405,
+    type: 3}

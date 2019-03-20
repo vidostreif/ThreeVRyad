@@ -12,7 +12,8 @@ public class MainAnimator : MonoBehaviour {
 
     public static MainAnimator Instance; // Синглтон
 
-    private List<AnimatorElement> elementsForNextMove = new List<AnimatorElement>(); //элементы для следующей подсказки игроку
+    private ElementsForNextMove elementsForNextMove = new ElementsForNextMove(); //элементы для следующей подсказки игроку
+    private List<AnimatorElement> animatorsElementsForNextMove = new List<AnimatorElement>(); //аниматоры элементов для следующей подсказки игроку
     private float timeToHint = 5; //время до подсказки
     private float idleHintsTime; //момент отсчета
 
@@ -29,16 +30,22 @@ public class MainAnimator : MonoBehaviour {
     public GameObject explosionEffect;//префаб
     //public List<GameObject> explosionEffects;// лист взрывов
 
-    public List<Element> ElementsForNextMove
+    public ElementsForNextMove ElementsForNextMove
     {
         set
         {
-            elementsForNextMove.Clear();
-            foreach (Element item in value)
+            elementsForNextMove = value;
+            animatorsElementsForNextMove.Clear();
+            foreach (Element item in value.elementsList)
             {
-                elementsForNextMove.Add(item.GetComponent<AnimatorElement>());
+                animatorsElementsForNextMove.Add(item.GetComponent<AnimatorElement>());
             }
             idleHintsTime = Time.time;
+        }
+
+        get
+        {
+            return elementsForNextMove;
         }
     }
 
@@ -55,7 +62,7 @@ public class MainAnimator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (elementsForNextMove.Count > 0 && (idleHintsTime + timeToHint) < Time.time)
+        if (animatorsElementsForNextMove.Count > 0 && (idleHintsTime + timeToHint) < Time.time)
         {
             PlayHintAnimations();
         }
@@ -66,7 +73,7 @@ public class MainAnimator : MonoBehaviour {
 
     //проигрование подскази игроку
     private void PlayHintAnimations() {
-        foreach (AnimatorElement item in elementsForNextMove)
+        foreach (AnimatorElement item in animatorsElementsForNextMove)
         {
             if (item != null)
             {
@@ -77,7 +84,7 @@ public class MainAnimator : MonoBehaviour {
     }
 
     public void ClearElementsForNextMove() {
-        elementsForNextMove.Clear();
+        animatorsElementsForNextMove.Clear();
     }
     
     //добавление объекта для сглаженного перемещения
