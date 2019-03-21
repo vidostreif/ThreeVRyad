@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using UnityEngine.UI;
+
+//!!!Сделать статичным
 
 [ExecuteInEditMode]
-//#if UNITY_EDITOR
-//[InitializeOnLoad]
-//#endif
 public class MainAnimator : MonoBehaviour {
 
     public static MainAnimator Instance; // Синглтон
 
     private ElementsForNextMove elementsForNextMove = new ElementsForNextMove(); //элементы для следующей подсказки игроку
     private List<AnimatorElement> animatorsElementsForNextMove = new List<AnimatorElement>(); //аниматоры элементов для следующей подсказки игроку
-    private float timeToHint = 5; //время до подсказки
+    private float timeToHint = 3; //время до подсказки
     private float idleHintsTime; //момент отсчета
 
     private List<MoveElement> moveElements = new List<MoveElement>();//элементы для перемещения
@@ -25,6 +25,9 @@ public class MainAnimator : MonoBehaviour {
 
     private List<CompressAndRecover> CompressAndRecoverElements = new List<CompressAndRecover>();//элементы для перемещения
     private List<CompressAndRecover> CompressAndRecoverElementsForRemove = new List<CompressAndRecover>();//элементы которые можно удалить из коллекции
+
+    private List<ChangeColorElement> changeColorElements = new List<ChangeColorElement>();//элементы для смены цвета
+    private List<ChangeColorElement> changeColorElementsForRemove = new List<ChangeColorElement>();//элементы которые можно удалить из коллекции
 
     public GameObject boom;
     public GameObject explosionEffect;//префаб
@@ -69,6 +72,7 @@ public class MainAnimator : MonoBehaviour {
         SmoothMove();
         Explosions();
         CompressAndRecover();
+        SmoothChangeColor();
     }
 
     //проигрование подскази игроку
@@ -126,119 +130,6 @@ public class MainAnimator : MonoBehaviour {
         }
         
     }
-
-    ////процедура сглаженного перемещения объектов к указанной позиции
-    //private void SmoothMove() {
-
-    //    //список элементов которые уже двигали, что бы не двигать повторно
-    //    List<Transform> moveIitems = new List<Transform>();
-
-    //    //перемещаем все элементы которые попали в коллекцию
-    //    foreach (MoveElement item in moveElements)
-    //    {
-    //        //если еще не двигали
-    //        if (item.thisTransform != null && !moveIitems.Contains(item.thisTransform))
-    //        {
-    //            moveIitems.Add(item.thisTransform);
-
-    //            if (item.smoothEnum == SmoothEnum.InArc)
-    //            {
-    //                float newPositionX = Mathf.SmoothDamp(item.thisTransform.position.x, item.targetPosition.x, ref item.yVelocity, item.smoothTime);
-    //                float newPositionY = Mathf.SmoothDamp(item.thisTransform.position.y, item.targetPosition.y, ref item.yVelocity, item.smoothTime);
-    //                item.thisTransform.position = new Vector3(newPositionX, newPositionY, item.targetPosition.z);
-    //            }
-    //            else if (item.smoothEnum == SmoothEnum.InLine)
-    //            {
-    //                item.thisTransform.position = Vector3.Lerp(item.thisTransform.position, item.targetPosition, Time.deltaTime * 100 * item.smoothTime);
-    //            }
-    //            else if (item.smoothEnum == SmoothEnum.InLineWithAcceleration)
-    //            {
-    //                //перемещаем с ускорением по прямой
-    //                //расчитываем вектор смещения
-    //                Vector3 translation = item.targetPosition - item.startPosition;
-    //                //вычисляем расстояние на которое смещаем объект
-    //                float offsetDistance = translation.magnitude;
-
-    //                //расчитываем вектор смещения
-    //                Vector3 translation2 = item.startPosition - item.thisTransform.position;
-    //                //вычисляем расстояние на которое смещаем объект
-    //                float offsetDistance2 = translation2.magnitude + 0.3f;
-
-    //                //нормализируем вектор для упрощения вычисления направления
-    //                //Vector3 direction = translation / offsetDistance;
-    //                //item.yVelocity = 2f * (Time.realtimeSinceStartup - item.startTime);
-
-    //                //if (item.smoothTime > Time.deltaTime)
-    //                //{
-    //                    //float speed = offsetDistance / item.smoothTime;
-    //                    //item.thisTransform.Translate(direction * speed * item.yVelocity / 1000);
-    //                    //item.smoothTime -= Time.deltaTime;
-
-    //                    float fraction = Mathf.Clamp01((Time.realtimeSinceStartup - item.startTime) * (offsetDistance2)/(offsetDistance/2) / item.smoothTime);
-    //                    item.thisTransform.position = Vector3.Lerp(item.startPosition, item.targetPosition, fraction);
-    //                //}
-    //                //else
-    //                //{                        
-    //                //    item.thisTransform.position = item.targetPosition;
-    //                //}                    
-    //            }
-    //            else if (item.smoothEnum == SmoothEnum.InLineWithOneSpeed)
-    //            {
-    //                //перемещаем с ускорением по прямой
-    //                //расчитываем вектор смещения
-    //                Vector3 translation = item.targetPosition - item.thisTransform.position;
-    //                //вычисляем расстояние на которое смещаем объект
-    //                float offsetDistance = translation.magnitude;
-    //                //нормализируем вектор для упрощения вычисления направления
-    //                Vector3 direction = translation / offsetDistance;
-
-    //                //item.yVelocity = 1f;
-                    
-    //                //if (item.smoothTime > Time.deltaTime)
-    //                //{
-    //                    //    float speed = offsetDistance / item.smoothTime;
-    //                    //    item.thisTransform.Translate(translation / item.smoothTime /1000);
-    //                    //item.smoothTime -= Time.deltaTime;
-    //                    float fraction = Mathf.Clamp01((Time.realtimeSinceStartup - item.startTime) / item.smoothTime);
-    //                    item.thisTransform.position = Vector3.Lerp(item.startPosition, item.targetPosition, fraction);
-    //                //}
-    //                //else
-    //                //{
-    //                //    item.thisTransform.position = item.targetPosition;
-    //                //}
-
-
-    //                //Vector2 startPosition = rectTransform.anchoredPosition;
-    //                //float startTime = Time.realtimeSinceStartup;
-    //                //float fraction = 0f;
-
-    //                //while (fraction < 1f)
-    //                //{
-    //                //    fraction = Mathf.Clamp01((Time.realtimeSinceStartup - startTime) / item.smoothTime);
-    //                //    rectTransform.anchoredPosition = Vector2.Lerp(startPosition, item.targetPosition, fraction);
-    //                //    yield return null;
-    //                //}
-    //            }
-
-    //            if (item.thisTransform.position == item.targetPosition)
-    //            {
-    //                if (item.destroyAfterMoving)
-    //                    DestroyImmediate(item.thisTransform.gameObject);
-    //                moveElementsForRemove.Add(item);
-    //            }
-    //        }
-    //        else if(item.thisTransform == null)
-    //        {
-    //            moveElementsForRemove.Add(item);
-    //        }
-    //    }
-
-    //    foreach (MoveElement item in moveElementsForRemove)
-    //    {
-    //        moveElements.Remove(item);
-    //    }
-    //    moveElementsForRemove.Clear();
-    //}
 
     //процедура сглаженного перемещения объектов к указанной позиции
     private void SmoothMove()
@@ -386,8 +277,7 @@ public class MainAnimator : MonoBehaviour {
         }
         explosionsForRemove.Clear();
     }
-
-
+    
     public void AddElementForCompressAndRecover(Transform objTransform, Vector3 direction, float power) {
         CompressAndRecoverElements.Add(new CompressAndRecover(objTransform, direction, power));
     }
@@ -423,6 +313,36 @@ public class MainAnimator : MonoBehaviour {
             CompressAndRecoverElements.Remove(item);
         }
         CompressAndRecoverElementsForRemove.Clear();
+    }
+
+    public void AddElementForSmoothChangeColor(Image image, Color newColor, float speed)
+    {
+        changeColorElements.Add(new ChangeColorElement(image, newColor, speed));
+    }
+
+    //изменение цвета
+    private void SmoothChangeColor()
+    {        
+        foreach (ChangeColorElement item in changeColorElements)
+        {
+            if (item.image != null)
+            {
+                item.image.color = Color.Lerp(item.image.color, item.newColor, Time.deltaTime * item.speed);
+                if (item.image.color == item.newColor)
+                    changeColorElementsForRemove.Add(item);
+            }
+            else
+            {
+                changeColorElementsForRemove.Add(item);
+            }
+        }
+
+        //удаление из массива
+        foreach (ChangeColorElement item in changeColorElementsForRemove)
+        {
+            changeColorElements.Remove(item);
+        }
+        changeColorElementsForRemove.Clear();
     }
 
     //вспомогательные

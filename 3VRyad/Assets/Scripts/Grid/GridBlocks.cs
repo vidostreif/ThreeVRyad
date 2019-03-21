@@ -392,7 +392,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
             MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
             //убрать
-            HelpToPlayer.CreateGameHelp(ElementsTypeEnum.Standard);
+            HelpToPlayer.CreateNextGameHelp();
         }
         blockedForMove = false;
     }
@@ -1392,8 +1392,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
             }
         }
-    }
-    
+    }    
 
 #if UNITY_EDITOR
     //устанавливаем блок на определенную позицию в сетке

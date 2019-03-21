@@ -9,9 +9,11 @@ public class BlockController : MonoBehaviour
 {
     public Block thisBlock;
     public DirectionEnum permittedDirection = DirectionEnum.All; //разрешенное направление для смещения
-    private Element dragElement = null;
+    public bool handleСlick = true;//обрабатывать клик
+    public bool handleDragging = true;//обрабатывать перетаскивание
+    private Element dragElement = null;//перетаскиваемый элемент
     private float timeFirstClick = 0;
-    private readonly float timeBetweenClicks = 0.5f;
+    private readonly float timeBetweenClicks = 0.5f;//максимальное время для срабатывания двойного клика
 
     void Start()
     {
@@ -50,40 +52,47 @@ public class BlockController : MonoBehaviour
 
     public void PointerClick(PointerEventData data)//обработка двойного клика
     {
-        //если есть активный инструмент
-        if (InstrumentsManager.Instance.InstrumentPrepared)
+        if (handleСlick)
         {
-            InstrumentsManager.Instance.ActivateInstrument(thisBlock);
-        }
-        else
-        {
-            if (thisBlock.Element != null && thisBlock.Element.Activated && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
+            //если есть активный инструмент
+            if (InstrumentsManager.Instance.InstrumentPrepared)
             {
-                if (Time.time > timeFirstClick + timeBetweenClicks)
+                InstrumentsManager.Instance.ActivateInstrument(thisBlock);
+            }
+            else
+            {
+                if (thisBlock.Element != null && thisBlock.Element.Activated && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
                 {
-                    timeFirstClick = Time.time;
-                }
-                else
-                {
-                    //Debug.Log("Double click");
-                    //Block block = GridBlocks.Instance.GetBlock(ThisBlock.Element);
-                    GridBlocks.Instance.Move(thisBlock);
+                    if (Time.time > timeFirstClick + timeBetweenClicks)
+                    {
+                        timeFirstClick = Time.time;
+                    }
+                    else
+                    {
+                        //Debug.Log("Double click");
+                        //Block block = GridBlocks.Instance.GetBlock(ThisBlock.Element);
+                        GridBlocks.Instance.Move(thisBlock);
+                    }
                 }
             }
         }
+        
     }
 
     public void Drag(PointerEventData data)//начало перетаскивания
     {
-        if (!InstrumentsManager.Instance.InstrumentPrepared)
+        if (handleDragging)
         {
-            if (thisBlock.Element != null && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
+            if (!InstrumentsManager.Instance.InstrumentPrepared)
             {
-                MasterController.Instance.DragElement(this);
-                dragElement = thisBlock.Element;
-                dragElement.drag = true;
+                if (thisBlock.Element != null && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
+                {
+                    MasterController.Instance.DragElement(this);
+                    dragElement = thisBlock.Element;
+                    dragElement.drag = true;
+                }
             }
-        }
+        }        
     }
 
     public void EndDrag(PointerEventData data)//прекращаем перетаскивание
