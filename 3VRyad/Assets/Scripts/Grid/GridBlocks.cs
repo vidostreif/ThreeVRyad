@@ -395,13 +395,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
 
             //проверка, что остались доступные ходы
-            ElementsForNextMove elementsForNextMove;
+            List<ElementsForNextMove> elementsForNextMoveList;
             int iteration2 = 1;
             do
             {
-                elementsForNextMove = CheckElementsForNextMove();
+                elementsForNextMoveList = CheckElementsForNextMove();
                 //Если нет доступных ходов, то перемешиваем поле
-                if (elementsForNextMove.elementsList.Count == 0)
+                if (elementsForNextMoveList.Count == 0)
                     MixStandartElements();
 
                 if (iteration2 > 4)
@@ -411,9 +411,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
                 iteration2++;
 
-            } while (elementsForNextMove.elementsList.Count == 0);//повторяем проверку
+            } while (elementsForNextMoveList.Count == 0);//повторяем проверку
 
-            MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;            
+            //пока первый
+            //!!!! Переделать, находить лучший ход
+            MainAnimator.Instance.ElementsForNextMove = elementsForNextMoveList[0];            
         }
         blockedForMove = false;
     }
@@ -652,10 +654,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     //возвращает массив элементов которые могут составить линию в следующем ходу
     //можно использовать как подсказку игроку
-    public ElementsForNextMove CheckElementsForNextMove()
+    public List<ElementsForNextMove> CheckElementsForNextMove()
     {
+        List<ElementsForNextMove> ElementsForNextMoveList = new List<ElementsForNextMove>();
         ElementsForNextMove elementsForNextMove = new ElementsForNextMove();
-        //List<Element> elementsList = elementsForNextMove.elementsList;
 
         for (int x = 0; x < containers.GetLength(0); x++)
         {
@@ -737,23 +739,27 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                             } while (elementFound);
                         }
-                        //если количество найденных элементов больше двух то останавливаем поиск
+                        //если количество найденных элементов больше двух то ищем следующую линию
                         if (elementsForNextMove.elementsList.Count > 2)
+                        {
+                            ElementsForNextMoveList.Add(elementsForNextMove);
+                            elementsForNextMove = new ElementsForNextMove();
                             break;
+                        }
                         else
                             elementsForNextMove.elementsList.Clear();
                     }
                 }
-                //если количество найденных элементов больше двух то останавливаем поиск
-                if (elementsForNextMove.elementsList.Count > 2)
-                    break;
+                ////если количество найденных элементов больше двух то останавливаем поиск
+                //if (elementsForNextMove.elementsList.Count > 2)
+                //    break;
             }
-            //если количество найденных элементов больше двух то останавливаем поиск
-            if (elementsForNextMove.elementsList.Count > 2)
-                break;
+            ////если количество найденных элементов больше двух то останавливаем поиск
+            //if (elementsForNextMove.elementsList.Count > 2)
+            //    break;
         }
 
-        return elementsForNextMove;
+        return ElementsForNextMoveList;
     }
 
     //перемешать стандартные элементы
