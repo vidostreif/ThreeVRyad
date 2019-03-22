@@ -134,7 +134,7 @@ public class InstrumentsManager : MonoBehaviour
     //ударяет крест на крест по всем блокам от указанного блока 
     private IEnumerator ActivateHoe(Block block)
     {
-        Block[] blocks = GridBlocks.Instance.DeterminingAllCrossBlocks(block.PositionInGrid);
+        Block[] blocks = GridBlocks.Instance.GetAllCrossBlocks(block.PositionInGrid);
         if (blocks.Length > 0)
         {            
             GameObject instrumentGO = new GameObject();
@@ -194,7 +194,7 @@ public class InstrumentsManager : MonoBehaviour
     //перемешивает стандартные незаблокированные элементы
     private IEnumerator ActivateVortex(Block block)
     {
-        Block[] blocks = GridBlocks.Instance.ReturnAllBlocksWithStandartElements();
+        Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
         if (blocks.Length > 1)
         {
             //если сетка выполняет действия, то ожидаем
@@ -223,7 +223,7 @@ public class InstrumentsManager : MonoBehaviour
     {
         if (BlockCheck.ThisBlockWithStandartElement(block))
         {
-            Block[] blocks = GridBlocks.Instance.ReturnAllBlocksWithStandartElements();
+            Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
             int quantity = 10;//количество перекрашиваемых элементов
             int repainted = 0;
             if (blocks.Length > 1)

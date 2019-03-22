@@ -14,7 +14,7 @@ public class SpreadBlockingElement : BlockingElement
                 UpdateSpriteAlfa();
 
                 //распространение на соседний блок
-                NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(this.PositionInGrid);
+                NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(this.PositionInGrid);
                 SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
 
                 foreach (Block block in neighboringBlocks.allBlockField)

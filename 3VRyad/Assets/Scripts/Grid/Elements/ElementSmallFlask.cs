@@ -9,6 +9,14 @@ public class ElementSmallFlask : Element
 {
     [SerializeField] protected int explosionRadius;
 
+    public int ExplosionRadius
+    {
+        get
+        {
+            return explosionRadius;
+        }
+    }
+
     protected override void DopSettings()
     {
         explosionRadius = 1;
@@ -40,7 +48,7 @@ public class ElementSmallFlask : Element
                     if (!Immortal)
                     {
                         base.DestroyElement();
-                        MainAnimator.Instance.AddExplosionEffect(thisTransform.position, explosionRadius);
+                        MainAnimator.Instance.AddExplosionEffect(thisTransform.position, ExplosionRadius);
                         HitNeighboringBlocks(thisHitTypeEnum);
                     }
                 }
@@ -52,7 +60,7 @@ public class ElementSmallFlask : Element
     protected override void ActionAfterHitting(HitTypeEnum hitType)
     {
         base.DestroyElement();
-        MainAnimator.Instance.AddExplosionEffect(thisTransform.position, explosionRadius);
+        MainAnimator.Instance.AddExplosionEffect(thisTransform.position, ExplosionRadius);
         HitNeighboringBlocks(thisHitTypeEnum);
     }
 
@@ -62,50 +70,13 @@ public class ElementSmallFlask : Element
         //Находим позицию блока в сетке
         Position gridPosition = this.PositionInGrid;
         //Определяем блоки вокруг
-        Block[] aroundBlocks = DeterminingBlocksForHit(gridPosition, explosionRadius);
+        Block[] aroundBlocks = GridBlocks.Instance.GetBlocksForHit(gridPosition, ExplosionRadius);
 
         for (int i = 0; i < aroundBlocks.Length; i++)
         {
             if (aroundBlocks[i] != null)
                 aroundBlocks[i].Hit(hitTypeEnum, this.shape);
         }
-    }
-
-    //определяем блоки для удара
-    //берем все блоки в указанном радиусе, за минусом центрального блока и блоков на углах
-    protected Block[] DeterminingBlocksForHit(Position position, int radius)
-    {
-        int diameter = radius * 2;
-        Blocks[] containers = GridBlocks.Instance.containers;
-        Block[] blocks = new Block[(diameter + 1) * (diameter + 1) - 5];
-
-        if (position.posX != -1 || position.posY != -1)
-        {
-            int iteration = 0;
-            int posX;
-            int posY;
-            for (int x = 0; x < diameter + 1; x++)
-            {
-                for (int y = 0; y < diameter + 1; y++)
-                {
-                    //пропускаем все не нужные блоки
-                    if ((x == 0 && y == 0) || (x == 0 && y == diameter) || (x == diameter && y == diameter) || (x == diameter && y == 0) || (x == radius && y == radius))
-                    {
-                        continue;
-                    }
-
-                    posX = position.posX - radius + x;
-                    posY = position.posY - radius + y;
-                    if (posX >= 0 && posX < containers.GetLength(0) &&
-                        posY >= 0 && posY < containers[posX].block.GetLength(0))
-                    {
-                        blocks[iteration] = containers[posX].block[posY];
-                        iteration++;
-                    }
-                }
-            }
-        }
-        return blocks;
-    }
+    }    
 
 }

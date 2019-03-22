@@ -231,7 +231,7 @@ public class Block : MonoBehaviour {
             }
 
             curElement.Shape = shape;
-            HelpToPlayer.AddHint(ElementsTypeEnum.Standard);
+            HelpToPlayer.AddHint(typeElementsEnum);
             //Добавляем в блок
             this.Element = curElement;
 

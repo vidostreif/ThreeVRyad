@@ -216,8 +216,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         {
             while (elementsForMoveList.Count > 0)
             {
-                //убрать
-                HelpToPlayer.DellGameHelp();
+                //удаляем подсказку
+                bool gameHelpWasDell = HelpToPlayer.DellGameHelp();
+                Debug.Log("gameHelpWasDell: " + gameHelpWasDell);
 
                 Blocks blocks = elementsForMoveList[0];
                 touchingBlock = blocks.block[0];
@@ -227,7 +228,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                 //повторяем итерации заполнения и поиска совпадений, пока совпадения не будут найдены
                 int iteration = 1;
-                //List<Block> blockFields;
                 bool matchFound;
                 bool makeActionElementsAfterMove = false;
                 do
@@ -241,7 +241,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     if (blockFieldsList.Count > 0)
                     {
                         matchFound = true;
-
                         if (iteration != 1)
                         {
                             int countblockFields = 0;
@@ -249,6 +248,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             {
                                 iteration++;
                                 yield return StartCoroutine(Filling(false, iteration));
+
                                 blockFieldsList = CheckMatchingLine();
                                 countblockFields = blockFieldsList.Count;
                                 //прерывание в случае вмешательства игрока
@@ -279,6 +279,19 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             makeActionElementsAfterMove = true;
                         }
                     }
+
+                    //если в этом ходу не удаляли предыдущую подсказку
+                    //создаем подсказку
+                    if (!gameHelpWasDell && HelpToPlayer.CreateNextGameHelp())
+                    {
+                        Debug.Log("Создаем подсказку!");
+                        //если создали, то прерываем процесс
+                        blockFieldsList.Clear();
+                        elementsForMoveList.Clear();
+                        blockedForMove = false;
+                        yield break;
+                    }
+
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFieldsList);
 
@@ -345,7 +358,17 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     blockFieldsList.Clear();
                     elementsForMoveList.Remove(blocks);
                     yield return StartCoroutine(Filling(true, iteration));
-                    
+                    //создаем подсказку
+                    if (HelpToPlayer.CreateNextGameHelp())
+                    {
+                        Debug.Log("Создаем подсказку!");
+                        //если создали, то прерываем процесс
+                        blockFieldsList.Clear();
+                        elementsForMoveList.Clear();
+                        blockedForMove = false;
+                        yield break;
+                    }
+
                     //если есть элементы в очереди на движение
                     if (elementsForMoveList.Count > 0)
                         break;
@@ -390,9 +413,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
             } while (elementsForNextMove.elementsList.Count == 0);//повторяем проверку
 
-            MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
-            //убрать
-            HelpToPlayer.CreateNextGameHelp();
+            MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;            
         }
         blockedForMove = false;
     }
@@ -461,7 +482,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         {
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
-                NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(new Position(x, y));
+                NeighboringBlocks neighboringBlocks = GetNeighboringBlocks(new Position(x, y));
 
                 //проверяем горизонталь если не первый и не последний стоблец
                 if (x != 0 && x != containers.GetLength(0) - 1)
@@ -554,7 +575,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //добавляем первые элементы                
                 if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(blockField))
                 {
-                    NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(blockField.PositionInGrid);
+                    NeighboringBlocks neighboringBlocks = GetNeighboringBlocks(blockField.PositionInGrid);
                     foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
                     {
                         //если блок находится по соседству и в нем такой же элемент
@@ -631,7 +652,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     //возвращает массив элементов которые могут составить линию в следующем ходу
     //можно использовать как подсказку игроку
-    private ElementsForNextMove CheckElementsForNextMove()
+    public ElementsForNextMove CheckElementsForNextMove()
     {
         ElementsForNextMove elementsForNextMove = new ElementsForNextMove();
         //List<Element> elementsList = elementsForNextMove.elementsList;
@@ -683,7 +704,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     continue;
 
                                 Position position = new Position(posX, posY);
-                                NeighboringBlocks neighboringBlocks = DeterminingNeighboringBlocks(position);
+                                NeighboringBlocks neighboringBlocks = GetNeighboringBlocks(position);
 
                                 //пересобираем массив для правильной последовательности проверки элементов
                                 Block[] blocks;
@@ -886,7 +907,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
     
     //определяем соседние блоки
-    public NeighboringBlocks DeterminingNeighboringBlocks(Position position)
+    public NeighboringBlocks GetNeighboringBlocks(Position position)
     {
         Block upBlock = null;
         Block DownBlock = null;
@@ -910,7 +931,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //определяем блоки вокруг
-    public Block[] DeterminingAroundBlocks(Position position)
+    public Block[] GetAroundBlocks(Position position)
     {
         Block[] blocks = new Block[8];
 
@@ -942,7 +963,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //определяем блоки крест на крест кроме центрального
-    public Block[] DeterminingAllCrossBlocks(Position position)
+    public Block[] GetAllCrossBlocks(Position position)
     {
         Block[] blocks = new Block[0];
 
@@ -973,7 +994,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //возвращает все блоки со стандартными элементами в сетке
-    public Block[] ReturnAllBlocksWithStandartElements()
+    public Block[] GetAllBlocksWithStandartElements()
     {
         List<Block> blocks = new List<Block>();
 
@@ -989,6 +1010,42 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
         }
         return blocks.ToArray();
+    }
+
+    //берем все блоки в указанном радиусе, за минусом центрального блока и блоков на углах
+    public Block[] GetBlocksForHit(Position position, int radius)
+    {
+        int diameter = radius * 2;
+        //Blocks[] containers = GridBlocks.Instance.containers;
+        Block[] blocks = new Block[(diameter + 1) * (diameter + 1) - 5];
+
+        if (position.posX != -1 || position.posY != -1)
+        {
+            int iteration = 0;
+            int posX;
+            int posY;
+            for (int x = 0; x < diameter + 1; x++)
+            {
+                for (int y = 0; y < diameter + 1; y++)
+                {
+                    //пропускаем все не нужные блоки
+                    if ((x == 0 && y == 0) || (x == 0 && y == diameter) || (x == diameter && y == diameter) || (x == diameter && y == 0) || (x == radius && y == radius))
+                    {
+                        continue;
+                    }
+
+                    posX = position.posX - radius + x;
+                    posY = position.posY - radius + y;
+                    if (posX >= 0 && posX < containers.GetLength(0) &&
+                        posY >= 0 && posY < containers[posX].block.GetLength(0))
+                    {
+                        blocks[iteration] = containers[posX].block[posY];
+                        iteration++;
+                    }
+                }
+            }
+        }
+        return blocks;
     }
 
     //процедура замены элементов между блоками

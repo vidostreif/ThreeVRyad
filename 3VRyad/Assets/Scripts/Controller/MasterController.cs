@@ -68,7 +68,7 @@ public class MasterController : MonoBehaviour
             
             //gridPosition = block.PositionInGrid;
             //Определяем соседние блоки
-            neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(block.PositionInGrid);
+            neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(block.PositionInGrid);
             //если стартовая позиция мыши нулевая
             if (startPosition == new Vector3(0, 0, 0))
             {

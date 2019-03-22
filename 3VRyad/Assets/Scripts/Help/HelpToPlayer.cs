@@ -41,103 +41,177 @@ public static class HelpToPlayer
         }        
     }
 
-    public static void CreateNextGameHelp()
+    public static bool CreateNextGameHelp()
     {
-        //!!!добавить все блоки в список для запрета обработки
-
-        Hint hint = null;
+        bool created = false;
         if (hintsList.Count > 0)
         {
-            hint = hintsList[0];
-            activeHint = hint;
-        }
-        else
-        {
-            return;
-        }        
-
-        if (hint.elementsTypeEnum == ElementsTypeEnum.Standard)
-        {
-            ElementsForNextMove elementsForNextMove = MainAnimator.Instance.ElementsForNextMove;
-            List<Block> blocks = new List<Block>();
-
-            //создаем затемнение 
-            hint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.Instance.canvasHelpToPlayer);
-            Image imageHelpToPlayer = hint.canvasHelpToPlayer.GetComponentInChildren<Image>();
-            MainAnimator.Instance.AddElementForSmoothChangeColor(imageHelpToPlayer, new Color(imageHelpToPlayer.color.r, imageHelpToPlayer.color.g, imageHelpToPlayer.color.b, 0.7f), 2);
-            //устанавливаем камеру
-            hint.canvasHelpToPlayer.GetComponent<Canvas>().worldCamera = Camera.main;
-            //получаем все блоки
-            foreach (Element item in elementsForNextMove.elementsList)
+            //!!!добавить все блоки в список для запрета обработки
+            
+            List<Hint> hintForDell = new List<Hint>();
+            //перебираем подскази до тех пор пока не создадим хоть одну
+            foreach (Hint hint in hintsList)
             {
-                blocks.Add(GridBlocks.Instance.GetBlock(item.PositionInGrid));
-            }
+                activeHint = hint;
+                hintForDell.Add(hint);
+                //создаем затемнение 
+                activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.Instance.canvasHelpToPlayer);
+                Image imageHelpToPlayer = activeHint.canvasHelpToPlayer.GetComponentInChildren<Image>();
+                MainAnimator.Instance.AddElementForSmoothChangeColor(imageHelpToPlayer, new Color(imageHelpToPlayer.color.r, imageHelpToPlayer.color.g, imageHelpToPlayer.color.b, 0.7f), 2);
+                //устанавливаем камеру
+                activeHint.canvasHelpToPlayer.GetComponent<Canvas>().worldCamera = Camera.main;
 
-            //записываем данные для блока в который будет смещен элемент
-            foreach (SpriteRenderer childrenSpriteRenderer in elementsForNextMove.targetBlock.GetComponentsInChildren<SpriteRenderer>())
-            {
-                if (childrenSpriteRenderer != null)
+                //находим нужную подсказку
+                if (activeHint.elementsTypeEnum == ElementsTypeEnum.Standard)
                 {
-                    hint.spriteRendersSetingList.Add(new SpriteRenderSettings(childrenSpriteRenderer, childrenSpriteRenderer.sortingLayerName, childrenSpriteRenderer.sortingOrder));
-
-                    childrenSpriteRenderer.sortingOrder = childrenSpriteRenderer.sortingLayerID;
-                    childrenSpriteRenderer.sortingLayerName = "Help";
+                    created = CreateElementsTypeStandardHelp();
                 }
-            }
-                        
-            //записываем разрешенное направление для движения элемента
-            BlockController blockController = elementsForNextMove.targetBlock.GetComponent<BlockController>();
-            blockController.permittedDirection = elementsForNextMove.oppositeDirectionForMove;
-
-            //перебираем все блоки
-            foreach (Block block in blocks)
-            {
-                if (block != null)
+                else if (activeHint.elementsTypeEnum == ElementsTypeEnum.CrushableWall)
                 {
-
-                    foreach (SpriteRenderer childrenSpriteRenderer in block.GetComponentsInChildren<SpriteRenderer>())
-                    {
-                        if (childrenSpriteRenderer != null)
-                        {
-                            hint.spriteRendersSetingList.Add(new SpriteRenderSettings(childrenSpriteRenderer, childrenSpriteRenderer.sortingLayerName, childrenSpriteRenderer.sortingOrder));
-                            
-                            childrenSpriteRenderer.sortingOrder = childrenSpriteRenderer.sortingLayerID;
-                            childrenSpriteRenderer.sortingLayerName = "Help";
-                        }
-                    }
-
-                    
-                    blockController = block.GetComponent<BlockController>();
-                    //сохраняем настройки
-                    hint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
-                    //деактивируем все элементы управления кроме нужного блока
-                    if (block != elementsForNextMove.blockElementForMove)
-                    {
-                        //BoxCollider2D boxCollider2D = block.GetComponent<BoxCollider2D>();
-                        blockController.handleDragging = false;
-                        blockController.handleСlick = false;
-                    }
-                    else
-                    {
-                        //записываем разрешенное направление для движения элемента                        
-                        blockController.permittedDirection = elementsForNextMove.directionForMove;
-                    }
+                    //перебираем все наши стены
+                    //получить все возможные линии и если есть линия рядом с нашим блоком, то создаем подсказку
+                    //где подсвечиваем блок и возможную линию
+                }
+                else if (activeHint.elementsTypeEnum == ElementsTypeEnum.SmallFlask || activeHint.elementsTypeEnum == ElementsTypeEnum.MediumFlask || activeHint.elementsTypeEnum == ElementsTypeEnum.BigFlask)
+                {
+                    created = CreateElementsTypeFlaskHelp(activeHint.elementsTypeEnum);
                 }
                 else
                 {
-                    Debug.Log("Не удалось создать подсказку");
+                    //неудалось определить подсказку
+                }
 
-                    //восстанавливаем значения
+                //если удалось создать подсказку, выходим из цикла
+                if (created)
+                {
+                    break;
+                }
+                else
+                {
+                    //неудалось создать подсказку
                     DellGameHelp();
-                    return;
-                }                
+                }
             }
-            //помечаем как показанную
-            hintsStatus[(int)hint.elementsTypeEnum].status = true;
-        }        
+
+            //удаляем пройденные подсказки
+            foreach (Hint item in hintForDell)
+            {
+                hintsList.Remove(item);
+            }
+        }
+
+        return created;
     }
 
-    public static void DellGameHelp()
+    public static bool CreateElementsTypeStandardHelp() {
+        ElementsForNextMove elementsForNextMove = GridBlocks.Instance.CheckElementsForNextMove();
+        //Если нет доступных ходов, то выходим
+        if (elementsForNextMove.elementsList.Count == 0)
+        {
+            DellGameHelp();
+            return false;
+        }
+
+        MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
+        List<Block> blocks = new List<Block>();
+
+        //получаем все блоки
+        foreach (Element item in elementsForNextMove.elementsList)
+        {
+            blocks.Add(GridBlocks.Instance.GetBlock(item.PositionInGrid));
+        }
+
+        //записываем данные для блока в который будет смещен элемент
+        ChangeSorting(elementsForNextMove.targetBlock.gameObject, activeHint);
+
+        //записываем разрешенное направление для движения элемента
+        BlockController blockController = elementsForNextMove.targetBlock.GetComponent<BlockController>();
+        blockController.permittedDirection = elementsForNextMove.oppositeDirectionForMove;
+
+        //перебираем все блоки
+        foreach (Block block in blocks)
+        {
+            if (block != null)
+            {
+                ChangeSorting(block.gameObject, activeHint);
+                blockController = block.GetComponent<BlockController>();
+                //сохраняем настройки
+                activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
+                //деактивируем все элементы управления кроме нужного блока
+                if (block != elementsForNextMove.blockElementForMove)
+                {
+                    blockController.handleDragging = false;
+                    blockController.handleСlick = false;
+                }
+                else
+                {
+                    //записываем разрешенное направление для движения элемента                        
+                    blockController.permittedDirection = elementsForNextMove.directionForMove;
+                }
+            }
+            else
+            {
+                Debug.Log("Не удалось создать подсказку");
+                //восстанавливаем значения
+                DellGameHelp();
+                return false;
+            }
+        }
+        //помечаем как показанную
+        hintsStatus[(int)activeHint.elementsTypeEnum].status = true;
+        return true;
+    }
+
+    public static bool CreateElementsTypeFlaskHelp(ElementsTypeEnum elementsTypeEnum) {
+        //берем любую маленькую фласку
+        //делаем подсветку фласки и соседних блококв
+        //наоходим все объекты с нужным элементом
+        ElementSmallFlask[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(ElementSmallFlask)) as ElementSmallFlask[];
+
+        //если нашли хоть один элемент
+        foreach (ElementSmallFlask item in findeObjects)
+        {
+            //берем блок с нашей флаской
+            Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);            
+            if (BlockCheck.ThisBlockWithElementCanMove(curBlock) && item.Type == elementsTypeEnum)
+            {
+                    //высвечиваем блок
+                    ChangeSorting(curBlock.gameObject, activeHint);
+
+                    //отключаем перетаскивание у фласки
+                    BlockController blockController = curBlock.GetComponent<BlockController>();
+                    activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
+                    blockController.handleDragging = false;
+
+                    //получаем соседние блоки
+                    Block[] blocks = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, item.GetComponent<ElementSmallFlask>().ExplosionRadius);
+
+                    //перебираем все блоки
+                    foreach (Block block in blocks)
+                    {
+                        if (block != null)
+                        {
+                            ChangeSorting(block.gameObject, activeHint);
+                            blockController = block.GetComponent<BlockController>();
+                            //сохраняем настройки
+                            activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
+                            //деактивируем
+                            blockController.handleDragging = false;
+                            blockController.handleСlick = false;
+                        }
+                    }
+                //помечаем как показанную
+                hintsStatus[(int)activeHint.elementsTypeEnum].status = true;
+                return true;
+            }
+        }
+        Debug.Log("Не нашли не одной маленькой фласки для создания подсказки!");
+        //восстанавливаем значения
+        DellGameHelp();
+        return false;
+    }
+
+    public static bool DellGameHelp()
     {
         if (activeHint != null)
         {
@@ -165,9 +239,29 @@ public static class HelpToPlayer
                 }
             }
 
-            hintsList.Remove(activeHint);
+            //hintsList.Remove(activeHint);
             activeHint = null;
-        }        
+            return true;
+        }
+        else
+        {
+            return false;
+        }       
+    }
+
+
+    //вспомогательные
+    private static void ChangeSorting(GameObject gameObject, Hint hint) {
+        foreach (SpriteRenderer childrenSpriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            if (childrenSpriteRenderer != null)
+            {
+                hint.spriteRendersSetingList.Add(new SpriteRenderSettings(childrenSpriteRenderer, childrenSpriteRenderer.sortingLayerName, childrenSpriteRenderer.sortingOrder));
+
+                childrenSpriteRenderer.sortingOrder = childrenSpriteRenderer.sortingLayerID;
+                childrenSpriteRenderer.sortingLayerName = "Help";
+            }
+        }
     }
 }
 

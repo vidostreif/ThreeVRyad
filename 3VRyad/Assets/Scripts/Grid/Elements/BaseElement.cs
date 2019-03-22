@@ -178,7 +178,7 @@ public class BaseElement : MonoBehaviour
         Score.Instance.CreateScoreElement(transform.position, score);
 
         //определяем есть ли вокруг элементы коллекционирующие наш вид элемента
-        Block[] blocksAround = GridBlocks.Instance.DeterminingAroundBlocks(this.PositionInGrid);
+        Block[] blocksAround = GridBlocks.Instance.GetAroundBlocks(this.PositionInGrid);
         foreach (Block item in blocksAround)
         {
             if (BlockCheck.ThisBlockWithCollectorElementAndNoBlockingElement(item))

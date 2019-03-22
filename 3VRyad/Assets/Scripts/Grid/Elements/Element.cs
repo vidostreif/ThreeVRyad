@@ -238,7 +238,7 @@ public class Element : BaseElement
     //Находим позицию блока в сетке
     Position gridPosition = this.PositionInGrid;
     //Определяем соседние блоки
-    NeighboringBlocks neighboringBlocks = GridBlocks.Instance.DeterminingNeighboringBlocks(gridPosition);
+    NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(gridPosition);
 
     foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
     {

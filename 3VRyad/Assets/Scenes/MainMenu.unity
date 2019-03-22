@@ -149,6 +149,8 @@ MonoBehaviour:
     type: 3}
   regionButtonPrefab: {fileID: 5749990630111453082, guid: 1e1a00a06ecf4474e9ed1fcaaf13b70b,
     type: 3}
+  scoreElementPrefab: {fileID: 0}
+  canvasHelpToPlayer: {fileID: 0}
 --- !u!4 &41151144
 Transform:
   m_ObjectHideFlags: 0
@@ -550,6 +552,11 @@ PrefabInstance:
     - target: {fileID: 5840600824901048463, guid: 7b5427ebc214fc44ab6b98c836c7ee07,
         type: 3}
       propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840600823259111468, guid: 7b5427ebc214fc44ab6b98c836c7ee07,
+        type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
