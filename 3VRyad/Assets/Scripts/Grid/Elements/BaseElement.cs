@@ -196,6 +196,7 @@ public class BaseElement : MonoBehaviour
             AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
             animatorElement.PlayDestroyAnimation();
         }
+        this.PositionInGrid = null;
     }
 
     protected virtual void UpdateSpriteAlfa()

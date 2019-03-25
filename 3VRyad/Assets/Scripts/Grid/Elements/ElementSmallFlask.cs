@@ -23,54 +23,22 @@ public class ElementSmallFlask : Element
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Standart, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick };
     }
 
-    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
-    {
-        if (!destroyed)
-        {
-            //если праввильный тип удара
-            if (vulnerabilityTypeEnum.Contains(hitType))
-            {
-                //если стоит блокировка на элементе, то пытаемся ее снять
-                if (BlockingElementExists())
-                {
-                    blockingElement.Hit();
-
-                    //если уничтожили блокирующий элемент
-                    if (blockingElement.Destroyed)
-                    {
-                        lockedForMove = false;
-                    }
-                }
-                //если элемент не заблокирован, то уничтожаем элемент        
-                else
-                {
-                    //если элемент не бессмертный
-                    if (!Immortal)
-                    {
-                        base.DestroyElement();
-                        MainAnimator.Instance.AddExplosionEffect(thisTransform.position, ExplosionRadius);
-                        HitNeighboringBlocks(thisHitTypeEnum);
-                    }
-                }
-            }
-        }
-    }
-
     //действие после удара
     protected override void ActionAfterHitting(HitTypeEnum hitType)
     {
+        Position position = new Position(PositionInGrid.posX, PositionInGrid.posY);
         base.DestroyElement();
         MainAnimator.Instance.AddExplosionEffect(thisTransform.position, ExplosionRadius);
-        HitNeighboringBlocks(thisHitTypeEnum);
+        HitNeighboringBlocks(thisHitTypeEnum, position);
     }
 
     //ударяем по соседним блокам
-    protected override void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)
+    protected override void HitNeighboringBlocks(HitTypeEnum hitTypeEnum, Position position)
     {
-        //Находим позицию блока в сетке
-        Position gridPosition = this.PositionInGrid;
+        ////Находим позицию блока в сетке
+        //Position gridPosition = this.PositionInGrid;
         //Определяем блоки вокруг
-        Block[] aroundBlocks = GridBlocks.Instance.GetBlocksForHit(gridPosition, ExplosionRadius);
+        Block[] aroundBlocks = GridBlocks.Instance.GetBlocksForHit(position, ExplosionRadius);
 
         for (int i = 0; i < aroundBlocks.Length; i++)
         {

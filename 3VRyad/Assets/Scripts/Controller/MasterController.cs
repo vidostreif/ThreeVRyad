@@ -212,6 +212,7 @@ public class MasterController : MonoBehaviour
                 {
                     //возвращаем элементы на свои позиции
                     MainAnimator.Instance.AddElementForSmoothMove(transforForLocal, startPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
+                    change = false;
                     if (processedNeighboringElement != null)
                     {
                         processedNeighboringElement.drag = false;
@@ -222,6 +223,7 @@ public class MasterController : MonoBehaviour
             {
                 //возвращаем элементы на свои позиции
                 MainAnimator.Instance.AddElementForSmoothMove(transforForLocal, startPosition, 2, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.1f);
+                change = false;
                 if (processedNeighboringElement != null)
                 {
                     processedNeighboringElement.drag = false;

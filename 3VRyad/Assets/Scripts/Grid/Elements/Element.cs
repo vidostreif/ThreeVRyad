@@ -138,10 +138,11 @@ public class Element : BaseElement
 
     //действие после удара
     protected virtual void ActionAfterHitting(HitTypeEnum hitType) {
+        Position position = new Position(PositionInGrid.posX, PositionInGrid.posY);
         base.DestroyElement();
 
         if (hitType == HitTypeEnum.Standart)
-            HitNeighboringBlocks(thisHitTypeEnum);
+            HitNeighboringBlocks(thisHitTypeEnum, position);
     }
 
     public virtual BlockingElement BlockingElement
@@ -233,12 +234,12 @@ public class Element : BaseElement
     }
 
     //ударяем по соседним блокам
-    protected virtual void HitNeighboringBlocks(HitTypeEnum hitTypeEnum)
+    protected virtual void HitNeighboringBlocks(HitTypeEnum hitTypeEnum, Position position)
 {
-    //Находим позицию блока в сетке
-    Position gridPosition = this.PositionInGrid;
+    ////Находим позицию блока в сетке
+    //Position gridPosition = this.PositionInGrid;
     //Определяем соседние блоки
-    NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(gridPosition);
+    NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(position);
 
     foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
     {

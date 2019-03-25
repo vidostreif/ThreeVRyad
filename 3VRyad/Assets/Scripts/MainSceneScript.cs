@@ -42,7 +42,8 @@ public class MainSceneScript : MonoBehaviour {
 
     public void CompleteGame()
     {
-        InstrumentsManager.Instance.DeactivateInstrument();
+        HelpToPlayer.ClearHintList();//очищаем список подсказок
+        InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
 
         CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");

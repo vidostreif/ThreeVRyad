@@ -11,6 +11,10 @@ public static class HelpToPlayer
     private static HintStatus[] hintsStatus = null;
     private static Hint activeHint = null;
 
+    private static bool deletedByClickingOnCanvas = false;
+    private static float timeCreateHints;
+    private static float delayTime = 0;
+
     private static void CreateHintStatusList() {
         if (hintsStatus == null)
         {
@@ -23,6 +27,11 @@ public static class HelpToPlayer
                 i++;
             }
         }
+    }
+
+    public static void ClearHintList()
+    {
+        hintsList.Clear();//очищаем список подсказок
     }
 
     public static void AddHint(ElementsTypeEnum elementsTypeEnum) {
@@ -67,6 +76,10 @@ public static class HelpToPlayer
                 {
                     created = CreateElementsTypeFlaskHelp(activeHint.elementsTypeEnum);
                 }
+                else if (activeHint.elementsTypeEnum == ElementsTypeEnum.ImmortalWall)
+                {
+                    created = CreateElementsTypeImmortalWallHelp(activeHint.elementsTypeEnum);
+                }
                 else
                 {
                     //неудалось определить подсказку
@@ -81,6 +94,10 @@ public static class HelpToPlayer
                     MainAnimator.Instance.AddElementForSmoothChangeColor(imageHelpToPlayer, new Color(imageHelpToPlayer.color.r, imageHelpToPlayer.color.g, imageHelpToPlayer.color.b, 0.7f), 2);
                     //устанавливаем камеру
                     activeHint.canvasHelpToPlayer.GetComponent<Canvas>().worldCamera = Camera.main;
+                    //добавляем действие
+                    Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
+                    Button button = gOPanel.GetComponent<Button>();
+                    button.onClick.AddListener(delegate { DeletedByClickingOnCanvas(); });
                     //помечаем как показанную
                     hintsStatus[(int)activeHint.elementsTypeEnum].status = true;
                     //добавляем для удаления
@@ -172,10 +189,7 @@ public static class HelpToPlayer
 
     private static bool CreateElementsTypeCrushableWallHelp(ElementsTypeEnum elementsTypeEnum)
     {
-        //перебираем все наши стены
-        //получить все возможные линии и если есть линия рядом с нашим блоком, то создаем подсказку
-        //где подсвечиваем блок и возможную линию
-
+        //получаем возможные ходы
         List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
         //Если нет доступных ходов, то выходим
         if (elementsForNextMoveList.Count == 0)
@@ -183,6 +197,7 @@ public static class HelpToPlayer
             return false;
         }
 
+        //получаем все стены
         ElementWall[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(ElementWall)) as ElementWall[];
 
         //если нашли хоть один элемент
@@ -191,30 +206,60 @@ public static class HelpToPlayer
             //берем блок с нашим элементом
             Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);
 
-            if (BlockCheck.ThisBlockWithElementWithoutBlockingElement(curBlock) && item.Type == elementsTypeEnum)
+            if (item.Type == elementsTypeEnum && BlockCheck.ThisBlockWithElementWithoutBlockingElement(curBlock))
             {
                 //получаем соседние блоки
                 NeighboringBlocks blocks = GridBlocks.Instance.GetNeighboringBlocks(curBlock.PositionInGrid);
-                //пытаемся найти ход где есть соседний блок  вследующем ходе
+                //пытаемся найти ход где есть соседний блок вследующем ходе
                 foreach (ElementsForNextMove curElementsForNextMove in elementsForNextMoveList)
                 {
+                    
                     foreach (Element element in curElementsForNextMove.elementsList)
                     {
-                        foreach (Block NeighboringBlock in blocks.allBlockField)
+                        //если элемент не для передвижения
+                        if (element != curElementsForNextMove.elementForMove)
                         {
-                            if (NeighboringBlock == GridBlocks.Instance.GetBlock(element.PositionInGrid))
+                            foreach (Block NeighboringBlock in blocks.allBlockField)
                             {
-                                //высвечиваем блок
-                                ChangeSorting(curBlock.gameObject, activeHint);
+                                if (NeighboringBlock == GridBlocks.Instance.GetBlock(element.PositionInGrid))
+                                {
+                                    //высвечиваем блок
+                                    ChangeSorting(curBlock.gameObject, activeHint);
 
-                                //высвечиваем нужный ход
-                                return HighlightSpecifiedMove(curElementsForNextMove);
+                                    //высвечиваем нужный ход
+                                    return HighlightSpecifiedMove(curElementsForNextMove);
+                                }
                             }
-                        }
+                        }                        
                     }
                 }
                 //если не нашли соседний блок
                 return false;
+            }
+        }
+        Debug.Log("Не нашли ни одной разрушаемой стены!");
+        return false;
+    }
+
+    private static bool CreateElementsTypeImmortalWallHelp(ElementsTypeEnum elementsTypeEnum)
+    {
+        //получаем все стены
+        ElementWall[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(ElementWall)) as ElementWall[];
+
+        //если нашли хоть один элемент
+        foreach (ElementWall item in findeObjects)
+        {
+            //берем блок с нашим элементом
+            Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);
+
+            if (item.Type == elementsTypeEnum && curBlock != null)
+            {
+                //высвечиваем блок
+                ChangeSorting(curBlock.gameObject, activeHint);
+
+                //таймаут для удаления подсказки
+                CanvasLiveTime(3);
+                return true;
             }
         }
         Debug.Log("Не нашли ни одной разрушаемой стены!");
@@ -251,6 +296,7 @@ public static class HelpToPlayer
 
             //hintsList.Remove(activeHint);
             activeHint = null;
+            deletedByClickingOnCanvas = false;
             return true;
         }
         else
@@ -290,6 +336,7 @@ public static class HelpToPlayer
 
         //записываем разрешенное направление для движения элемента
         BlockController blockController = elementsForNextMove.targetBlock.GetComponent<BlockController>();
+        activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
         blockController.permittedDirection = elementsForNextMove.oppositeDirectionForMove;
 
         //перебираем все блоки
@@ -320,6 +367,26 @@ public static class HelpToPlayer
             }
         }
         return true;
+    }
+
+    //разрешаем удалить подсказку после определенного времени
+    private static void CanvasLiveTime(float time) {
+        deletedByClickingOnCanvas = true;
+        timeCreateHints = Time.time;
+        delayTime = time;
+    }
+
+    //попытка удалить по клику
+    public static void DeletedByClickingOnCanvas()
+    {
+        if (deletedByClickingOnCanvas)
+        {
+            //если прошло больше времени чем указано
+            if ((Time.time - delayTime) > timeCreateHints)
+            {
+                DellGameHelp();
+            }
+        }
     }
 }
 

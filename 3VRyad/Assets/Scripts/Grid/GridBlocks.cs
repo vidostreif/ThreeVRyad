@@ -218,7 +218,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             {
                 //удаляем подсказку
                 bool gameHelpWasDell = HelpToPlayer.DellGameHelp();
-                Debug.Log("gameHelpWasDell: " + gameHelpWasDell);
+                //Debug.Log("gameHelpWasDell: " + gameHelpWasDell);
 
                 Blocks blocks = elementsForMoveList[0];
                 touchingBlock = blocks.block[0];
@@ -228,10 +228,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                 //повторяем итерации заполнения и поиска совпадений, пока совпадения не будут найдены
                 int iteration = 1;
-                bool matchFound;
+                bool matchFound = false;
                 bool makeActionElementsAfterMove = false;
                 do
                 {
+                    //Debug.Log("Выполняем ход, итерация: " + iteration + " matchFound: " + matchFound + " needFilling: " + needFilling);
                     //добавить проверку, что если нет destinationBlock, то не искать совпадающие линии
 
                     //ищем совпавшие линии 
@@ -280,17 +281,20 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                     }
 
-                    //если в этом ходу не удаляли предыдущую подсказку
-                    //создаем подсказку
-                    if (!gameHelpWasDell && HelpToPlayer.CreateNextGameHelp())
+                    //если не конец игры, создаем подсказку
+                    if (!Tasks.Instance.endGame)
                     {
-                        Debug.Log("Создаем подсказку!");
-                        //если создали, то прерываем процесс
-                        blockFieldsList.Clear();
-                        elementsForMoveList.Clear();
-                        blockedForMove = false;
-                        yield break;
-                    }
+                        //если в этом ходу не удаляли предыдущую подсказку
+                        if (!gameHelpWasDell && HelpToPlayer.CreateNextGameHelp())
+                        {
+                            Debug.Log("Создаем подсказку!");
+                            //если создали, то прерываем процесс
+                            blockFieldsList.Clear();
+                            elementsForMoveList.Clear();
+                            blockedForMove = false;
+                            yield break;
+                        }
+                    }                     
 
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFieldsList);
@@ -358,16 +362,20 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     blockFieldsList.Clear();
                     elementsForMoveList.Remove(blocks);
                     yield return StartCoroutine(Filling(true, iteration));
-                    //создаем подсказку
-                    if (HelpToPlayer.CreateNextGameHelp())
+
+                    //если не конец игры, создаем подсказку
+                    if (!Tasks.Instance.endGame)
                     {
-                        Debug.Log("Создаем подсказку!");
-                        //если создали, то прерываем процесс
-                        blockFieldsList.Clear();
-                        elementsForMoveList.Clear();
-                        blockedForMove = false;
-                        yield break;
-                    }
+                        if (HelpToPlayer.CreateNextGameHelp())
+                        {
+                            Debug.Log("Создаем подсказку!");
+                            //если создали, то прерываем процесс
+                            blockFieldsList.Clear();
+                            elementsForMoveList.Clear();
+                            blockedForMove = false;
+                            yield break;
+                        }
+                    }                    
 
                     //если есть элементы в очереди на движение
                     if (elementsForMoveList.Count > 0)
@@ -859,10 +867,17 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //возвращает блок на указанной позиции
     public Block GetBlock(Position position)
     {
-        if (position.posX >= 0 && position.posX < containers.GetLength(0) &&
-            position.posY >= 0 && position.posY < containers[position.posX].block.GetLength(0))
+        if (position != null)
         {
-            return containers[position.posX].block[position.posY];
+            if (position.posX >= 0 && position.posX < containers.GetLength(0) &&
+                        position.posY >= 0 && position.posY < containers[position.posX].block.GetLength(0))
+            {
+                return containers[position.posX].block[position.posY];
+            }
+        }
+        else
+        {
+            Debug.Log("Запрос из null позиции!");
         }
 
         return null;
@@ -932,6 +947,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             if (position.posY + 1 < containers[position.posX].block.GetLength(0))
                 upBlock = containers[position.posX].block[position.posY + 1];
         }
+        else
+        {
+            Debug.Log("Запрос из null позиции!");
+        }
 
         return new NeighboringBlocks(upBlock, DownBlock, LeftBlock, RightBlock);
     }
@@ -965,6 +984,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
             }
         }
+        else
+        {
+            Debug.Log("Запрос из null позиции!");
+        }
         return blocks;
     }
 
@@ -996,6 +1019,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
             }
         }
+        else
+        {
+            Debug.Log("Запрос из null позиции!");
+        }
         return blocks;
     }
 
@@ -1025,7 +1052,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //Blocks[] containers = GridBlocks.Instance.containers;
         Block[] blocks = new Block[(diameter + 1) * (diameter + 1) - 5];
 
-        if (position.posX != -1 || position.posY != -1)
+        if (position != null)
         {
             int iteration = 0;
             int posX;
@@ -1050,6 +1077,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     }
                 }
             }
+        }
+        else
+        {
+            Debug.Log("Запрос из null позиции!");
         }
         return blocks;
     }
@@ -1254,7 +1285,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     }
                     if (currentBlock.Element.speed > 0)
                     {
-                        needIteration = true;
+                        //needIteration = true;
                         currentBlock.Element.speed = 0;
                     }
                 }
@@ -1262,10 +1293,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         if (needIteration)
         {
-            //Debug.Log(Time.deltaTime);
-            //yield return new WaitForSeconds(0.15f - Time.deltaTime);
             needFilling = true;
-            //yield break;
         }
     }
     
