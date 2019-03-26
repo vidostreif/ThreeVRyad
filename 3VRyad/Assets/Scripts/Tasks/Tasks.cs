@@ -55,8 +55,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
     //создание коллекции целей
     public void CreateCollectedElements() {
-        //смещение по y
-        float startingYPoint = transform.position.y - ((1 + distanceBetweenTargets) * (targets.Length-1)) * 0.5f;
+        
         //удаляем все задания
         string targetsName = "Targets";
         Transform targetsTransform = transform.Find(targetsName);
@@ -68,10 +67,14 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         targetsParent = new GameObject();
         targetsParent.name = targetsName;
         targetsParent.transform.SetParent(transform, false);
+        targetsParent.transform.localPosition = new Vector3(-32, -32, targetsParent.transform.localPosition.z);
+
+        //смещение по y
+        float startingYPoint = targetsParent.transform.position.y - ((1 + distanceBetweenTargets) * (targets.Length - 1)) * 0.5f;
 
         for (int i = 0; i < targets.Length; i++)
         {
-            targets[i].GameObject = Instantiate(prefabcollectedElements, new Vector3(transform.position.x, startingYPoint + (i * (1 + distanceBetweenTargets)), transform.position.z), Quaternion.identity, targetsParent.transform);
+            targets[i].GameObject = Instantiate(prefabcollectedElements, new Vector3(targetsParent.transform.position.x, startingYPoint + (i * (1 + distanceBetweenTargets)), targetsParent.transform.position.z), Quaternion.identity, targetsParent.transform);
             Image image = targets[i].GameObject.GetComponent(typeof(Image)) as Image;
             image.sprite = SpriteBank.SetShape(targets[i].elementsShape);
             targets[i].Image = image;
