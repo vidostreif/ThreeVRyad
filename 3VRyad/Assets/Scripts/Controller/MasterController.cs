@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MasterController : MonoBehaviour
 {
@@ -95,6 +96,16 @@ public class MasterController : MonoBehaviour
         }
 
         Reset();//Обнуляем Данные
+    }
+
+    public void ForcedDropElement()//принудительно бросаем элемент
+    {
+        if (blockController != null)
+        {
+            change = false;
+            blockController.EndDrag(blockController.pointerEventData);
+            //Debug.Log("Drop");
+        }
     }
 
     private void MoveElement()//процедура перемещения взятого объекта

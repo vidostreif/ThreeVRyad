@@ -73,11 +73,27 @@ public static class JsonSaveAndLoad
         saveIsChanged = true;
     }
 
-    //запись сохранений уровней
+    //запись сохранений магазина
     public static void RecordSave(Shop shop)
     {
         GateSaveFromFile();
         save.shopSave.coins = shop.Coins;
+        saveIsChanged = true;
+    }
+
+    //запись показанных подсказок
+    public static void RecordSave(HintStatus[] hintsStatus)
+    {
+        GateSaveFromFile();
+        
+        //очищаем перед записью
+        save.helpSave.Clear();
+        //записываем новые данные
+        foreach (HintStatus hintStatus in hintsStatus)
+        {
+            save.helpSave.Add(new HelpSave(hintStatus.elementsTypeEnum.ToString(), hintStatus.status));
+        }
+
         saveIsChanged = true;
     }
 }
@@ -87,6 +103,7 @@ public class Save
 {
     public List<RegionSave> regionSave = new List<RegionSave>();
     public ShopSave shopSave = new ShopSave();
+    public List<HelpSave> helpSave = new List<HelpSave>();
 }
 
 [Serializable]
@@ -119,5 +136,18 @@ public class LevelSave
 public class ShopSave
 {
     public int coins = 0;//количество монет
+}
+
+[Serializable]
+public class HelpSave
+{
+    public string elementsTypeEnum;//тип
+    public bool status;//показана
+
+    public HelpSave(string elementsTypeEnum, bool status)
+    {
+        this.elementsTypeEnum = elementsTypeEnum;
+        this.status = status;
+    }
 }
 

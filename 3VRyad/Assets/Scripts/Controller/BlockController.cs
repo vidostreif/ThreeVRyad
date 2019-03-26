@@ -11,6 +11,7 @@ public class BlockController : MonoBehaviour
     public DirectionEnum permittedDirection = DirectionEnum.All; //разрешенное направление для смещения
     public bool handleСlick = true;//обрабатывать клик
     public bool handleDragging = true;//обрабатывать перетаскивание
+    public PointerEventData pointerEventData = null;
     private Element dragElement = null;//перетаскиваемый элемент
     private float timeFirstClick = 0;
     private readonly float timeBetweenClicks = 0.5f;//максимальное время для срабатывания двойного клика
@@ -90,6 +91,7 @@ public class BlockController : MonoBehaviour
                     MasterController.Instance.DragElement(this);
                     dragElement = thisBlock.Element;
                     dragElement.drag = true;
+                    pointerEventData = data;
                 }
             }
         }        
@@ -105,6 +107,7 @@ public class BlockController : MonoBehaviour
                 if (dragElement != null)
                 {
                     dragElement.drag = false;
+                    pointerEventData = null;
                 }
             }
         }

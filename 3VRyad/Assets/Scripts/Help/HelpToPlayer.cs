@@ -19,10 +19,23 @@ public static class HelpToPlayer
         {
             hintsStatus = new HintStatus[Enum.GetNames(typeof(ElementsTypeEnum)).Length];
 
+            //загружаем сохранения
+            List<HelpSave> helpSaves = JsonSaveAndLoad.LoadSave().helpSave;
+
             int i = 0;
             foreach (ElementsTypeEnum elementsTypeEnum in Enum.GetValues(typeof(ElementsTypeEnum)))
             {
-                hintsStatus[i] = new HintStatus(elementsTypeEnum, false);
+                HelpSave helpSave = helpSaves.Find(item => item.elementsTypeEnum == elementsTypeEnum.ToString());
+                //ищем в сохранениях
+                if (helpSave != null)
+                {
+                    hintsStatus[i] = new HintStatus(elementsTypeEnum, helpSave.status);
+                }
+                else
+                {
+                    hintsStatus[i] = new HintStatus(elementsTypeEnum, false);
+                }
+                
                 i++;
             }
         }
@@ -91,7 +104,7 @@ public static class HelpToPlayer
 
                 //если удалось создать подсказку, выходим из цикла
                 if (created)
-                {
+                {                    
                     //создаем затемнение 
                     activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.Instance.canvasHelpToPlayer);
                     Image imageHelpToPlayer = activeHint.canvasHelpToPlayer.GetComponentInChildren<Image>();
@@ -110,6 +123,8 @@ public static class HelpToPlayer
                     hintsStatus[(int)activeHint.elementsTypeEnum].status = true;
                     //добавляем для удаления
                     hintForDell.Add(hint);
+
+                    MasterController.Instance.ForcedDropElement();//если игрок перетаскивает элемент, то бросаем его с возвратом на позицию
                     break;
                 }
                 else
@@ -255,6 +270,8 @@ public static class HelpToPlayer
                     //высвечиваем блок
                     ChangeSorting(curBlock.gameObject, activeHint);
 
+                    //добавляем эффект
+
                     //отключаем перетаскивание у фласки
                     BlockController blockController = curBlock.GetComponent<BlockController>();
                     activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
@@ -323,6 +340,8 @@ public static class HelpToPlayer
                                     //высвечиваем блок
                                     ChangeSorting(curBlock.gameObject, activeHint);
 
+                                    //добавляем эффект
+
                                     //высвечиваем нужный ход
                                     return HighlightSpecifiedMove(curElementsForNextMove);
                                 }
@@ -354,6 +373,8 @@ public static class HelpToPlayer
                 //высвечиваем блок
                 ChangeSorting(curBlock.gameObject, activeHint);
 
+                //добавляем эффект
+
                 //таймаут для удаления подсказки
                 CanvasLiveTime(3);
                 return true;
@@ -378,6 +399,8 @@ public static class HelpToPlayer
             {
                 //высвечиваем блок
                 ChangeSorting(curBlock.gameObject, activeHint);
+
+                //добавляем эффект
 
                 //таймаут для удаления подсказки
                 CanvasLiveTime(3);
@@ -419,6 +442,7 @@ public static class HelpToPlayer
             //hintsList.Remove(activeHint);
             activeHint = null;
             deletedByClickingOnCanvas = false;
+            JsonSaveAndLoad.RecordSave(hintsStatus);
             return true;
         }
         else
