@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public static class HelpToPlayer
 {
-
     private static List<Hint> hintsList = new List<Hint>();
     private static HintStatus[] hintsStatus = null;
     private static Hint activeHint = null;
@@ -66,23 +65,28 @@ public static class HelpToPlayer
                 //находим нужную подсказку
                 if (activeHint.elementsTypeEnum == ElementsTypeEnum.Standard)
                 {
-                    created = CreateElementsTypeStandardHelp();
+                    created = CreateStandardElementHelp();
                 }
                 else if (activeHint.elementsTypeEnum == ElementsTypeEnum.CrushableWall)
                 {                    
-                    created = CreateElementsTypeCrushableWallHelp(activeHint.elementsTypeEnum);
+                    created = CreateCrushableWallHelp(activeHint.elementsTypeEnum);
                 }
                 else if (activeHint.elementsTypeEnum == ElementsTypeEnum.SmallFlask || activeHint.elementsTypeEnum == ElementsTypeEnum.MediumFlask || activeHint.elementsTypeEnum == ElementsTypeEnum.BigFlask)
                 {
-                    created = CreateElementsTypeFlaskHelp(activeHint.elementsTypeEnum);
+                    created = CreateFlaskHelp(activeHint.elementsTypeEnum);
                 }
                 else if (activeHint.elementsTypeEnum == ElementsTypeEnum.ImmortalWall)
                 {
-                    created = CreateElementsTypeImmortalWallHelp(activeHint.elementsTypeEnum);
+                    created = CreateImortalWallHelp();
+                }
+                else if (activeHint.elementsTypeEnum == ElementsTypeEnum.Drop)
+                {
+                    created = CreateDropElementHelp();
                 }
                 else
                 {
                     //неудалось определить подсказку
+                    Debug.Log("Неудалось определить подсказку!");
                 }
 
                 //если удалось создать подсказку, выходим из цикла
@@ -98,6 +102,10 @@ public static class HelpToPlayer
                     Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
                     Button button = gOPanel.GetComponent<Button>();
                     button.onClick.AddListener(delegate { DeletedByClickingOnCanvas(); });
+
+                    //показываем текст
+                    CreateTextCloud();
+
                     //помечаем как показанную
                     hintsStatus[(int)activeHint.elementsTypeEnum].status = true;
                     //добавляем для удаления
@@ -121,7 +129,96 @@ public static class HelpToPlayer
         return created;
     }
 
-    private static bool CreateElementsTypeStandardHelp() {
+    private static void CreateTextCloud()
+    {
+        if (activeHint.spriteRendersSetingList.Count > 0)
+        {
+            //находим самый левый верхний объект
+            Vector3 newPosition = activeHint.spriteRendersSetingList[0].spriteRenderer.transform.position;
+            foreach (SpriteRenderSettings item in activeHint.spriteRendersSetingList)
+            {
+                //обрабатываем только блоки
+                if (item.spriteRenderer.GetComponent<Block>())
+                {
+                    if (item.spriteRenderer.transform.position.x < newPosition.x)
+                    {
+                        newPosition.x = item.spriteRenderer.transform.position.x;
+                    }
+
+                    if (item.spriteRenderer.transform.position.y > newPosition.y)
+                    {
+                        newPosition.y = item.spriteRenderer.transform.position.y;
+                    }
+                }                
+            }
+
+            Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
+            Transform textCloud = gOPanel.transform.Find("TextCloud");
+            textCloud.position = new Vector3(newPosition.x - 3, newPosition.y, newPosition.z);
+
+            //если слишков высоко, то смещаем вниз до пределов экрана
+            RectTransform rectTransformGOPanel = gOPanel.GetComponent<RectTransform>();
+            RectTransform rectTransformTextCloud = textCloud.GetComponent<RectTransform>();
+            if (-rectTransformTextCloud.anchoredPosition.y < rectTransformTextCloud.rect.height * 0.5f)
+            {
+                rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x, - rectTransformTextCloud.rect.height * 0.5f);
+            }
+
+            //если слишков низко, то смещаем вверх до пределов экрана
+            if (rectTransformGOPanel.rect.height < -rectTransformTextCloud.anchoredPosition.y + rectTransformTextCloud.rect.height * 0.5f)
+            {
+                rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x, -rectTransformGOPanel.rect.height + rectTransformTextCloud.rect.height * 0.5f);
+            }
+
+            //!!!сделать перенос на правую сторону
+            
+            Text text = textCloud.GetComponentInChildren<Text>();
+
+            if (activeHint.elementsTypeEnum == ElementsTypeEnum.Standard)
+            {
+                text.text = "Что бы собрать растения в нашем саду, их нужно собрать в линии из более чем двух растений. Попробуйте передвинуть выделяющееся растение!";
+            }
+            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.SmallFlask)
+            {
+                text.text = "Это маленький бонус за сбор линии из 4 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
+            }
+            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.MediumFlask)
+            {
+                text.text = "Это маленький бонус за сбор линии из 5 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
+            }
+            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.BigFlask)
+            {
+                text.text = "Это маленький бонус за сбор линии из 6 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
+            }
+            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.CrushableWall)
+            {
+                text.text = "Это стену вы можете взорвать или уничтожить собрав линию рядом! Соберите линию.";
+            }
+            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.ImmortalWall)
+            {
+                text.text = "Это стену вы не сможете разрушить, она очень крепкая!";
+            }
+            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.Drop)
+            {
+                text.text = "Этот элемент лишний на поле, и что бы его убрать, его нужно согнать через все поле в самый низ!";
+            }
+            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.SeedBarrel)
+            {
+                text.text = "Это бочка с зернами, она наполняется когда рядом собираются растения указанные на бочке!";
+            }
+            else
+            {
+                text.text = "Често говоря, я и сам не понимаю, что происходит :)";
+            }
+        }
+        else
+        {
+            Debug.Log("Нет ни одного SpriteRenderSettings для обработки");
+            return;
+        }
+    }
+
+    private static bool CreateStandardElementHelp() {
         List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
         //Если нет доступных ходов, то выходим
         if (elementsForNextMoveList.Count == 0)
@@ -142,7 +239,7 @@ public static class HelpToPlayer
         
     }
 
-    private static bool CreateElementsTypeFlaskHelp(ElementsTypeEnum elementsTypeEnum) {
+    private static bool CreateFlaskHelp(ElementsTypeEnum elementsTypeEnum) {
         //берем любую маленькую фласку
         //делаем подсветку фласки и соседних блококв
         //наоходим все объекты с нужным элементом
@@ -187,7 +284,7 @@ public static class HelpToPlayer
         return false;
     }
 
-    private static bool CreateElementsTypeCrushableWallHelp(ElementsTypeEnum elementsTypeEnum)
+    private static bool CreateCrushableWallHelp(ElementsTypeEnum elementsTypeEnum)
     {
         //получаем возможные ходы
         List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
@@ -241,7 +338,7 @@ public static class HelpToPlayer
         return false;
     }
 
-    private static bool CreateElementsTypeImmortalWallHelp(ElementsTypeEnum elementsTypeEnum)
+    private static bool CreateImortalWallHelp()
     {
         //получаем все стены
         ElementWall[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(ElementWall)) as ElementWall[];
@@ -252,7 +349,7 @@ public static class HelpToPlayer
             //берем блок с нашим элементом
             Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);
 
-            if (item.Type == elementsTypeEnum && curBlock != null)
+            if (item.Type == ElementsTypeEnum.ImmortalWall && curBlock != null)
             {
                 //высвечиваем блок
                 ChangeSorting(curBlock.gameObject, activeHint);
@@ -262,7 +359,32 @@ public static class HelpToPlayer
                 return true;
             }
         }
-        Debug.Log("Не нашли ни одной разрушаемой стены!");
+        Debug.Log("Не нашли ни одной бесмертной стены!");
+        return false;
+    }
+
+    private static bool CreateDropElementHelp()
+    {
+        //получаем все элементы
+        Element[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(Element)) as Element[];
+
+        //если нашли хоть один элемент
+        foreach (Element item in findeObjects)
+        {
+            //берем блок с нашим элементом
+            Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);
+
+            if (item.Type == ElementsTypeEnum.Drop && curBlock != null)
+            {
+                //высвечиваем блок
+                ChangeSorting(curBlock.gameObject, activeHint);
+
+                //таймаут для удаления подсказки
+                CanvasLiveTime(3);
+                return true;
+            }
+        }
+        Debug.Log("Не нашли ни одного сбрасываемого элемента!");
         return false;
     }
 
@@ -384,7 +506,11 @@ public static class HelpToPlayer
             //если прошло больше времени чем указано
             if ((Time.time - delayTime) > timeCreateHints)
             {
-                DellGameHelp();
+                if (DellGameHelp())
+                {
+                    //выполняем ход
+                    GridBlocks.Instance.Move();
+                }
             }
         }
     }
