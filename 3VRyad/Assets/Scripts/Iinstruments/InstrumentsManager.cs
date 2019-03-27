@@ -48,26 +48,36 @@ public class InstrumentsManager : MonoBehaviour
 
         for (int i = 0; i < instruments.Length; i++)
         {
-            GameObject elementGameObject = Instantiate(prefabInstrument, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenInstruments)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
-            Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
+            instruments[i].GameObject = Instantiate(prefabInstrument, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenInstruments)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
+            Image image = instruments[i].GameObject.GetComponent(typeof(Image)) as Image;
             image.sprite = SpriteBank.SetShape(instruments[i].Type);
             instruments[i].Image = image;
             instruments[i].Text = image.GetComponentInChildren<Text>();
-            instruments[i].AddAction(elementGameObject);            
+            instruments[i].AddAction(instruments[i].GameObject);            
         }
     }
 
     public void PreparInstrument(Instrument instrument)
     {
-        //добавить проверку что нет актиного инструмента
+        //деактивируем предыдущий инструмент
+        if (preparedInstrument != null)
+        {
+            DeactivateInstrument();
+        }
         instrumentPrepared = true;
         preparedInstrument = instrument;
+        //создаем эффект подсветки
+        preparedInstrument.PSSelect = Instantiate(MainParticleSystem.Instance.pSSelect, preparedInstrument.GameObject.transform);
     }
 
     public void DeactivateInstrument()
     {
         instrumentPrepared = false;
-        preparedInstrument = null;
+        if (preparedInstrument != null && preparedInstrument.PSSelect != null)
+        {
+            Destroy(preparedInstrument.PSSelect);
+        }
+        preparedInstrument = null;        
     }
 
     public void ActivateInstrument(Block block) {
@@ -105,7 +115,7 @@ public class InstrumentsManager : MonoBehaviour
                     successfulActivation = false;
                     break;
             }
-            instrumentPrepared = false;
+            //instrumentPrepared = false;
 
             if (successfulActivation)
             {
@@ -113,7 +123,8 @@ public class InstrumentsManager : MonoBehaviour
                 preparedInstrument.SubQuantity();
                 GridBlocks.Instance.Move();
                 successfulActivation = false;
-            }            
+            }
+            DeactivateInstrument();
         }
     }
 
@@ -139,7 +150,7 @@ public class InstrumentsManager : MonoBehaviour
         {            
             GameObject instrumentGO = new GameObject();
             //добавляем эффект
-            Instantiate(MainParticleSystem.Instance.prefabMagicalTail, instrumentGO.transform);
+            Instantiate(MainParticleSystem.Instance.pSMagicalTail, instrumentGO.transform);
             SpriteRenderer spriteRenderer = instrumentGO.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = preparedInstrument.Image.sprite;
             spriteRenderer.sortingLayerName = "Magic";
@@ -249,7 +260,7 @@ public class InstrumentsManager : MonoBehaviour
                         curBlock.CreatElement(GridBlocks.Instance.prefabElement, block.Element.Shape, block.Element.Type);
                         curBlock.Element.transform.position = block.transform.position;
                         //добавляем эффект
-                        GameObject effect = Instantiate(MainParticleSystem.Instance.prefabMagicalTail, curBlock.Element.transform);
+                        GameObject effect = Instantiate(MainParticleSystem.Instance.pSMagicalTail, curBlock.Element.transform);
                         Destroy(effect, 4);
 
                         repainted++;

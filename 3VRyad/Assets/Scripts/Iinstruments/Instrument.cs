@@ -8,6 +8,8 @@ public class Instrument
 {
     [SerializeField] private InstrumentsEnum type;//какой вид инструмента
     [SerializeField] private int quantity;//доступное количество
+    private GameObject gameObject;//объект инструмента
+    private GameObject pSSelect;//наложенный эффект выделения
     private Image image;
     private Text text;
     private Button button;
@@ -54,6 +56,30 @@ public class Instrument
         get
         {
             return type;
+        }
+    }
+    public GameObject GameObject
+    {
+        get
+        {
+            return gameObject;
+        }
+
+        set
+        {
+            gameObject = value;
+        }
+    }
+    public GameObject PSSelect
+    {
+        get
+        {
+            return pSSelect;
+        }
+
+        set
+        {
+            pSSelect = value;
         }
     }
 

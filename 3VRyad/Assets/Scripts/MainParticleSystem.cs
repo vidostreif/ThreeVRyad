@@ -5,7 +5,8 @@ using UnityEngine;
 public class MainParticleSystem : MonoBehaviour
 {
     public static MainParticleSystem Instance; // Синглтон
-    public GameObject prefabMagicalTail;
+    public GameObject pSMagicalTail;
+    public GameObject pSSelect;
 
     void Awake()
     {

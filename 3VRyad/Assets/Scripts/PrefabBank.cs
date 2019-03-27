@@ -5,6 +5,8 @@ using UnityEngine;
 public class PrefabBank : MonoBehaviour
 {
     public static PrefabBank Instance; // Синглтон
+
+    //интерфейс
     public GameObject levelsCanvasPrefab;
     public GameObject regionsCanvasPrefab;
     public GameObject levelButtonPrefab;

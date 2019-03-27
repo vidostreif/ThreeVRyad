@@ -176,5 +176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0ba9119ac108c4785a28b9d9525e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabMagicalTail: {fileID: 3255581534497179977, guid: ef7b6435c945fca4cbc2a2b98bf820b5,
+  pSMagicalTail: {fileID: 3255581534497179977, guid: ef7b6435c945fca4cbc2a2b98bf820b5,
+    type: 3}
+  pSSelect: {fileID: 8611567648739745067, guid: caa5fc562caea1d4fa52f355ff2a180c,
     type: 3}
