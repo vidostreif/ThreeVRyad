@@ -228,6 +228,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(Tasks), true)]
 public class TasksEditor : Editor
 {
@@ -248,3 +249,4 @@ public class TasksEditor : Editor
         }
     }
 }
+#endif
