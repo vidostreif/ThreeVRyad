@@ -176,7 +176,8 @@ public class BaseElement : MonoBehaviour
         destroyed = true;
         ElementsList.DellElement(shape);
         Score.Instance.CreateScoreElement(transform.position, score);
-
+        SuperBonus.Instance.CreatePowerSuperBonus(transform.position, score);
+        
         //определяем есть ли вокруг элементы коллекционирующие наш вид элемента
         Block[] blocksAround = GridBlocks.Instance.GetAroundBlocks(this.PositionInGrid);
         foreach (Block item in blocksAround)

@@ -463,17 +463,24 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     //проверяет нахождение блока в массивах для обработки
     public bool BlockInProcessing(Block inBlock) {
+        //если заблокирован
+        if (inBlock != null && inBlock.Blocked)
+        {
+            return true;
+        }
+        //в списке для удара
         if (blockFieldsList.Contains(inBlock))
         {
             return true;
         }
+        //в списке для последовательного выполнения ходов
         foreach (Blocks blocks in elementsForMoveList)
         {
             foreach (Block block in blocks.block)
             {
                 if (block == inBlock)
                 {
-
+                    return true;
                 }
             }
         }
@@ -498,7 +505,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (x != 0 && x != containers.GetLength(0) - 1)
                 {
                     //проверяем что соседние блоки существуют
-                    if (BlockCheck.ThisStandardBlockWithElement(neighboringBlocks.Left) && BlockCheck.ThisStandardBlockWithElement(neighboringBlocks.Right) && BlockCheck.ThisStandardBlockWithElement(containers[x].block[y]))
+                    if (BlockCheck.ThisNoBlockedBlockWithElement(neighboringBlocks.Left) && BlockCheck.ThisNoBlockedBlockWithElement(neighboringBlocks.Right) && BlockCheck.ThisNoBlockedBlockWithElement(containers[x].block[y]))
                     {
                         ////проверяем что элементы существуют в блоках
                         if (neighboringBlocks.Left.Element.speed == 0 && neighboringBlocks.Right.Element.speed == 0 && containers[x].block[y].Element.speed == 0)
@@ -528,7 +535,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (y != 0 && y != containers[x].block.GetLength(0) - 1)
                 {
                     //Проверяем что соседние блоки существуют
-                    if (BlockCheck.ThisStandardBlockWithElement(neighboringBlocks.Up) && BlockCheck.ThisStandardBlockWithElement(neighboringBlocks.Down) && BlockCheck.ThisStandardBlockWithElement(containers[x].block[y]))
+                    if (BlockCheck.ThisNoBlockedBlockWithElement(neighboringBlocks.Up) && BlockCheck.ThisNoBlockedBlockWithElement(neighboringBlocks.Down) && BlockCheck.ThisNoBlockedBlockWithElement(containers[x].block[y]))
                     {
                         if (neighboringBlocks.Up.Element.speed == 0 && neighboringBlocks.Down.Element.speed == 0 && containers[x].block[y].Element.speed == 0)
                         {
@@ -672,7 +679,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
                 //если стандартный блок и в нем есть элемент
-                if (BlockCheck.ThisStandardBlockWithElement(containers[x].block[y]))
+                if (BlockCheck.ThisNoBlockedBlockWithElement(containers[x].block[y]))
                 {
                     for (int j = 0; j < 2; j++)
                     {

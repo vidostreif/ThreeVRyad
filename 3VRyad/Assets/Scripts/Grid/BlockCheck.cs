@@ -95,10 +95,10 @@ public static class BlockCheck
         }
     }
 
-    public static bool ThisStandardBlockWithElement(Block block)
+    public static bool ThisNoBlockedBlockWithElement(Block block)
     {
 
-        if (block != null && block.Type == BlockTypeEnum.Standard && block.Element != null && !block.Element.Destroyed)
+        if (block != null && !block.Blocked && block.Element != null && !block.Element.Destroyed)
         {
             return true;
         }

@@ -14,7 +14,7 @@ public class Block : MonoBehaviour {
     [SerializeField] protected SpriteRenderer spriteRenderer;
     [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected bool dropping;//сбрасывающий блок
-
+    [SerializeField] protected bool blocked;//заблокирован для действий
 
     public BlockTypeEnum Type
     {
@@ -139,6 +139,18 @@ public class Block : MonoBehaviour {
         set
         {
             dropping = value;
+        }
+    }
+    public bool Blocked
+    {
+        get
+        {
+            return blocked;
+        }
+
+        set
+        {
+            blocked = value;
         }
     }
 

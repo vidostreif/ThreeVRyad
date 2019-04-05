@@ -18,18 +18,6 @@ public static class SupportFunctions
         }
     }
 
-    //public static void MixArray(List<ElementsPriority> arr)
-    //{
-    //    for (int i = (arr.Count - 1); i >= 1; i--)
-    //    {
-    //        int j = UnityEngine.Random.Range(0, i + 1);
-    //        var temp = arr[j];
-    //        arr[j] = arr[i];
-    //        arr[i] = temp;
-    //    }
-    //}
-
-
     public static void MixArray<T>(List<T> list)
         {
             System.Random rand = new System.Random();

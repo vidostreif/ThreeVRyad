@@ -204,22 +204,21 @@ public class InstrumentsManager : MonoBehaviour
     //активация вихря
     //перемешивает стандартные незаблокированные элементы
     private IEnumerator ActivateVortex(Block block)
-    {
+    {   //если сетка выполняет действия, то ожидаем
+        do
+        {
+            yield return new WaitForSeconds(0.01f);
+            //если инструмент был деактивирован
+            if (instrumentPrepared == false)
+            {
+                successfulActivation = false;
+                yield break;
+            }
+        } while (GridBlocks.Instance.blockedForMove);
+
         Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
         if (blocks.Length > 1)
         {
-            //если сетка выполняет действия, то ожидаем
-            do
-            {
-                yield return new WaitForSeconds(0.01f);
-                //если инструмент был деактивирован
-                if (instrumentPrepared == false)
-                {
-                    successfulActivation = false;
-                    yield break;
-                }
-            } while (GridBlocks.Instance.blockedForMove);
-
             GridBlocks.Instance.MixStandartElements();
             yield return new WaitForSeconds(0.3f);
             successfulActivation = true;

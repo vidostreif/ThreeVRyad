@@ -148,9 +148,20 @@ public class MainAnimator : MonoBehaviour {
 
                 if (item.smoothEnum == SmoothEnum.InArc)
                 {
-                    float newPositionX = Mathf.SmoothDamp(item.thisTransform.position.x, item.targetPosition.x, ref item.yVelocity, item.smoothTime);
-                    float newPositionY = Mathf.SmoothDamp(item.thisTransform.position.y, item.targetPosition.y, ref item.yVelocity, item.smoothTime);
+                    float newPositionX = Mathf.SmoothDamp(item.thisTransform.position.x, item.targetPosition.x, ref item.yVelocity, Time.deltaTime * 100 * item.smoothTime);
+                    float newPositionY = Mathf.SmoothDamp(item.thisTransform.position.y, item.targetPosition.y, ref item.yVelocity, Time.deltaTime * 100 * item.smoothTime);
                     item.thisTransform.position = new Vector3(newPositionX, newPositionY, item.targetPosition.z);
+                }
+                else if(item.smoothEnum == SmoothEnum.InArcWithAcceleration)
+                {
+                    if (item.yVelocity < 1.0f)
+                    {
+                        item.yVelocity += item.smoothTime * Time.deltaTime;
+
+                        Vector3 m1 = Vector3.Lerp(item.startPosition, item.intermediatePosition, item.yVelocity);
+                        Vector3 m2 = Vector3.Lerp(item.intermediatePosition, item.targetPosition, item.yVelocity);
+                        item.thisTransform.position = Vector3.Lerp(m1, m2, item.yVelocity);
+                    }
                 }
                 else if (item.smoothEnum == SmoothEnum.InLine)
                 {
@@ -206,7 +217,7 @@ public class MainAnimator : MonoBehaviour {
                     //}
 
                     if (item.destroyAfterMoving)
-                        DestroyImmediate(item.thisTransform.gameObject);
+                        Destroy(item.thisTransform.gameObject, 0.5f);
                     moveElementsForRemove.Add(item);
                 }
             }

@@ -7,6 +7,8 @@ public class MainParticleSystem : MonoBehaviour
     public static MainParticleSystem Instance; // Синглтон
     public GameObject pSMagicalTail;
     public GameObject pSSelect;
+    public GameObject pSAddPowerSuperBonus;
+    public GameObject pSBeatsSuperBonus;
 
     void Awake()
     {
