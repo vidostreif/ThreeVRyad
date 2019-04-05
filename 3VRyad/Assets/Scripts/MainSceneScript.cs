@@ -42,9 +42,6 @@ public class MainSceneScript : MonoBehaviour {
 
     public void CompleteGame()
     {
-        HelpToPlayer.ClearHintList();//очищаем список подсказок
-        InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
-
         CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
@@ -97,6 +94,18 @@ public class MainSceneScript : MonoBehaviour {
             textEndGame.text = "Поражение!";
             Destroy(gONextLevelButton.gameObject);
         }
+
+        ResetScene();
+    }
+
+    private void ResetScene()
+    {
+        //Сбрасываем значения
+        HelpToPlayer.ClearHintList();//очищаем список подсказок
+        InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
+        Tasks.Instance.ResetParameters();
+        Score.Instance.ResetParameters();
+        SuperBonus.Instance.ResetParameters();
     }
 
     public void RestartLevel()

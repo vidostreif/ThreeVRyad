@@ -57,6 +57,14 @@ public class Score : MonoBehaviour, IESaveAndLoad
         }
     }
 
+    public void ResetParameters()
+    {
+        //Сбрасываем значения
+        score = 0;
+        addScore = 0;
+        UpdateText();
+    }
+
     public void CreateScoreElement(Vector3 position, int score)
     {
         GameObject scoreElement = Instantiate(PrefabBank.Instance.scoreElementPrefab, transform);
@@ -100,7 +108,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
     {
         return this.GetType();
     }
-    //передаем данные о на стройках в xml формате
+    //передаем данные о настройках в xml формате
     public XElement GetXElement()
     {
         XElement mainXElement = new XElement(this.GetType().ToString());
@@ -114,9 +122,6 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
     public void RecoverFromXElement(XElement tasksXElement)
     {
-        //Сбрасываем значения
-        score = 0;
-        addScore = 0;
 
         //восстанавливаем значения
         this.scoreForFirstStar = int.Parse(tasksXElement.Element("scoreForFirstStar").Value);
@@ -132,5 +137,6 @@ public class Score : MonoBehaviour, IESaveAndLoad
             text = transform.GetComponentInChildren<Text>();
             text.text = "Для первой " + scoreForFirstStar + "\nДля второй " + scoreForSecondStar + "\nДля третьей " + scoreForThirdStar;
         }
+        ResetParameters();
     }
 }

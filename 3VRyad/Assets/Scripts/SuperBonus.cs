@@ -53,7 +53,7 @@ public class SuperBonus : MonoBehaviour
                     {
                         item.Block.Hit();
                         item.Block.Blocked = false;
-                        Destroy(item.backlight, 0.5f);
+                        Destroy(item.backlight, 0.1f);
                     }
                     HitSuperBonusListForDelete.Add(item);
                 }
@@ -73,6 +73,14 @@ public class SuperBonus : MonoBehaviour
         }
         
     }
+
+    public void ResetParameters()
+    {
+        //Сбрасываем значения
+        bonusPower = 0;
+        charges = 0;
+        FilledImage();
+    }
     //эффек добавления в чан
     public void CreatePowerSuperBonus(Vector3 position, int power)
     {
@@ -91,7 +99,7 @@ public class SuperBonus : MonoBehaviour
         beatsSuperBonus.transform.parent = targetTransform;
         GameObject element = Instantiate(MainParticleSystem.Instance.pSBeatsSuperBonus, beatsSuperBonus.transform);
         beatsSuperBonus.transform.position = transform.position;
-        MainAnimator.Instance.AddElementForSmoothMove(beatsSuperBonus.transform, targetTransform.position, 1, SmoothEnum.InArcWithAcceleration, smoothTime: 1.5f, destroyAfterMoving: true);
+        MainAnimator.Instance.AddElementForSmoothMove(beatsSuperBonus.transform, targetTransform.position, 1, SmoothEnum.InArc, smoothTime: 0.1f, destroyAfterMoving: true);
         return beatsSuperBonus;
     }
 
@@ -123,6 +131,7 @@ public class SuperBonus : MonoBehaviour
     {
         charges--;
         activated = true;
+        tankImage.fillAmount = 1;
         Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
 
         if (blocks.Length > 1)
@@ -141,13 +150,13 @@ public class SuperBonus : MonoBehaviour
                         GameObject backlight = Instantiate(MainParticleSystem.Instance.pSSelect, blocks[i].transform);
                         backlight.transform.position = blocks[i].transform.position;
                         HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(blocks[i].transform), blocks[i]));//добавляем в список для последующей обработки                        
-                        Destroy(backlight, 1);
                         yield return new WaitForSeconds(0.1f);
                     }                    
                 }
             }            
         }
         activated = false;
+        FilledImage();
     }
 }
 

@@ -146,22 +146,22 @@ public class MainAnimator : MonoBehaviour {
             {
                 moveIitems.Add(item.thisTransform);
 
-                if (item.smoothEnum == SmoothEnum.InArc)
+                if (item.smoothEnum == SmoothEnum.InArcWithSlowdown)
                 {
                     float newPositionX = Mathf.SmoothDamp(item.thisTransform.position.x, item.targetPosition.x, ref item.yVelocity, Time.deltaTime * 100 * item.smoothTime);
                     float newPositionY = Mathf.SmoothDamp(item.thisTransform.position.y, item.targetPosition.y, ref item.yVelocity, Time.deltaTime * 100 * item.smoothTime);
                     item.thisTransform.position = new Vector3(newPositionX, newPositionY, item.targetPosition.z);
                 }
-                else if(item.smoothEnum == SmoothEnum.InArcWithAcceleration)
+                else if(item.smoothEnum == SmoothEnum.InArc)
                 {
-                    if (item.yVelocity < 1.0f)
-                    {
-                        item.yVelocity += item.smoothTime * Time.deltaTime;
+                    //if (item.yVelocity < 1.0f)
+                    //{
+                        item.yVelocity += 0.1f * Time.deltaTime * item.smoothTime * 100;
 
                         Vector3 m1 = Vector3.Lerp(item.startPosition, item.intermediatePosition, item.yVelocity);
                         Vector3 m2 = Vector3.Lerp(item.intermediatePosition, item.targetPosition, item.yVelocity);
                         item.thisTransform.position = Vector3.Lerp(m1, m2, item.yVelocity);
-                    }
+                    //}
                 }
                 else if (item.smoothEnum == SmoothEnum.InLine)
                 {
@@ -217,7 +217,7 @@ public class MainAnimator : MonoBehaviour {
                     //}
 
                     if (item.destroyAfterMoving)
-                        Destroy(item.thisTransform.gameObject, 0.5f);
+                        Destroy(item.thisTransform.gameObject, 0.1f);
                     moveElementsForRemove.Add(item);
                 }
             }
@@ -265,7 +265,7 @@ public class MainAnimator : MonoBehaviour {
                             float offsetDistance = translation.magnitude;
                             //нормализируем вектор для упрощения вычисления направления
                             Vector3 direction = translation / offsetDistance;
-                            AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.2f, 5, SmoothEnum.InArc, 0.01f);
+                            AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.2f, 5, SmoothEnum.InArcWithSlowdown, 0.01f);
                             //AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);
                             AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
                             animatorElement.PlayIdleAnimation();

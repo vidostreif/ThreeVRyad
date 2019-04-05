@@ -47,10 +47,12 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         collectedAll = false;
     }
 
-    void Start()
-    {        
-        //UpdateMovesText();
-        //CreateCollectedElements();
+    public void ResetParameters()
+    {
+        //Сбрасываем значения
+        endGame = false;
+        collectedAll = false;
+        CreateCollectedElements();
     }
 
     //создание коллекции целей
@@ -80,23 +82,6 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             targets[i].Image = image;
             targets[i].Text = image.GetComponentInChildren<Text>();
         }
-    }
-
-    public bool Collect(Element element) {
-        //ищем данный вид элемента в массиве и если нашли, то возвращаем истина
-        return Collect((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()), element.transform);
-    }
-
-    public bool Collect(BlockingElement element)
-    {
-        //ищем данный вид элемента в массиве и если нашли, то возвращаем истина
-        return Collect((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()), element.transform);
-    }
-
-    public bool Collect(BehindElement element)
-    {
-        //ищем данный вид элемента в массиве и если нашли, то возвращаем истина
-        return Collect((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()), element.transform);
     }
 
     public bool Collect(AllShapeEnum allShape, Transform transformElement)
@@ -201,14 +186,6 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
     public void RecoverFromXElement(XElement tasksXElement)
     {
-        //Сбрасываем значения
-        endGame = false;
-        collectedAll = false;
-        ////удаляем GameObject
-        //foreach (Target target in targets)
-        //{
-        //    DestroyImmediate(target.GameObject);
-        //}
         //восстанавливаем значения
         this.moves = int.Parse(tasksXElement.Element("moves").Value);
         int sizeTargets = int.Parse(tasksXElement.Element("sizeTargets").Value);
@@ -224,7 +201,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             this.targets[iteration] = target;
             iteration++;
         }
-        CreateCollectedElements();
+        ResetParameters();
     }
 }
 

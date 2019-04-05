@@ -26,7 +26,7 @@ public class MoveElement {
         this.destroyAfterMoving = destroyAfterMoving;
         this.startPosition = objTransform.position;
 
-        if (smoothEnum == SmoothEnum.InArcWithAcceleration)
+        if (smoothEnum == SmoothEnum.InArc)
         {
             intermediatePosition = startPosition + (targetPosition - startPosition) / 2 + Vector3.up * 5.0f;
         }

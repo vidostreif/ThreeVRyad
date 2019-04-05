@@ -135,8 +135,8 @@ public enum BorderEnum
 
 public enum SmoothEnum
 {
+    InArcWithSlowdown,
     InArc,
-    InArcWithAcceleration,
     InLine,
     InLineWithOneSpeed,
     InLineWithAcceleration
