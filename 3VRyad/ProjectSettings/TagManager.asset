@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Elements
+  - editor
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - 
   - Elements
   - Displacements
-  - 
+  - Editor
   - 
   - 
   - 
