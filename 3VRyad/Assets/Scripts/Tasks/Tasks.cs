@@ -17,7 +17,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     public static Tasks Instance; // Синглтон
     [HideInInspector] public Transform thisTransform;
     public GameObject prefabcollectedElements;
-    public float distanceBetweenTargets;
+    //public float distanceBetweenTargets;
     public bool collectedAll { get; protected set; }
     public Target[] targets;// список целей
 
@@ -61,7 +61,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     //создание коллекции целей
     public void CreateCollectedElements()
     {
-        //Debug.Log("CreateCollectedElements");
+        Debug.Log("CreateCollectedElements");
         //удаляем все задания
         string targetsName = "Targets";
         Transform targetsTransform = transform.Find(targetsName);
@@ -113,7 +113,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             targets[i].GameObject.transform.localScale = new Vector3(3,3,3);
             //yield return new WaitForSeconds(0.2f);
         }
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(1.5f);
         //делаем исчезновение
         Image imageCanvasStartGamePanel = canvasStartGamePanel.GetComponent<Image>();
         MainAnimator.Instance.AddElementForSmoothChangeColor(imageCanvasStartGamePanel, new Color(imageCanvasStartGamePanel.color.r, imageCanvasStartGamePanel.color.g, imageCanvasStartGamePanel.color.b, 0), 2f);
@@ -314,7 +314,7 @@ public class TasksEditor : Editor
         base.OnInspectorGUI();
         if (GUILayout.Button("Обновить"))
         {
-            thisTasks.CreateCollectedElements();
+            thisTasks.ResetParameters();
         }
     }
 }

@@ -1,11 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SuperBonus : MonoBehaviour
+public class SuperBonus : MonoBehaviour, IESaveAndLoad
 {
     public static SuperBonus Instance; // Синглтон
+    public bool allow;//разрешен на уровне
     public int maxBonusPower;//мощность для набора одного заряда
     public int beats;//количество ударов в одном заряде
     private int bonusPower = 0;
@@ -30,60 +33,65 @@ public class SuperBonus : MonoBehaviour
 
     private void Update()
     {
-        //активируем супер бонус если есть заряды и еще не закончили игру
-        if (charges > 0 && !activated && !Tasks.Instance.endGame)
+        if (allow)
         {
-            StartCoroutine(ActivateSuperBonus());
-        }
-
-        //обрабатываем ракеты которые долетели до нужного элемента
-        if (HitSuperBonusList.Count > 0)
-        {
-            foreach (HitSuperBonus item in HitSuperBonusList)
+            //активируем супер бонус если есть заряды и еще не закончили игру
+            if (charges > 0 && !activated && !Tasks.Instance.endGame)
             {
-                if (item.gameObjectBeat == null)
+                StartCoroutine(ActivateSuperBonus());
+            }
+
+            //обрабатываем ракеты которые долетели до нужного элемента
+            if (HitSuperBonusList.Count > 0)
+            {
+                foreach (HitSuperBonus item in HitSuperBonusList)
                 {
-                    if (item.Block != null)
+                    if (item.gameObjectBeat == null)
                     {
-                        item.Block.Hit();
-                        item.Block.Blocked = false;
-                        Destroy(item.backlight, 0.1f);
+                        if (item.Block != null)
+                        {
+                            item.Block.Hit();
+                            item.Block.Blocked = false;
+                            Destroy(item.backlight, 0.1f);
+                        }
+                        HitSuperBonusListForDelete.Add(item);
                     }
-                    HitSuperBonusListForDelete.Add(item);
+                }
+
+                foreach (HitSuperBonus item in HitSuperBonusListForDelete)
+                {
+                    HitSuperBonusList.Remove(item);
+                }
+                HitSuperBonusListForDelete.Clear();
+
+                //если ударили по всем блокам
+                if (HitSuperBonusList.Count == 0)
+                {
+                    GridBlocks.Instance.Move();
                 }
             }
-
-            foreach (HitSuperBonus item in HitSuperBonusListForDelete)
-            {
-                HitSuperBonusList.Remove(item);
-            }
-            HitSuperBonusListForDelete.Clear();
-
-            //если ударили по всем блокам
-            if (HitSuperBonusList.Count == 0)
-            {
-                GridBlocks.Instance.Move();
-            }
         }
-        
     }
 
     public void ResetParameters()
     {
         //Сбрасываем значения
         bonusPower = 0;
-        charges = 0;
+        charges = 0;        
         FilledImage();
     }
     //эффек добавления в чан
     public void CreatePowerSuperBonus(Vector3 position, int power)
     {
-        GameObject powerSuperBonus = new GameObject();
-        powerSuperBonus.transform.parent = transform;
-        GameObject element = Instantiate(MainParticleSystem.Instance.pSAddPowerSuperBonus, powerSuperBonus.transform);
-        powerSuperBonus.transform.position = position;
-        MainAnimator.Instance.AddElementForSmoothMove(powerSuperBonus.transform, transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 0.7f, destroyAfterMoving: true);
-        AddBonusPower(power);
+        if (allow)
+        {
+            GameObject powerSuperBonus = new GameObject();
+            powerSuperBonus.transform.parent = transform;
+            GameObject element = Instantiate(MainParticleSystem.Instance.pSAddPowerSuperBonus, powerSuperBonus.transform);
+            powerSuperBonus.transform.position = position;
+            MainAnimator.Instance.AddElementForSmoothMove(powerSuperBonus.transform, transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 0.7f, destroyAfterMoving: true);
+            AddBonusPower(power);
+        }        
     }
 
     //ракета
@@ -115,7 +123,8 @@ public class SuperBonus : MonoBehaviour
     //заполнение картинки, в соответсвии с заполнением бонуса
     private void FilledImage() {
 
-        if (maxBonusPower != 0)
+
+        if (maxBonusPower != 0 && tankImage != null)
         {
             tankImage.fillAmount = (float)bonusPower / (float)maxBonusPower;
         }        
@@ -151,6 +160,31 @@ public class SuperBonus : MonoBehaviour
         }
         activated = false;
         FilledImage();
+    }
+
+
+    //сохранение и заргрузка
+    public Type GetClassName()
+    {
+        return this.GetType();
+    }
+    //передаем данные о на стройках в xml формате
+    public XElement GetXElement()
+    {
+        XElement XElement = new XElement(this.GetType().ToString());
+        XElement.Add(new XElement("maxBonusPower", maxBonusPower));
+        XElement.Add(new XElement("beats", beats));
+        XElement.Add(new XElement("allow", allow));
+        return XElement;
+    }
+
+    public void RecoverFromXElement(XElement tasksXElement)
+    {
+        //восстанавливаем значения
+        this.maxBonusPower = int.Parse(tasksXElement.Element("maxBonusPower").Value);
+        this.beats = int.Parse(tasksXElement.Element("beats").Value);
+        try { this.allow = bool.Parse(tasksXElement.Element("allow").Value); } catch (Exception) { }        
+        ResetParameters();
     }
 }
 

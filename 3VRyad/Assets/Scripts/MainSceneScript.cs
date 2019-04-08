@@ -23,8 +23,7 @@ public class MainSceneScript : MonoBehaviour {
     }
 
     void Start()
-    {
-        ResetScene();
+    {        
         //восстанавливаем настройки сцены
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
@@ -32,15 +31,13 @@ public class MainSceneScript : MonoBehaviour {
         }
         else
         {
-            Tasks.Instance.ResetParameters();
+            ResetScene();            
         }
         Prepare();
     }
 
-    public void Prepare() {
-        
-        //Tasks.Instance.UpdateMovesText();
-        //Tasks.Instance.CreateCollectedElements();
+    public void Prepare()
+    {        
         BorderGrid.CircleGrid(GridBlocks.Instance);
         GridBlocks.Instance.StartFilling();
         GridBlocks.Instance.Move();
@@ -103,18 +100,16 @@ public class MainSceneScript : MonoBehaviour {
             textEndGame.text = "Поражение!";
             Destroy(gONextLevelButton.gameObject);
         }
-
-        //ResetScene();
     }
 
     private void ResetScene()
     {
-        //Сбрасываем значения
+        //Сбрасываем значения  
         HelpToPlayer.ClearHintList();//очищаем список подсказок
-        InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
-        //Tasks.Instance.ResetParameters();
+        Tasks.Instance.ResetParameters();
         Score.Instance.ResetParameters();
         SuperBonus.Instance.ResetParameters();
+        InstrumentsManager.Instance.ResetParameters();
     }
 
     public void RestartLevel()
@@ -122,7 +117,7 @@ public class MainSceneScript : MonoBehaviour {
         Destroy(CanvasMenu);
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
-            ResetScene();
+            //ResetScene();
             LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
         }
         else

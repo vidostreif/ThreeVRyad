@@ -8,6 +8,7 @@ public class Instrument
 {
     [SerializeField] private InstrumentsEnum type;//какой вид инструмента
     [SerializeField] private int quantity;//доступное количество
+    [SerializeField] private bool allow;//разрешен на уровне
     private GameObject gameObject;//объект инструмента
     private GameObject pSSelect;//наложенный эффект выделения
     private Image image;
@@ -82,6 +83,18 @@ public class Instrument
             pSSelect = value;
         }
     }
+    public bool Allow
+    {
+        get
+        {
+            return allow;
+        }
+
+        set
+        {
+            allow = value;
+        }
+    }
 
     public void AddAction(GameObject elementGameObject) {
         //добавляем действие к кнопке
@@ -102,7 +115,15 @@ public class Instrument
     //обнолвление текста
     private void UpdateText()
     {
-        text.text = "" + quantity;
+        if (allow)
+        {
+            text.text = "" + quantity;
+        }
+        else
+        {
+            text.text = "";
+        }
+        
     }
 
     public void SubQuantity()

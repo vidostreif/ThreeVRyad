@@ -1,16 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InstrumentsManager : MonoBehaviour
+#if UNITY_EDITOR
+[ExecuteInEditMode]
+#endif
+public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
 {
     public static InstrumentsManager Instance; // Синглтон
     [HideInInspector] public Transform thisTransform;
     public float distanceBetweenInstruments;
     public GameObject prefabInstrument;
-
     public Instrument[] instruments;// список инструментов 
+
     private bool instrumentPrepared = false;
     private Instrument preparedInstrument;
     private bool successfulActivation = false;
@@ -37,23 +42,54 @@ public class InstrumentsManager : MonoBehaviour
 
     void Start()
     {
+        //CreateInstruments();
+    }
+
+    public void ResetParameters()
+    {
+        //Сбрасываем значения
+        DeactivateInstrument();
+        //instrumentPrepared = false;
+        //successfulActivation = false;
+        //preparedInstrument = null;
         CreateInstruments();
     }
 
     //создание коллекции инструментов
     private void CreateInstruments()
     {
+        //удаляем все инструменты
+        string instrumentsName = "Instruments";
+        Transform instrumentsTransform = transform.Find(instrumentsName);
+        if (instrumentsTransform != null)
+        {
+            DestroyImmediate(instrumentsTransform.gameObject);
+        }
+        GameObject instrumentsParent = new GameObject();
+        instrumentsParent.transform.SetParent(transform, false);
+        instrumentsParent.name = instrumentsName;
+
         //смещение по y
         float startingYPoint = thisTransform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenInstruments) * (instruments.Length - 1)) * 0.5f;
 
         for (int i = 0; i < instruments.Length; i++)
-        {
-            instruments[i].GameObject = Instantiate(prefabInstrument, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenInstruments)), thisTransform.position.z), Quaternion.identity, this.thisTransform);
-            Image image = instruments[i].GameObject.GetComponent(typeof(Image)) as Image;
-            image.sprite = SpriteBank.SetShape(instruments[i].Type);
-            instruments[i].Image = image;
-            instruments[i].Text = image.GetComponentInChildren<Text>();
-            instruments[i].AddAction(instruments[i].GameObject);            
+        {            
+                instruments[i].GameObject = Instantiate(prefabInstrument, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenInstruments)), thisTransform.position.z), Quaternion.identity, instrumentsParent.transform);
+                Image image = instruments[i].GameObject.GetComponent(typeof(Image)) as Image;
+                image.sprite = SpriteBank.SetShape(instruments[i].Type);
+                instruments[i].Image = image;
+                instruments[i].Text = image.GetComponentInChildren<Text>();
+            //если разрешен на уровне
+            if (instruments[i].Allow)
+            {
+                instruments[i].AddAction(instruments[i].GameObject);
+            }
+            else
+            {
+                SupportFunctions.ChangeAlfa(instruments[i].Image, 0.2f);
+                
+                //!!!сверху повесить замок
+            }                 
         }
     }
 
@@ -61,8 +97,16 @@ public class InstrumentsManager : MonoBehaviour
     {
         //деактивируем предыдущий инструмент
         if (preparedInstrument != null)
-        {
-            DeactivateInstrument();
+        {            
+            if (preparedInstrument == instrument)
+            {
+                DeactivateInstrument();
+                return;
+            }
+            else
+            {
+                DeactivateInstrument();
+            }
         }
         instrumentPrepared = true;
         preparedInstrument = instrument;
@@ -280,5 +324,55 @@ public class InstrumentsManager : MonoBehaviour
             }
         }
         successfulActivation = false;
+    }
+
+
+    //сохранение и заргрузка
+    public Type GetClassName()
+    {
+        return this.GetType();
+    }
+    //передаем данные о на стройках в xml формате
+    public XElement GetXElement()
+    {
+        XElement XElement = new XElement(this.GetType().ToString());
+        //записываем все внешности и количество
+        XElement targetsXElement = new XElement("instruments");
+        foreach (Instrument instrument in instruments)
+        {
+            XAttribute type = new XAttribute("type", instrument.Type);
+            XAttribute allow = new XAttribute("allow", instrument.Allow);
+            XElement shapeAndGoalXElement = new XElement("typeAndAllow", type, allow);
+            targetsXElement.Add(shapeAndGoalXElement);
+        }
+        XElement.Add(targetsXElement);
+
+        return XElement;
+    }
+
+    public void RecoverFromXElement(XElement tasksXElement)
+    {
+        //восстанавливаем значения
+        foreach (Instrument item in instruments)
+        {
+            item.Allow = true;
+        }
+
+        foreach (XElement shapeAndGoalXElement in tasksXElement.Element("instruments").Elements("typeAndAllow"))
+        {
+            InstrumentsEnum type = (InstrumentsEnum)Enum.Parse(typeof(InstrumentsEnum), shapeAndGoalXElement.Attribute("type").Value);
+            bool allow = bool.Parse(shapeAndGoalXElement.Attribute("allow").Value);
+
+            //ищем наш инструмент
+            foreach (Instrument item in instruments)
+            {
+                if (item.Type == type)
+                {
+                    item.Allow = allow;
+                    break;
+                }
+            }
+        }
+        ResetParameters();
     }
 }
