@@ -24,17 +24,23 @@ public class MainSceneScript : MonoBehaviour {
 
     void Start()
     {
+        ResetScene();
         //восстанавливаем настройки сцены
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
             LevelMenu.Instance.LoadXml(LevelMenu.Instance.LastLoadLevel);
         }
+        else
+        {
+            Tasks.Instance.ResetParameters();
+        }
         Prepare();
     }
 
     public void Prepare() {
-        Tasks.Instance.UpdateMovesText();
-        Tasks.Instance.CreateCollectedElements();
+        
+        //Tasks.Instance.UpdateMovesText();
+        //Tasks.Instance.CreateCollectedElements();
         BorderGrid.CircleGrid(GridBlocks.Instance);
         GridBlocks.Instance.StartFilling();
         GridBlocks.Instance.Move();
@@ -42,6 +48,9 @@ public class MainSceneScript : MonoBehaviour {
 
     public void CompleteGame()
     {
+        HelpToPlayer.ClearHintList();//очищаем список подсказок
+        InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
+
         CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
@@ -95,7 +104,7 @@ public class MainSceneScript : MonoBehaviour {
             Destroy(gONextLevelButton.gameObject);
         }
 
-        ResetScene();
+        //ResetScene();
     }
 
     private void ResetScene()
@@ -103,7 +112,7 @@ public class MainSceneScript : MonoBehaviour {
         //Сбрасываем значения
         HelpToPlayer.ClearHintList();//очищаем список подсказок
         InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
-        Tasks.Instance.ResetParameters();
+        //Tasks.Instance.ResetParameters();
         Score.Instance.ResetParameters();
         SuperBonus.Instance.ResetParameters();
     }
@@ -113,6 +122,7 @@ public class MainSceneScript : MonoBehaviour {
         Destroy(CanvasMenu);
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
+            ResetScene();
             LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
         }
         else

@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 114191125961773848}
   - component: {fileID: 114031967854233578}
   - component: {fileID: 713935765}
+  - component: {fileID: 4383766326852242122}
   m_Layer: 0
   m_Name: GameHelper
   m_TagString: GameController
@@ -179,4 +180,34 @@ MonoBehaviour:
   pSMagicalTail: {fileID: 3255581534497179977, guid: ef7b6435c945fca4cbc2a2b98bf820b5,
     type: 3}
   pSSelect: {fileID: 8611567648739745067, guid: caa5fc562caea1d4fa52f355ff2a180c,
+    type: 3}
+  pSAddPowerSuperBonus: {fileID: 1950090472279298309, guid: 5fdae8ba271d78348b7ecb3f88f2dafe,
+    type: 3}
+  pSBeatsSuperBonus: {fileID: 41670316522004511, guid: 0ef67ff3713e84d46b8d6e91596fe7f3,
+    type: 3}
+--- !u!114 &4383766326852242122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234334804531704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d2585fca08d3a2408c7b87d41de681a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelsCanvasPrefab: {fileID: 2025017914175311533, guid: a4bf554d27bb35c49ba6533d01b0d6d0,
+    type: 3}
+  regionsCanvasPrefab: {fileID: 8009733685089108250, guid: d2d8ebd1ae0a8d44db2aae5112367924,
+    type: 3}
+  levelButtonPrefab: {fileID: 8229304379904151616, guid: c9e5f9747cbbd2c4cab1e84832ebc693,
+    type: 3}
+  regionButtonPrefab: {fileID: 5749990630111453082, guid: 1e1a00a06ecf4474e9ed1fcaaf13b70b,
+    type: 3}
+  scoreElementPrefab: {fileID: 117811080947788871, guid: a205143d57c405547a4d1232b52256d3,
+    type: 3}
+  canvasHelpToPlayer: {fileID: 650881581553827240, guid: 72ad9d3f0fe88e749a803220bb397405,
+    type: 3}
+  canvasStartGame: {fileID: 6618326486082433069, guid: ec635800295e07a438133710c8979466,
     type: 3}

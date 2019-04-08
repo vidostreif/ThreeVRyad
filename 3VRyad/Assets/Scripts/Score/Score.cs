@@ -29,13 +29,15 @@ public class Score : MonoBehaviour, IESaveAndLoad
         }
 
         Instance = this;
+
+        text = transform.GetComponentInChildren<Text>();
+        UpdateText();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        text = transform.GetComponentInChildren<Text>();
-        UpdateText();
+        
     }
 
     // Update is called once per frame

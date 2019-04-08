@@ -92,7 +92,7 @@ public class MainAnimator : MonoBehaviour {
     }
     
     //добавление объекта для сглаженного перемещения
-    public void AddElementForSmoothMove(Transform objTransform, Vector3 targetPosition, int priority, SmoothEnum smoothEnum, float smoothTime = 0.05f, bool destroyAfterMoving = false, bool addToQueue = false)
+    public void AddElementForSmoothMove(Transform objTransform, Vector3 targetPosition, int priority, SmoothEnum smoothEnum, float smoothTime = 0.05f, bool destroyAfterMoving = false, bool addToQueue = false, Action action = null)
     {
         //проверяем есть ли уже такой объект и какой у него приоритет
         bool add = true;
@@ -126,7 +126,7 @@ public class MainAnimator : MonoBehaviour {
             }
 
             //добавляем
-            moveElements.Add(new MoveElement(objTransform, targetPosition, smoothTime, smoothEnum, priority, destroyAfterMoving));
+            moveElements.Add(new MoveElement(objTransform, targetPosition, smoothTime, smoothEnum, priority, destroyAfterMoving, action));
         }
         
     }
@@ -216,6 +216,10 @@ public class MainAnimator : MonoBehaviour {
                     //    animatorElement.PlayFallAnimation();
                     //}
 
+                    //выполняем прописанный делегат
+                    if (item.action != null)
+                        item.action();
+                    //удаляем если требуется
                     if (item.destroyAfterMoving)
                         Destroy(item.thisTransform.gameObject, 0.1f);
                     moveElementsForRemove.Add(item);

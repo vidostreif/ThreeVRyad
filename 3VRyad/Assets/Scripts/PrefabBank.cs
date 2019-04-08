@@ -15,6 +15,7 @@ public class PrefabBank : MonoBehaviour
     public GameObject scoreElementPrefab;
 
     public GameObject canvasHelpToPlayer;
+    public GameObject canvasStartGame;
 
     void Awake()
     {

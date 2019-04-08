@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,8 +16,9 @@ public class MoveElement {
     public SmoothEnum smoothEnum;
     public bool destroyAfterMoving;
     public float yVelocity = 0.0f;
+    public Action action;
 
-    public MoveElement(Transform objTransform, Vector3 targetPosition, float smoothTime, SmoothEnum smoothEnum, int priority, bool destroyAfterMoving)
+    public MoveElement(Transform objTransform, Vector3 targetPosition, float smoothTime, SmoothEnum smoothEnum, int priority, bool destroyAfterMoving, Action action)
     {
         this.thisTransform = objTransform;
         this.targetPosition = targetPosition;
@@ -25,6 +27,7 @@ public class MoveElement {
         this.priority = priority;
         this.destroyAfterMoving = destroyAfterMoving;
         this.startPosition = objTransform.position;
+        this.action = action;
 
         if (smoothEnum == SmoothEnum.InArc)
         {

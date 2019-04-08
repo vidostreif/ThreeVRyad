@@ -7,12 +7,13 @@ using UnityEngine.UI;
 using System.Xml.Linq;
 
 #if UNITY_EDITOR
-[InitializeOnLoad]
+//[InitializeOnLoad]
+[ExecuteInEditMode]
 #endif
 //задания
 public class Tasks : MonoBehaviour, IESaveAndLoad
 {
-        
+
     public static Tasks Instance; // Синглтон
     [HideInInspector] public Transform thisTransform;
     public GameObject prefabcollectedElements;
@@ -21,6 +22,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     public Target[] targets;// список целей
 
     private Text movesText;
+    private GameObject targetsParent;
     [SerializeField] private int moves; //количество ходов
     public bool endGame { get; protected set; } //признак что можно выполнить ход    
 
@@ -51,13 +53,15 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     {
         //Сбрасываем значения
         endGame = false;
-        collectedAll = false;
+        collectedAll = false;        
+        UpdateMovesText();
         CreateCollectedElements();
     }
 
     //создание коллекции целей
-    public void CreateCollectedElements() {
-        
+    public void CreateCollectedElements()
+    {
+        //Debug.Log("CreateCollectedElements");
         //удаляем все задания
         string targetsName = "Targets";
         Transform targetsTransform = transform.Find(targetsName);
@@ -65,24 +69,108 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             DestroyImmediate(targetsTransform.gameObject);
         }
-        GameObject targetsParent;
-        targetsParent = new GameObject();
-        targetsParent.name = targetsName;
-        targetsParent.transform.SetParent(transform, false);
-        targetsParent.transform.localPosition = new Vector3(-32, -32, targetsParent.transform.localPosition.z);
+        CreateTargetsParent();
 
-        //смещение по y
-        float startingYPoint = targetsParent.transform.position.y - ((1 + distanceBetweenTargets) * (targets.Length - 1)) * 0.5f;
+        if (targets.Length > 0)
+        {
+            //создаем задания
+            for (int i = 0; i < targets.Length; i++)
+            {
+                targets[i].GameObject = Instantiate(prefabcollectedElements);
+                Image image = targets[i].GameObject.GetComponent(typeof(Image)) as Image;
+                image.sprite = SpriteBank.SetShape(targets[i].elementsShape);
+                targets[i].Image = image;
+                targets[i].Text = image.GetComponentInChildren<Text>();
+            }
 
+            //создаем первичную анимацию если в игре
+            if (Application.isPlaying)
+            {
+                StartCoroutine(StartGameAnimation());
+            }
+            else
+            {
+                //перемещаем на основную панель   
+                MovingTasksToMainPanel();
+            }
+        }        
+    }
+
+    public IEnumerator StartGameAnimation()
+    {
+        //создаем первичную анимацию если в игре
+        GameObject canvasStartGame = Instantiate(PrefabBank.Instance.canvasStartGame);
+        canvasStartGame.GetComponent<Canvas>().worldCamera = Camera.main;
+        Transform canvasStartGamePanel = canvasStartGame.transform.Find("Panel");
+        //смещение по x
+        RectTransform rectTransformTarget = targets[0].GameObject.transform.GetComponent<RectTransform>();
+        float scale = rectTransformTarget.rect.width / rectTransformTarget.rect.size.x * 3.0f * 1.5f;
+        float startingXPoint = canvasStartGamePanel.transform.position.x - ((scale) * (targets.Length - 1)) * 0.5f;
         for (int i = 0; i < targets.Length; i++)
         {
-            targets[i].GameObject = Instantiate(prefabcollectedElements, new Vector3(targetsParent.transform.position.x, startingYPoint + (i * (1 + distanceBetweenTargets)), targetsParent.transform.position.z), Quaternion.identity, targetsParent.transform);
-            Image image = targets[i].GameObject.GetComponent(typeof(Image)) as Image;
-            image.sprite = SpriteBank.SetShape(targets[i].elementsShape);
-            targets[i].Image = image;
-            targets[i].Text = image.GetComponentInChildren<Text>();
+            targets[i].GameObject.transform.SetParent(canvasStartGamePanel, false);
+            targets[i].GameObject.transform.position = new Vector3(startingXPoint + (i * (scale)), canvasStartGamePanel.transform.position.y, canvasStartGamePanel.transform.position.z);
+            targets[i].GameObject.transform.localScale = new Vector3(3,3,3);
+            //yield return new WaitForSeconds(0.2f);
         }
+        yield return new WaitForSeconds(3.0f);
+        //делаем исчезновение
+        Image imageCanvasStartGamePanel = canvasStartGamePanel.GetComponent<Image>();
+        MainAnimator.Instance.AddElementForSmoothChangeColor(imageCanvasStartGamePanel, new Color(imageCanvasStartGamePanel.color.r, imageCanvasStartGamePanel.color.g, imageCanvasStartGamePanel.color.b, 0), 2f);
+        Destroy(canvasStartGame, 5f);
+        //перемещаем на основную панель
+        MovingTasksToMainPanel();
     }
+
+    public void CreateTargetsParent()
+    {
+        string targetsName = "Targets";
+        targetsParent = new GameObject();
+        targetsParent.transform.SetParent(transform, false);
+        //Instantiate(new GameObject(), transform);
+        targetsParent.name = targetsName;
+        targetsParent.transform.localPosition = new Vector3(-32, -32, targetsParent.transform.localPosition.z);
+    }
+
+    public void MovingTasksToMainPanel()
+    {
+        if (targets.Length > 0)
+        {
+            if (targetsParent == null)
+            {
+                CreateTargetsParent();
+            }
+            //перемещаем на основную панель
+            //смещение по y
+            RectTransform rectTransformTarget = targets[0].GameObject.transform.GetComponent<RectTransform>();
+            float scale = rectTransformTarget.rect.height / rectTransformTarget.rect.size.y * 1.5f;
+            float startingYPoint = targetsParent.transform.position.y - ((scale) * (targets.Length - 1)) * 0.5f;
+
+            for (int i = 0; i < targets.Length; i++)
+            {
+                if (Application.isPlaying)
+                {
+                    Transform targetTransform = targets[i].GameObject.transform;
+                    MainAnimator.Instance.AddElementForSmoothMove(targets[i].GameObject.transform, new Vector3(targetsParent.transform.position.x, startingYPoint + (i * (scale)), targetsParent.transform.position.z), 
+                        1, SmoothEnum.InLineWithOneSpeed, 0.3f, action: () => SetParentTargets(targetTransform));
+                }
+                else
+                {
+                    targets[i].GameObject.transform.SetParent(targetsParent.transform, false);
+                    targets[i].GameObject.transform.position = new Vector3(targetsParent.transform.position.x, startingYPoint + (i * (scale)), targetsParent.transform.position.z);
+                }
+                targets[i].GameObject.transform.localScale = new Vector3(1, 1, 1);
+
+            }
+        }
+
+    }
+
+    public void SetParentTargets(Transform targetTransform)
+    {
+        targetTransform.SetParent(targetsParent.transform, true);
+    }
+
 
     public bool Collect(AllShapeEnum allShape, Transform transformElement)
     {
@@ -102,7 +190,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     }
 
     //проверяем, не собрали ли мы коллекции
-    private void CheckAll() {
+    private void CheckAll()
+    {
         bool CollectedAll = true;
         foreach (Target item in targets)
         {
@@ -126,7 +215,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         }
     }
 
-    public void UpdateAllGoal() {
+    public void UpdateAllGoal()
+    {
         //обновляем данные по коллекциям
         foreach (Target item in targets)
         {
@@ -138,7 +228,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         }
     }
     //обнолвление текста количества ходов
-    public void UpdateMovesText() {
+    public void UpdateMovesText()
+    {
         movesText.text = "Ходы:" + Moves;
     }
 
@@ -153,9 +244,9 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             {
                 endGame = true;
             }
-        }        
+        }
     }
-    
+
     //сохранение и заргрузка
     public Type GetClassName()
     {
@@ -201,6 +292,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             this.targets[iteration] = target;
             iteration++;
         }
+        
         ResetParameters();
     }
 }

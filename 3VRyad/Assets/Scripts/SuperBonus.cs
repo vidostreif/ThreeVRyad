@@ -24,12 +24,6 @@ public class SuperBonus : MonoBehaviour
         }
 
         Instance = this;
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        //Transform tank = transform.Find("Tank");
         tankImage = transform.GetComponent(typeof(Image)) as Image;
         FilledImage();
     }
