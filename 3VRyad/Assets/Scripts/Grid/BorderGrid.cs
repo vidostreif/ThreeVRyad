@@ -23,13 +23,10 @@ public static class BorderGrid
                 Object.Destroy(child.gameObject);
             }            
         }
-
-        //borderGrid.transform.SetParent(grid.transform, false);
+        
         borderGrid.transform.parent = grid.transform;
         borderGrid.transform.localRotation = new Quaternion(0, 0, 0, 0);
-        //borderGrid.transform.localPosition = new Vector3(0 - grid.blockSize * 0.25f, 0 - grid.blockSize * 0.25f, 0);
-
-        Vector3 startPosition = new Vector3(borderGrid.transform.position.x - (grid.containers.GetLength(0) * grid.blockSize / 2) + grid.blockSize * 0.75f, borderGrid.transform.position.y - (grid.containers[0].block.GetLength(0) * grid.blockSize / 2) + grid.blockSize * 0.25f);
+        borderGrid.transform.localPosition = new Vector3(0 - grid.blockSize * 0.25f, 0 - grid.blockSize * 0.25f, 0);
 
         for (int x = 0; x < grid.containers.GetLength(0) + 1; x++)
         {
@@ -50,7 +47,7 @@ public static class BorderGrid
                 else
                 {
                     //определяем какие блоки заняты и выбираем соответствующий рисунок и поворот
-                    Vector3 localPosition = new Vector3(startPosition.x + grid.blockSize * x, startPosition.y + grid.blockSize * y, 0);
+                    Vector3 localPosition = new Vector3(grid.blockSize * x, grid.blockSize * y, 0);
                     int turn = 0;
                     if (RightUp == null)
                         DefineAndCreateBorder(localPosition, turn, borderGrid, LeftUp, RightDown);
