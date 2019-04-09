@@ -1407,7 +1407,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         GameObject blocks;
         blocks = new GameObject();
         blocks.name = blocksName;
-        blocks.transform.parent = transform;        
+        blocks.transform.SetParent(transform, false);
+        //blocks.transform.parent = transform;        
 
         this.blockSize = float.Parse(gridXElement.Element("blockSize").Value);
         int XSize = int.Parse(gridXElement.Element("XSize").Value);
@@ -1430,6 +1431,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             containers[i] = new Blocks() { block = new Block[YSize] };
         }
 
+        ////загружаем размер блока
+        //GameObject blockGO = Instantiate(prefabBlock);
+        //blockSize = blockGO.GetComponent<Transform>().rect.width;
+        //DestroyImmediate(blockGO);
+        Vector3 startPosition = new Vector3(blocks.transform.position.x - (XSize * blockSize / 2) + blockSize, blocks.transform.position.y - (YSize * blockSize / 2) + blockSize / 2);
         //восстанавливаем все блоки и элементы
         foreach (XElement block in gridXElement.Element("blocks").Elements("block"))
         {
@@ -1458,12 +1464,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
             if (blockType != BlockTypeEnum.Empty)
             {
-                Vector3 position = new Vector3(this.transform.localPosition.x + posX * blockSize, this.transform.localPosition.y + posY * blockSize, this.transform.localPosition.z);
+                Vector3 position = new Vector3(startPosition.x + posX * blockSize, startPosition.y + posY * blockSize, blocks.transform.position.z);
 
                 //создаем блок
                 GameObject blockGameObject = Instantiate(prefabBlock, position, Quaternion.identity);
                 blockGameObject.name = "Block_" + posX + "_" + posY;
                 blockGameObject.transform.parent = blocks.transform;
+                //blockGameObject.transform.SetParent(blocks.transform, false);
 
                 Block blockField = blockGameObject.GetComponent<Block>();
                 blockField.GeneratorElements = generatorElements;
