@@ -180,7 +180,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             {
                 transformElement.parent = this.thisTransform;
                 //перемещаем элемент к нашему объекту
-                MainAnimator.Instance.AddElementForSmoothMove(transformElement, target.Image.transform.position, 2, SmoothEnum.InLine, 0.05f, true, true);
+                MainAnimator.Instance.AddElementForSmoothMove(transformElement, target.Image.transform.position, 6, SmoothEnum.InLine, 0.05f, true, true);
                 //проверяем, не собрали ли мы коллекцию
                 CheckAll();
                 return true;
