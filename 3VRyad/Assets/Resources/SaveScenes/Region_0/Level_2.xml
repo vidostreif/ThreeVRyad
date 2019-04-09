@@ -120,7 +120,7 @@
     <sizeTargets>2</sizeTargets>
     <targets>
       <shapeAndGoal shape="Orange" goal="10" collectEverything="false" />
-      <shapeAndGoal shape="Banana" goal="1" collectEverything="true" />
+      <shapeAndGoal shape="Banana" goal="2" collectEverything="true" />
     </targets>
   </Tasks>
 </root>

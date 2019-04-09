@@ -82,20 +82,16 @@ public class SaveAndLoadScene
 
         XElement root = null;
 
-        //if (!File.Exists(datapath))
-        //{
-        //    Debug.Log("Файл не найден!");
-        //}
-        //else
-        //{
-            //string fileXmlPath = Application.dataPath;
-            //fileXmlPath += "/Data/Spells.xml";
+        if (!LevelFileExist(name, folder))
+        {
+            Debug.Log("Файл не найден!");
+            return;
+        }
+        else
+        {
             TextAsset txt = Resources.Load<TextAsset>(allSaveFolder + "/" + folder + "/" + name);
-            //XmlDocument xml = new XmlDocument();
-            //xml.LoadXml(ta.text);
-
             root = XDocument.Parse(txt.text).Element("root");
-        //}
+        }
 
         if (root == null)
         {
