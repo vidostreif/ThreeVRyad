@@ -11,7 +11,7 @@ using UnityEngine.UI;
 public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
 {
     public static InstrumentsManager Instance; // Синглтон
-    [HideInInspector] public Transform thisTransform;
+    //[HideInInspector] public Transform thisTransform;
     public float distanceBetweenInstruments;
     public GameObject prefabInstrument;
     public Instrument[] instruments;// список инструментов 
@@ -37,7 +37,7 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
         }
 
         Instance = this;
-        thisTransform = transform;
+        //thisTransform = transform;
     }
 
     void Start()
@@ -49,9 +49,6 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
     {
         //Сбрасываем значения
         DeactivateInstrument();
-        //instrumentPrepared = false;
-        //successfulActivation = false;
-        //preparedInstrument = null;
         CreateInstruments();
     }
 
@@ -70,11 +67,11 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
         instrumentsParent.name = instrumentsName;
 
         //смещение по y
-        float startingYPoint = thisTransform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenInstruments) * (instruments.Length - 1)) * 0.5f;
+        float startingYPoint = transform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenInstruments) * (instruments.Length - 1)) * 0.5f;
 
         for (int i = 0; i < instruments.Length; i++)
         {            
-                instruments[i].GameObject = Instantiate(prefabInstrument, new Vector3(thisTransform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenInstruments)), thisTransform.position.z), Quaternion.identity, instrumentsParent.transform);
+                instruments[i].GameObject = Instantiate(prefabInstrument, new Vector3(transform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenInstruments)), transform.position.z), Quaternion.identity, instrumentsParent.transform);
                 Image image = instruments[i].GameObject.GetComponent(typeof(Image)) as Image;
                 image.sprite = SpriteBank.SetShape(instruments[i].Type);
                 instruments[i].Image = image;

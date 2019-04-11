@@ -23,6 +23,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
     private Text movesText;
     private GameObject targetsParent;
+    private GameObject canvasStartGame;
     [SerializeField] private int moves; //количество ходов
     public bool endGame { get; protected set; } //признак что можно выполнить ход    
 
@@ -99,27 +100,33 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     public IEnumerator StartGameAnimation()
     {
         //создаем первичную анимацию если в игре
-        GameObject canvasStartGame = Instantiate(PrefabBank.Instance.canvasStartGame);
+        Destroy(canvasStartGame);
+        canvasStartGame = Instantiate(PrefabBank.Instance.canvasStartGame);
         canvasStartGame.GetComponent<Canvas>().worldCamera = Camera.main;
         Transform canvasStartGamePanel = canvasStartGame.transform.Find("Panel");
         //смещение по x
         RectTransform rectTransformTarget = targets[0].GameObject.transform.GetComponent<RectTransform>();
-        float scale = rectTransformTarget.rect.width / rectTransformTarget.rect.size.x * 3.0f * 1.5f;
+        float scale = rectTransformTarget.rect.width / rectTransformTarget.rect.size.x * 2.5f * 1.5f;
         float startingXPoint = canvasStartGamePanel.transform.position.x - ((scale) * (targets.Length - 1)) * 0.5f;
         for (int i = 0; i < targets.Length; i++)
         {
             targets[i].GameObject.transform.SetParent(canvasStartGamePanel, false);
             targets[i].GameObject.transform.position = new Vector3(startingXPoint + (i * (scale)), canvasStartGamePanel.transform.position.y, canvasStartGamePanel.transform.position.z);
-            targets[i].GameObject.transform.localScale = new Vector3(3,3,3);
-            //yield return new WaitForSeconds(0.2f);
+            targets[i].GameObject.transform.localScale = new Vector3(2.5f, 2.5f, 2.5f);
         }
-        yield return new WaitForSeconds(1.5f);
-        //делаем исчезновение
-        Image imageCanvasStartGamePanel = canvasStartGamePanel.GetComponent<Image>();
-        MainAnimator.Instance.AddElementForSmoothChangeColor(imageCanvasStartGamePanel, new Color(imageCanvasStartGamePanel.color.r, imageCanvasStartGamePanel.color.g, imageCanvasStartGamePanel.color.b, 0), 2f);
-        Destroy(canvasStartGame, 5f);
-        //перемещаем на основную панель
-        MovingTasksToMainPanel();
+        yield return new WaitForSeconds(1.0f);
+
+        //если другая куротина не уничтожила канвас
+        if (canvasStartGamePanel != null)
+        {
+            //делаем исчезновение
+            Image imageCanvasStartGamePanel = canvasStartGamePanel.GetComponent<Image>();
+            MainAnimator.Instance.AddElementForSmoothChangeColor(imageCanvasStartGamePanel, new Color(imageCanvasStartGamePanel.color.r, imageCanvasStartGamePanel.color.g, imageCanvasStartGamePanel.color.b, 0), 4f);
+            Destroy(canvasStartGame, 3f);
+            //перемещаем на основную панель
+            MovingTasksToMainPanel();
+        }
+        
     }
 
     public void CreateTargetsParent()
