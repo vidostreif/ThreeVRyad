@@ -31,17 +31,11 @@ public class Score : MonoBehaviour, IESaveAndLoad
         Instance = this;
 
         text = transform.GetComponentInChildren<Text>();
-        UpdateText();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        ResetParameters();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     { 
         if (addScore > 50)
         {
@@ -64,7 +58,14 @@ public class Score : MonoBehaviour, IESaveAndLoad
         //Сбрасываем значения
         score = 0;
         addScore = 0;
-        UpdateText();
+        if (Application.isPlaying)
+        {
+            UpdateText();
+        }
+        else
+        {
+            text.text = "1: " + scoreForFirstStar + " 2: " + scoreForSecondStar + " 3: " + scoreForThirdStar;
+        }
     }
 
     public void CreateScoreElement(Vector3 position, int score)

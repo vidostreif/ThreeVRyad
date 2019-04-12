@@ -113,7 +113,7 @@
   <SuperBonus>
     <maxBonusPower>5000</maxBonusPower>
     <beats>7</beats>
-    <allow>false</allow>
+    <allow>true</allow>
   </SuperBonus>
   <Tasks>
     <moves>20</moves>

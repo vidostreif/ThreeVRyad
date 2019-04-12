@@ -62,7 +62,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     //создание коллекции целей
     public void CreateCollectedElements()
     {
-        Debug.Log("CreateCollectedElements");
+        //Debug.Log("CreateCollectedElements");
         //удаляем все задания
         string targetsName = "Targets";
         Transform targetsTransform = transform.Find(targetsName);

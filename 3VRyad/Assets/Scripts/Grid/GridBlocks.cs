@@ -238,6 +238,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     //ищем совпавшие линии 
                     matchFound = false;
                     blockFieldsList = CheckMatchingLine();
+
+                    if (!Tasks.Instance.endGame)
+                    {
+                        //запускаем супербонус
+                        SuperBonus.Instance.ActivateSuperBonus();
+                    }                    
+
                     int CountElementsForMove = elementsForMoveList.Count;
                     if (blockFieldsList.Count > 0)
                     {

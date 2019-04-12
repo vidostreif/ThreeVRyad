@@ -106,9 +106,9 @@
     </instruments>
   </InstrumentsManager>
   <Score>
-    <scoreForFirstStar>27000</scoreForFirstStar>
-    <scoreForSecondStar>30000</scoreForSecondStar>
-    <scoreForThirdStar>39000</scoreForThirdStar>
+    <scoreForFirstStar>23000</scoreForFirstStar>
+    <scoreForSecondStar>27000</scoreForSecondStar>
+    <scoreForThirdStar>30000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>15000</maxBonusPower>
@@ -116,12 +116,12 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>20</moves>
+    <moves>15</moves>
     <sizeTargets>3</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Camomile" goal="10" collectEverything="false" />
-      <shapeAndGoal shape="Apple" goal="10" collectEverything="false" />
-      <shapeAndGoal shape="Plum" goal="10" collectEverything="false" />
+      <shapeAndGoal shape="Orange" goal="30" collectEverything="false" />
+      <shapeAndGoal shape="Apple" goal="30" collectEverything="false" />
+      <shapeAndGoal shape="Plum" goal="30" collectEverything="false" />
     </targets>
   </Tasks>
 </root>

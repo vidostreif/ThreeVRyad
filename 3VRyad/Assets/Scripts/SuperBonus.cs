@@ -35,11 +35,11 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     {
         if (allow)
         {
-            //активируем супер бонус если есть заряды и еще не закончили игру
-            if (charges > 0 && !activated && !Tasks.Instance.endGame)
-            {
-                StartCoroutine(ActivateSuperBonus());
-            }
+            ////активируем супер бонус если есть заряды и еще не закончили игру
+            //if (charges > 0 && !activated && !Tasks.Instance.endGame)
+            //{
+            //    StartCoroutine(ActivateSuperBonus());
+            //}
 
             //обрабатываем ракеты которые долетели до нужного элемента
             if (HitSuperBonusList.Count > 0)
@@ -130,38 +130,54 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         }        
     }
 
-    private IEnumerator ActivateSuperBonus()
+    public void ActivateSuperBonus()
     {
-        charges--;
-        activated = true;
-        tankImage.fillAmount = 1;
-        Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
-
-        if (blocks.Length > 1)
+        //активируем супер бонус если есть заряды и он разрешен на уровне
+        if (allow && charges > 0 && !activated)
         {
-            //перемешиваем
-            SupportFunctions.MixArray(blocks);
-            for (int i = 0; i < beats; i++)
+            charges--;
+            //activated = true;
+            tankImage.fillAmount = 1;
+            Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
+
+            if (blocks.Length > 1)
             {
-                if (blocks.Length > i)
+                //перемешиваем
+                SupportFunctions.MixArray(blocks);
+                List<Block> blocksForWork = new List<Block>();
+                for (int i = 0; i < beats; i++)
                 {
-                    //если блок сейчас не обрабатывается
-                    if (!GridBlocks.Instance.BlockInProcessing(blocks[i]))
+                    if (blocks.Length > i)
                     {
-                        blocks[i].Blocked = true;//блокируем  
-                        //подсветка
-                        GameObject backlight = Instantiate(MainParticleSystem.Instance.pSSelect, blocks[i].transform);
-                        backlight.transform.position = blocks[i].transform.position;
-                        HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(blocks[i].transform), blocks[i]));//добавляем в список для последующей обработки                        
-                        yield return new WaitForSeconds(0.1f);
-                    }                    
+                        //если блок сейчас не обрабатывается
+                        if (!GridBlocks.Instance.BlockInProcessing(blocks[i]))
+                        {
+                            blocks[i].Blocked = true;//предварительно блокируем  
+                            blocksForWork.Add(blocks[i]);
+                        }
+                    }
                 }
-            }            
-        }
-        activated = false;
-        FilledImage();
+                //запускаем дальнейшую обработку блоков
+                StartCoroutine(CreatingEffects(blocksForWork));
+            }
+            //activated = false;
+            FilledImage();
+        }        
     }
 
+    private IEnumerator CreatingEffects(List<Block> blocks) {
+
+        activated = true;
+        foreach (Block block in blocks)
+        {
+            //подсветка
+            GameObject backlight = Instantiate(MainParticleSystem.Instance.pSSelect, block.transform);
+            backlight.transform.position = block.transform.position;
+            HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(block.transform), block));//добавляем в список для последующей обработки                        
+            yield return new WaitForSeconds(0.1f);
+        }
+        activated = false;
+    }
 
     //сохранение и заргрузка
     public Type GetClassName()

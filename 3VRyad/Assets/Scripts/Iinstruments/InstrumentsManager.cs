@@ -67,11 +67,11 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
         instrumentsParent.name = instrumentsName;
 
         //смещение по y
-        float startingYPoint = transform.position.y - ((GridBlocks.Instance.blockSize + distanceBetweenInstruments) * (instruments.Length - 1)) * 0.5f;
+        float startingYPoint = transform.position.y - ((1 + distanceBetweenInstruments) * (instruments.Length - 1)) * 0.5f;
 
         for (int i = 0; i < instruments.Length; i++)
         {            
-                instruments[i].GameObject = Instantiate(prefabInstrument, new Vector3(transform.position.x, startingYPoint + (i * (GridBlocks.Instance.blockSize + distanceBetweenInstruments)), transform.position.z), Quaternion.identity, instrumentsParent.transform);
+                instruments[i].GameObject = Instantiate(prefabInstrument, new Vector3(transform.position.x, startingYPoint + (i * (1 + distanceBetweenInstruments)), transform.position.z), Quaternion.identity, instrumentsParent.transform);
                 Image image = instruments[i].GameObject.GetComponent(typeof(Image)) as Image;
                 image.sprite = SpriteBank.SetShape(instruments[i].Type);
                 instruments[i].Image = image;
