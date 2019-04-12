@@ -10,12 +10,26 @@ public class SpriteBank : MonoBehaviour
 
     void Awake()
     {
-        // регистрация синглтона
-        if (Instance != null)
+        //// регистрация синглтона
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("Несколько экземпляров SpriteBank!");
+        //}
+        //Instance = this;
+
+        if (Instance)
         {
-            Debug.LogError("Несколько экземпляров SpriteBank!");
+            Destroy(this.gameObject); //Delete duplicate
+            return;
         }
-        Instance = this;
+        else
+        {
+            Instance = this; //Make this object the only instance            
+        }
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoad(gameObject); //Set as do not destroy
+        }
     }
 
     public static Sprite SetShape(ElementsShapeEnum shape)

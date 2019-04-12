@@ -28,7 +28,11 @@ public class LevelMenu : MonoBehaviour
         else
         {
             Instance = this; //Make this object the only instance            
-        }      
+        }
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoad(gameObject); //Set as do not destroy
+        }
     }
 
     void Start()
@@ -419,7 +423,7 @@ public class LevelMenu : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "SampleScene")
         {
             LoadXml(inLevel);
-            MainSceneScript.Instance.Prepare();
+            MainGameSceneScript.Instance.Prepare();
         }
         else
         {

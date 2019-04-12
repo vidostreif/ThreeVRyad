@@ -22,12 +22,25 @@ public class MasterController : MonoBehaviour
 
     void Awake()
     {
-        // регистрация синглтона
-        if (Instance != null)
+        if (Instance)
         {
-            Debug.LogError("Несколько экземпляров MasterController!");
+            Destroy(this.gameObject); //Delete duplicate
+            return;
         }
-        Instance = this;
+        else
+        {
+            Instance = this; //Make this object the only instance            
+        }
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoad(gameObject); //Set as do not destroy
+        }
+        //// регистрация синглтона
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("Несколько экземпляров MasterController!");
+        //}
+        //Instance = this;
     }
 
     void Update()

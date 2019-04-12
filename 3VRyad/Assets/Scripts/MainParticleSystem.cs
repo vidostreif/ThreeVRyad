@@ -12,12 +12,25 @@ public class MainParticleSystem : MonoBehaviour
 
     void Awake()
     {
-        // регистрация синглтона
-        if (Instance != null)
+        if (Instance)
         {
-            Debug.LogError("Несколько экземпляров MainParticleSystem!");
+            Destroy(this.gameObject); //Delete duplicate
+            return;
         }
+        else
+        {
+            Instance = this; //Make this object the only instance            
+        }
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoad(gameObject); //Set as do not destroy
+        }
+        //// регистрация синглтона
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("Несколько экземпляров MainParticleSystem!");
+        //}
 
-        Instance = this;
+        //Instance = this;
     }
 }

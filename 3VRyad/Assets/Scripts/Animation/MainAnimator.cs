@@ -54,13 +54,27 @@ public class MainAnimator : MonoBehaviour {
 
     void Awake()
     {
-        // регистрация синглтона
-        if (Instance != null)
-        {
-            Debug.LogError("Несколько экземпляров MainAnimator!");
-        }
+        //// регистрация синглтона
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("Несколько экземпляров MainAnimator!");
+        //}
 
-        Instance = this;
+        //Instance = this;
+
+        if (Instance)
+        {
+            Destroy(this.gameObject); //Delete duplicate
+            return;
+        }
+        else
+        {
+            Instance = this; //Make this object the only instance            
+        }
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoad(gameObject); //Set as do not destroy
+        }
     }
 	
 	// Update is called once per frame

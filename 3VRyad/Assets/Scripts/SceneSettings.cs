@@ -22,13 +22,13 @@ public class SceneSettings : MonoBehaviour
 
     public void RestartScene() {
         HideOrShowSetings(false);
-        MainSceneScript.Instance.RestartLevel();
+        MainGameSceneScript.Instance.RestartLevel();
     }
 
     public void ExitScene()
     {
         HideOrShowSetings(false);
-        MainSceneScript.Instance.ExitToMenu();
+        MainGameSceneScript.Instance.ExitToMenu();
     }
 
     public void SoundSwitch()

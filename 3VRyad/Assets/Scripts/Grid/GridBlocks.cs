@@ -405,7 +405,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //если закончились ходы игрока и ходы всей игры
             if (elementsForMoveList.Count == 0 && Tasks.Instance.endGame)
             {
-                MainSceneScript.Instance.CompleteGame();
+                MainGameSceneScript.Instance.CompleteGame();
                 yield break;
             }
 

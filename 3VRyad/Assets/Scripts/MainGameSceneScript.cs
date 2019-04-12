@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class MainSceneScript : MonoBehaviour {
+public class MainGameSceneScript : MonoBehaviour {
 
     private float timeUnpause; //время когда нужно снять игру с паузы
-    public static MainSceneScript Instance; // Синглтон
+    public static MainGameSceneScript Instance; // Синглтон
     public GameObject prefabCanvasEndGameMenu;
     private GameObject CanvasMenu;
 
@@ -18,7 +18,6 @@ public class MainSceneScript : MonoBehaviour {
         {
             Debug.LogError("Несколько экземпляров MainSceneScript!");
         }
-
         Instance = this;
     }
 
@@ -48,7 +47,7 @@ public class MainSceneScript : MonoBehaviour {
         HelpToPlayer.ClearHintList();//очищаем список подсказок
         InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
 
-        CanvasMenu = Instantiate(prefabCanvasEndGameMenu);
+        CanvasMenu = Instantiate(PrefabBank.Instance.canvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
         Text textEndGame = gOtextEndGame.GetComponent(typeof(Text)) as Text;
