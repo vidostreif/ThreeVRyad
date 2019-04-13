@@ -155,5 +155,35 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
             Bonus bonus = new Bonus(type, shape, cost);
             this.bonusesList.Add(bonus);
         }
+
+#if UNITY_EDITOR
+        //если не в игре, то показываем
+        if (!Application.isPlaying)
+        {
+            string parentName = "Bonuses";
+            GameObject parentGO = GameObject.Find(parentName);
+            if (parentGO != null)
+            {
+                DestroyImmediate(parentGO);
+            }
+            parentGO = new GameObject();
+            parentGO.name = parentName;
+            GameObject canvasGame = GameObject.Find("GameHelper");
+            parentGO.transform.SetParent(canvasGame.transform, false);
+            parentGO.transform.localPosition = new Vector3(-canvasGame.GetComponent<RectTransform>().rect.width / 2, canvasGame.GetComponent<RectTransform>().rect.height / 2);
+
+            int i = 0;
+            foreach (Bonus item in bonusesList)
+            {
+                GameObject imageElementAndParameters = Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageElementAndParameters") as GameObject, parentGO.transform);
+                imageElementAndParameters.transform.position = new Vector3(imageElementAndParameters.transform.position.x + i * 3, imageElementAndParameters.transform.position.y + 3, 0);
+                Image image = imageElementAndParameters.GetComponent(typeof(Image)) as Image;
+                image.sprite = SpriteBank.SetShape(item.Shape);
+                Text Text = imageElementAndParameters.GetComponentInChildren<Text>();
+                Text.text = "Тип: " + item.Type + "\n Цена: " + item.Cost;
+                i++;
+            }
+        }
+#endif
     }
 }

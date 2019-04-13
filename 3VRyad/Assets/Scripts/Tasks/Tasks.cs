@@ -134,7 +134,6 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         string targetsName = "Targets";
         targetsParent = new GameObject();
         targetsParent.transform.SetParent(transform, false);
-        //Instantiate(new GameObject(), transform);
         targetsParent.name = targetsName;
         targetsParent.transform.localPosition = new Vector3(-32, -32, targetsParent.transform.localPosition.z);
     }

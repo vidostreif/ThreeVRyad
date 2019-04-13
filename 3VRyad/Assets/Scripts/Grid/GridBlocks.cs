@@ -6,6 +6,7 @@ using UnityEditor;
 using System.Xml.Linq;
 using System;
 using System.Linq;
+using UnityEngine.UI;
 
 //#if UNITY_EDITOR
 //[InitializeOnLoad]
@@ -16,12 +17,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public static GridBlocks Instance; // Синглтон
     public float blockSize = 1;
     public Transform thisTransform;
+      
+    public List<ElementsPriority> elementsPriorityList;
 
     public Blocks[] containers;
     public GameObject prefabBlock;
     public GameObject prefabElement;
     public GameObject prefabBlockingWall;
-    public List<ElementsPriority> elementsPriorityList;
 
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
     private List<Element> elementsForMixList = new List<Element>();//элементы для замены во время микса
@@ -1429,6 +1431,36 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             ElementsPriority curShapeAndPriority = new ElementsPriority(shape, type, priority);
             this.elementsPriorityList.Add(curShapeAndPriority);
         }
+
+#if UNITY_EDITOR
+        //если не в игре, то показываем приоритеты
+        if (!Application.isPlaying)
+        {
+            string elementAndParametersName = "ElementAndParameters";
+            GameObject elementAndParameters = GameObject.Find(elementAndParametersName);
+            if (elementAndParameters != null)
+            {
+                DestroyImmediate(elementAndParameters);
+            }
+            elementAndParameters = new GameObject();
+            elementAndParameters.name = elementAndParametersName;
+            GameObject canvasGame = GameObject.Find("GameHelper");
+            elementAndParameters.transform.SetParent(canvasGame.transform, false);
+            elementAndParameters.transform.localPosition = new Vector3(-canvasGame.GetComponent<RectTransform>().rect.width/2, canvasGame.GetComponent<RectTransform>().rect.height / 2);
+
+            int i = 0;
+            foreach (ElementsPriority item in elementsPriorityList)
+            {
+                GameObject imageElementAndParameters = Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageElementAndParameters") as GameObject, elementAndParameters.transform);
+                imageElementAndParameters.transform.position = new Vector3(imageElementAndParameters.transform.position.x + i*3, imageElementAndParameters.transform.position.y, 0);
+                Image image = imageElementAndParameters.GetComponent(typeof(Image)) as Image;
+                image.sprite = SpriteBank.SetShape(item.ElementsShape);
+                Text Text = imageElementAndParameters.GetComponentInChildren<Text>();
+                Text.text = "Тип: " + item.elementsType + "\n Приоритет: " + item.priority + "\n Макс кол. на поле: " + item.maxAmountOnField + "\n Макс кол. будет создано: " + item.limitOnAmountCreated;
+                i++;
+            }
+        }
+#endif
 
         //создаем массив массивов блоков
         this.containers = new Blocks[XSize];

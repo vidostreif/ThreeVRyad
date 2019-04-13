@@ -8,7 +8,6 @@ public class MainGameSceneScript : MonoBehaviour {
 
     private float timeUnpause; //время когда нужно снять игру с паузы
     public static MainGameSceneScript Instance; // Синглтон
-    public GameObject prefabCanvasEndGameMenu;
     private GameObject CanvasMenu;
 
     void Awake()
