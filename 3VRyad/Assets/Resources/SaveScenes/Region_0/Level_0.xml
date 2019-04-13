@@ -64,6 +64,9 @@
       <block posX="8" posY="6" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
     </blocks>
   </GridBlocks>
+  <HelpFromGnome>
+    <helpEnum>Gnome</helpEnum>
+  </HelpFromGnome>
   <InstrumentsManager>
     <instruments>
       <typeAndAllow type="Shovel" allow="false" />

@@ -141,3 +141,11 @@ public enum SmoothEnum
     InLineWithOneSpeed,
     InLineWithAcceleration
 }//тип сглаженного перемещения
+
+public enum HelpEnum
+{
+    Empty,
+    Gnome,
+    Moves,
+    Tasks,    
+}//тип сглаженного перемещения

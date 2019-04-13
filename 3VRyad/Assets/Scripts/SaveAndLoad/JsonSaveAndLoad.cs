@@ -91,7 +91,7 @@ public static class JsonSaveAndLoad
         //записываем новые данные
         foreach (HintStatus hintStatus in hintsStatus)
         {
-            save.helpSave.Add(new HelpSave(hintStatus.elementsTypeEnum.ToString(), hintStatus.status));
+            save.helpSave.Add(new HelpSave(hintStatus.help.ToString(), hintStatus.status));
         }
 
         saveIsChanged = true;

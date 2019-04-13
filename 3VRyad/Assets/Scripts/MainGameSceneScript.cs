@@ -37,9 +37,10 @@ public class MainGameSceneScript : MonoBehaviour {
 
     public void Prepare()
     {        
-        BorderGrid.CircleGrid(GridBlocks.Instance);
-        GridBlocks.Instance.StartFilling();
-        GridBlocks.Instance.Move();
+        BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
+        HelpToPlayer.AddHint(HelpFromGnome.Instance.helpEnum);//подсказка
+        GridBlocks.Instance.StartFilling();//стартовое заполнение элементами
+        GridBlocks.Instance.Move();//выполнение хода
     }
 
     public void CompleteGame()

@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class Region
 {
     public string name;
-    [SerializeField] public List<Level> levelList = new List<Level>();
-    private Image image;
+    public Image image;
+    [SerializeField] public List<Level> levelList = new List<Level>();    
     private Text text;
     private Button button;
 
@@ -25,18 +25,18 @@ public class Region
             UpdateText();
         }
     }
-    public Image Image
-    {
-        get
-        {
-            return image;
-        }
+    //public Image Image
+    //{
+    //    get
+    //    {
+    //        return image;
+    //    }
 
-        set
-        {
-            image = value;
-        }
-    }
+    //    set
+    //    {
+    //        image = value;
+    //    }
+    //}
     public Button Button
     {
         get

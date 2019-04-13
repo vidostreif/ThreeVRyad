@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public static class HelpToPlayer
 {
+    private static List<Type> enumTypes = new List<Type>();
     private static List<Hint> hintsList = new List<Hint>();
     private static HintStatus[] hintsStatus = null;
     private static Hint activeHint = null;
@@ -17,26 +18,39 @@ public static class HelpToPlayer
     private static void CreateHintStatusList() {
         if (hintsStatus == null)
         {
-            hintsStatus = new HintStatus[Enum.GetNames(typeof(ElementsTypeEnum)).Length];
+            //список enum которые используются для подсказок
+            enumTypes = new List<Type>();
+            enumTypes.Add(typeof(ElementsTypeEnum));
+            enumTypes.Add(typeof(HelpEnum));
+
+            //создаем массив статусов подсказок
+            int count = 0;
+            foreach (Type item in enumTypes)
+            {
+                count += Enum.GetNames(item).Length;
+            }
+            hintsStatus = new HintStatus[count];
 
             //загружаем сохранения
-            List<HelpSave> helpSaves = JsonSaveAndLoad.LoadSave().helpSave;
-
+            List <HelpSave> helpSaves = JsonSaveAndLoad.LoadSave().helpSave;
             int i = 0;
-            foreach (ElementsTypeEnum elementsTypeEnum in Enum.GetValues(typeof(ElementsTypeEnum)))
+            foreach (Type enumType in enumTypes)
             {
-                HelpSave helpSave = helpSaves.Find(item => item.elementsTypeEnum == elementsTypeEnum.ToString());
-                //ищем в сохранениях
-                if (helpSave != null)
+                foreach (var curEnum in Enum.GetValues(enumType))
                 {
-                    hintsStatus[i] = new HintStatus(elementsTypeEnum, helpSave.status);
+                    HelpSave helpSave = helpSaves.Find(item => item.elementsTypeEnum == curEnum.ToString());
+                    //ищем в сохранениях
+                    if (helpSave != null)
+                    {
+                        hintsStatus[i] = new HintStatus(curEnum.ToString(), helpSave.status);
+                    }
+                    else
+                    {
+                        hintsStatus[i] = new HintStatus(curEnum.ToString(), false);
+                    }
+
+                    i++;
                 }
-                else
-                {
-                    hintsStatus[i] = new HintStatus(elementsTypeEnum, false);
-                }
-                
-                i++;
             }
         }
     }
@@ -48,18 +62,38 @@ public static class HelpToPlayer
 
     public static void AddHint(ElementsTypeEnum elementsTypeEnum) {
 
+        AddHint(typeof(ElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum);
+    }
+
+    public static void AddHint(HelpEnum helpEnum)
+    {
+        AddHint(typeof(HelpEnum), helpEnum.ToString(), (int)helpEnum);
+    }
+
+    private static void AddHint(Type enumType, string help, int number) {
         //проверяем показывали ли мы такую подсказку игроку
         CreateHintStatusList();
+
+        //определяем позицию в энумах
+        int count = 0;
+        foreach (Type item in enumTypes)
+        {
+            if (item != enumType)
+            {
+                count+= Enum.GetNames(item).Length;
+            }
+        }
+
         //если уже показывали то не добавляем
-        if (hintsStatus[(int)elementsTypeEnum].status == false)
+        if (hintsStatus[count + number].status == false)
         {
             //если она уже добавлена в массив, то пропускаем
-            Hint hint = hintsList.Find(item => item.elementsTypeEnum == elementsTypeEnum);
+            Hint hint = hintsList.Find(item => item.help == help);
             if (hint == null)
             {
-                hintsList.Add(new Hint(elementsTypeEnum));
-            }            
-        }        
+                hintsList.Add(new Hint(help, count + number));
+            }
+        }
     }
 
     public static bool CreateNextGameHelp()
@@ -70,31 +104,37 @@ public static class HelpToPlayer
             //!!!добавить все блоки в список для запрета обработки
             
             List<Hint> hintForDell = new List<Hint>();
+            
             //перебираем подскази до тех пор пока не создадим хоть одну
             foreach (Hint hint in hintsList)
             {
-                activeHint = hint;                                
+                activeHint = hint;
+                activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.Instance.canvasHelpToPlayer);
 
                 //находим нужную подсказку
-                if (activeHint.elementsTypeEnum == ElementsTypeEnum.Standard)
+                if (activeHint.help == ElementsTypeEnum.Standard.ToString())
                 {
                     created = CreateStandardElementHelp();
                 }
-                else if (activeHint.elementsTypeEnum == ElementsTypeEnum.CrushableWall)
+                else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
                 {                    
-                    created = CreateCrushableWallHelp(activeHint.elementsTypeEnum);
+                    created = CreateCrushableWallHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
                 }
-                else if (activeHint.elementsTypeEnum == ElementsTypeEnum.SmallFlask || activeHint.elementsTypeEnum == ElementsTypeEnum.MediumFlask || activeHint.elementsTypeEnum == ElementsTypeEnum.BigFlask)
+                else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString() || activeHint.help == ElementsTypeEnum.MediumFlask.ToString() || activeHint.help == ElementsTypeEnum.BigFlask.ToString())
                 {
-                    created = CreateFlaskHelp(activeHint.elementsTypeEnum);
+                    created = CreateFlaskHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
                 }
-                else if (activeHint.elementsTypeEnum == ElementsTypeEnum.ImmortalWall)
+                else if (activeHint.help == ElementsTypeEnum.ImmortalWall.ToString())
                 {
                     created = CreateImortalWallHelp();
                 }
-                else if (activeHint.elementsTypeEnum == ElementsTypeEnum.Drop)
+                else if (activeHint.help == ElementsTypeEnum.Drop.ToString())
                 {
                     created = CreateDropElementHelp();
+                }
+                else if (activeHint.help == HelpEnum.Gnome.ToString())
+                {
+                    created = GnomeHelp();
                 }
                 else
                 {
@@ -104,9 +144,8 @@ public static class HelpToPlayer
 
                 //если удалось создать подсказку, выходим из цикла
                 if (created)
-                {                    
-                    //создаем затемнение 
-                    activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.Instance.canvasHelpToPlayer);
+                {
+                    //создаем затемнение                  
                     Image imageHelpToPlayer = activeHint.canvasHelpToPlayer.GetComponentInChildren<Image>();
                     MainAnimator.Instance.AddElementForSmoothChangeColor(imageHelpToPlayer, new Color(imageHelpToPlayer.color.r, imageHelpToPlayer.color.g, imageHelpToPlayer.color.b, 0.9f), 2);
                     //устанавливаем камеру
@@ -120,7 +159,7 @@ public static class HelpToPlayer
                     CreateTextCloud();
 
                     //помечаем как показанную
-                    hintsStatus[(int)activeHint.elementsTypeEnum].status = true;
+                    hintsStatus[activeHint.numberHelp].status = true;
                     //добавляем для удаления
                     hintForDell.Add(hint);
 
@@ -146,37 +185,81 @@ public static class HelpToPlayer
 
     private static void CreateTextCloud()
     {
-        if (activeHint.spriteRendersSetingList.Count > 0)
+        //собераем все трансформы
+        List<Transform> transformsList = new List<Transform>();
+        foreach (SpriteRenderSettings item in activeHint.spriteRendersSetingList)
         {
-            //находим самый левый верхний объект
-            Vector3 newPosition = activeHint.spriteRendersSetingList[0].spriteRenderer.transform.position;
-            foreach (SpriteRenderSettings item in activeHint.spriteRendersSetingList)
-            {
-                //обрабатываем только блоки
-                if (item.spriteRenderer.GetComponent<Block>())
-                {
-                    if (item.spriteRenderer.transform.position.x < newPosition.x)
-                    {
-                        newPosition.x = item.spriteRenderer.transform.position.x;
-                    }
+            transformsList.Add(item.spriteRenderer.transform);
+        }
+        foreach (ParentSettings item in activeHint.ParentSettingsList)
+        {
+            transformsList.Add(item.gameObjectTransform);
+        }
 
-                    if (item.spriteRenderer.transform.position.y > newPosition.y)
-                    {
-                        newPosition.y = item.spriteRenderer.transform.position.y;
-                    }
-                }                
-            }
-
+        if (transformsList.Count > 0)
+        {
+            
+            Vector3 newPosition = transformsList[0].position;
+            float width = transformsList[0].localScale.x;
             Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
             Transform textCloud = gOPanel.transform.Find("TextCloud");
-            textCloud.position = new Vector3(newPosition.x - 3, newPosition.y, newPosition.z);
-
-            //если слишков высоко, то смещаем вниз до пределов экрана
             RectTransform rectTransformGOPanel = gOPanel.GetComponent<RectTransform>();
             RectTransform rectTransformTextCloud = textCloud.GetComponent<RectTransform>();
+
+            //находим самый левый верхний объект
+            foreach (Transform item in transformsList)
+            {
+                //обрабатываем все кроме элементов
+                if (!item.GetComponent<BaseElement>())
+                {
+                    if (item.position.x < newPosition.x)
+                    {
+                        newPosition.x = item.position.x;
+                        width = item.localScale.x; // ширина
+                    }
+
+                    if (item.position.y > newPosition.y)
+                    {
+                        newPosition.y = item.position.y;
+                        width = item.localScale.x; // ширина
+                    }
+                }
+            }
+            textCloud.position = new Vector3(newPosition.x - width, newPosition.y, newPosition.z);
+            rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x - rectTransformTextCloud.rect.width * 0.5f, rectTransformTextCloud.anchoredPosition.y);
+
+            //если выходит за пределы экрана слева переносим на право
+            if (rectTransformTextCloud.anchoredPosition.x < rectTransformTextCloud.rect.width * 0.5f)
+            {
+                //находим самый правый верхний объект
+                newPosition = transformsList[0].position;
+                width = transformsList[0].localScale.x;
+                foreach (Transform item in transformsList)
+                {
+                    //обрабатываем все кроме элементов
+                    if (!item.GetComponent<BaseElement>())
+                    {
+                        if (item.position.x > newPosition.x)
+                        {
+                            newPosition.x = item.position.x;
+                            width = item.localScale.x; // ширина
+                        }
+
+                        if (item.position.y > newPosition.y)
+                        {
+                            newPosition.y = item.position.y;
+                            width = item.localScale.x; // ширина
+                        }
+                    }
+                }
+                textCloud.position = new Vector3(newPosition.x + width, newPosition.y, newPosition.z);
+                rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x + rectTransformTextCloud.rect.width * 0.5f, rectTransformTextCloud.anchoredPosition.y);
+            }
+
+            //если слишков высоко, то смещаем вниз до пределов экрана
             if (-rectTransformTextCloud.anchoredPosition.y < rectTransformTextCloud.rect.height * 0.5f)
             {
-                rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x, - rectTransformTextCloud.rect.height * 0.5f);
+                rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x, -rectTransformTextCloud.rect.height * 0.5f);
             }
 
             //если слишков низко, то смещаем вверх до пределов экрана
@@ -185,41 +268,43 @@ public static class HelpToPlayer
                 rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x, -rectTransformGOPanel.rect.height + rectTransformTextCloud.rect.height * 0.5f);
             }
 
-            //!!!сделать перенос на правую сторону
-            
             Text text = textCloud.GetComponentInChildren<Text>();
 
-            if (activeHint.elementsTypeEnum == ElementsTypeEnum.Standard)
+            if (activeHint.help == ElementsTypeEnum.Standard.ToString())
             {
                 text.text = "Что бы собрать растения в нашем саду, их нужно собрать в линии из более чем двух растений. Попробуйте передвинуть выделяющееся растение!";
             }
-            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.SmallFlask)
+            else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString())
             {
                 text.text = "Это маленький бонус за сбор линии из 4 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
             }
-            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.MediumFlask)
+            else if (activeHint.help == ElementsTypeEnum.MediumFlask.ToString())
             {
                 text.text = "Это маленький бонус за сбор линии из 5 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
             }
-            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.BigFlask)
+            else if (activeHint.help == ElementsTypeEnum.BigFlask.ToString())
             {
                 text.text = "Это маленький бонус за сбор линии из 6 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
             }
-            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.CrushableWall)
+            else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
             {
                 text.text = "Это стену вы можете взорвать или уничтожить собрав линию рядом! Соберите линию.";
             }
-            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.ImmortalWall)
+            else if (activeHint.help == ElementsTypeEnum.ImmortalWall.ToString())
             {
                 text.text = "Это стену вы не сможете разрушить, она очень крепкая!";
             }
-            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.Drop)
+            else if (activeHint.help == ElementsTypeEnum.Drop.ToString())
             {
                 text.text = "Этот элемент лишний на поле, и что бы его убрать, его нужно согнать через все поле в самый низ!";
             }
-            else if (activeHint.elementsTypeEnum == ElementsTypeEnum.SeedBarrel)
+            else if (activeHint.help == ElementsTypeEnum.SeedBarrel.ToString())
             {
                 text.text = "Это бочка с зернами, она наполняется когда рядом собираются растения указанные на бочке!";
+            }
+            else if (activeHint.help == HelpEnum.Gnome.ToString())
+            {
+                text.text = "Привет! Я твой помошник и буду всячески тебе помогать!";
             }
             else
             {
@@ -233,7 +318,93 @@ public static class HelpToPlayer
         }
     }
 
-    private static bool CreateStandardElementHelp() {
+    public static bool DellGameHelp()
+    {
+        //если есть подсказка для элементов
+        if (activeHint != null)
+        {
+            
+            //восстанавливаем значения сортировки спрайтов
+            foreach (SpriteRenderSettings item in activeHint.spriteRendersSetingList)
+            {
+                if (item.spriteRenderer != null)
+                {
+                    item.spriteRenderer.sortingOrder = item.sortingOrder;
+                    item.spriteRenderer.sortingLayerName = item.sortingLayerName;
+                }
+            }
+
+            //восстанавливаем значения родителя
+            foreach (ParentSettings item in activeHint.ParentSettingsList)
+            {
+                if (item.gameObjectTransform != null && item.parentTransform != null)
+                {
+                    item.gameObjectTransform.SetParent(item.parentTransform, false);
+                }
+            }
+
+            //восстанавливаем значения блок контроллеров
+            foreach (BlockControllerSettings item in activeHint.blockControllersSetingList)
+            {
+                if (item.blockController != null)
+                {
+                    item.blockController.handleDragging = item.handleDragging;
+                    item.blockController.handleСlick = item.handleСlick;
+                    item.blockController.permittedDirection = item.permittedDirection;
+                }
+            }
+
+            //удаляем затемнение
+            UnityEngine.Object.Destroy(activeHint.canvasHelpToPlayer);
+
+            deletedByClickingOnCanvas = false;
+            JsonSaveAndLoad.RecordSave(hintsStatus);
+            if (activeHint.createNextGameHelp)
+            {
+                CreateNextGameHelp();
+                return false;
+            }
+            else
+            {
+                activeHint = null;
+                return true;
+            }
+            
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    //разрешаем удалить подсказку после определенного времени
+    private static void CanvasLiveTime(float time)
+    {
+        deletedByClickingOnCanvas = true;
+        timeCreateHints = Time.time;
+        delayTime = time;
+    }
+
+    //попытка удалить по клику
+    public static void DeletedByClickingOnCanvas()
+    {
+        if (deletedByClickingOnCanvas)
+        {
+            //если прошло больше времени чем указано
+            if ((Time.time - delayTime) > timeCreateHints)
+            {
+                if (DellGameHelp())
+                {
+                    //выполняем ход
+                    GridBlocks.Instance.Move();
+                }
+            }
+        }
+    }
+
+    //подсказки для элементов
+    private static bool CreateStandardElementHelp()
+    {
         List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
         //Если нет доступных ходов, то выходим
         if (elementsForNextMoveList.Count == 0)
@@ -251,10 +422,11 @@ public static class HelpToPlayer
         {
             return false;
         }
-        
+
     }
 
-    private static bool CreateFlaskHelp(ElementsTypeEnum elementsTypeEnum) {
+    private static bool CreateFlaskHelp(ElementsTypeEnum elementsTypeEnum)
+    {
         //берем любую маленькую фласку
         //делаем подсветку фласки и соседних блококв
         //наоходим все объекты с нужным элементом
@@ -264,36 +436,36 @@ public static class HelpToPlayer
         foreach (ElementSmallFlask item in findeObjects)
         {
             //берем блок с нашей флаской
-            Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);            
+            Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);
             if (BlockCheck.ThisBlockWithElementCanMove(curBlock) && item.Type == elementsTypeEnum)
             {
-                    //высвечиваем блок
-                    ChangeSorting(curBlock.gameObject, activeHint);
+                //высвечиваем блок
+                ChangeSorting(curBlock.gameObject, activeHint);
 
-                    //добавляем эффект
+                //добавляем эффект
 
-                    //отключаем перетаскивание у фласки
-                    BlockController blockController = curBlock.GetComponent<BlockController>();
-                    activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
-                    blockController.handleDragging = false;
+                //отключаем перетаскивание у фласки
+                BlockController blockController = curBlock.GetComponent<BlockController>();
+                activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
+                blockController.handleDragging = false;
 
-                    //получаем соседние блоки
-                    Block[] blocks = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, item.GetComponent<ElementSmallFlask>().ExplosionRadius);
+                //получаем соседние блоки
+                Block[] blocks = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, item.GetComponent<ElementSmallFlask>().ExplosionRadius);
 
-                    //перебираем все блоки
-                    foreach (Block block in blocks)
+                //перебираем все блоки
+                foreach (Block block in blocks)
+                {
+                    if (block != null)
                     {
-                        if (block != null)
-                        {
-                            ChangeSorting(block.gameObject, activeHint);
-                            blockController = block.GetComponent<BlockController>();
-                            //сохраняем настройки
-                            activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
-                            //деактивируем
-                            blockController.handleDragging = false;
-                            blockController.handleСlick = false;
-                        }
+                        ChangeSorting(block.gameObject, activeHint);
+                        blockController = block.GetComponent<BlockController>();
+                        //сохраняем настройки
+                        activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
+                        //деактивируем
+                        blockController.handleDragging = false;
+                        blockController.handleСlick = false;
                     }
+                }
                 return true;
             }
         }
@@ -327,7 +499,7 @@ public static class HelpToPlayer
                 //пытаемся найти ход где есть соседний блок вследующем ходе
                 foreach (ElementsForNextMove curElementsForNextMove in elementsForNextMoveList)
                 {
-                    
+
                     foreach (Element element in curElementsForNextMove.elementsList)
                     {
                         //если элемент не для передвижения
@@ -346,7 +518,7 @@ public static class HelpToPlayer
                                     return HighlightSpecifiedMove(curElementsForNextMove);
                                 }
                             }
-                        }                        
+                        }
                     }
                 }
                 //если не нашли соседний блок
@@ -411,46 +583,27 @@ public static class HelpToPlayer
         return false;
     }
 
-    public static bool DellGameHelp()
+
+    //подсказки для интерфейса
+    private static bool GnomeHelp()
     {
-        if (activeHint != null)
+        //находим гнома
+        GameObject gnome = GameObject.Find("GnomeAndTank");
+
+        if (gnome != null)
         {
-            //удаляем затемнение
-            UnityEngine.Object.Destroy(activeHint.canvasHelpToPlayer);
-
-            //восстанавливаем значения сортировки спрайтов
-            foreach (SpriteRenderSettings item in activeHint.spriteRendersSetingList)
-            {
-                if (item.spriteRenderer != null)
-                {
-                    item.spriteRenderer.sortingOrder = item.sortingOrder;
-                    item.spriteRenderer.sortingLayerName = item.sortingLayerName;
-                }
-            }
-
-            //восстанавливаем значения блок контроллеров
-            foreach (BlockControllerSettings item in activeHint.blockControllersSetingList)
-            {
-                if (item.blockController != null)
-                {
-                    item.blockController.handleDragging = item.handleDragging;
-                    item.blockController.handleСlick = item.handleСlick;
-                    item.blockController.permittedDirection = item.permittedDirection;
-                }
-            }
-
-            //hintsList.Remove(activeHint);
-            activeHint = null;
-            deletedByClickingOnCanvas = false;
-            JsonSaveAndLoad.RecordSave(hintsStatus);
+            ChangeParent(gnome, activeHint);
+            activeHint.createNextGameHelp = true;
+            //таймаут для удаления подсказки
+            CanvasLiveTime(3);
             return true;
         }
         else
         {
+            Debug.Log("Не нашли гнома!");
             return false;
-        }       
+        }
     }
-
 
     //вспомогательные
     private static void ChangeSorting(GameObject gameObject, Hint hint) {
@@ -464,6 +617,16 @@ public static class HelpToPlayer
                 childrenSpriteRenderer.sortingLayerName = "Help";
             }
         }
+    }
+
+    private static void ChangeParent(GameObject gameObject, Hint hint)
+    {
+            if (gameObject.transform != null)
+            {
+                hint.ParentSettingsList.Add(new ParentSettings(gameObject.transform, gameObject.transform.parent));
+
+                gameObject.transform.SetParent(hint.canvasHelpToPlayer.transform.Find("Panel"), false);
+            }
     }
 
     private static bool HighlightSpecifiedMove(ElementsForNextMove elementsForNextMove)
@@ -515,51 +678,32 @@ public static class HelpToPlayer
         return true;
     }
 
-    //разрешаем удалить подсказку после определенного времени
-    private static void CanvasLiveTime(float time) {
-        deletedByClickingOnCanvas = true;
-        timeCreateHints = Time.time;
-        delayTime = time;
-    }
-
-    //попытка удалить по клику
-    public static void DeletedByClickingOnCanvas()
-    {
-        if (deletedByClickingOnCanvas)
-        {
-            //если прошло больше времени чем указано
-            if ((Time.time - delayTime) > timeCreateHints)
-            {
-                if (DellGameHelp())
-                {
-                    //выполняем ход
-                    GridBlocks.Instance.Move();
-                }
-            }
-        }
-    }
 }
 
 public class Hint {
-    public ElementsTypeEnum elementsTypeEnum;
+    public string help;
+    public int numberHelp;
+    public bool createNextGameHelp = false;
     public List<BlockControllerSettings> blockControllersSetingList = new List<BlockControllerSettings>();
     public List<SpriteRenderSettings> spriteRendersSetingList = new List<SpriteRenderSettings>();
+    public List<ParentSettings> ParentSettingsList = new List<ParentSettings>();
     public GameObject canvasHelpToPlayer;
 
-    public Hint(ElementsTypeEnum elementsTypeEnum)
+    public Hint(string help, int numberHelp)
     {
-        this.elementsTypeEnum = elementsTypeEnum;
+        this.help = help;
+        this.numberHelp = numberHelp;
     }
 }
 
 public class HintStatus
 {
-    public ElementsTypeEnum elementsTypeEnum;
+    public string help;
     public bool status = false;
 
-    public HintStatus(ElementsTypeEnum elementsTypeEnum, bool status)
+    public HintStatus(string help, bool status)
     {
-        this.elementsTypeEnum = elementsTypeEnum;
+        this.help = help;
         this.status = status;
     }
 }
@@ -590,5 +734,17 @@ public class BlockControllerSettings
         this.handleСlick = handleСlick;
         this.handleDragging = handleDragging;
         this.permittedDirection = permittedDirection;
+    }
+}
+
+public class ParentSettings
+{
+    public Transform gameObjectTransform;
+    public Transform parentTransform;
+
+    public ParentSettings(Transform gameObjectTransform, Transform parentTransform)
+    {
+        this.gameObjectTransform = gameObjectTransform;
+        this.parentTransform = parentTransform;
     }
 }
