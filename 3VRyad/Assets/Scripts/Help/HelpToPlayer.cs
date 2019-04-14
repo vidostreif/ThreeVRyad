@@ -62,15 +62,17 @@ public static class HelpToPlayer
 
     public static void AddHint(ElementsTypeEnum elementsTypeEnum) {
 
-        AddHint(typeof(ElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum);
+        AddHint(typeof(ElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum, false);
     }
 
     public static void AddHint(HelpEnum helpEnum)
     {
-        AddHint(typeof(HelpEnum), helpEnum.ToString(), (int)helpEnum);
+        AddHint(typeof(HelpEnum), helpEnum.ToString(), (int)helpEnum, true);
     }
+    
 
-    private static void AddHint(Type enumType, string help, int number) {
+
+    private static void AddHint(Type enumType, string help, int number, bool toTop) {
         //проверяем показывали ли мы такую подсказку игроку
         CreateHintStatusList();
 
@@ -91,7 +93,14 @@ public static class HelpToPlayer
             Hint hint = hintsList.Find(item => item.help == help);
             if (hint == null)
             {
-                hintsList.Add(new Hint(help, count + number));
+                if (toTop)
+                {
+                    hintsList.Insert(0, new Hint(help, count + number));
+                }
+                else
+                {
+                    hintsList.Add(new Hint(help, count + number));
+                }               
             }
         }
     }
@@ -99,7 +108,7 @@ public static class HelpToPlayer
     public static bool CreateNextGameHelp()
     {
         bool created = false;
-        if (hintsList.Count > 0)
+        if (hintsList.Count > 0 && activeHint == null)
         {
             //!!!добавить все блоки в список для запрета обработки
             
@@ -593,7 +602,7 @@ public static class HelpToPlayer
         if (gnome != null)
         {
             ChangeParent(gnome, activeHint);
-            activeHint.createNextGameHelp = true;
+            //activeHint.createNextGameHelp = true;
             //таймаут для удаления подсказки
             CanvasLiveTime(3);
             return true;

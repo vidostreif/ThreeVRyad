@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 
+
 public static class JsonSaveAndLoad 
 {
     private static Save save;
@@ -19,10 +20,10 @@ public static class JsonSaveAndLoad
         path = Path.Combine(Application.persistentDataPath, "Save.json");
 #else
             path = Path.Combine(Application.dataPath, "Save.json");
-#endif
+#endif      
             if (File.Exists(path))
             {
-                save = JsonUtility.FromJson<Save>(File.ReadAllText(path));
+                save = JsonUtility.FromJson<Save>(VEncryption.Decrypt(File.ReadAllText(path)));
                 Debug.Log("Загрузка сохранения.");
             }
             else
@@ -38,7 +39,7 @@ public static class JsonSaveAndLoad
     {
         if (saveIsChanged)
         {
-            File.WriteAllText(path, JsonUtility.ToJson(save));
+            File.WriteAllText(path, VEncryption.Encrypt(JsonUtility.ToJson(save)));
             saveIsChanged = false;
         }        
     }
@@ -150,4 +151,5 @@ public class HelpSave
         this.status = status;
     }
 }
+
 

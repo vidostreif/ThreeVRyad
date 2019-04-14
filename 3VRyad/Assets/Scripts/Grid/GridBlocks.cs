@@ -220,7 +220,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             {
                 //удаляем подсказку
                 bool gameHelpWasDell = HelpToPlayer.DellGameHelp();
-                //Debug.Log("gameHelpWasDell: " + gameHelpWasDell);
+                
 
                 Blocks blocks = elementsForMoveList[0];
                 touchingBlock = blocks.block[0];

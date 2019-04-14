@@ -35,6 +35,10 @@ public class HelpFromGnome : MonoBehaviour, IESaveAndLoad
     {
         //восстанавливаем значения
         this.helpEnum =  (HelpEnum)Enum.Parse(typeof(HelpEnum), XElement.Element("helpEnum").Value);
-        //ResetParameters();
+
+        if (Application.isPlaying && this.helpEnum != HelpEnum.Empty)
+        {
+            HelpToPlayer.AddHint(HelpFromGnome.Instance.helpEnum);//подсказка
+        }
     }
 }
