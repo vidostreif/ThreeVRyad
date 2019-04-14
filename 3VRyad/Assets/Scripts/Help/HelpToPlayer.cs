@@ -70,8 +70,6 @@ public static class HelpToPlayer
         AddHint(typeof(HelpEnum), helpEnum.ToString(), (int)helpEnum, true);
     }
     
-
-
     private static void AddHint(Type enumType, string help, int number, bool toTop) {
         //проверяем показывали ли мы такую подсказку игроку
         CreateHintStatusList();
@@ -143,7 +141,15 @@ public static class HelpToPlayer
                 }
                 else if (activeHint.help == HelpEnum.Gnome.ToString())
                 {
-                    created = GnomeHelp();
+                    created = InterfaceHelp("Gnome");
+                }
+                else if (activeHint.help == HelpEnum.Tasks.ToString())
+                {
+                    created = InterfaceHelp("PanelCollectsElement");
+                }
+                else if (activeHint.help == HelpEnum.Score.ToString())
+                {
+                    created = InterfaceHelp("Score");
                 }
                 else
                 {
@@ -315,6 +321,14 @@ public static class HelpToPlayer
             {
                 text.text = "Привет! Я твой помошник и буду всячески тебе помогать!";
             }
+            else if (activeHint.help == HelpEnum.Tasks.ToString())
+            {
+                text.text = "На этой панеле показано, сколько элементов нужно собрать и сколько ходов для этого осталось!";
+            }
+            else if (activeHint.help == HelpEnum.Score.ToString())
+            {
+                text.text = "Здесь ты видишь количество набранных очков. Чем больше очков ты наберешь, тем больше звезд получишь!";
+            }
             else
             {
                 text.text = "Често говоря, я и сам не понимаю, что происходит :)";
@@ -368,17 +382,8 @@ public static class HelpToPlayer
 
             deletedByClickingOnCanvas = false;
             JsonSaveAndLoad.RecordSave(hintsStatus);
-            if (activeHint.createNextGameHelp)
-            {
-                CreateNextGameHelp();
-                return false;
-            }
-            else
-            {
-                activeHint = null;
-                return true;
-            }
-            
+            activeHint = null;
+            return true;
         }
         else
         {
@@ -402,11 +407,22 @@ public static class HelpToPlayer
             //если прошло больше времени чем указано
             if ((Time.time - delayTime) > timeCreateHints)
             {
-                if (DellGameHelp())
+                if (activeHint != null)
                 {
-                    //выполняем ход
-                    GridBlocks.Instance.Move();
-                }
+                    bool createNextGameHelpByClicking = activeHint.createNextGameHelpByClicking;
+                    if (DellGameHelp())
+                    {
+                        if (createNextGameHelpByClicking)
+                        {
+                            CreateNextGameHelp();
+                        }
+                        else
+                        {
+                            //выполняем ход
+                            GridBlocks.Instance.Move();
+                        }                        
+                    }
+                }                
             }
         }
     }
@@ -594,22 +610,22 @@ public static class HelpToPlayer
 
 
     //подсказки для интерфейса
-    private static bool GnomeHelp()
+    private static bool InterfaceHelp(string goName)
     {
         //находим гнома
-        GameObject gnome = GameObject.Find("GnomeAndTank");
+        GameObject go = GameObject.Find(goName);
 
-        if (gnome != null)
+        if (go != null)
         {
-            ChangeParent(gnome, activeHint);
-            //activeHint.createNextGameHelp = true;
+            ChangeParent(go, activeHint);
             //таймаут для удаления подсказки
-            CanvasLiveTime(3);
+            activeHint.createNextGameHelpByClicking = true;
+            CanvasLiveTime(1);
             return true;
         }
         else
         {
-            Debug.Log("Не нашли гнома!");
+            Debug.Log("Не нашли " + goName + " для создания подсказки!");
             return false;
         }
     }
@@ -692,7 +708,7 @@ public static class HelpToPlayer
 public class Hint {
     public string help;
     public int numberHelp;
-    public bool createNextGameHelp = false;
+    public bool createNextGameHelpByClicking = false;
     public List<BlockControllerSettings> blockControllersSetingList = new List<BlockControllerSettings>();
     public List<SpriteRenderSettings> spriteRendersSetingList = new List<SpriteRenderSettings>();
     public List<ParentSettings> ParentSettingsList = new List<ParentSettings>();

@@ -40,6 +40,7 @@ public class MainGameSceneScript : MonoBehaviour {
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
 
         //если не создали первую подсказку для уровня, то выполняем ход
+        HelpToPlayer.AddHint(HelpFromGnome.Instance.helpEnum);//подсказка
         if (!HelpToPlayer.CreateNextGameHelp())
         {
             GridBlocks.Instance.Move();//выполнение хода

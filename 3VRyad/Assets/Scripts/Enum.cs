@@ -146,6 +146,6 @@ public enum HelpEnum
 {
     Empty,
     Gnome,
-    Moves,
+    Score,
     Tasks,    
 }//тип сглаженного перемещения

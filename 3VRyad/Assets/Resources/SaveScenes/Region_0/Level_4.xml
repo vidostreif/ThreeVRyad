@@ -97,6 +97,9 @@
       <block posX="10" posY="8" blockType="Standard" generatorElements="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
     </blocks>
   </GridBlocks>
+  <HelpFromGnome>
+    <helpEnum>Empty</helpEnum>
+  </HelpFromGnome>
   <InstrumentsManager>
     <instruments>
       <typeAndAllow type="Shovel" allow="true" />

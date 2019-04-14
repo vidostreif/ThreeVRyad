@@ -33,24 +33,40 @@ public class LevelMenu : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject); //Set as do not destroy
         }
+
+        ////заполнение regionsList из существующих файлов
+        CreateRegionsListFromFiles();
+
+#if UNITY_EDITOR
+        //Если на сцене игры
+        if (SceneManager.GetActiveScene().name == "SampleScene")
+        {
+            ////если в игре
+            if (Application.isPlaying)
+            {
+                //сохранить здесь уровень. А потом заново загрузить.
+                if (lastLoadLevel == null && lastLoadXmlDocument != null && lastLoadFolder != null)
+                {
+                    lastLoadLevel = FoundLevel(lastLoadXmlDocument, lastLoadFolder);
+                    SaveXml(lastLoadLevel);
+                    //LoadXml(lastLoadLevel);
+                }
+            }
+            else
+            {
+                if (lastLoadXmlDocument != null && lastLoadFolder != null)
+                {
+                    LoadXml(FoundLevel(lastLoadXmlDocument, lastLoadFolder));
+                }
+            }
+        }        
+#endif
     }
 
     void Start()
     {
-        ////заполнение regionsList из существующих файлов
-        CreateRegionsListFromFiles();      
-        ////если в игре
         if (Application.isPlaying)
-        {
-            Prepare();
-        }
-        else
-        {
-            if (lastLoadXmlDocument != null && lastLoadFolder != null)
-            {
-                LoadXml(FoundLevel(lastLoadXmlDocument, lastLoadFolder));
-            }
-        }
+        { Prepare(); }
     }
 
     private void Prepare() {
@@ -186,18 +202,6 @@ public class LevelMenu : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    //void OnDisable()
-    //{
-    //    if (!Application.isPlaying)
-    //    {
-    //        if (lastLoadLevel != null && lastLoadXmlDocument != "" && lastLoadFolder != "")
-    //        {
-    //            //SaveXml(lastLoadLevel);
-    //            Debug.Log("save");
-    //            SaveAndLoadScene.Instance().SaveXml(lastLoadXmlDocument, lastLoadFolder);
-    //        }
-    //    }
-    //}
 
     public void SaveXml(Level inLevel)
     {

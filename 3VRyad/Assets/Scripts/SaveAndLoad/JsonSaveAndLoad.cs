@@ -23,8 +23,17 @@ public static class JsonSaveAndLoad
 #endif      
             if (File.Exists(path))
             {
-                save = JsonUtility.FromJson<Save>(VEncryption.Decrypt(File.ReadAllText(path)));
-                Debug.Log("Загрузка сохранения.");
+                try
+                {
+                    save = JsonUtility.FromJson<Save>(VEncryption.Decrypt(File.ReadAllText(path)));
+                    Debug.Log("Загрузка сохранения.");
+                }
+                catch (Exception)
+                {
+                    Debug.Log("Загрузить сохранение не удалось. Создается новое сохранение.");
+                    save = new Save();
+                }
+                
             }
             else
             {
