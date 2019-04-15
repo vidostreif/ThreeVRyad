@@ -82,6 +82,10 @@ public static class HelpToPlayer
             {
                 count+= Enum.GetNames(item).Length;
             }
+            else
+            {
+                break;
+            }
         }
 
         //если уже показывали то не добавляем
@@ -676,8 +680,9 @@ public static class HelpToPlayer
         //перебираем все блоки
         foreach (Block block in blocks)
         {
-            if (block != null)
+            if (block != null && !GridBlocks.Instance.BlockInProcessing(block))
             {
+                //block.Blocked = true;
                 ChangeSorting(block.gameObject, activeHint);
                 blockController = block.GetComponent<BlockController>();
                 //сохраняем настройки

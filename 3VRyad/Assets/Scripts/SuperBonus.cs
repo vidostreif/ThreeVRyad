@@ -35,12 +35,6 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     {
         if (allow)
         {
-            ////активируем супер бонус если есть заряды и еще не закончили игру
-            //if (charges > 0 && !activated && !Tasks.Instance.endGame)
-            //{
-            //    StartCoroutine(ActivateSuperBonus());
-            //}
-
             //обрабатываем ракеты которые долетели до нужного элемента
             if (HitSuperBonusList.Count > 0)
             {

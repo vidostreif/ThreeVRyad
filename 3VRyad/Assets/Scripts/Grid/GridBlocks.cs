@@ -188,24 +188,27 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     public void Move(Block touchingBlock = null, Block destinationBlock = null)
     {
-        //если остались ходы и нет подготовленных для действия инструментов
-        if ((!Tasks.Instance.endGame && !InstrumentsManager.Instance.InstrumentPrepared && (Tasks.Instance.Moves - elementsForMoveList.Count) > 0) ||
-            (touchingBlock == null && destinationBlock == null))
-        {            
-            Blocks blocks = new Blocks();
-            blocks.block = new Block[2];
-            blocks.block[0] = touchingBlock;
-            blocks.block[1] = destinationBlock;
-            elementsForMoveList.Add(blocks);
-
-            if (!blockedForMove)
-            {
-                StartCoroutine(GridBlocks.Instance.MakeMove(touchingBlock, destinationBlock));
-            }
-        }
-        else if ((touchingBlock != null && destinationBlock != null))
+        if (Application.isPlaying)
         {
-            ExchangeElements(touchingBlock, destinationBlock);
+            //если остались ходы и нет подготовленных для действия инструментов
+            if ((!Tasks.Instance.endGame && !InstrumentsManager.Instance.InstrumentPrepared && (Tasks.Instance.Moves - elementsForMoveList.Count) > 0 && (touchingBlock != null || destinationBlock != null))
+            || (touchingBlock == null && destinationBlock == null && (elementsForMoveList.Count == 0 || (blockedForMove && elementsForMoveList.Count < 2))))
+            {
+                Blocks blocks = new Blocks();
+                blocks.block = new Block[2];
+                blocks.block[0] = touchingBlock;
+                blocks.block[1] = destinationBlock;
+                elementsForMoveList.Add(blocks);
+
+                if (!blockedForMove)
+                {
+                    StartCoroutine(GridBlocks.Instance.MakeMove(touchingBlock, destinationBlock));
+                }
+            }
+            else if ((touchingBlock != null && destinationBlock != null))
+            {
+                ExchangeElements(touchingBlock, destinationBlock);
+            }
         }
     }
 
@@ -234,7 +237,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 bool makeActionElementsAfterMove = false;
                 do
                 {
-                    //Debug.Log("Выполняем ход, итерация: " + iteration + " matchFound: " + matchFound + " needFilling: " + needFilling);
                     //добавить проверку, что если нет destinationBlock, то не искать совпадающие линии
 
                     //ищем совпавшие линии 
@@ -353,7 +355,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                         foreach (List<Block> item in findedBlockInLine)
                             Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
-                        yield return new WaitForSeconds(0.07f);
+                        yield return new WaitForSeconds(0.07f);                        
                     }
                     else if (matchFound)
                     {
@@ -361,30 +363,18 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             Bonuses.Instance.CheckBonuses(item, null, null);
                         yield return new WaitForSeconds(0.07f);
                     }
-                    
+
                     if (matchFound && iteration != 1)
                     {
                         if (CountElementsForMove < elementsForMoveList.Count)
                             break;
                         yield return new WaitForSeconds(0.1f);                        
                     }
+
                     blockFieldsList.Clear();
                     elementsForMoveList.Remove(blocks);
                     yield return StartCoroutine(Filling(true, iteration));
-
-                    //если не конец игры, создаем подсказку
-                    if (!Tasks.Instance.endGame)
-                    {
-                        if (HelpToPlayer.CreateNextGameHelp())
-                        {
-                            Debug.Log("Создаем подсказку!");
-                            //если создали, то прерываем процесс
-                            blockFieldsList.Clear();
-                            elementsForMoveList.Clear();
-                            blockedForMove = false;
-                            yield break;
-                        }
-                    }                    
+                                                      
 
                     //если есть элементы в очереди на движение
                     if (elementsForMoveList.Count > 0)
@@ -402,6 +392,19 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 blockFieldsList.Clear();
                 //обновляем данные по коллекциям
                 Tasks.Instance.UpdateAllGoal();
+
+                //если не конец игры и не нужно выполнять действие после хода, создаем подсказку
+                if (!Tasks.Instance.endGame)
+                {
+                    if (HelpToPlayer.CreateNextGameHelp())
+                    {
+                        Debug.Log("Создаем подсказку!");
+                        //если создали, то прерываем процесс
+                        elementsForMoveList.Clear();
+                        blockedForMove = false;
+                        yield break;
+                    }
+                }
             }
 
             //если закончились ходы игрока и ходы всей игры
@@ -436,18 +439,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         blockedForMove = false;
     }
-
-    ////обработка сбрасывающих блоков
-    //private void ProcessingDroppingBlock() {
-    //    foreach (Block item in droppingBlockList)
-    //    {
-    //        //сбрасывающий блок со сбрасываемым элементом
-    //        if (BlockCheck.ThisBlockDropingWithDropElement(item))
-    //        {
-    //            item.Hit(HitTypeEnum.Drop);
-    //        }
-    //    }                
-    //}
 
     //действия элементов после хода
     private void PerformActionElementsAfterMove() {

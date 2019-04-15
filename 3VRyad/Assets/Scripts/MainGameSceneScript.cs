@@ -25,6 +25,13 @@ public class MainGameSceneScript : MonoBehaviour {
         //восстанавливаем настройки сцены
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
+#if UNITY_EDITOR
+            if (LevelMenu.Instance.levelSaved)
+            {
+                LevelMenu.Instance.SaveXml(LevelMenu.Instance.LastLoadLevel);
+                LevelMenu.Instance.levelSaved = true;
+            }            
+#endif
             LevelMenu.Instance.LoadXml(LevelMenu.Instance.LastLoadLevel);
         }
         else
@@ -138,6 +145,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
     public void ExitToMenu()
     {
+        ResetScene();
         LevelMenu.Instance.LoadMainMenu();
     }
 

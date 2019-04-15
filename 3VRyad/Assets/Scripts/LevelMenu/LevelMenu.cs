@@ -14,6 +14,7 @@ public class LevelMenu : MonoBehaviour
     private Level lastLoadLevel;
     public string lastLoadXmlDocument;
     public string lastLoadFolder;
+    public bool levelSaved = false;//левел в начале загрузки сохранен
     private GameObject canvasRegions = null;
     private GameObject canvasLevels = null;
     //private AsyncOperation async;
@@ -44,12 +45,9 @@ public class LevelMenu : MonoBehaviour
             ////если в игре
             if (Application.isPlaying)
             {
-                //сохранить здесь уровень. А потом заново загрузить.
                 if (lastLoadLevel == null && lastLoadXmlDocument != null && lastLoadFolder != null)
                 {
                     lastLoadLevel = FoundLevel(lastLoadXmlDocument, lastLoadFolder);
-                    SaveXml(lastLoadLevel);
-                    //LoadXml(lastLoadLevel);
                 }
             }
             else
@@ -63,18 +61,20 @@ public class LevelMenu : MonoBehaviour
 #endif
     }
 
-    void Start()
+    public void Start()
     {
         if (Application.isPlaying)
-        { Prepare(); }
+        {
+            Prepare(); 
+        }
     }
 
     private void Prepare() {
-        DontDestroyOnLoad(gameObject); //Set as do not destroy
+        //DontDestroyOnLoad(gameObject); //Set as do not destroy
         //загрузить данных из сохранения
         LoadSave();
         regionsList[0].levelList[0].SetLevelOpend();
-        lastLoadLevel = null;
+        //lastLoadLevel = null;
 
         //если запустились на сцене меню
         if (SceneManager.GetActiveScene().name == "MainMenu")
