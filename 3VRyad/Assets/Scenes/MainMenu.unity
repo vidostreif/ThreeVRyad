@@ -328,6 +328,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameHelper
       objectReference: {fileID: 0}
+    - target: {fileID: 2079086742628396324, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4351087558254360, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.62
@@ -371,11 +376,6 @@ PrefabInstance:
     - target: {fileID: 4351087558254360, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079086742628396324, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
@@ -509,6 +509,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Main Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.990566
+      objectReference: {fileID: 0}
+    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.8457191
+      objectReference: {fileID: 0}
+    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.8457191
       objectReference: {fileID: 0}
     - target: {fileID: 7457034389743375328, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
         type: 3}

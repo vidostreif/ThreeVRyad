@@ -8,12 +8,24 @@ using UnityEngine.UI;
 public class Score : MonoBehaviour, IESaveAndLoad
 {
     public static Score Instance; // Синглтон
-    public int scoreForFirstStar; //Количество очков для поллучения первой звезды
-    public int scoreForSecondStar;//Количество очков для поллучения второй звезды
-    public int scoreForThirdStar;//Количество очков для поллучения третьей звезды
+    
     private int score = 0;
     private int addScore = 0;
     private Text text;
+    private Image imagePanelImage;
+
+    public int scoreFor1Star; //Количество очков для поллучения первой звезды
+    private Image imageStar1;
+    private bool imageStar1shown;
+
+    public int scoreFor2Star;//Количество очков для поллучения второй звезды
+    private Image imageStar2;
+    private bool imageStar2shown;
+
+    public int scoreFor3Star;//Количество очков для поллучения третьей звезды
+    private Image imageStar3;
+    private bool imageStar3shown;
+
 
     public int getScore()
     {
@@ -44,12 +56,14 @@ public class Score : MonoBehaviour, IESaveAndLoad
             score += i;
             addScore -= i;
             UpdateText();
+            UpdateLineAndStars();
         }
         else if (addScore > 0)
         {
             score += 1;
             addScore -= 1;
             UpdateText();
+            UpdateLineAndStars();
         }
     }
 
@@ -64,8 +78,29 @@ public class Score : MonoBehaviour, IESaveAndLoad
         }
         else
         {
-            text.text = "1: " + scoreForFirstStar + " 2: " + scoreForSecondStar + " 3: " + scoreForThirdStar;
+            text.text = "1: " + scoreFor1Star + " 2: " + scoreFor2Star + " 3: " + scoreFor3Star;
         }
+
+        //визуализируем звезды
+        Transform panelImage = transform.Find("PanelImage");
+        RectTransform rectTransformPanelImage = panelImage.GetComponent<RectTransform>();
+        imagePanelImage = panelImage.GetComponent<Image>();
+        Transform star1 = panelImage.Find("Star1");
+        RectTransform rectTransformStar1 = star1.GetComponent<RectTransform>();
+        imageStar1 = star1.GetComponent<Image>();
+        imageStar1shown = false;
+        Transform star2 = panelImage.Find("Star2");
+        RectTransform rectTransformStar2 = star2.GetComponent<RectTransform>();
+        imageStar2 = star2.GetComponent<Image>();
+        imageStar2shown = false;
+        Transform star3 = panelImage.Find("Star3");
+        RectTransform rectTransformStar3 = star3.GetComponent<RectTransform>();
+        imageStar3 = star3.GetComponent<Image>();
+        imageStar3shown = false;
+
+        rectTransformStar2.localPosition = new Vector3(rectTransformPanelImage.rect.xMin + (rectTransformPanelImage.rect.width * (float)scoreFor2Star / (float)scoreFor3Star), rectTransformStar3.localPosition.y, 0);
+        rectTransformStar1.localPosition = new Vector3(rectTransformPanelImage.rect.xMin + (rectTransformPanelImage.rect.width * (float)scoreFor1Star / (float)scoreFor3Star), rectTransformStar3.localPosition.y, 0);
+        UpdateLineAndStars();
     }
 
     public void CreateScoreElement(Vector3 position, int score)
@@ -83,6 +118,36 @@ public class Score : MonoBehaviour, IESaveAndLoad
         this.addScore += addScore;
     }
 
+    //обновляем отображение линии и звезд
+    private void UpdateLineAndStars()
+    {
+        imagePanelImage.fillAmount = (float)score / (float)scoreFor3Star;
+        //показываем звезды
+        if (score > scoreFor1Star && !imageStar1shown)
+        {
+            //!!!создать эффект взрыва отображения звезды
+
+            SupportFunctions.ChangeAlfa(imageStar1, 1);
+            imageStar1shown = true;
+        }
+
+        if (score > scoreFor2Star && !imageStar2shown)
+        {
+            //!!!создать эффект взрыва отображения звезды
+
+            SupportFunctions.ChangeAlfa(imageStar2, 1);
+            imageStar2shown = true;
+        }
+
+        if (score > scoreFor3Star && !imageStar3shown)
+        {
+            //!!!создать эффект взрыва отображения звезды
+
+            SupportFunctions.ChangeAlfa(imageStar3, 1);
+            imageStar3shown = true;
+        }
+    }
+
     //обнолвление текста
     private void UpdateText()
     {
@@ -91,15 +156,15 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
     //количество полученных звезд
     public int NumberOfStarsReceived() {
-        if (score + addScore >= scoreForThirdStar)
+        if (score + addScore >= scoreFor3Star)
         {
             return 3;
         }
-        else if (score + addScore >= scoreForSecondStar)
+        else if (score + addScore >= scoreFor2Star)
         {
             return 2;
         }
-        else if (score + addScore >= scoreForFirstStar)
+        else if (score + addScore >= scoreFor1Star)
         {
             return 1;
         }
@@ -116,9 +181,9 @@ public class Score : MonoBehaviour, IESaveAndLoad
     {
         XElement mainXElement = new XElement(this.GetType().ToString());
 
-        mainXElement.Add(new XElement("scoreForFirstStar", scoreForFirstStar));
-        mainXElement.Add(new XElement("scoreForSecondStar", scoreForSecondStar));
-        mainXElement.Add(new XElement("scoreForThirdStar", scoreForThirdStar));
+        mainXElement.Add(new XElement("scoreForFirstStar", scoreFor1Star));
+        mainXElement.Add(new XElement("scoreForSecondStar", scoreFor2Star));
+        mainXElement.Add(new XElement("scoreForThirdStar", scoreFor3Star));
 
         return mainXElement;
     }
@@ -127,9 +192,9 @@ public class Score : MonoBehaviour, IESaveAndLoad
     {
 
         //восстанавливаем значения
-        this.scoreForFirstStar = int.Parse(tasksXElement.Element("scoreForFirstStar").Value);
-        this.scoreForSecondStar = int.Parse(tasksXElement.Element("scoreForSecondStar").Value);
-        this.scoreForThirdStar = int.Parse(tasksXElement.Element("scoreForThirdStar").Value);
+        this.scoreFor1Star = int.Parse(tasksXElement.Element("scoreForFirstStar").Value);
+        this.scoreFor2Star = int.Parse(tasksXElement.Element("scoreForSecondStar").Value);
+        this.scoreFor3Star = int.Parse(tasksXElement.Element("scoreForThirdStar").Value);
 
         if (Application.isPlaying)
         {
@@ -138,7 +203,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
         else
         {
             text = transform.GetComponentInChildren<Text>();
-            text.text = "Для первой " + scoreForFirstStar + "\nДля второй " + scoreForSecondStar + "\nДля третьей " + scoreForThirdStar;
+            text.text = "Для первой " + scoreFor1Star + "\nДля второй " + scoreFor2Star + "\nДля третьей " + scoreFor3Star;
         }
         ResetParameters();
     }

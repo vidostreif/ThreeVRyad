@@ -109,9 +109,9 @@
     </instruments>
   </InstrumentsManager>
   <Score>
-    <scoreForFirstStar>27000</scoreForFirstStar>
-    <scoreForSecondStar>30000</scoreForSecondStar>
-    <scoreForThirdStar>39000</scoreForThirdStar>
+    <scoreForFirstStar>18000</scoreForFirstStar>
+    <scoreForSecondStar>22000</scoreForSecondStar>
+    <scoreForThirdStar>27000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>5000</maxBonusPower>

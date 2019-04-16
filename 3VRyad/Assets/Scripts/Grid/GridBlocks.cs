@@ -409,6 +409,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //если закончились ходы игрока и ходы всей игры
             if (elementsForMoveList.Count == 0 && Tasks.Instance.endGame)
             {
+                Time.timeScale = 2;
                 //если собрали все задачи и активируем все бонусы
                 if (Tasks.Instance.collectedAll && Bonuses.Instance.ActivateBonusOnEnd())
                 {
@@ -421,6 +422,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
                 else
                 {
+                    Time.timeScale = 1;
                     MainGameSceneScript.Instance.CompleteGame();
                 }
                 yield break;
