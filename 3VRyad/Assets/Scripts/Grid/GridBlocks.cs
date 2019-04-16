@@ -224,7 +224,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //удаляем подсказку
                 bool gameHelpWasDell = HelpToPlayer.DellGameHelp();
                 
-
                 Blocks blocks = elementsForMoveList[0];
                 touchingBlock = blocks.block[0];
                 destinationBlock = blocks.block[1];
@@ -410,7 +409,20 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //если закончились ходы игрока и ходы всей игры
             if (elementsForMoveList.Count == 0 && Tasks.Instance.endGame)
             {
-                MainGameSceneScript.Instance.CompleteGame();
+                //если собрали все задачи и активируем все бонусы
+                if (Tasks.Instance.collectedAll && Bonuses.Instance.ActivateBonusOnEnd())
+                {
+                    blockedForMove = false;
+                }
+                //если собрали все задачи и активируем супер бонус в конце уровня
+                else if(Tasks.Instance.collectedAll && SuperBonus.Instance.ActivateSuperBonusOnEnd())
+                {
+                    blockedForMove = false;
+                }
+                else
+                {
+                    MainGameSceneScript.Instance.CompleteGame();
+                }
                 yield break;
             }
 
@@ -649,7 +661,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
             if (blocksInLine.Count > 3)
             {
-                Debug.Log("Найдено блоков в линии:" + blocksInLine.Count);
+                //Debug.Log("Найдено блоков в линии:" + blocksInLine.Count);
 
                 listBlocksInLine.Add(blocksInLine);
                 //repit = true;
@@ -1044,6 +1056,25 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             {
                 //если блок существует по данному адресу и в нем есть стандартный элемент
                 if (BlockCheck.ThisBlockWithStandartElement(containers[x].block[y]))
+                {
+                    blocks.Add(containers[x].block[y]);
+                }
+            }
+        }
+        return blocks.ToArray();
+    }
+
+    //возвращает все блоки с указаным элементом
+    public Block[] GetAllBlocksWithCurElements(ElementsTypeEnum elementsTypeEnum)
+    {
+        List<Block> blocks = new List<Block>();
+
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если блок существует по данному адресу и в нем есть нужный элемент
+                if (BlockCheck.ThisBlockWithCurElement(containers[x].block[y], elementsTypeEnum))
                 {
                     blocks.Add(containers[x].block[y]);
                 }

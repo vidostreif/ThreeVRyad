@@ -11,6 +11,8 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
     public static Bonuses Instance; // Синглтон
     public List<Bonus> bonusesList;
 
+    private bool activateBonusOnEnd = false;
+
     void Awake()
     {
         // регистрация синглтона
@@ -20,7 +22,8 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         Instance = this;
     }
 
-    public void CheckBonuses(List<Block> findedBlockInLine, Block touchingBlock, Block destinationBlock) {
+    public void CheckBonuses(List<Block> findedBlockInLine, Block touchingBlock, Block destinationBlock)
+    {
 
         //ищем бонус подходящий под нашу длинну совпадающей линии
         int count = findedBlockInLine.Count;
@@ -90,8 +93,9 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
             if (blockToCreateBonus != null)
             {
                 //делаем анимацию перемещения уничтоженных элементов
-                foreach (Block item in findedBlockInLine) {
-                    MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLine,smoothTime: 0.2f , destroyAfterMoving: true);
+                foreach (Block item in findedBlockInLine)
+                {
+                    MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLine, smoothTime: 0.2f, destroyAfterMoving: true);
                     //AnimatorElement animatorElement = item.Element.GetComponent<AnimatorElement>();
                     //animatorElement.StopDestroyAnimation();
                     item.Element = null;
@@ -103,7 +107,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
             }
             else
             {
-                Debug.Log("Не удалось создать бонус! 1" );
+                Debug.Log("Не удалось создать бонус! 1");
             }
         }
         else
@@ -112,8 +116,55 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         }
     }
 
-    private void CreatBonus(Bonus bonus, Block blockToCreateBonus) {
+    private void CreatBonus(Bonus bonus, Block blockToCreateBonus)
+    {
         blockToCreateBonus.CreatElement(GridBlocks.Instance.prefabElement, bonus.Shape, bonus.Type);
+    }
+
+    private IEnumerator CurActivateBonusOnEnd(List<Block> blocks)
+    {
+        activateBonusOnEnd = true;
+
+        foreach (Block block in blocks)
+        {
+            block.Hit();            
+            yield return new WaitForSeconds(0.1f);
+        }
+        GridBlocks.Instance.Move();
+        activateBonusOnEnd = false;
+    }
+
+    public bool ActivateBonusOnEnd()
+    {
+        //если на поле остались бонусы то находим их и активируем
+        if (!activateBonusOnEnd)
+        {
+            List<Block> blocks = new List<Block>();
+            Block[] curBlocks;
+            foreach (Bonus bonus in bonusesList)
+            {
+                curBlocks = GridBlocks.Instance.GetAllBlocksWithCurElements(bonus.Type);
+                foreach (Block curBlock in curBlocks)
+                {
+                    blocks.Add(curBlock);
+                }                
+            }
+
+            if (blocks.Count > 0)
+            {
+                StartCoroutine(CurActivateBonusOnEnd(blocks));
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        else
+        {
+            return true;
+        }
     }
 
     //сохранение и заргрузка
@@ -122,7 +173,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
     {
         return this.GetType();
     }
-    
+
 
     public XElement GetXElement()
     {

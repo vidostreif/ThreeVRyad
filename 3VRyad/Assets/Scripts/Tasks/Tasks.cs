@@ -218,6 +218,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             endGame = true;
             collectedAll = true;
+
+            //!!! сделать мега взрыв показывающий что все элементы собраны
         }
     }
 
@@ -240,7 +242,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     }
 
     //ход
-    public void SubMoves()
+    //возвращяет удалось ли уменьшить количество ходов
+    public bool SubMoves()
     {
         if (moves > 0)
         {
@@ -250,6 +253,11 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             {
                 endGame = true;
             }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

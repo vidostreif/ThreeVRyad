@@ -56,6 +56,19 @@ public static class BlockCheck
         }
     }
 
+    public static bool ThisBlockWithCurElement(Block block, ElementsTypeEnum elementsTypeEnum)
+    {
+
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Type == elementsTypeEnum)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static bool ThisBlockWithCollectorElementAndNoBlockingElement(Block block)
     {
         if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Collector

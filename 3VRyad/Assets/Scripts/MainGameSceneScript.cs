@@ -46,8 +46,12 @@ public class MainGameSceneScript : MonoBehaviour {
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
 
+        
+        if (HelpFromGnome.Instance.helpEnum != HelpEnum.Empty)
+        {
+            HelpToPlayer.AddHint(HelpFromGnome.Instance.helpEnum);//подсказка
+        }
         //если не создали первую подсказку для уровня, то выполняем ход
-        HelpToPlayer.AddHint(HelpFromGnome.Instance.helpEnum);//подсказка
         if (!HelpToPlayer.CreateNextGameHelp())
         {
             GridBlocks.Instance.Move();//выполнение хода

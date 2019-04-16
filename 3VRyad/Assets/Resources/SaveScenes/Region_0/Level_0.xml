@@ -1,9 +1,9 @@
 <root>
   <Bonuses>
     <bonusesList>
-      <bonus shape="MediumFlask" type="MediumFlask" cost="20" />
-      <bonus shape="SmallFlask" type="SmallFlask" cost="20" />
-      <bonus shape="BigFlask" type="BigFlask" cost="20" />
+      <bonus shape="MediumFlask" type="MediumFlask" cost="5" />
+      <bonus shape="SmallFlask" type="SmallFlask" cost="4" />
+      <bonus shape="BigFlask" type="BigFlask" cost="6" />
     </bonusesList>
   </Bonuses>
   <GridBlocks>
@@ -81,9 +81,9 @@
     <scoreForThirdStar>10000</scoreForThirdStar>
   </Score>
   <SuperBonus>
-    <maxBonusPower>5000</maxBonusPower>
+    <maxBonusPower>10000</maxBonusPower>
     <beats>7</beats>
-    <allow>false</allow>
+    <allow>true</allow>
   </SuperBonus>
   <Tasks>
     <moves>15</moves>

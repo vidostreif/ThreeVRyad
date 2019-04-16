@@ -11,9 +11,12 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     public bool allow;//разрешен на уровне
     public int maxBonusPower;//мощность для набора одного заряда
     public int beats;//количество ударов в одном заряде
+
+    private int strikesOnBlocks = 0;//количество ударов по блокам
     private int bonusPower = 0;
     private int charges = 0; //заряды супербонуса
-    private bool activated = false;//активируетс в текущий момент
+    private bool activated = false;//активируется в текущий момент
+    private bool activateSuperBonusOnEnd = false;
     private Image tankImage;
     private List<HitSuperBonus> HitSuperBonusList = new List<HitSuperBonus>();
     private List<HitSuperBonus> HitSuperBonusListForDelete = new List<HitSuperBonus>();
@@ -46,6 +49,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                         {
                             item.Block.Hit();
                             item.Block.Blocked = false;
+                            strikesOnBlocks++;
                             Destroy(item.backlight, 0.1f);
                         }
                         HitSuperBonusListForDelete.Add(item);
@@ -58,10 +62,11 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                 }
                 HitSuperBonusListForDelete.Clear();
 
-                //если ударили по всем блокам
-                if (HitSuperBonusList.Count == 0)
+                //если ударили по всем блокам или ударили столько же раз сколько ракет в одном супер бонусе
+                if (HitSuperBonusList.Count == 0 || strikesOnBlocks >= beats)
                 {
                     GridBlocks.Instance.Move();
+                    strikesOnBlocks = 0;
                 }
             }
         }
@@ -122,6 +127,70 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         {
             tankImage.fillAmount = (float)bonusPower / (float)maxBonusPower;
         }        
+    }
+
+    private IEnumerator CurActivateSuperBonusOnEnd()
+    {
+        activateSuperBonusOnEnd = true;
+
+            //запускаем супер бонус пока есть ходы
+            while (Tasks.Instance.SubMoves())
+            {
+                charges++;
+                //если супер бонус выполняет действие, то ожидаем
+                do
+                {
+                    yield return new WaitForSeconds(0.2f);
+                } while (activated);
+
+                ActivateSuperBonus();
+            }
+
+            //если еще остались заряды, то и их используем
+            while (charges > 0)
+            {
+                //если супер бонус выполняет действие, то ожидаем
+                do
+                {
+                    yield return new WaitForSeconds(0.2f);
+                } while (activated);
+
+                ActivateSuperBonus();
+            }
+
+        //ожидаем, пока все ракеты не долетят до своих целей
+        do
+        {
+            yield return new WaitForSeconds(0.01f);
+        } while (HitSuperBonusList.Count > 0);
+
+        activateSuperBonusOnEnd = false;
+    }
+
+    public bool ActivateSuperBonusOnEnd()
+    {
+        //если супер бонус разрешен на уровне  и остались доступные ходы, то конвертируем их в заряды супер бонуса
+        //и возвращяем true до тех пор пока выполняем процедцрц конвертации и запуска всех ракет
+        if (allow)
+        {
+            if (!activateSuperBonusOnEnd && (Tasks.Instance.Moves > 0 || charges > 0))
+            {
+                StartCoroutine(CurActivateSuperBonusOnEnd());
+                return true;
+            }
+            else if (activateSuperBonusOnEnd)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void ActivateSuperBonus()
