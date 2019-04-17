@@ -200,8 +200,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 blocks.block[1] = destinationBlock;
                 elementsForMoveList.Add(blocks);
 
+                Debug.Log("Добавление хода.");
+
                 if (!blockedForMove)
                 {
+                    Debug.Log("Запуск новой куротины MakeMove.");
                     StartCoroutine(GridBlocks.Instance.MakeMove(touchingBlock, destinationBlock));
                 }
             }
@@ -246,6 +249,15 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     {
                         //запускаем супербонус
                         SuperBonus.Instance.ActivateSuperBonus();
+                    }
+                    else
+                    {
+                        //если конец игры, то каждый следующий проход ускоряем время
+                        if (Time.timeScale < 3)
+                        {
+                            Time.timeScale += 0.05f;
+                            Debug.Log("Time.timeScale " + Time.timeScale);
+                        }
                     }                    
 
                     int CountElementsForMove = elementsForMoveList.Count;
@@ -264,11 +276,19 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 countblockFields = blockFieldsList.Count;
                                 //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
+                                {
+                                    Debug.Log("Прерывание хода.");
                                     break;
+                                }
+                                    
                             }
 
+                            //прерывание в случае вмешательства игрока
                             if (CountElementsForMove < elementsForMoveList.Count)
+                            {
+                                Debug.Log("Прерывание хода.");
                                 break;
+                            }
 
                             if (needFilling)
                             {
@@ -277,12 +297,20 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     iteration++;
                                     yield return StartCoroutine(Filling(false, iteration));
                                 }
+                                //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
+                                {
+                                    Debug.Log("Прерывание хода.");
                                     break;
+                                }
                                 iteration++;
                                 StartCoroutine(Filling(false, iteration));
+                                //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
+                                {
+                                    Debug.Log("Прерывание хода.");
                                     break;
+                                }
                             }
                         }
                         else
@@ -365,8 +393,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                     if (matchFound && iteration != 1)
                     {
+                        //прерывание в случае вмешательства игрока
                         if (CountElementsForMove < elementsForMoveList.Count)
+                        {
+                            Debug.Log("Прерывание хода.");
                             break;
+                        }
                         yield return new WaitForSeconds(0.1f);                        
                     }
 
@@ -392,7 +424,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //обновляем данные по коллекциям
                 Tasks.Instance.UpdateAllGoal();
 
-                //если не конец игры и не нужно выполнять действие после хода, создаем подсказку
+                //если не конец игры, создаем подсказку
                 if (!Tasks.Instance.endGame)
                 {
                     if (HelpToPlayer.CreateNextGameHelp())
@@ -409,7 +441,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //если закончились ходы игрока и ходы всей игры
             if (elementsForMoveList.Count == 0 && Tasks.Instance.endGame)
             {
-                Time.timeScale = 2;
+                
                 //если собрали все задачи и активируем все бонусы
                 if (Tasks.Instance.collectedAll && Bonuses.Instance.ActivateBonusOnEnd())
                 {

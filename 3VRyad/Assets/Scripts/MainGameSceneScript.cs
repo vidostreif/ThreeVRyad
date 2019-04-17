@@ -42,7 +42,8 @@ public class MainGameSceneScript : MonoBehaviour {
     }
 
     public void Prepare()
-    {        
+    {
+        Time.timeScale = 1;
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
 
@@ -60,6 +61,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
     public void CompleteGame()
     {
+        Time.timeScale = 1;
         HelpToPlayer.ClearHintList();//очищаем список подсказок
         InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
 
@@ -120,6 +122,7 @@ public class MainGameSceneScript : MonoBehaviour {
     private void ResetScene()
     {
         //Сбрасываем значения  
+        Time.timeScale = 1;
         HelpToPlayer.ClearHintList();//очищаем список подсказок
         Tasks.Instance.ResetParameters();
         Score.Instance.ResetParameters();
