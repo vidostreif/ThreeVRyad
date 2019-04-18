@@ -16,7 +16,7 @@ public static class GPGSManager
 
     private static CloudSavesUI savesUI;
 
-    private static bool isActivate = false;
+    public static bool isActivate = false;
     public static bool IsAuthenticated
     {
         get
@@ -38,7 +38,10 @@ public static class GPGSManager
             PlayGamesPlatform.InitializeInstance(config);
             PlayGamesPlatform.DebugLogEnabled = debug;
             PlayGamesPlatform.Activate();
-            isActivate = true;
+            //Auth((success) =>
+            //{
+                isActivate = true;
+            //});
             startDateTime = DateTime.Now;
         }
     }
@@ -48,15 +51,16 @@ public static class GPGSManager
         Initialize(debug);
     }
 
-    public static void Auth(Action<bool> onAuth)
+    public static bool Auth()
     {
-        Initialize(false);
-        Social.localUser.Authenticate((success) =>
-        {            
-            if (success) savedGameClient = PlayGamesPlatform.Instance.SavedGame;
-            onAuth(success);
-        });
+        if (Social.localUser.authenticated)
+        {
+            savedGameClient = PlayGamesPlatform.Instance.SavedGame;
+            return true;
+        }
+        return false;
     }
+
 
     public static void ShowSavesUI(Action<SavedGameRequestStatus, byte[]> onDataRead, Action onDataCreate)
     {
@@ -113,8 +117,11 @@ public static class GPGSManager
 
     public static void WriteSaveData(byte[] data)
     {
-        if (!IsAuthenticated || data == null || data.Length == 0)
+        if (!IsAuthenticated || data == null || data.Length == 0) {
+            Debug.Log("Ошибка сохранения в google.");
             return;
+        }
+            
         TimeSpan currentSpan = DateTime.Now - startDateTime;
         Action onDataWrite = () =>
         {
@@ -128,6 +135,7 @@ public static class GPGSManager
                 data,
                 (status, metadata) => currentMetadata = metadata);
             startDateTime = DateTime.Now;
+            Debug.Log("Сохранения в google.");
         };
         if (currentMetadata == null)
         {

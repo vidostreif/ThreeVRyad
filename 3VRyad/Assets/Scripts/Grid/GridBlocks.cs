@@ -200,11 +200,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 blocks.block[1] = destinationBlock;
                 elementsForMoveList.Add(blocks);
 
-                Debug.Log("Добавление хода.");
+                //Debug.Log("Добавление хода.");
 
                 if (!blockedForMove)
                 {
-                    Debug.Log("Запуск новой куротины MakeMove.");
+                    //Debug.Log("Запуск новой куротины MakeMove.");
                     StartCoroutine(GridBlocks.Instance.MakeMove(touchingBlock, destinationBlock));
                 }
             }

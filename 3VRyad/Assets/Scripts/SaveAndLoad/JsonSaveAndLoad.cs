@@ -16,31 +16,73 @@ public static class JsonSaveAndLoad
     {
         if (!saveFromFileLoad)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            path = Path.Combine(Application.persistentDataPath, "Save.json");
-            GPGSManager.Initialize(false);
-#else
-            path = Path.Combine(Application.dataPath, "Save.json");
-#endif
-            if (File.Exists(path))
+            if (save == null)
             {
-                try
+#if UNITY_ANDROID && !UNITY_EDITOR
+            path = Path.Combine(Application.persistentDataPath, "Save.json");            
+#else
+                path = Path.Combine(Application.dataPath, "Save.json");
+#endif
+                if (File.Exists(path))
                 {
-                    save = JsonUtility.FromJson<Save>(VEncryption.Decrypt(File.ReadAllText(path)));
-                    Debug.Log("Загрузка сохранения.");
+                    try
+                    {
+                        save = JsonUtility.FromJson<Save>(VEncryption.Decrypt(File.ReadAllText(path)));
+                        Debug.Log("Загрузка сохранения.");
+                    }
+                    catch (Exception)
+                    {
+                        Debug.Log("Загрузить сохранение из локального хранилища не удалось.");
+                        //GateSaveFromGPGS();
+                    }
+
                 }
-                catch (Exception)
+                else
                 {
                     Debug.Log("Загрузить сохранение из локального хранилища не удалось.");
-                    GateSaveFromGPGS();
+                    //GateSaveFromGPGS();
                 }
+            }
 
-            }
-            else
-            {
-                Debug.Log("Загрузить сохранение из локального хранилища не удалось.");
-                GateSaveFromGPGS();
-            }
+            //загружаем данные из гугл сервиса
+            GPGSManager.Initialize(false);
+
+            //!!! нужно дождаться окончания этой процедуры
+            //bool i = false;
+            //GPGSManager.Auth((success) =>
+            //{
+                if (GPGSManager.Auth() && save == null)
+                {
+                    GPGSManager.ReadSaveData(GPGSManager.DEFAULT_SAVE_NAME, (status, data) =>
+                    {
+                        if (status == GooglePlayGames.BasicApi.SavedGame.SavedGameRequestStatus.Success && data.Length > 0)
+                        {
+                            try
+                            {
+                                save = JsonUtility.FromJson<Save>(VEncryption.Decrypt(Encoding.UTF8.GetString(data, 0, data.Length)));
+                                //saveFromFileLoad = true;
+                                Debug.Log("Загрузка сохранения из google.");
+                            }
+                            catch (Exception)
+                            {
+                                Debug.Log("Загрузка сохранения из google не удалась.");
+                            }
+                        }
+                        else
+                        {
+                            Debug.Log("Загрузка сохранения из google не удалась.");
+                        }
+
+                        //i = true;
+                    });
+                }
+                else
+                {
+                    //i = true;
+                    //Debug.Log("Загрузка сохранения из google не удалась.");
+                }
+                
+            //});
 
             if (save == null)
             {
@@ -51,46 +93,19 @@ public static class JsonSaveAndLoad
         }
     }
 
-    private static void GateSaveFromGPGS()
-    {
-        //загружаем данные из гугл сервиса
-        //GPGSManager.Initialize(false);
-        GPGSManager.Auth((success) =>
-        {
-            if (success)
-            {
-                GPGSManager.ReadSaveData(GPGSManager.DEFAULT_SAVE_NAME, (status, data) =>
-                {
-                    if (status == GooglePlayGames.BasicApi.SavedGame.SavedGameRequestStatus.Success && data.Length > 0)
-                    {
-                        try
-                        {
-                            save = JsonUtility.FromJson<Save>(VEncryption.Decrypt(Encoding.UTF8.GetString(data, 0, data.Length)));
-                            saveFromFileLoad = true;
-                            Debug.Log("Загрузка сохранения из google.");
-                        }
-                        catch (Exception)
-                        {
-                            Debug.Log("Загрузка сохранения из google не удалась.");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("Загрузка сохранения из google не удалась.");
-                    }
-                });
-            }
-            else
-            {
-                Debug.Log("Загрузка сохранения из google не удалась.");
-            }
-        });
-    }
+    //private static void GateSaveFromGPGS()
+    //{
+        
+    //}
 
     public static void SetSaveToGPGS(string saveString)
     {
-        //сохраняем данные в гугл сервис
-        GPGSManager.WriteSaveData(Encoding.UTF8.GetBytes(saveString));
+        //if (GPGSManager.isActivate)
+        //{
+            //сохраняем данные в гугл сервис
+            GPGSManager.WriteSaveData(Encoding.UTF8.GetBytes(saveString));
+            
+        //}
     }
 
     public static void SetSaveToFile()
