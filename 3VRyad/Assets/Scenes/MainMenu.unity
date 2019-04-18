@@ -333,6 +333,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8716653638444527371, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 7457034389743375135}
     - target: {fileID: 4351087558254360, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.62
@@ -496,6 +501,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6844234493297698153, guid: be7be99c5e5a4644eb0be7c98112471f,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 7457034389743375135}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be7be99c5e5a4644eb0be7c98112471f, type: 3}
 --- !u!1001 &7139243662964381983

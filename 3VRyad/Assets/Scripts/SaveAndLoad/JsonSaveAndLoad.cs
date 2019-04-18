@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using System.Text;
 
-
-public static class JsonSaveAndLoad 
+public static class JsonSaveAndLoad
 {
     private static Save save;
     private static bool saveIsChanged = false;
@@ -17,10 +17,11 @@ public static class JsonSaveAndLoad
         if (!saveFromFileLoad)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-        path = Path.Combine(Application.persistentDataPath, "Save.json");
+            path = Path.Combine(Application.persistentDataPath, "Save.json");
+            GPGSManager.Initialize(false);
 #else
             path = Path.Combine(Application.dataPath, "Save.json");
-#endif      
+#endif
             if (File.Exists(path))
             {
                 try
@@ -30,31 +31,82 @@ public static class JsonSaveAndLoad
                 }
                 catch (Exception)
                 {
-                    Debug.Log("Загрузить сохранение не удалось. Создается новое сохранение.");
-                    save = new Save();
+                    Debug.Log("Загрузить сохранение из локального хранилища не удалось.");
+                    GateSaveFromGPGS();
                 }
-                
+
             }
             else
             {
+                Debug.Log("Загрузить сохранение из локального хранилища не удалось.");
+                GateSaveFromGPGS();
+            }
+
+            if (save == null)
+            {
+                Debug.Log("Создается новое сохранение");
                 save = new Save();
             }
+            saveFromFileLoad = true;
         }
+    }
 
-        saveFromFileLoad = true;
+    private static void GateSaveFromGPGS()
+    {
+        //загружаем данные из гугл сервиса
+        //GPGSManager.Initialize(false);
+        GPGSManager.Auth((success) =>
+        {
+            if (success)
+            {
+                GPGSManager.ReadSaveData(GPGSManager.DEFAULT_SAVE_NAME, (status, data) =>
+                {
+                    if (status == GooglePlayGames.BasicApi.SavedGame.SavedGameRequestStatus.Success && data.Length > 0)
+                    {
+                        try
+                        {
+                            save = JsonUtility.FromJson<Save>(VEncryption.Decrypt(Encoding.UTF8.GetString(data, 0, data.Length)));
+                            saveFromFileLoad = true;
+                            Debug.Log("Загрузка сохранения из google.");
+                        }
+                        catch (Exception)
+                        {
+                            Debug.Log("Загрузка сохранения из google не удалась.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Загрузка сохранения из google не удалась.");
+                    }
+                });
+            }
+            else
+            {
+                Debug.Log("Загрузка сохранения из google не удалась.");
+            }
+        });
+    }
+
+    public static void SetSaveToGPGS(string saveString)
+    {
+        //сохраняем данные в гугл сервис
+        GPGSManager.WriteSaveData(Encoding.UTF8.GetBytes(saveString));
     }
 
     public static void SetSaveToFile()
     {
         if (saveIsChanged)
         {
-            File.WriteAllText(path, VEncryption.Encrypt(JsonUtility.ToJson(save)));
+            string saveString = VEncryption.Encrypt(JsonUtility.ToJson(save));
+            File.WriteAllText(path, saveString);
+            SetSaveToGPGS(saveString);
             saveIsChanged = false;
-        }        
+        }
     }
 
     //загрузка сохранений уровней
-    public static Save LoadSave() {
+    public static Save LoadSave()
+    {
         GateSaveFromFile();
         return save;
     }
@@ -95,7 +147,7 @@ public static class JsonSaveAndLoad
     public static void RecordSave(HintStatus[] hintsStatus)
     {
         GateSaveFromFile();
-        
+
         //очищаем перед записью
         save.helpSave.Clear();
         //записываем новые данные

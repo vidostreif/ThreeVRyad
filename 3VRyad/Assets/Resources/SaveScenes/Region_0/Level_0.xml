@@ -1,9 +1,9 @@
 <root>
   <Bonuses>
     <bonusesList>
-      <bonus shape="MediumFlask" type="MediumFlask" cost="5" />
-      <bonus shape="SmallFlask" type="SmallFlask" cost="4" />
-      <bonus shape="BigFlask" type="BigFlask" cost="6" />
+      <bonus shape="MediumFlask" type="MediumFlask" cost="30" />
+      <bonus shape="SmallFlask" type="SmallFlask" cost="30" />
+      <bonus shape="BigFlask" type="BigFlask" cost="30" />
     </bonusesList>
   </Bonuses>
   <GridBlocks>
@@ -13,7 +13,7 @@
     <elementsShape>
       <shapeAndPriority shape="Mushroom" type="Standard" priority="10" />
       <shapeAndPriority shape="Plum" type="Standard" priority="10" />
-      <shapeAndPriority shape="Orange" type="Standard" priority="30" />
+      <shapeAndPriority shape="Orange" type="Standard" priority="20" />
       <shapeAndPriority shape="Apple" type="Standard" priority="10" />
     </elementsShape>
     <blocks>
@@ -83,7 +83,7 @@
   <SuperBonus>
     <maxBonusPower>10000</maxBonusPower>
     <beats>7</beats>
-    <allow>true</allow>
+    <allow>false</allow>
   </SuperBonus>
   <Tasks>
     <moves>15</moves>
