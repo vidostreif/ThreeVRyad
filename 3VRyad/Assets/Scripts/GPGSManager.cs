@@ -16,12 +16,10 @@ public static class GPGSManager
 
     private static CloudSavesUI savesUI;
 
-    public static bool isActivate = false;
     public static bool IsAuthenticated
     {
         get
         {
-            Initialize(false);
             if (PlayGamesPlatform.Instance != null) return PlayGamesPlatform.Instance.IsAuthenticated();
             return false;
         }
@@ -30,20 +28,14 @@ public static class GPGSManager
 
     public static void Initialize(bool debug)
     {
-        if (!isActivate)
-        {
             PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
                         .EnableSavedGames()
                         .Build();
             PlayGamesPlatform.InitializeInstance(config);
             PlayGamesPlatform.DebugLogEnabled = debug;
             PlayGamesPlatform.Activate();
-            //Auth((success) =>
-            //{
-                isActivate = true;
-            //});
+
             startDateTime = DateTime.Now;
-        }
     }
     public static void Initialize(bool debug, CloudSavesUI savesUI)
     {
@@ -51,16 +43,14 @@ public static class GPGSManager
         Initialize(debug);
     }
 
-    public static bool Auth()
+    public static void Auth(Action<bool> onAuth)
     {
-        if (Social.localUser.authenticated)
+        Social.localUser.Authenticate((success) =>
         {
-            savedGameClient = PlayGamesPlatform.Instance.SavedGame;
-            return true;
-        }
-        return false;
+            if (success) savedGameClient = PlayGamesPlatform.Instance.SavedGame;
+            onAuth(success);
+        });
     }
-
 
     public static void ShowSavesUI(Action<SavedGameRequestStatus, byte[]> onDataRead, Action onDataCreate)
     {
@@ -118,7 +108,7 @@ public static class GPGSManager
     public static void WriteSaveData(byte[] data)
     {
         if (!IsAuthenticated || data == null || data.Length == 0) {
-            Debug.Log("Ошибка сохранения в google.");
+            Debug.Log("Ошибка сохранения в google." + " IsAuthenticated: " + IsAuthenticated.ToString() + " data.Length: " + data.Length);
             return;
         }
             

@@ -12,7 +12,7 @@ public static class JsonSaveAndLoad
     private static bool saveFromFileLoad = false;//попытка загрузки из файла произведена
     private static string path;
 
-    private static void GateSaveFromFile()
+    public static void LoadSaveFromFile()
     {
         if (!saveFromFileLoad)
         {
@@ -45,13 +45,11 @@ public static class JsonSaveAndLoad
             }
 
             //загружаем данные из гугл сервиса
-            GPGSManager.Initialize(false);
 
             //!!! нужно дождаться окончания этой процедуры
-            //bool i = false;
-            //GPGSManager.Auth((success) =>
-            //{
-                if (GPGSManager.Auth() && save == null)
+            GPGSManager.Auth((success) =>
+            {
+                if (success)
                 {
                     GPGSManager.ReadSaveData(GPGSManager.DEFAULT_SAVE_NAME, (status, data) =>
                     {
@@ -72,17 +70,13 @@ public static class JsonSaveAndLoad
                         {
                             Debug.Log("Загрузка сохранения из google не удалась.");
                         }
-
-                        //i = true;
                     });
                 }
                 else
                 {
-                    //i = true;
-                    //Debug.Log("Загрузка сохранения из google не удалась.");
-                }
-                
-            //});
+                    Debug.Log("Загрузка сохранения из google не удалась.");
+                }                
+            });
 
             if (save == null)
             {
@@ -93,19 +87,10 @@ public static class JsonSaveAndLoad
         }
     }
 
-    //private static void GateSaveFromGPGS()
-    //{
-        
-    //}
-
-    public static void SetSaveToGPGS(string saveString)
+    private static void SetSaveToGPGS(string saveString)
     {
-        //if (GPGSManager.isActivate)
-        //{
             //сохраняем данные в гугл сервис
             GPGSManager.WriteSaveData(Encoding.UTF8.GetBytes(saveString));
-            
-        //}
     }
 
     public static void SetSaveToFile()
@@ -122,14 +107,14 @@ public static class JsonSaveAndLoad
     //загрузка сохранений уровней
     public static Save LoadSave()
     {
-        GateSaveFromFile();
+        LoadSaveFromFile();
         return save;
     }
 
     //запись сохранений уровней
     public static void RecordSave(List<Level> levelList, int region)
     {
-        GateSaveFromFile();
+        LoadSaveFromFile();
         //если в нашем сохранении недостаточно регионов
         if (save.regionSave.Count < region + 1)
         {
@@ -153,7 +138,7 @@ public static class JsonSaveAndLoad
     //запись сохранений магазина
     public static void RecordSave(Shop shop)
     {
-        GateSaveFromFile();
+        LoadSaveFromFile();
         save.shopSave.coins = shop.Coins;
         saveIsChanged = true;
     }
@@ -161,7 +146,7 @@ public static class JsonSaveAndLoad
     //запись показанных подсказок
     public static void RecordSave(HintStatus[] hintsStatus)
     {
-        GateSaveFromFile();
+        LoadSaveFromFile();
 
         //очищаем перед записью
         save.helpSave.Clear();
