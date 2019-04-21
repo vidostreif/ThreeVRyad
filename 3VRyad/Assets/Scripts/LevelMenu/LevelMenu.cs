@@ -38,9 +38,9 @@ public class LevelMenu : MonoBehaviour
         ////заполнение regionsList из существующих файлов
         CreateRegionsListFromFiles();
 
-        //инициализируем гугл сервис
-        GPGSManager.Initialize(false);
-        JsonSaveAndLoad.LoadSaveFromFile();
+        ////инициализируем гугл сервис
+        //GPGSManager.Initialize(false);
+        //JsonSaveAndLoad.LoadSaveFromFile();
 
 #if UNITY_EDITOR
         //Если на сцене игры
