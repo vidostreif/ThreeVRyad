@@ -88,14 +88,17 @@ public class Score : MonoBehaviour, IESaveAndLoad
         Transform star1 = panelImage.Find("Star1");
         RectTransform rectTransformStar1 = star1.GetComponent<RectTransform>();
         imageStar1 = star1.GetComponent<Image>();
+        SupportFunctions.ChangeAlfa(imageStar1, 0.2f);
         imageStar1shown = false;
         Transform star2 = panelImage.Find("Star2");
         RectTransform rectTransformStar2 = star2.GetComponent<RectTransform>();
         imageStar2 = star2.GetComponent<Image>();
+        SupportFunctions.ChangeAlfa(imageStar2, 0.2f);
         imageStar2shown = false;
         Transform star3 = panelImage.Find("Star3");
         RectTransform rectTransformStar3 = star3.GetComponent<RectTransform>();
         imageStar3 = star3.GetComponent<Image>();
+        SupportFunctions.ChangeAlfa(imageStar3, 0.2f);
         imageStar3shown = false;
 
         rectTransformStar2.localPosition = new Vector3(rectTransformPanelImage.rect.xMin + (rectTransformPanelImage.rect.width * (float)scoreFor2Star / (float)scoreFor3Star), rectTransformStar3.localPosition.y, 0);

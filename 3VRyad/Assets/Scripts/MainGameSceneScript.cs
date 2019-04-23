@@ -26,7 +26,7 @@ public class MainGameSceneScript : MonoBehaviour {
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
 #if UNITY_EDITOR
-            if (LevelMenu.Instance.levelSaved)
+            if (!LevelMenu.Instance.levelSaved)
             {
                 LevelMenu.Instance.SaveXml(LevelMenu.Instance.LastLoadLevel);
                 LevelMenu.Instance.levelSaved = true;
@@ -36,7 +36,8 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
-            ResetScene();            
+            ResetScene();
+            Debug.Log("MainGameSceneScript вызов ResetScene()");
         }
         Prepare();
     }

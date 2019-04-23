@@ -61,6 +61,10 @@ public class LevelMenu : MonoBehaviour
                     LoadXml(FoundLevel(lastLoadXmlDocument, lastLoadFolder));
                 }
             }
+        }
+        else
+        {
+            levelSaved = true;
         }        
 #endif
     }
