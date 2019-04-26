@@ -30,6 +30,7 @@ public class LevelMenu : MonoBehaviour
         {
             Instance = this; //Make this object the only instance            
         }
+
         if (Application.isPlaying)
         {
             DontDestroyOnLoad(gameObject); //Set as do not destroy

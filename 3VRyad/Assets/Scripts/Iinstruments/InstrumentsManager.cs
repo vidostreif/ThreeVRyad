@@ -5,6 +5,7 @@ using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Purchasing;
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 [ExecuteInEditMode]
@@ -31,15 +32,42 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
     void Awake()
     {
         // регистрация синглтона
-        if (Instance != null)
+        if (Instance)
         {
-            Debug.LogError("Несколько экземпляров Tasks!");
+            Destroy(this.gameObject); //Delete duplicate
+            return;
+        }
+        else
+        {
+            Instance = this; //Make this object the only instance            
         }
 
-        Instance = this;
-        //thisTransform = transform;
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoad(gameObject); //Set as do not destroy
+        }
+
+        //загружаем сохранение
+        Save save = JsonSaveAndLoad.LoadSave();
+        foreach (InstrumentsSave instrumentsSave in save.instrumentsSave)
+        {
+            foreach (Instrument instrument in instruments)
+            {
+                if (instrumentsSave.instrumenTypeEnum == instrument.Type.ToString())
+                {
+                    instrument.AddQuantity(instrumentsSave.count);
+                    break;
+                }
+            }
+        }
+        
     }
 
+    void Start()
+    {
+        CreateInstrumentsOnGame();
+    }
+    
     //добавление количества инструментов из бандла
     public bool addinstruments(BundleShopV[] bundleShopV) {
 
@@ -82,54 +110,78 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
                 }
             }
         }
+        else
+        {
+            JsonSaveAndLoad.RecordSave(instruments);
+        }
 
         return res;
     }
-
-
+    
     public void ResetParameters()
     {
         //Сбрасываем значения
         DeactivateInstrument();
-        CreateInstruments();
+        CreateInstrumentsOnGame();
     }
 
-    //создание коллекции инструментов
-    private void CreateInstruments()
+    //создание коллекции инструментов в игре
+    public void CreateInstrumentsOnGame()
     {
-        //удаляем все инструменты
-        string instrumentsName = "Instruments";
-        Transform instrumentsTransform = transform.Find(instrumentsName);
-        if (instrumentsTransform != null)
+        //если на сцене игры
+        if (SceneManager.GetActiveScene().name == "SampleScene")
         {
-            DestroyImmediate(instrumentsTransform.gameObject);
-        }
-        GameObject instrumentsParent = new GameObject();
-        instrumentsParent.transform.SetParent(transform, false);
-        instrumentsParent.name = instrumentsName;
+            //находим панель инструентов в игре
+            GameObject panel = GameObject.Find("PanelInstruments");
 
-        //смещение по y
-        float startingYPoint = transform.position.y - ((1 + distanceBetweenInstruments) * (instruments.Length - 1)) * 0.5f;
-
-        for (int i = 0; i < instruments.Length; i++)
-        {            
-                instruments[i].GameObject = Instantiate(prefabInstrument, new Vector3(transform.position.x, startingYPoint + (i * (1 + distanceBetweenInstruments)), transform.position.z), Quaternion.identity, instrumentsParent.transform);
-                Image image = instruments[i].GameObject.GetComponent(typeof(Image)) as Image;
-                image.sprite = SpriteBank.SetShape(instruments[i].Type);
-                instruments[i].Image = image;
-                instruments[i].Text = image.GetComponentInChildren<Text>();
-            //если разрешен на уровне
-            if (instruments[i].Allow)
+            if (panel != null)
             {
-                instruments[i].AddAction(instruments[i].GameObject);
+                //удаляем все инструменты
+                string instrumentsName = "Instruments";
+                Transform instrumentsTransform = panel.transform.Find(instrumentsName);
+                if (instrumentsTransform != null)
+                {
+                    DestroyImmediate(instrumentsTransform.gameObject);
+                }
+                GameObject instrumentsParent = new GameObject();
+                instrumentsParent.transform.SetParent(panel.transform, false);
+                instrumentsParent.name = instrumentsName;
+
+                //смещение по y
+                float startingYPoint = panel.transform.position.y - ((1 + distanceBetweenInstruments) * (instruments.Length - 1)) * 0.5f;
+
+                for (int i = 0; i < instruments.Length; i++)
+                {
+                    
+                    GameObject go = Instantiate(prefabInstrument, new Vector3(panel.transform.position.x, startingYPoint + (i * (1 + distanceBetweenInstruments)), panel.transform.position.z), Quaternion.identity, instrumentsParent.transform);
+                    instruments[i].CreateGameInstrumentButton(go);
+                }
             }
             else
             {
-                SupportFunctions.ChangeAlfa(instruments[i].Image, 0.2f);
-                
-                //!!!сверху повесить замок
-            }                 
-        }
+                Debug.Log("Не нашли панель инструментов!");
+            }
+        }        
+    }
+
+    //создание коллекции инструментов в магазине
+    public void CreateInstrumentsOnShop(Transform panelTransform)
+    {        
+            if (panelTransform != null)
+            {
+                //смещение по x
+                float startingXPoint = panelTransform.position.x - ((1 + distanceBetweenInstruments) * (instruments.Length - 1)) * 0.5f;
+
+                for (int i = 0; i < instruments.Length; i++)
+                {
+                    GameObject go = Instantiate(prefabInstrument, new Vector3(startingXPoint + (i * (1 + distanceBetweenInstruments)), panelTransform.position.y, panelTransform.position.z), Quaternion.identity, panelTransform);
+                    instruments[i].CreateShopInstrumentButton(go);
+                }
+            }
+            else
+            {
+                Debug.Log("Не нашли панель в магазине для отображения инструментов!");
+            }
     }
 
     public void PreparInstrument(Instrument instrument)
@@ -150,7 +202,7 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
         instrumentPrepared = true;
         preparedInstrument = instrument;
         //создаем эффект подсветки
-        preparedInstrument.PSSelect = Instantiate(MainParticleSystem.Instance.pSSelect, preparedInstrument.GameObject.transform);
+        preparedInstrument.PSSelect = Instantiate(MainParticleSystem.Instance.pSSelect, preparedInstrument.GameInstrumentButton.GameObject.transform);
     }
 
     public void DeactivateInstrument()
@@ -204,6 +256,7 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
             {
                 Debug.Log("Инструмент активирован!");
                 preparedInstrument.SubQuantity();
+                JsonSaveAndLoad.RecordSave(instruments);
                 GridBlocks.Instance.Move();
                 successfulActivation = false;
             }
@@ -235,7 +288,7 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
             //добавляем эффект
             Instantiate(MainParticleSystem.Instance.pSMagicalTail, instrumentGO.transform);
             SpriteRenderer spriteRenderer = instrumentGO.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = preparedInstrument.Image.sprite;
+            spriteRenderer.sprite = SpriteBank.SetShape(preparedInstrument.Type);
             spriteRenderer.sortingLayerName = "Magic";
             
             //находим первый существующий блок, для первичной установки инструмента

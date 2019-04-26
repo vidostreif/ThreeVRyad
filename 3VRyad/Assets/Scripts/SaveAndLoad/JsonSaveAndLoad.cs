@@ -12,7 +12,7 @@ public static class JsonSaveAndLoad
     private static bool saveFromFileLoad = false;//попытка загрузки из файла произведена
     private static string path;
 
-    public static void LoadSaveFromFile()
+    private static void LoadSaveFromFile()
     {
         if (!saveFromFileLoad)
         {
@@ -88,7 +88,7 @@ public static class JsonSaveAndLoad
     private static void SetSaveToGPGS(string saveString)
     {
             //сохраняем данные в гугл сервис
-            GPGSManager.WriteSaveData(Encoding.UTF8.GetBytes(saveString));
+            //GPGSManager.WriteSaveData(Encoding.UTF8.GetBytes(saveString));
     }
 
     public static void SetSaveToFile()
@@ -156,6 +156,22 @@ public static class JsonSaveAndLoad
 
         saveIsChanged = true;
     }
+
+    //запись количества инструментов
+    public static void RecordSave(Instrument[] instruments)
+    {
+        LoadSaveFromFile();
+
+        //очищаем перед записью
+        save.instrumentsSave.Clear();
+        //записываем новые данные
+        foreach (Instrument instrument in instruments)
+        {
+            save.instrumentsSave.Add(new InstrumentsSave(instrument.Type.ToString(), instrument.Quantity));
+        }
+
+        saveIsChanged = true;
+    }
 }
 
 [Serializable]
@@ -164,6 +180,7 @@ public class Save
     public List<RegionSave> regionSave = new List<RegionSave>();
     public ShopSave shopSave = new ShopSave();
     public List<HelpSave> helpSave = new List<HelpSave>();
+    public List<InstrumentsSave> instrumentsSave = new List<InstrumentsSave>();
 }
 
 [Serializable]
@@ -208,6 +225,19 @@ public class HelpSave
     {
         this.elementsTypeEnum = elementsTypeEnum;
         this.status = status;
+    }
+}
+
+[Serializable]
+public class InstrumentsSave
+{
+    public string instrumenTypeEnum;//тип
+    public int count;//количество
+
+    public InstrumentsSave(string instrumenTypeEnum, int count)
+    {
+        this.instrumenTypeEnum = instrumenTypeEnum;
+        this.count = count;
     }
 }
 

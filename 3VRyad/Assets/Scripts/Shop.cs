@@ -52,9 +52,6 @@ public class Shop : MonoBehaviour, IStoreListener
         Transform gOTextCoins = transform.Find("TextCoins");
         textCoins = gOTextCoins.GetComponent(typeof(Text)) as Text;
         UpdateTextCoins();
-
-        //Shop.OnPurchaseConsumable += Shop_OnPurchaseConsumable;
-        //Shop.OnPurchaseNonConsumable += Shop_OnPurchaseNonConsumable;
     }
 
     public void ExchangeStarsForCoins(Level level, int stars) {
@@ -102,6 +99,8 @@ public class Shop : MonoBehaviour, IStoreListener
         Button ButtonE = buttonExitTransform.GetComponent(typeof(Button)) as Button;
         ButtonE.onClick.AddListener(delegate { DestroyPanelShop(); });
 
+        //Показать инструменты в верху экрана
+        InstrumentsManager.Instance.CreateInstrumentsOnShop(panelShop.transform.Find("PanelShopInstruments"));
     }
 
     public void DestroyPanelShop()
@@ -110,13 +109,6 @@ public class Shop : MonoBehaviour, IStoreListener
     }
 
     //магазин за реальные деньги
-    ///// Событие, которое запускается при удачной покупке многоразового товара.
-    //public static event OnSuccessConsumable OnPurchaseConsumable;
-    ///// Событие, которое запускается при удачной покупке не многоразового товара.
-    //public static event OnSuccessNonConsumable OnPurchaseNonConsumable;
-    ///// Событие, которое запускается при неудачной покупке какого-либо товара.
-    //public static event OnFailedPurchase PurchaseFailed;
-
     /// Проверить, куплен ли товар.
     /// <param name="id">Индекс товара в списке.</param>
     public static bool CheckBuyState(string id)
@@ -247,7 +239,8 @@ public class Shop : MonoBehaviour, IStoreListener
             //если небыло никаких ошибок и в купленном бандле есть монеты - добавляем монеты
             if (result)
             {
-                coins += product.coins;                
+                coins += product.coins;
+                JsonSaveAndLoad.RecordSave(this);
             }
 
             //если успешная покупка, то отнимаем стоимось покупки в монетах (если она есть)
@@ -255,6 +248,8 @@ public class Shop : MonoBehaviour, IStoreListener
             {
                 Debug.Log("успешная покупка " + product.id);
                 coins -= product.priceCoins;
+
+                JsonSaveAndLoad.SetSaveToFile();
             }
             else
             {
@@ -290,27 +285,6 @@ public class Shop : MonoBehaviour, IStoreListener
 
         return false;
     }
-
-
-    
-    //public delegate void OnSuccessConsumable(PurchaseEventArgs args);
-    //protected virtual void OnSuccessC(PurchaseEventArgs args)
-    //{
-    //    if (OnPurchaseConsumable != null) OnPurchaseConsumable(args);
-    //    Debug.Log(currentProduct.id + " Buyed!");
-    //}
-    //public delegate void OnSuccessNonConsumable(PurchaseEventArgs args);
-    //protected virtual void OnSuccessNC(PurchaseEventArgs args)
-    //{
-    //    if (OnPurchaseNonConsumable != null) OnPurchaseNonConsumable(args);
-    //    Debug.Log(currentProduct.id + " Buyed!");
-    //}
-    //public delegate void OnFailedPurchase(Product product, PurchaseFailureReason failureReason);
-    //protected virtual void OnFailedP(Product product, PurchaseFailureReason failureReason)
-    //{
-    //    if (PurchaseFailed != null) PurchaseFailed(product, failureReason);
-    //    Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
-    //}
 
     //вызывается когда покупка не удалась и сообщение с ошибкой пишется в консоль
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
