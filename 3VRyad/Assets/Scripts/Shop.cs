@@ -71,7 +71,7 @@ public class Shop : MonoBehaviour, IStoreListener
     }
 
     //создание меню магазина
-    public void CreateShopButtons()
+    public void CreateShop()
     {
         if (panelShop != null)
         {
@@ -94,10 +94,8 @@ public class Shop : MonoBehaviour, IStoreListener
             product.AddAction(bottonGO);
         }
 
-        //Добавляем кнопке выход действие
-        Transform buttonExitTransform = panelShop.transform.Find("ButtonExit");
-        Button ButtonE = buttonExitTransform.GetComponent(typeof(Button)) as Button;
-        ButtonE.onClick.AddListener(delegate { DestroyPanelShop(); });
+        //Заменяем кнопке действие на Закрыть
+        ChangeButtonShopAction(DestroyPanelShop, "Закрыть");
 
         //Показать инструменты в верху экрана
         InstrumentsManager.Instance.CreateInstrumentsOnShop(panelShop.transform.Find("PanelShopInstruments"));
@@ -106,6 +104,15 @@ public class Shop : MonoBehaviour, IStoreListener
     public void DestroyPanelShop()
     {
         Destroy(panelShop);
+        ChangeButtonShopAction(CreateShop, "Магазин");
+    }
+
+    private void ChangeButtonShopAction(Action action, string str) {
+        Transform buttonShopTransform = transform.Find("ButtonOpenShop");
+        Button ButtonE = buttonShopTransform.GetComponent(typeof(Button)) as Button;
+        buttonShopTransform.GetComponentInChildren<Text>().text = str;
+        ButtonE.onClick.RemoveAllListeners();
+        ButtonE.onClick.AddListener(delegate { action(); });
     }
 
     //магазин за реальные деньги

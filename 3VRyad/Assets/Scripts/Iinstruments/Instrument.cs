@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -79,7 +80,7 @@ public class Instrument
         //если разрешен на уровне
         if (Allow)
         {
-            AddOnGameAction(gameInstrumentButton);
+            AddAction(gameInstrumentButton, ActionOnGame);
         }
         else
         {
@@ -98,20 +99,14 @@ public class Instrument
         shopInstrumentButton = new InstrumentButton(go, type);
         UpdateText();
 
-        AddOnShopAction(gameInstrumentButton);
+        AddAction(shopInstrumentButton, ActionOnShop);
     }
 
-    public void AddOnGameAction(InstrumentButton InstrumentButton) {
+    private void AddAction(InstrumentButton InstrumentButton, Action action) {
         //добавляем действие к кнопке
         InstrumentButton.Button = InstrumentButton.GameObject.GetComponent(typeof(Button)) as Button;
-        InstrumentButton.Button.onClick.AddListener(delegate { ActionOnGame(); });
-    }
-
-    public void AddOnShopAction(InstrumentButton InstrumentButton)
-    {
-        //добавляем действие к кнопке
-        InstrumentButton.Button = InstrumentButton.GameObject.GetComponent(typeof(Button)) as Button;
-        InstrumentButton.Button.onClick.AddListener(delegate { ActionOnShop(); });
+        InstrumentButton.Button.onClick.RemoveAllListeners();
+        InstrumentButton.Button.onClick.AddListener(delegate { action(); });
     }
 
     //действие при нажатии

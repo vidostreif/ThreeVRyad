@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -106.70007, y: -11.850037}
-  m_SizeDelta: {x: 46.72, y: 19.57}
+  m_AnchoredPosition: {x: -106.70007, y: -15.299988}
+  m_SizeDelta: {x: 46.7, y: 26.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &415568048065469431
 CanvasRenderer:
@@ -129,8 +129,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -140.20001, y: -11.599976}
-  m_SizeDelta: {x: 20, y: 20}
+  m_AnchoredPosition: {x: -140.20001, y: -15}
+  m_SizeDelta: {x: 26, y: 26}
   m_Pivot: {x: 0.50000095, y: 0.49999896}
 --- !u!222 &415568049321881828
 CanvasRenderer:
@@ -458,8 +458,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -41.670044, y: -11.849976}
-  m_SizeDelta: {x: 83.34, y: 19.57}
+  m_AnchoredPosition: {x: -41.670044, y: -15.900024}
+  m_SizeDelta: {x: 83.3, y: 27.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8087115005414450127
 CanvasRenderer:
@@ -539,7 +539,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 415568049360065174}
-        m_MethodName: CreateShopButtons
+        m_MethodName: CreateShop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
