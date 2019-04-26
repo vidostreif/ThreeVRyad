@@ -25,18 +25,7 @@ public class Region
             UpdateText();
         }
     }
-    //public Image Image
-    //{
-    //    get
-    //    {
-    //        return image;
-    //    }
 
-    //    set
-    //    {
-    //        image = value;
-    //    }
-    //}
     public Button Button
     {
         get

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Instrument
 {
     [SerializeField] private InstrumentsEnum type;//какой вид инструмента
-    [SerializeField] private int quantity;//доступное количество
+    private int quantity;//доступное количество
     [SerializeField] private bool allow;//разрешен на уровне
     private GameObject gameObject;//объект инструмента
     private GameObject pSSelect;//наложенный эффект выделения
@@ -126,9 +126,22 @@ public class Instrument
         
     }
 
-    public void SubQuantity()
+    public void SubQuantity(int count = 1)
     {
-            quantity--;
-            UpdateText();
+        if (count <= quantity)
+        {
+            quantity -= count;            
+        }
+        else
+        {
+            quantity = 0;
+        }
+        UpdateText();
+    }
+
+    public void AddQuantity(int count = 1)
+    {
+        quantity += count;
+        UpdateText();
     }
 }

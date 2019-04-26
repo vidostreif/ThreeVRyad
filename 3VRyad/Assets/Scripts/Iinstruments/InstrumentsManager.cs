@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Purchasing;
 
 #if UNITY_EDITOR
 [ExecuteInEditMode]
@@ -11,7 +12,6 @@ using UnityEngine.UI;
 public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
 {
     public static InstrumentsManager Instance; // Синглтон
-    //[HideInInspector] public Transform thisTransform;
     public float distanceBetweenInstruments;
     public GameObject prefabInstrument;
     public Instrument[] instruments;// список инструментов 
@@ -40,10 +40,52 @@ public class InstrumentsManager : MonoBehaviour, IESaveAndLoad
         //thisTransform = transform;
     }
 
-    void Start()
-    {
-        //CreateInstruments();
+    //добавление количества инструментов из бандла
+    public bool addinstruments(BundleShopV[] bundleShopV) {
+
+        bool res = true;
+        //добавляем бандл к инструментам
+        foreach (BundleShopV item in bundleShopV)
+        {
+            bool found = false;
+            foreach (Instrument instrument in instruments)
+            {
+                if (instrument.Type == item.type)
+                {
+                    instrument.AddQuantity(item.count);
+                    Debug.Log("Добавили к инструменту " + instrument.Type +  ", " + item.count + " шт.");
+                    found = true;
+                    break;
+                }
+            }
+
+            //если не нашли нужный инструмент
+            if (!found)
+            {
+                res = false;
+            }
+        }
+
+        //отнимаем обратно если не нашли все инструменты
+        if (!res)
+        {
+            foreach (BundleShopV item in bundleShopV)
+            {
+                foreach (Instrument instrument in instruments)
+                {
+                    if (instrument.Type == item.type)
+                    {
+                        instrument.SubQuantity(item.count);
+                        Debug.Log("Отняли у инструмента " + instrument.Type + ", " + item.count + " шт.");
+                        break;
+                    }
+                }
+            }
+        }
+
+        return res;
     }
+
 
     public void ResetParameters()
     {

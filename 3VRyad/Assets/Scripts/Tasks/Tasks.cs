@@ -238,6 +238,10 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     //обнолвление текста количества ходов
     public void UpdateMovesText()
     {
+        if (movesText == null)
+        {
+            movesText = GetComponentInChildren<Text>();
+        }
         movesText.text = "Ходы:" + Moves;
     }
 
