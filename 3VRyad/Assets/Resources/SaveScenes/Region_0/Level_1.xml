@@ -67,14 +67,14 @@
   <HelpFromGnome>
     <helpEnum>Tasks</helpEnum>
   </HelpFromGnome>
-  <InstrumentsManager>
+  <InstrumentPanel>
     <instruments>
       <typeAndAllow type="Shovel" allow="true" />
-      <typeAndAllow type="Hoe" allow="false" />
-      <typeAndAllow type="Vortex" allow="false" />
-      <typeAndAllow type="Repainting" allow="false" />
+      <typeAndAllow type="Hoe" allow="true" />
+      <typeAndAllow type="Vortex" allow="true" />
+      <typeAndAllow type="Repainting" allow="true" />
     </instruments>
-  </InstrumentsManager>
+  </InstrumentPanel>
   <Score>
     <scoreForFirstStar>500</scoreForFirstStar>
     <scoreForSecondStar>1000</scoreForSecondStar>

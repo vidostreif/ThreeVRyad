@@ -158,6 +158,11 @@ public class SaveAndLoadScene
             Component[] findeObjects = UnityEngine.Object.FindObjectsOfType(component) as Component[]; //находим всех объекты с компонентом и создаём массив из них
             IESaveAndLoad[] findeIESaveAndLoad = UnityEngine.Object.FindObjectsOfType(component) as IESaveAndLoad[]; //находим всех объекты с компонентом и создаём массив из них
 
+            if (findeIESaveAndLoad == null)
+            {
+                Debug.LogError("Объектов типа: " + component.ToString() + ", не найден при загрузке!");
+                continue;
+            }
             //!!! потом можноо переделать что бы загружались все объекты даже если тип объектов несколько. Загружать можно по имени.
             if (findeIESaveAndLoad.GetLength(0) > 1)
             {

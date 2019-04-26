@@ -50,7 +50,7 @@ public class ElementController : MonoBehaviour {
     public void DoubleClick(PointerEventData data)//обработка двойного клика
     {
         //если есть актиный инструмент
-        if (InstrumentsManager.Instance.InstrumentPrepared)
+        if (InstrumentPanel.Instance.InstrumentPrepared)
         {
             //Block block = GridBlocks.Instance.GetBlock(ThisElement);
             //InstrumentsManager.Instance.ActivateInstrument(block);

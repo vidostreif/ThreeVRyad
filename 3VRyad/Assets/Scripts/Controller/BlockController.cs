@@ -44,7 +44,7 @@ public class BlockController : MonoBehaviour
 
     public void PointerEnter(PointerEventData data)//начало перетаскивания
     {
-        if (InstrumentsManager.Instance.InstrumentPrepared)
+        if (InstrumentPanel.Instance.InstrumentPrepared)
         {
             //SpriteRenderer spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
             //spriteRenderer.color = new Color(spriteRenderer.color.r + 0.5f, spriteRenderer.color.g + 0.5f, spriteRenderer.color.b + 0.5f, spriteRenderer.color.a);
@@ -56,9 +56,9 @@ public class BlockController : MonoBehaviour
         if (handleСlick)
         {
             //если есть активный инструмент
-            if (InstrumentsManager.Instance.InstrumentPrepared)
+            if (InstrumentPanel.Instance.InstrumentPrepared)
             {
-                InstrumentsManager.Instance.ActivateInstrument(thisBlock);
+                InstrumentPanel.Instance.ActivateInstrument(thisBlock);
             }
             else
             {
@@ -84,7 +84,7 @@ public class BlockController : MonoBehaviour
     {
         if (handleDragging)
         {
-            if (!InstrumentsManager.Instance.InstrumentPrepared)
+            if (!InstrumentPanel.Instance.InstrumentPrepared)
             {
                 if (thisBlock.Element != null && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
                 {
@@ -99,7 +99,7 @@ public class BlockController : MonoBehaviour
 
     public void EndDrag(PointerEventData data)//прекращаем перетаскивание
     {
-        if (!InstrumentsManager.Instance.InstrumentPrepared)
+        if (!InstrumentPanel.Instance.InstrumentPrepared)
         {
             if (thisBlock.Element != null && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)
             {

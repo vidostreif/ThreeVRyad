@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+[ExecuteInEditMode]
+#endif
 public class PrefabBank : MonoBehaviour
 {
     public static PrefabBank Instance; // Синглтон
@@ -22,6 +25,8 @@ public class PrefabBank : MonoBehaviour
     public GameObject canvasHelpToPlayer;
     public GameObject canvasStartGame;
     public GameObject canvasEndGameMenu;
+
+    public GameObject prefabInstrument;
 
     void Awake()
     {

@@ -67,14 +67,14 @@
   <HelpFromGnome>
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
-  <InstrumentsManager>
+  <InstrumentPanel>
     <instruments>
-      <typeAndAllow type="Shovel" allow="false" />
-      <typeAndAllow type="Hoe" allow="false" />
-      <typeAndAllow type="Vortex" allow="false" />
-      <typeAndAllow type="Repainting" allow="false" />
+      <typeAndAllow type="Shovel" allow="true" />
+      <typeAndAllow type="Hoe" allow="true" />
+      <typeAndAllow type="Vortex" allow="true" />
+      <typeAndAllow type="Repainting" allow="true" />
     </instruments>
-  </InstrumentsManager>
+  </InstrumentPanel>
   <Score>
     <scoreForFirstStar>3000</scoreForFirstStar>
     <scoreForSecondStar>5000</scoreForSecondStar>

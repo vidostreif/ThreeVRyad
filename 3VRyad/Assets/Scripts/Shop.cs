@@ -10,8 +10,11 @@ public class Shop : MonoBehaviour, IStoreListener
     public static Shop Instance; // Синглтон
     private int coins = 0; //валюта магазина
     private int exchangeRate = 3; //курс обмена звезд на коины
-    private Text textCoins;
-    private GameObject panelShop;
+    
+    private GameObject panelShop; //магазин
+    private Transform panelShopOnGame;// панель которая отображается в верхнем углу экрана
+    private Transform buttonShopTransform;//кнопка магазина в углу экрана
+    private Text textCoins;//текст монет в верхнем углу экрана
 
     private static IStoreController m_StoreController;
     private static IExtensionProvider m_StoreExtensionProvider;
@@ -49,7 +52,10 @@ public class Shop : MonoBehaviour, IStoreListener
         Save save = JsonSaveAndLoad.LoadSave();
         coins = save.shopSave.coins;
 
-        Transform gOTextCoins = transform.Find("TextCoins");
+        panelShopOnGame = transform.Find("PanelShopOnGame");
+        buttonShopTransform = panelShopOnGame.Find("ButtonOpenShop");
+        ChangeButtonShopAction(CreateShop, "Магазин");
+        Transform gOTextCoins = panelShopOnGame.Find("TextCoins");
         textCoins = gOTextCoins.GetComponent(typeof(Text)) as Text;
         UpdateTextCoins();
     }
@@ -97,18 +103,23 @@ public class Shop : MonoBehaviour, IStoreListener
         //Заменяем кнопке действие на Закрыть
         ChangeButtonShopAction(DestroyPanelShop, "Закрыть");
 
+        //увеличиваем панель в верхнем углу
+        panelShopOnGame.localScale = panelShopOnGame.localScale * 2.0f;
+
         //Показать инструменты в верху экрана
         InstrumentsManager.Instance.CreateInstrumentsOnShop(panelShop.transform.Find("PanelShopInstruments"));
     }
 
     public void DestroyPanelShop()
     {
+        //уменьшаем панель в верхнем углу
+        panelShopOnGame.localScale = panelShopOnGame.localScale / 2.0f;
+
         Destroy(panelShop);
-        ChangeButtonShopAction(CreateShop, "Магазин");
+        ChangeButtonShopAction(CreateShop, "Магазин");        
     }
 
     private void ChangeButtonShopAction(Action action, string str) {
-        Transform buttonShopTransform = transform.Find("ButtonOpenShop");
         Button ButtonE = buttonShopTransform.GetComponent(typeof(Button)) as Button;
         buttonShopTransform.GetComponentInChildren<Text>().text = str;
         ButtonE.onClick.RemoveAllListeners();
@@ -130,7 +141,6 @@ public class Shop : MonoBehaviour, IStoreListener
     {
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
         foreach (ProductV s in PRODUCTS) builder.AddProduct(s.id, s.productType);
-        //foreach (string s in NC_PRODUCTS) builder.AddProduct(s, ProductType.NonConsumable);
         UnityPurchasing.Initialize(this, builder);
     }
 
@@ -331,6 +341,7 @@ public class ProductV {
     {
         //добавляем действие к кнопке
         Button = elementGameObject.GetComponent(typeof(Button)) as Button;
+        Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(delegate { Action(); });
     }
 

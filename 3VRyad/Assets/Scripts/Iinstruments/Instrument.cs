@@ -9,19 +9,9 @@ public class Instrument
 {
     [SerializeField] private InstrumentsEnum type;//какой вид инструмента
     private int quantity;//доступное количество
-    [SerializeField] private bool allow;//разрешен на уровне
-    
-    private GameObject pSSelect;//наложенный эффект выделения
-    private InstrumentButton gameInstrumentButton; //кнопка инструмента в игре
     private InstrumentButton shopInstrumentButton; //кнопка инструмента в магазине
 
-    public InstrumentButton GameInstrumentButton
-    {
-        get
-        {
-            return gameInstrumentButton;
-        }
-    }
+
     public InstrumentButton ShopInstrumentButton
     {
         get
@@ -41,52 +31,6 @@ public class Instrument
         get
         {
             return type;
-        }
-    }
-    public GameObject PSSelect
-    {
-        get
-        {
-            return pSSelect;
-        }
-
-        set
-        {
-            pSSelect = value;
-        }
-    }
-    public bool Allow
-    {
-        get
-        {
-            return allow;
-        }
-
-        set
-        {
-            allow = value;
-        }
-    }
-
-    public void CreateGameInstrumentButton(GameObject go)
-    {
-        if (gameInstrumentButton != null)
-        {
-            GameObject.Destroy(gameInstrumentButton.GameObject);
-        }
-        gameInstrumentButton = new InstrumentButton(go, type);        
-        UpdateText();
-
-        //если разрешен на уровне
-        if (Allow)
-        {
-            AddAction(gameInstrumentButton, ActionOnGame);
-        }
-        else
-        {
-            SupportFunctions.ChangeAlfa(gameInstrumentButton.Image, 0.2f);
-
-            //!!!сверху повесить замок и действие открытия магазина
         }
     }
 
@@ -110,14 +54,6 @@ public class Instrument
     }
 
     //действие при нажатии
-    public void ActionOnGame() {
-        if (quantity > 0)
-        {
-            Debug.Log(Type);
-            InstrumentsManager.Instance.PreparInstrument(this);
-        }        
-    }
-
     public void ActionOnShop()
     {
         
@@ -126,20 +62,15 @@ public class Instrument
     //обнолвление текста
     private void UpdateText()
     {
-        //для игрового отображения
-        if (allow && gameInstrumentButton != null)
-        {
-            gameInstrumentButton.UpdateText("" + quantity);
-        }
-        else if (gameInstrumentButton != null)
-        {
-            gameInstrumentButton.UpdateText("");
-        }
-
         //для отображения в магазине
         if (shopInstrumentButton != null)
         {
             shopInstrumentButton.UpdateText("" + quantity);
+        }
+
+        if (InstrumentPanel.Instance != null)
+        {
+            InstrumentPanel.Instance.UpdateTextInstrumentOnGame(type);
         }
     }
 

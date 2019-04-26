@@ -64,7 +64,7 @@ public class MainGameSceneScript : MonoBehaviour {
     {
         Time.timeScale = 1;
         HelpToPlayer.ClearHintList();//очищаем список подсказок
-        InstrumentsManager.Instance.DeactivateInstrument();//деактивируем инструмент
+        InstrumentPanel.Instance.DeactivateInstrument();//деактивируем инструмент
 
         CanvasMenu = Instantiate(PrefabBank.Instance.canvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
@@ -128,7 +128,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Tasks.Instance.ResetParameters();
         Score.Instance.ResetParameters();
         SuperBonus.Instance.ResetParameters();
-        InstrumentsManager.Instance.ResetParameters();
+        InstrumentPanel.Instance.ResetParameters();
     }
 
     public void RestartLevel()

@@ -191,7 +191,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         if (Application.isPlaying)
         {
             //если остались ходы и нет подготовленных для действия инструментов
-            if ((!Tasks.Instance.endGame && !InstrumentsManager.Instance.InstrumentPrepared && (Tasks.Instance.Moves - elementsForMoveList.Count) > 0 && (touchingBlock != null || destinationBlock != null))
+            if ((!Tasks.Instance.endGame && !InstrumentPanel.Instance.InstrumentPrepared && (Tasks.Instance.Moves - elementsForMoveList.Count) > 0 && (touchingBlock != null || destinationBlock != null))
             || (touchingBlock == null && destinationBlock == null && (elementsForMoveList.Count == 0 || (blockedForMove && elementsForMoveList.Count < 2))))
             {
                 Blocks blocks = new Blocks();
