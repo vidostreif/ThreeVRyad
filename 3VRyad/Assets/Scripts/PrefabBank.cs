@@ -18,7 +18,8 @@ public class PrefabBank : MonoBehaviour
     //магазин
     public GameObject shopPanelPrefab;
     public GameObject shopButtonPrefab;
-
+    public GameObject prefabButtonThing;
+    public GameObject panelShopConfirmation;
 
     public GameObject scoreElementPrefab;
 
@@ -26,7 +27,8 @@ public class PrefabBank : MonoBehaviour
     public GameObject canvasStartGame;
     public GameObject canvasEndGameMenu;
 
-    public GameObject prefabInstrument;
+    
+
 
     void Awake()
     {

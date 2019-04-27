@@ -136,7 +136,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Destroy(CanvasMenu);
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
-            //ResetScene();
+            
             LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
         }
         else

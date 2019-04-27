@@ -115,7 +115,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PRODUCTS:
   - id: bundel_x1
-    priceCoins: 5
+    name: "\u0411\u0430\u043D\u0434\u043B \u04451"
+    priceCoins: 25
     productType: 0
     compositionBundle:
     - type: 1
@@ -129,7 +130,8 @@ MonoBehaviour:
     coins: 0
     image: {fileID: 21300000, guid: 835bf98bc9278bb4487599a0155d803f, type: 3}
   - id: bundel_x10
-    priceCoins: 10
+    name: "\u0411\u0430\u043D\u0434\u043B \u044510"
+    priceCoins: 225
     productType: 0
     compositionBundle:
     - type: 1
@@ -143,6 +145,7 @@ MonoBehaviour:
     coins: 0
     image: {fileID: 21300000, guid: 9d64a4c865823b447b58ca23bd6433a8, type: 3}
   - id: coins_100
+    name: "100 \u043C\u043E\u043D\u0435\u0442"
     priceCoins: 0
     productType: 0
     compositionBundle: []
@@ -161,17 +164,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanceBetweenInstruments: 0.4
-  prefabInstrument: {fileID: 1061130453393650, guid: bc4b4ceb5fdbadb4ca8579eac98a182d,
-    type: 3}
   instruments:
   - type: 1
-    allow: 1
   - type: 2
-    allow: 0
   - type: 3
-    allow: 0
   - type: 4
-    allow: 0
 --- !u!1001 &2026195761932548349
 PrefabInstance:
   m_ObjectHideFlags: 0

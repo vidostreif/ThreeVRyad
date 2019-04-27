@@ -158,14 +158,14 @@ public static class JsonSaveAndLoad
     }
 
     //запись количества инструментов
-    public static void RecordSave(Instrument[] instruments)
+    public static void RecordSave(Thing[] instruments)
     {
         LoadSaveFromFile();
 
         //очищаем перед записью
         save.instrumentsSave.Clear();
         //записываем новые данные
-        foreach (Instrument instrument in instruments)
+        foreach (Thing instrument in instruments)
         {
             save.instrumentsSave.Add(new InstrumentsSave(instrument.Type.ToString(), instrument.Quantity));
         }

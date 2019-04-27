@@ -179,6 +179,10 @@ MonoBehaviour:
     type: 3}
   shopButtonPrefab: {fileID: 1142045414171374012, guid: e6c62fc857545e24dbb923fe759cabf1,
     type: 3}
+  prefabButtonThing: {fileID: 1061130453393650, guid: bc4b4ceb5fdbadb4ca8579eac98a182d,
+    type: 3}
+  panelShopConfirmation: {fileID: 4712337802733844449, guid: acbd03de5a973c44e96b54955631a454,
+    type: 3}
   scoreElementPrefab: {fileID: 117811080947788871, guid: a205143d57c405547a4d1232b52256d3,
     type: 3}
   canvasHelpToPlayer: {fileID: 650881581553827240, guid: 72ad9d3f0fe88e749a803220bb397405,

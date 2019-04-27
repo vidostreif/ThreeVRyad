@@ -1455,6 +1455,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public void RecoverFromXElement(XElement gridXElement)
     {
         //Сбрасываем значения
+        StopAllCoroutines();
         blockedForMove = false;
         elementsForMixList = new List<Element>();
         elementsForMoveList = new List<Blocks>();

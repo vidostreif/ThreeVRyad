@@ -7,11 +7,11 @@ using UnityEngine.UI;
 using UnityEngine.Purchasing;
 using UnityEngine.SceneManagement;
 
-public class InstrumentsManager : MonoBehaviour
+public class ThingsManager : MonoBehaviour
 {
-    public static InstrumentsManager Instance; // Синглтон
+    public static ThingsManager Instance; // Синглтон
     public float distanceBetweenInstruments;
-    public Instrument[] instruments;// список инструментов 
+    public Thing[] instruments;// список инструментов 
     
     void Awake()
     {
@@ -35,7 +35,7 @@ public class InstrumentsManager : MonoBehaviour
         Save save = JsonSaveAndLoad.LoadSave();
         foreach (InstrumentsSave instrumentsSave in save.instrumentsSave)
         {
-            foreach (Instrument instrument in instruments)
+            foreach (Thing instrument in instruments)
             {
                 if (instrumentsSave.instrumenTypeEnum == instrument.Type.ToString())
                 {
@@ -55,7 +55,7 @@ public class InstrumentsManager : MonoBehaviour
         foreach (BundleShopV item in bundleShopV)
         {
             bool found = false;
-            foreach (Instrument instrument in instruments)
+            foreach (Thing instrument in instruments)
             {
                 if (instrument.Type == item.type)
                 {
@@ -78,7 +78,7 @@ public class InstrumentsManager : MonoBehaviour
         {
             foreach (BundleShopV item in bundleShopV)
             {
-                foreach (Instrument instrument in instruments)
+                foreach (Thing instrument in instruments)
                 {
                     if (instrument.Type == item.type)
                     {
@@ -107,8 +107,8 @@ public class InstrumentsManager : MonoBehaviour
 
                 for (int i = 0; i < instruments.Length; i++)
                 {
-                    GameObject go = Instantiate(PrefabBank.Instance.prefabInstrument, new Vector3(startingXPoint + (i * (1 + distanceBetweenInstruments)), panelTransform.position.y, panelTransform.position.z), Quaternion.identity, panelTransform);
-                    instruments[i].CreateShopInstrumentButton(go);
+                    GameObject go = Instantiate(PrefabBank.Instance.prefabButtonThing, new Vector3(startingXPoint + (i * (1 + distanceBetweenInstruments)), panelTransform.position.y, panelTransform.position.z), Quaternion.identity, panelTransform);
+                    instruments[i].CreateShopThingButton(go);
                 }
             }
             else

@@ -58,7 +58,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             for (int i = 0; i < instrumentsOnGame.Length; i++)
             {
 
-                GameObject go = Instantiate(PrefabBank.Instance.prefabInstrument, new Vector3(panel.transform.position.x, startingYPoint + (i * (1 + distanceBetweenInstruments)), panel.transform.position.z), Quaternion.identity, instrumentsParent.transform);
+                GameObject go = Instantiate(PrefabBank.Instance.prefabButtonThing, new Vector3(panel.transform.position.x, startingYPoint + (i * (1 + distanceBetweenInstruments)), panel.transform.position.z), Quaternion.identity, instrumentsParent.transform);
                 instrumentsOnGame[i].CreateGameInstrumentButton(go);
             }
         }
@@ -70,11 +70,11 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     //находим наши инструменты в общем менеджере
     public void FoundInstrumentsOnMenedger()
     {
-        if (InstrumentsManager.Instance != null)
+        if (ThingsManager.Instance != null)
         {
             foreach (InstrumentOnGame instrumentOnGame in instrumentsOnGame)
             {
-                foreach (Instrument instrument in InstrumentsManager.Instance.instruments)
+                foreach (Thing instrument in ThingsManager.Instance.instruments)
                 {
                     if (instrumentOnGame.Type == instrument.Type)
                     {
@@ -184,7 +184,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             {
                 Debug.Log("Инструмент активирован!");
                 preparedInstrument.InstrumentOnManager.SubQuantity();
-                JsonSaveAndLoad.RecordSave(InstrumentsManager.Instance.instruments);
+                JsonSaveAndLoad.RecordSave(ThingsManager.Instance.instruments);
                 GridBlocks.Instance.Move();
                 successfulActivation = false;
             }
@@ -401,11 +401,11 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
 public class InstrumentOnGame {
     [SerializeField] private InstrumentsEnum type;//какой вид инструмента
     [SerializeField] private bool allow;//разрешен на уровне
-    private Instrument instrumentOnManager; //ссылка на инструмент в менеджере
+    private Thing instrumentOnManager; //ссылка на инструмент в менеджере
     private GameObject pSSelect;//наложенный эффект выделения
-    private InstrumentButton gameInstrumentButton; //кнопка инструмента в игре
+    private ThingsButton gameInstrumentButton; //кнопка инструмента в игре
 
-    public InstrumentButton GameInstrumentButton
+    public ThingsButton GameInstrumentButton
     {
         get
         {
@@ -438,7 +438,7 @@ public class InstrumentOnGame {
     }
 
     public InstrumentsEnum Type { get => type;}
-    public Instrument InstrumentOnManager { get => instrumentOnManager; set => instrumentOnManager = value; }
+    public Thing InstrumentOnManager { get => instrumentOnManager; set => instrumentOnManager = value; }
 
     public void ActionOnGame()
     {
@@ -448,7 +448,7 @@ public class InstrumentOnGame {
         }
     }
 
-    private void AddAction(InstrumentButton InstrumentButton, Action action)
+    private void AddAction(ThingsButton InstrumentButton, Action action)
     {
         //добавляем действие к кнопке
         InstrumentButton.Button = InstrumentButton.GameObject.GetComponent(typeof(Button)) as Button;
@@ -462,7 +462,7 @@ public class InstrumentOnGame {
         {
             GameObject.DestroyImmediate(gameInstrumentButton.GameObject);
         }
-        gameInstrumentButton = new InstrumentButton(go, Type);
+        gameInstrumentButton = new ThingsButton(go, Type);
         UpdateText();
 
         //если разрешен на уровне

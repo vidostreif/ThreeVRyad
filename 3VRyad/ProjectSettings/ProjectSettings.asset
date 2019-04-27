@@ -113,7 +113,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.35
+  bundleVersion: 0.38
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -151,7 +151,7 @@ PlayerSettings:
     Android: ru.VIDOCompany
     Standalone: com.Company.ProductName
   buildNumber: {}
-  AndroidBundleVersionCode: 25
+  AndroidBundleVersionCode: 28
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -239,7 +239,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/vido1/Documents/ThreeVRyad/3VRyad/user.keystore
+  AndroidKeystoreName: "C:/Users/vido1/OneDrive/\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B/Unity
+    project/ThreeVRyad/3VRyad/user.keystore"
   AndroidKeyaliasName: 3vradkey
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1

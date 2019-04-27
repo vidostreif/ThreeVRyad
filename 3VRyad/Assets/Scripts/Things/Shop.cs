@@ -12,6 +12,7 @@ public class Shop : MonoBehaviour, IStoreListener
     private int exchangeRate = 3; //курс обмена звезд на коины
     
     private GameObject panelShop; //магазин
+    private GameObject panelShopConfirmation; //панель подтверждения действия
     private Transform panelShopOnGame;// панель которая отображается в верхнем углу экрана
     private Transform buttonShopTransform;//кнопка магазина в углу экрана
     private Text textCoins;//текст монет в верхнем углу экрана
@@ -54,7 +55,7 @@ public class Shop : MonoBehaviour, IStoreListener
 
         panelShopOnGame = transform.Find("PanelShopOnGame");
         buttonShopTransform = panelShopOnGame.Find("ButtonOpenShop");
-        ChangeButtonShopAction(CreateShop, "Магазин");
+        ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
         Transform gOTextCoins = panelShopOnGame.Find("TextCoins");
         textCoins = gOTextCoins.GetComponent(typeof(Text)) as Text;
         UpdateTextCoins();
@@ -91,9 +92,24 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             GameObject bottonGO = Instantiate(PrefabBank.Instance.shopButtonPrefab, contentTransform);
             Transform textNameTransform = bottonGO.transform.Find("TextName");
-            textNameTransform.GetComponentInChildren<Text>().text = product.id;
-            Transform textPriceTransform = bottonGO.transform.Find("TextPrice");
-            textPriceTransform.GetComponentInChildren<Text>().text = product.priceCoins.ToString();
+            textNameTransform.GetComponentInChildren<Text>().text = product.name;
+
+            //выбираем как будем отоброжать цену - монеты или реальные деньги
+            Transform textPriceCoinTransform = bottonGO.transform.Find("TextPriceCoin");
+            Transform textPriceReMoneyTransform = bottonGO.transform.Find("TextPriceReMoney");
+            if (product.priceCoins != 0)
+            {
+                textPriceCoinTransform.GetComponentInChildren<Text>().text = product.priceCoins.ToString();
+                //скрываем другой текст
+                Destroy(textPriceReMoneyTransform.gameObject);
+            }
+            else
+            {
+                textPriceReMoneyTransform.GetComponentInChildren<Text>().text = m_StoreController.products.WithID(product.id).metadata.localizedPriceString;
+                //скрываем другой текст
+                Destroy(textPriceCoinTransform.gameObject);
+            }                         
+            
             Transform imageTransform = bottonGO.transform.Find("Image");
             imageTransform.GetComponentInChildren<Image>().sprite = product.image;
 
@@ -101,13 +117,28 @@ public class Shop : MonoBehaviour, IStoreListener
         }
 
         //Заменяем кнопке действие на Закрыть
-        ChangeButtonShopAction(DestroyPanelShop, "Закрыть");
+        ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");
 
         //увеличиваем панель в верхнем углу
         panelShopOnGame.localScale = panelShopOnGame.localScale * 2.0f;
 
         //Показать инструменты в верху экрана
-        InstrumentsManager.Instance.CreateInstrumentsOnShop(panelShop.transform.Find("PanelShopInstruments"));
+        ThingsManager.Instance.CreateInstrumentsOnShop(panelShop.transform.Find("PanelShopInstruments"));
+    }
+
+    //создаем панель подтверждения покупки
+    public void CreateShopConfirmation(string str)
+    {
+        if (panelShop != null)
+        {
+            if (panelShopConfirmation != null)
+            {
+                Destroy(panelShopConfirmation);
+            }
+            panelShopConfirmation = Instantiate(PrefabBank.Instance.panelShopConfirmation, panelShop.transform);
+            panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
+            ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation, "OK");
+        }
     }
 
     public void DestroyPanelShop()
@@ -116,12 +147,17 @@ public class Shop : MonoBehaviour, IStoreListener
         panelShopOnGame.localScale = panelShopOnGame.localScale / 2.0f;
 
         Destroy(panelShop);
-        ChangeButtonShopAction(CreateShop, "Магазин");        
+        ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");        
     }
 
-    private void ChangeButtonShopAction(Action action, string str) {
-        Button ButtonE = buttonShopTransform.GetComponent(typeof(Button)) as Button;
-        buttonShopTransform.GetComponentInChildren<Text>().text = str;
+    public void DestroyPanelShopConfirmation()
+    {
+        Destroy(panelShopConfirmation);
+    }
+
+    private void ChangeButtonAction(Transform buttonTransform, Action action, string str) {
+        Button ButtonE = buttonTransform.GetComponent(typeof(Button)) as Button;
+        buttonTransform.GetComponentInChildren<Text>().text = str;
         ButtonE.onClick.RemoveAllListeners();
         ButtonE.onClick.AddListener(delegate { action(); });
     }
@@ -225,9 +261,10 @@ public class Shop : MonoBehaviour, IStoreListener
             result = Shop_OnPurchaseNonConsumable(currentProduct);
         else
         {
+            CreateShopConfirmation("Во время обработки вашей покупки, что-то пошло не так!");
             Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", args.purchasedProduct.definition.id));
             result = false;
-        }
+        }        
 
         if (result)
         {
@@ -250,7 +287,7 @@ public class Shop : MonoBehaviour, IStoreListener
             //если есть бандл инструментов
             if (product.compositionBundle.Length > 0)
             {
-                result = InstrumentsManager.Instance.addinstruments(product.compositionBundle);
+                result = ThingsManager.Instance.addinstruments(product.compositionBundle);
             }
 
             //если небыло никаких ошибок и в купленном бандле есть монеты - добавляем монеты
@@ -263,23 +300,28 @@ public class Shop : MonoBehaviour, IStoreListener
             //если успешная покупка, то отнимаем стоимось покупки в монетах (если она есть)
             if (result)
             {
-                Debug.Log("успешная покупка " + product.id);
-                coins -= product.priceCoins;
+                //Debug.Log("успешная покупка " + product.id);
 
+                //выводим панель подтверждения
+                CreateShopConfirmation("Вы успешно преобрели " + product.name);                
+                coins -= product.priceCoins;
                 JsonSaveAndLoad.SetSaveToFile();
             }
             else
             {
-                Debug.Log("неудачная покупка " + product.id);
+                //Debug.Log("неудачная покупка " + product.id);
+                CreateShopConfirmation("Мы не смогли обработать вашу покупку!");
             }
 
             UpdateTextCoins();
-            currentProduct = null;
+            product = null;
             return result;
         }
         else
         {
             Debug.Log("Была произведена успешная покупка, но целевой бандел не найден!! " + product.id);
+            CreateShopConfirmation("Мы не смогли обработать вашу покупку!");
+            product = null;
             return false;
         }        
     }
@@ -307,6 +349,8 @@ public class Shop : MonoBehaviour, IStoreListener
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
         //OnFailedP(product, failureReason);
+        //выводим панель подтверждения
+        CreateShopConfirmation("Во время обработки вашей покупки, что-то пошло не так!");
         Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
     }
 }
@@ -314,6 +358,7 @@ public class Shop : MonoBehaviour, IStoreListener
 [System.Serializable]
 public class ProductV {
     public string id;
+    public string name;
     public int priceCoins = 0;//цена в монетах
     public ProductType productType;//тип продука, многоразовый или одноразовый
     

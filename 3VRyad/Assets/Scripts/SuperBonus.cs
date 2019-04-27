@@ -75,9 +75,15 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     public void ResetParameters()
     {
         //Сбрасываем значения
+        StopAllCoroutines();
+        activated = false;
+        activateSuperBonusOnEnd = false;
+        strikesOnBlocks = 0;
         bonusPower = 0;
-        charges = 0;        
-        FilledImage();
+        charges = 0;
+        HitSuperBonusList = new List<HitSuperBonus>();
+        HitSuperBonusListForDelete = new List<HitSuperBonus>();
+        FilledImage();        
     }
     //эффек добавления в чан
     public void CreatePowerSuperBonus(Vector3 position, int power)
@@ -233,6 +239,11 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         activated = true;
         foreach (Block block in blocks)
         {
+            //если сбросили параметры, то останавливаем работу
+            if (!activated)
+            {
+                break;
+            }
             //подсветка
             GameObject backlight = Instantiate(MainParticleSystem.Instance.pSSelect, block.transform);
             backlight.transform.position = block.transform.position;
