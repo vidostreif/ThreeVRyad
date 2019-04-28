@@ -15,8 +15,8 @@ public class LevelMenu : MonoBehaviour
     public string lastLoadXmlDocument;
     public string lastLoadFolder;
     public bool levelSaved = false;//левел в начале загрузки сохранен
-    private GameObject canvasRegions = null;
-    private GameObject canvasLevels = null;
+    private GameObject panelRegions = null;
+    private GameObject panelLevels = null;
     //private AsyncOperation async;
 
     public void Awake()
@@ -441,16 +441,22 @@ public class LevelMenu : MonoBehaviour
         else
         {
             lastLoadLevel = inLevel;
-            Destroy(canvasRegions);
-            Destroy(canvasLevels);
+            Destroy(panelRegions);
+            Destroy(panelLevels);
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("SampleScene");
+            //создаем изображение для отображения загрузки
+            GameObject imageMainLoadGO = Instantiate(PrefabBank.Instance.imageMainLoad, transform);
+            Image imageLoad = imageMainLoadGO.transform.Find("ImageLoad").GetComponent<Image>();
             //ожидаем загрузки уровня
+            float progress = 0;
             while (!asyncLoad.isDone)
             {
+                progress = asyncLoad.progress / 0.9f;
+                imageLoad.fillAmount = progress;
                 yield return null;
             }
-        }
-        
+            Destroy(imageMainLoadGO);
+        }        
         //async.allowSceneActivation = false;
         ////восстанавливаем настройки уровня
         ////LoadXml(inLevel);
@@ -459,20 +465,20 @@ public class LevelMenu : MonoBehaviour
 
     public void CreateLevelMenu(Region region)
     {
-        if (canvasRegions != null)
+        if (panelRegions != null)
         {
-            Destroy(canvasRegions);
+            Destroy(panelRegions);
         }
-        canvasLevels = Instantiate(PrefabBank.Instance.levelsCanvasPrefab, transform);
+        panelLevels = Instantiate(PrefabBank.Instance.levelsCanvasPrefab, transform);
 
         //настройки кнопки назад
-        Transform returnButtonTransform = canvasLevels.transform.Find("ReturnButton");
+        Transform returnButtonTransform = panelLevels.transform.Find("ReturnButton");
         //добавляем действие к кнопке
         Button returnButton = returnButtonTransform.GetComponent(typeof(Button)) as Button;
         returnButton.onClick.AddListener(delegate { CreateRegionMenu(); });
 
         //список уровней
-        Transform LevelsCountTransform = canvasLevels.transform.Find("Viewport/Content");
+        Transform LevelsCountTransform = panelLevels.transform.Find("Viewport/Content");
         int levelNumber = 1;
         foreach (Level level in region.levelList)
         {
@@ -502,12 +508,12 @@ public class LevelMenu : MonoBehaviour
 
     public void CreateRegionMenu()
     {
-        if (canvasLevels != null)
+        if (panelLevels != null)
         {
-            Destroy(canvasLevels);
+            Destroy(panelLevels);
         }
-        canvasRegions = Instantiate(PrefabBank.Instance.regionsCanvasPrefab, transform);
-        Transform contentTransform = canvasRegions.transform.Find("Viewport/Content");
+        panelRegions = Instantiate(PrefabBank.Instance.regionsCanvasPrefab, transform);
+        Transform contentTransform = panelRegions.transform.Find("Viewport/Content");
 
         //список регионов
         foreach (Region region in regionsList)

@@ -175,6 +175,8 @@ MonoBehaviour:
     type: 3}
   regionButtonPrefab: {fileID: 5749990630111453082, guid: 1e1a00a06ecf4474e9ed1fcaaf13b70b,
     type: 3}
+  imageMainLoad: {fileID: 3631243949167058397, guid: 1f03ac7229fb1a6419ad3ea1affecace,
+    type: 3}
   shopPanelPrefab: {fileID: 7868385485302589415, guid: edd0deb54dc49904dbe1e21ef682fdd0,
     type: 3}
   shopButtonPrefab: {fileID: 1142045414171374012, guid: e6c62fc857545e24dbb923fe759cabf1,

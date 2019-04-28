@@ -14,6 +14,7 @@ public class PrefabBank : MonoBehaviour
     public GameObject regionsCanvasPrefab;
     public GameObject levelButtonPrefab;
     public GameObject regionButtonPrefab;
+    public GameObject imageMainLoad;
 
     //магазин
     public GameObject shopPanelPrefab;
