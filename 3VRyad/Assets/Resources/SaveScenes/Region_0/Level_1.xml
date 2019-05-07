@@ -65,16 +65,8 @@
     </blocks>
   </GridBlocks>
   <HelpFromGnome>
-    <helpEnum>Tasks</helpEnum>
+    <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
-  <InstrumentPanel>
-    <instruments>
-      <typeAndAllow type="Shovel" allow="true" />
-      <typeAndAllow type="Hoe" allow="true" />
-      <typeAndAllow type="Vortex" allow="true" />
-      <typeAndAllow type="Repainting" allow="true" />
-    </instruments>
-  </InstrumentPanel>
   <Score>
     <scoreForFirstStar>500</scoreForFirstStar>
     <scoreForSecondStar>1000</scoreForSecondStar>
@@ -93,4 +85,12 @@
       <shapeAndGoal shape="Apple" goal="5" collectEverything="false" />
     </targets>
   </Tasks>
+  <InstrumentPanel>
+    <instruments>
+      <typeAndAllow type="Shovel" allow="true" />
+      <typeAndAllow type="Hoe" allow="true" />
+      <typeAndAllow type="Vortex" allow="true" />
+      <typeAndAllow type="Repainting" allow="true" />
+    </instruments>
+  </InstrumentPanel>
 </root>
