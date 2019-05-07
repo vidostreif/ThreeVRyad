@@ -11,10 +11,11 @@
     <XSize>12</XSize>
     <YSize>9</YSize>
     <elementsShape>
-      <shapeAndPriority shape="Mushroom" type="Standard" priority="10" />
-      <shapeAndPriority shape="Plum" type="Standard" priority="10" />
-      <shapeAndPriority shape="Orange" type="Standard" priority="20" />
       <shapeAndPriority shape="Apple" type="Standard" priority="10" />
+      <shapeAndPriority shape="Camomile" type="Standard" priority="10" />
+      <shapeAndPriority shape="Plum" type="Standard" priority="10" />
+      <shapeAndPriority shape="Mushroom" type="Standard" priority="10" />
+      <shapeAndPriority shape="Orange" type="Standard" priority="25" />
     </elementsShape>
     <blocks>
       <block posX="2" posY="2" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Plum" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -67,18 +68,10 @@
   <HelpFromGnome>
     <helpEnum>Gnome</helpEnum>
   </HelpFromGnome>
-  <InstrumentPanel>
-    <instruments>
-      <typeAndAllow type="Shovel" allow="true" />
-      <typeAndAllow type="Hoe" allow="true" />
-      <typeAndAllow type="Vortex" allow="true" />
-      <typeAndAllow type="Repainting" allow="true" />
-    </instruments>
-  </InstrumentPanel>
   <Score>
-    <scoreForFirstStar>3000</scoreForFirstStar>
-    <scoreForSecondStar>5000</scoreForSecondStar>
-    <scoreForThirdStar>10000</scoreForThirdStar>
+    <scoreForFirstStar>5000</scoreForFirstStar>
+    <scoreForSecondStar>6000</scoreForSecondStar>
+    <scoreForThirdStar>7000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>10000</maxBonusPower>
@@ -89,7 +82,15 @@
     <moves>15</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Orange" goal="20" collectEverything="false" />
+      <shapeAndGoal shape="Orange" goal="25" collectEverything="false" />
     </targets>
   </Tasks>
+  <InstrumentPanel>
+    <instruments>
+      <typeAndAllow type="Shovel" allow="false" />
+      <typeAndAllow type="Hoe" allow="false" />
+      <typeAndAllow type="Vortex" allow="false" />
+      <typeAndAllow type="Repainting" allow="false" />
+    </instruments>
+  </InstrumentPanel>
 </root>

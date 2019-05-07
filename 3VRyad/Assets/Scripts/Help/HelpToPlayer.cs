@@ -527,10 +527,9 @@ public static class HelpToPlayer
             {
                 //получаем соседние блоки
                 NeighboringBlocks blocks = GridBlocks.Instance.GetNeighboringBlocks(curBlock.PositionInGrid);
-                //пытаемся найти ход где есть соседний блок вследующем ходе
+                //пытаемся найти ход где есть соседний блок в следующем ходе
                 foreach (ElementsForNextMove curElementsForNextMove in elementsForNextMoveList)
                 {
-
                     foreach (Element element in curElementsForNextMove.elementsList)
                     {
                         //если элемент не для передвижения
@@ -552,11 +551,11 @@ public static class HelpToPlayer
                         }
                     }
                 }
-                //если не нашли соседний блок
-                return false;
+                ////если не нашли соседний блок
+                //return false;
             }
         }
-        Debug.Log("Не нашли ни одной разрушаемой стены!");
+        Debug.Log("Не нашли подходящую разрушаемую стену для подсказки!");
         return false;
     }
 
@@ -709,7 +708,6 @@ public static class HelpToPlayer
         }
         return true;
     }
-
 }
 
 public class Hint {

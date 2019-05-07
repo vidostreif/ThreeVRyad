@@ -134,6 +134,19 @@ public static class BlockCheck
         }
     }
 
+    public static bool ThisBlockWithElementCreateLine(Block block)
+    {
+
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.CreateLine)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static bool ThisBlockWithElementCanMove(Block block)
     {
 

@@ -725,7 +725,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
                 //если стандартный блок и в нем есть элемент
-                if (BlockCheck.ThisNoBlockedBlockWithElement(containers[x].block[y]))
+                if (BlockCheck.ThisNoBlockedBlockWithElement(containers[x].block[y]) && BlockCheck.ThisBlockWithElementCreateLine(containers[x].block[y]))
                 {
                     for (int j = 0; j < 2; j++)
                     {
