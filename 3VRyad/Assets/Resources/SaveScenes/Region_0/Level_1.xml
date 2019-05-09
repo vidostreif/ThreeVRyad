@@ -2,7 +2,7 @@
   <Bonuses>
     <bonusesList>
       <bonus shape="SmallFlask" type="SmallFlask" cost="4" />
-      <bonus shape="MediumFlask" type="MediumFlask" cost="5" />
+      <bonus shape="MediumFlask" type="MediumFlask" cost="30" />
       <bonus shape="BigFlask" type="BigFlask" cost="30" />
     </bonusesList>
   </Bonuses>
@@ -47,7 +47,7 @@
       <block posX="6" posY="1" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Orange" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="6" posY="2" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Strawberry" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="6" posY="3" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Orange" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="6" posY="4" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="6" posY="4" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="SmallFlask" elementShape="SmallFlask" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="6" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Strawberry" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="6" posY="6" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="6" posY="7" blockType="Standard" generatorElements="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Orange" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -58,11 +58,18 @@
       <block posX="7" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Orange" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="7" posY="6" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Mushroom" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="7" posY="7" blockType="Standard" generatorElements="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="8" posY="1" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Strawberry" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="8" posY="2" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="8" posY="3" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Strawberry" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="8" posY="4" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Mushroom" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="8" posY="4" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="8" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="8" posY="6" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Plum" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="8" posY="7" blockType="Standard" generatorElements="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="9" posY="2" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="9" posY="3" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Strawberry" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="9" posY="4" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Mushroom" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="9" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="9" posY="6" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Plum" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
     </blocks>
   </GridBlocks>
   <HelpFromGnome>

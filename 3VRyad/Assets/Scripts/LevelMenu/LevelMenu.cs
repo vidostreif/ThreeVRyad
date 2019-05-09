@@ -55,13 +55,6 @@ public class LevelMenu : MonoBehaviour
                     lastLoadLevel = FoundLevel(lastLoadXmlDocument, lastLoadFolder);
                 }
             }
-            else
-            {
-                if (lastLoadXmlDocument != null && lastLoadFolder != null)
-                {
-                    LoadXml(FoundLevel(lastLoadXmlDocument, lastLoadFolder));
-                }
-            }
         }
         else
         {
@@ -72,6 +65,21 @@ public class LevelMenu : MonoBehaviour
 
     public void Start()
     {
+
+#if UNITY_EDITOR
+        if (SceneManager.GetActiveScene().name == "SampleScene")
+        {
+            ////если не в игре
+            if (!Application.isPlaying)
+            {
+                if (lastLoadXmlDocument != null && lastLoadFolder != null)
+                {
+                    LoadXml(FoundLevel(lastLoadXmlDocument, lastLoadFolder));
+                }
+            }
+        }
+#endif
+
         if (Application.isPlaying)
         {
             Prepare(); 

@@ -57,7 +57,6 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
 
             for (int i = 0; i < instrumentsOnGame.Length; i++)
             {
-
                 GameObject go = Instantiate(PrefabBank.Instance.prefabButtonThing, new Vector3(panel.transform.position.x, startingYPoint + (i * (1 + distanceBetweenInstruments)), panel.transform.position.z), Quaternion.identity, instrumentsParent.transform);
                 instrumentsOnGame[i].CreateGameInstrumentButton(go);
             }
