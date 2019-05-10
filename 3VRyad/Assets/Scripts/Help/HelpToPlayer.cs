@@ -187,6 +187,18 @@ public static class HelpToPlayer
                     flashingItemsNames.Add("Instrument" + InstrumentsEnum.Hoe.ToString());
                     created = InterfaceHelp("PanelInstruments", flashingItemsNames);
                 }
+                else if (activeHint.help == HelpEnum.Vortex.ToString())
+                {
+                    List<string> flashingItemsNames = new List<string>();
+                    flashingItemsNames.Add("Instrument" + InstrumentsEnum.Vortex.ToString());
+                    created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+                }
+                else if (activeHint.help == HelpEnum.Repainting.ToString())
+                {
+                    List<string> flashingItemsNames = new List<string>();
+                    flashingItemsNames.Add("Instrument" + InstrumentsEnum.Repainting.ToString());
+                    created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+                }
                 else
                 {
                     //неудалось определить подсказку
@@ -340,11 +352,11 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == ElementsTypeEnum.MediumFlask.ToString())
             {
-                text.text = "Это маленький бонус за сбор линии из 5 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
+                text.text = "Это уже не маленький бонус за сбор линии из 5 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
             }
             else if (activeHint.help == ElementsTypeEnum.BigFlask.ToString())
             {
-                text.text = "Это маленький бонус за сбор линии из 6 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
+                text.text = "Это очень большой бонус за сбор линии из 6 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
             }
             else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
             {
@@ -388,7 +400,15 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.Hoe.ToString())
             {
-                text.text = "Теперь вам доступпен новый инструмент Матыга! Она ударяет крест на крес по полю. Попробуйте!";
+                text.text = "Теперь вам доступпен новый инструмент Матыга! Он ударяет крест на крес по полю. Попробуйте!";
+            }
+            else if (activeHint.help == HelpEnum.Vortex.ToString())
+            {
+                text.text = "Теперь вам доступпен новый инструмент Смерч! Он перемешивает все фрукты на поле. Попробуйте!";
+            }
+            else if (activeHint.help == HelpEnum.Repainting.ToString())
+            {
+                text.text = "Теперь вам доступпен новый инструмент Перекраска! Он перекрашивает несколько фруктов на поле в фрук который вы укажите. Попробуйте!";
             }
             else
             {

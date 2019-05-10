@@ -155,4 +155,6 @@ public enum HelpEnum
     Instruments,
     Shop,
     Hoe,
+    Vortex, //вихрь
+    Repainting, //перекраска
 }//тип сглаженного перемещения
