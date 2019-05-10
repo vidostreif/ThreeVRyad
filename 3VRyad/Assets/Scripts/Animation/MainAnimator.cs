@@ -98,6 +98,9 @@ public class MainAnimator : MonoBehaviour {
                 item.PlayHintAnimation();
             }                           
         }
+
+        SpriteRenderer spriteRenderer = elementsForNextMove.elementForMove.GetComponent<SpriteRenderer>();
+        AddElementForSmoothChangeColor(spriteRenderer, new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0.5f), 20, true, 5);
         idleHintsTime = Time.time;
     }
 

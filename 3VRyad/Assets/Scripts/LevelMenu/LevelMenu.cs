@@ -69,7 +69,7 @@ public class LevelMenu : MonoBehaviour
 #if UNITY_EDITOR
         if (SceneManager.GetActiveScene().name == "SampleScene")
         {
-            ////если не в игре
+            //если не в игре
             if (!Application.isPlaying)
             {
                 if (lastLoadXmlDocument != null && lastLoadFolder != null)

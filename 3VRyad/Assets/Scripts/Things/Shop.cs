@@ -45,6 +45,12 @@ public class Shop : MonoBehaviour, IStoreListener
         }
         DontDestroyOnLoad(gameObject);
         InitializePurchasing();
+
+        panelShopOnGame = transform.Find("PanelShopOnGame");
+        buttonShopTransform = panelShopOnGame.Find("ButtonOpenShop");
+        ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
+        Transform gOTextCoins = panelShopOnGame.Find("TextCoins");
+        textCoins = gOTextCoins.GetComponent(typeof(Text)) as Text;        
     }
 
     // Start is called before the first frame update
@@ -52,12 +58,6 @@ public class Shop : MonoBehaviour, IStoreListener
     {
         Save save = JsonSaveAndLoad.LoadSave();
         coins = save.shopSave.coins;
-
-        panelShopOnGame = transform.Find("PanelShopOnGame");
-        buttonShopTransform = panelShopOnGame.Find("ButtonOpenShop");
-        ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
-        Transform gOTextCoins = panelShopOnGame.Find("TextCoins");
-        textCoins = gOTextCoins.GetComponent(typeof(Text)) as Text;
         UpdateTextCoins();
     }
 
@@ -80,6 +80,7 @@ public class Shop : MonoBehaviour, IStoreListener
     //создание меню магазина
     public void CreateShop()
     {
+        HelpToPlayer.DellGameHelp();
         if (panelShop != null)
         {
             Destroy(panelShop);
@@ -128,7 +129,7 @@ public class Shop : MonoBehaviour, IStoreListener
 
     //создаем панель подтверждения покупки
     public void CreateShopConfirmation(string str)
-    {
+    {        
         if (panelShop != null)
         {
             if (panelShopConfirmation != null)

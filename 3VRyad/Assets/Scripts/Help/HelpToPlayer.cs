@@ -179,7 +179,7 @@ public static class HelpToPlayer
                 }
                 else if (activeHint.help == HelpEnum.Shop.ToString())
                 {
-                    created = InterfaceHelp("PanelShopOnGame");
+                    created = InterfaceHelp("ButtonOpenShop");
                 }
                 else if (activeHint.help == HelpEnum.Hoe.ToString())
                 {
@@ -396,7 +396,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.Shop.ToString())
             {
-                text.text = "На этой панели вы можете увидеть сколько у вас монет и зайти в магазин, что бы прикупить инструментов!";
+                text.text = "Это кнопка открывает магазин, в котором вы можете купить что нибудь полезное!";
             }
             else if (activeHint.help == HelpEnum.Hoe.ToString())
             {

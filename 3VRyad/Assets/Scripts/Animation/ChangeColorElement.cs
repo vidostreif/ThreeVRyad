@@ -43,7 +43,7 @@ public class ChangeColorElement
         this.image = null;
         this.spriteRenderer = spriteRenderer;
         this.standartColor = spriteRenderer.color;
-        this.startColor = image.color;
+        this.startColor = spriteRenderer.color;
         this.newColor = newColor;
         this.speed = speed;
         this.inCycle = inCycle;

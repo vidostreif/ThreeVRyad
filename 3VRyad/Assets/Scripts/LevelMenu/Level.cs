@@ -112,6 +112,7 @@ public class Level
 
     public void SetLevelPassed(int stars, int score)
     {
+        open = true;
         passed = true;
 
             if (this.stars < stars)
