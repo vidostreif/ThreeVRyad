@@ -45,7 +45,7 @@
       <block posX="4" posY="2" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="4" posY="3" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Standard" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="4" posY="4" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="4" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="4" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="4" posY="6" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="4" posY="7" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="4" posY="8" blockType="Standard" generatorElements="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -72,7 +72,7 @@
       <block posX="7" posY="2" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="7" posY="3" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="7" posY="4" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="7" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="7" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="7" posY="6" blockType="Standard" generatorElements="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="7" posY="7" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="7" posY="8" blockType="Standard" generatorElements="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -100,12 +100,12 @@
     </blocks>
   </GridBlocks>
   <HelpFromGnome>
-    <helpEnum>Empty</helpEnum>
+    <helpEnum>Instruments</helpEnum>
   </HelpFromGnome>
   <Score>
-    <scoreForFirstStar>18000</scoreForFirstStar>
-    <scoreForSecondStar>23000</scoreForSecondStar>
-    <scoreForThirdStar>28000</scoreForThirdStar>
+    <scoreForFirstStar>15000</scoreForFirstStar>
+    <scoreForSecondStar>18000</scoreForSecondStar>
+    <scoreForThirdStar>20000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>10000</maxBonusPower>
@@ -116,7 +116,7 @@
     <moves>22</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Bush" goal="18" collectEverything="true" />
+      <shapeAndGoal shape="Bush" goal="16" collectEverything="true" />
     </targets>
   </Tasks>
   <InstrumentPanel>

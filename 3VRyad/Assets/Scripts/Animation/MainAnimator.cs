@@ -344,9 +344,66 @@ public class MainAnimator : MonoBehaviour {
         CompressAndRecoverElementsForRemove.Clear();
     }
 
+    //добавление каритнки для плавного изменения цвета
     public void AddElementForSmoothChangeColor(Image image, Color newColor, float speed)
     {
         changeColorElements.Add(new ChangeColorElement(image, newColor, speed));
+    }
+
+    public void AddElementForSmoothChangeColor(Image image, Color newColor, float speed, bool inCycle, int numberOfCycles = 1000)
+    {
+        changeColorElements.Add(new ChangeColorElement(image, newColor, speed, inCycle, numberOfCycles * 2));
+    }
+
+    //удаляем из массива сглаженной смены цвета
+    public void DellElementForSmoothChangeColor(Image image)
+    {
+        ChangeColorElement curItem = null;
+        foreach (ChangeColorElement item in changeColorElements)
+        {
+            if (item.image == image)
+            {
+                curItem = item;
+                //возвращаем стандартный цвет
+                item.image.color = item.standartColor;
+                break;
+            }
+        }
+        if (curItem != null)
+        {
+            changeColorElements.Remove(curItem);
+        }
+    }
+
+    //добавление каритнки для плавного изменения цвета
+    public void AddElementForSmoothChangeColor(SpriteRenderer spriteRenderer, Color newColor, float speed)
+    {
+        changeColorElements.Add(new ChangeColorElement(spriteRenderer, newColor, speed));
+    }
+
+    public void AddElementForSmoothChangeColor(SpriteRenderer spriteRenderer, Color newColor, float speed, bool inCycle, int numberOfCycles = 1000)
+    {
+        changeColorElements.Add(new ChangeColorElement(spriteRenderer, newColor, speed, inCycle, numberOfCycles * 2));
+    }
+
+    //удаляем из массива сглаженной смены цвета
+    public void DellElementForSmoothChangeColor(SpriteRenderer spriteRenderer)
+    {
+        ChangeColorElement curItem = null;
+        foreach (ChangeColorElement item in changeColorElements)
+        {
+            if (item.spriteRenderer == spriteRenderer)
+            {
+                curItem = item;
+                //возвращаем стандартный цвет
+                item.spriteRenderer.color = item.standartColor;
+                break;
+            }
+        }
+        if (curItem != null)
+        {
+            changeColorElements.Remove(curItem);
+        }
     }
 
     //изменение цвета
@@ -358,7 +415,51 @@ public class MainAnimator : MonoBehaviour {
             {
                 item.image.color = Color.Lerp(item.image.color, item.newColor, Time.deltaTime * item.speed);
                 if (item.image.color == item.newColor)
-                    changeColorElementsForRemove.Add(item);
+                {
+                    if (item.inCycle && item.numberOfCycles > 0)
+                    {   
+                        //обмениваем стартовый и конечный цвет
+                        Color startColor = item.startColor;
+                        item.startColor = item.newColor;
+                        item.newColor = startColor;
+                        item.numberOfCycles--;
+                    }
+                    else if (item.inCycle)
+                    {
+                        //возвращаем стандартный цвет
+                        item.image.color = item.standartColor;
+                        changeColorElementsForRemove.Add(item);
+                    }
+                    else
+                    {
+                        changeColorElementsForRemove.Add(item);
+                    }                    
+                }                    
+            }
+            else if (item.spriteRenderer != null)
+            {
+                item.spriteRenderer.color = Color.Lerp(item.spriteRenderer.color, item.newColor, Time.deltaTime * item.speed);
+                if (item.spriteRenderer.color == item.newColor)
+                {
+                    if (item.inCycle && item.numberOfCycles > 0)
+                    {
+                        //обмениваем стартовый и конечный цвет
+                        Color startColor = item.startColor;
+                        item.startColor = item.newColor;
+                        item.newColor = startColor;
+                        item.numberOfCycles--;
+                    }
+                    else if (item.inCycle)
+                    {
+                        //возвращаем стандартный цвет
+                        item.spriteRenderer.color = item.standartColor;
+                        changeColorElementsForRemove.Add(item);
+                    }
+                    else
+                    {
+                        changeColorElementsForRemove.Add(item);
+                    }
+                }
             }
             else
             {
@@ -373,6 +474,8 @@ public class MainAnimator : MonoBehaviour {
         }
         changeColorElementsForRemove.Clear();
     }
+
+
 
     //вспомогательные
 

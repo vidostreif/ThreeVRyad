@@ -36,7 +36,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
 
     private void Update()
     {
-        if (allow)
+        //обрабатываем только если супер бонус разрешен и не показывается подсказка в текущий момент
+        if (allow && !HelpToPlayer.HelpActive())
         {
             //обрабатываем ракеты которые долетели до нужного элемента
             if (HitSuperBonusList.Count > 0)

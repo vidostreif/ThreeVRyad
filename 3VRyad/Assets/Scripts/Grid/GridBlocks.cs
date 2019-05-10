@@ -463,12 +463,16 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //проверка, что остались доступные ходы
             List<ElementsForNextMove> elementsForNextMoveList;
             int iteration2 = 1;
+            bool addMove = false;
             do
             {
                 elementsForNextMoveList = CheckElementsForNextMove();
                 //Если нет доступных ходов, то перемешиваем поле
                 if (elementsForNextMoveList.Count == 0)
+                {
                     MixStandartElements();
+                    addMove = true;
+                }                   
 
                 if (iteration2 > 4)
                 {
@@ -481,7 +485,14 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
             //пока первый
             //!!!! Переделать, находить лучший ход
-            MainAnimator.Instance.ElementsForNextMove = elementsForNextMoveList[0];            
+            MainAnimator.Instance.ElementsForNextMove = elementsForNextMoveList[0];
+
+            //если перемешивали поле, то делаем еще один ход
+            if (addMove)
+            {
+                blockedForMove = false;
+                Move();
+            }                        
         }
         blockedForMove = false;
     }

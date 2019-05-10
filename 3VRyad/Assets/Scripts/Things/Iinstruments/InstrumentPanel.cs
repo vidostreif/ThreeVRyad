@@ -112,6 +112,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         
     public void PreparInstrument(InstrumentOnGame instrument)
     {
+        //удаляем подсказку если она есть
+        HelpToPlayer.DellGameHelp();
         //деактивируем предыдущий инструмент
         if (preparedInstrument != null)
         {
@@ -197,7 +199,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     {
         if (BlockCheck.ThisBlockWithMortalElement(block))
         {
-            block.Hit();
+            block.Hit(HitTypeEnum.Explosion);
             yield return new WaitForSeconds(0.3f);
             successfulActivation = true;
             yield break;
@@ -243,7 +245,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                 }
             } while (GridBlocks.Instance.blockedForMove);
 
-            block.Hit();
+            block.Hit(HitTypeEnum.Explosion);
             foreach (Block curBlock in blocks)
             {
                 if (curBlock != null)
@@ -254,7 +256,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                     {
                         yield return new WaitForSeconds(0.01f);
                     } while (instrumentGO.transform.position != curBlock.transform.position);
-                    curBlock.Hit();
+                    curBlock.Hit(HitTypeEnum.Explosion);
                 }
             }
             spriteRenderer.sprite = null;
@@ -457,6 +459,7 @@ public class InstrumentOnGame {
 
     public void CreateGameInstrumentButton(GameObject go)
     {
+        go.name = "Instrument" + type.ToString();
         if (gameInstrumentButton != null)
         {
             GameObject.DestroyImmediate(gameInstrumentButton.GameObject);

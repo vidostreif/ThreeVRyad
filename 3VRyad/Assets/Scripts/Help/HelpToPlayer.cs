@@ -15,6 +15,18 @@ public static class HelpToPlayer
     private static float timeCreateHints;
     private static float delayTime = 0;
 
+    //возвращает истину если подсказка активна
+    public static bool HelpActive() {
+        if (activeHint != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private static void CreateHintStatusList() {
         if (hintsStatus == null)
         {
@@ -155,6 +167,26 @@ public static class HelpToPlayer
                 {
                     created = InterfaceHelp("Score");
                 }
+                else if (activeHint.help == HelpEnum.SuperBonus.ToString())
+                {
+                    created = InterfaceHelp("SuperBonus");
+                }
+                else if (activeHint.help == HelpEnum.Instruments.ToString())
+                {
+                    List<string> flashingItemsNames = new List<string>();
+                    flashingItemsNames.Add("Instrument" + InstrumentsEnum.Shovel.ToString());
+                    created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+                }
+                else if (activeHint.help == HelpEnum.Shop.ToString())
+                {
+                    created = InterfaceHelp("PanelShopOnGame");
+                }
+                else if (activeHint.help == HelpEnum.Hoe.ToString())
+                {
+                    List<string> flashingItemsNames = new List<string>();
+                    flashingItemsNames.Add("Instrument" + InstrumentsEnum.Hoe.ToString());
+                    created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+                }
                 else
                 {
                     //неудалось определить подсказку
@@ -171,10 +203,17 @@ public static class HelpToPlayer
                     MainAnimator.Instance.AddElementForSmoothChangeColor(imageHelpToPlayer, new Color(imageHelpToPlayer.color.r, imageHelpToPlayer.color.g, imageHelpToPlayer.color.b, 0.9f), 2);
                     //устанавливаем камеру
                     activeHint.canvasHelpToPlayer.GetComponent<Canvas>().worldCamera = Camera.main;
-                    //добавляем действие
+                    //добавляем действие канвасу
                     Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
                     Button button = gOPanel.GetComponent<Button>();
                     button.onClick.AddListener(delegate { DeletedByClickingOnCanvas(); });
+                    //добавляем действие кнопке закрыть
+                    Transform buttonDellHelpGO = activeHint.canvasHelpToPlayer.transform.Find("ButtonDellHelp");
+                    Button buttonDellHelp = buttonDellHelpGO.GetComponent<Button>();
+                    buttonDellHelp.onClick.AddListener(delegate { DeletedByClickingOnButton(); });
+                    ////показываем кнопку постепенно
+                    //Image imageDellHelp = buttonDellHelpGO.GetComponent<Image>();
+                    //MainAnimator.Instance.AddElementForSmoothChangeColor(imageDellHelp, new Color(imageDellHelp.color.r, imageDellHelp.color.g, imageDellHelp.color.b, 1), 0.1f);
 
                     //показываем текст
                     CreateTextCloud();
@@ -335,6 +374,22 @@ public static class HelpToPlayer
             {
                 text.text = "Здесь ты видишь количество набранных очков. Чем больше очков ты наберешь, тем больше звезд получишь!";
             }
+            else if (activeHint.help == HelpEnum.SuperBonus.ToString())
+            {
+                text.text = "Это чан с волшебным зельем который наполняется энергией собраных элементов, а после выплескивает эту энергию на поле в виде нескольких магических лучей!";
+            }
+            else if (activeHint.help == HelpEnum.Instruments.ToString())
+            {
+                text.text = "Это панель с инструментами, которые могут помочь вам пройти уровень. Вам уже доступен инструмент Лопата, которая ударяет по одному блоку!";
+            }
+            else if (activeHint.help == HelpEnum.Shop.ToString())
+            {
+                text.text = "На этой панели вы можете увидеть сколько у вас монет и зайти в магазин, что бы прикупить инструментов!";
+            }
+            else if (activeHint.help == HelpEnum.Hoe.ToString())
+            {
+                text.text = "Теперь вам доступпен новый инструмент Матыга! Она ударяет крест на крес по полю. Попробуйте!";
+            }
             else
             {
                 text.text = "Често говоря, я и сам не понимаю, что происходит :)";
@@ -347,6 +402,46 @@ public static class HelpToPlayer
         }
     }
 
+    //попытка удалить по клику по канвасу
+    public static void DeletedByClickingOnCanvas()
+    {
+        if (deletedByClickingOnCanvas)
+        {
+            //если прошло больше времени чем указано
+            if ((Time.time - delayTime) > timeCreateHints)
+            {
+                DellAndCreateHelp();
+            }
+        }
+    }
+
+    //удаление подсказки по нажатию на кнопку
+    public static void DeletedByClickingOnButton()
+    {
+        DellAndCreateHelp();
+    }
+
+    //удаление подсказки с проверкой создающую новую подсказку или выполнением хода 
+    private static void DellAndCreateHelp()
+    {
+        if (activeHint != null)
+        {
+            bool createNextGameHelpByClicking = activeHint.createNextGameHelpByClicking;
+            if (DellGameHelp())
+            {
+                if (createNextGameHelpByClicking)
+                {
+                    CreateNextGameHelp();
+                }
+                else
+                {
+                    //выполняем ход
+                    GridBlocks.Instance.Move();
+                }
+            }
+        }
+    }
+    
     public static bool DellGameHelp()
     {
         //если есть подсказка для элементов
@@ -383,6 +478,9 @@ public static class HelpToPlayer
                 }
             }
 
+            //удаляем эффект мигания
+            DellFromFlashing(activeHint);
+
             //удаляем затемнение
             UnityEngine.Object.Destroy(activeHint.canvasHelpToPlayer);
 
@@ -403,34 +501,6 @@ public static class HelpToPlayer
         deletedByClickingOnCanvas = true;
         timeCreateHints = Time.time;
         delayTime = time;
-    }
-
-    //попытка удалить по клику
-    public static void DeletedByClickingOnCanvas()
-    {
-        if (deletedByClickingOnCanvas)
-        {
-            //если прошло больше времени чем указано
-            if ((Time.time - delayTime) > timeCreateHints)
-            {
-                if (activeHint != null)
-                {
-                    bool createNextGameHelpByClicking = activeHint.createNextGameHelpByClicking;
-                    if (DellGameHelp())
-                    {
-                        if (createNextGameHelpByClicking)
-                        {
-                            CreateNextGameHelp();
-                        }
-                        else
-                        {
-                            //выполняем ход
-                            GridBlocks.Instance.Move();
-                        }                        
-                    }
-                }                
-            }
-        }
     }
 
     //подсказки для элементов
@@ -578,7 +648,7 @@ public static class HelpToPlayer
                 //добавляем эффект
 
                 //таймаут для удаления подсказки
-                CanvasLiveTime(3);
+                CanvasLiveTime(1);
                 return true;
             }
         }
@@ -605,7 +675,7 @@ public static class HelpToPlayer
                 //добавляем эффект
 
                 //таймаут для удаления подсказки
-                CanvasLiveTime(3);
+                CanvasLiveTime(1);
                 return true;
             }
         }
@@ -615,17 +685,32 @@ public static class HelpToPlayer
 
 
     //подсказки для интерфейса
-    private static bool InterfaceHelp(string goName)
+    //goName - название основного элемента
+    //flashingItemsNames - элементы которые будут мигать
+    private static bool InterfaceHelp(string goName, List<string> flashingItemsNames = null)
     {
         //находим гнома
         GameObject go = GameObject.Find(goName);
 
         if (go != null)
         {
+            //замена родителя на наш канвас
             ChangeParent(go, activeHint);
+            //запуск анимации для мигающих элементов
+            if (flashingItemsNames != null)
+            {
+                foreach (string item in flashingItemsNames)
+                {
+                    GameObject itemGO = GameObject.Find(item);
+                    if (itemGO != null)
+                    {
+                        AddToFlashing(itemGO, activeHint);
+                    }
+                }
+            }            
             //таймаут для удаления подсказки
             activeHint.createNextGameHelpByClicking = true;
-            CanvasLiveTime(1);
+            CanvasLiveTime(2);
             return true;
         }
         else
@@ -636,6 +721,45 @@ public static class HelpToPlayer
     }
 
     //вспомогательные
+    //добавление для мерцания
+    private static void AddToFlashing(GameObject gameObject, Hint hint)
+    {
+        float speed = 20f;
+        float alfa = 0.5f;
+        foreach (SpriteRenderer childrenSpriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
+        {
+            if (childrenSpriteRenderer != null)
+            {
+                hint.FlashingSpriteRendersList.Add(childrenSpriteRenderer);
+
+                MainAnimator.Instance.AddElementForSmoothChangeColor(childrenSpriteRenderer, new Color(childrenSpriteRenderer.color.r, childrenSpriteRenderer.color.g, childrenSpriteRenderer.color.b, alfa), speed, true);
+            }
+        }
+
+        foreach (Image childrenImage in gameObject.GetComponentsInChildren<Image>())
+        {
+            if (childrenImage != null)
+            {
+                hint.FlashingImageList.Add(childrenImage);
+
+                MainAnimator.Instance.AddElementForSmoothChangeColor(childrenImage, new Color(childrenImage.color.r, childrenImage.color.g, childrenImage.color.b, alfa), speed, true);
+            }
+        }
+    }
+
+    private static void DellFromFlashing(Hint hint)
+    {
+        foreach (SpriteRenderer item in hint.FlashingSpriteRendersList)
+        {
+            MainAnimator.Instance.DellElementForSmoothChangeColor(item);
+        }
+
+        foreach (Image item in hint.FlashingImageList)
+        {
+            MainAnimator.Instance.DellElementForSmoothChangeColor(item);
+        }
+    }
+
     private static void ChangeSorting(GameObject gameObject, Hint hint) {
         foreach (SpriteRenderer childrenSpriteRenderer in gameObject.GetComponentsInChildren<SpriteRenderer>())
         {
@@ -717,6 +841,8 @@ public class Hint {
     public List<BlockControllerSettings> blockControllersSetingList = new List<BlockControllerSettings>();
     public List<SpriteRenderSettings> spriteRendersSetingList = new List<SpriteRenderSettings>();
     public List<ParentSettings> ParentSettingsList = new List<ParentSettings>();
+    public List<SpriteRenderer> FlashingSpriteRendersList = new List<SpriteRenderer>();
+    public List<Image> FlashingImageList = new List<Image>();
     public GameObject canvasHelpToPlayer;
 
     public Hint(string help, int numberHelp)

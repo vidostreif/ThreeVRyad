@@ -65,7 +65,7 @@
       <block posX="5" posY="0" blockType="Standard" generatorElements="false" dropping="true" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="1" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="2" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="5" posY="3" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="BigFlask" elementShape="BigFlask" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="5" posY="3" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="4" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="5" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="6" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -126,7 +126,7 @@
     </blocks>
   </GridBlocks>
   <HelpFromGnome>
-    <helpEnum>Hoe</helpEnum>
+    <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
   <Score>
     <scoreForFirstStar>25000</scoreForFirstStar>
@@ -148,7 +148,7 @@
   <InstrumentPanel>
     <instruments>
       <typeAndAllow type="Shovel" allow="true" />
-      <typeAndAllow type="Hoe" allow="true" />
+      <typeAndAllow type="Hoe" allow="false" />
       <typeAndAllow type="Vortex" allow="false" />
       <typeAndAllow type="Repainting" allow="false" />
     </instruments>
