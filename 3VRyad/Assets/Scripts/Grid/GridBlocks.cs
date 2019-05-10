@@ -857,7 +857,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                                     Block oppositeBlock2 = null;
                                                     if (oppositeBlock1 != null)
                                                     {
-                                                        oppositeBlock2 = GetNeighboringBlocks(oppositeBlock1.PositionInGrid).GetBlock(direction);
+                                                        oppositeBlock2 = GetNeighboringBlocks(oppositeBlock1.PositionInGrid).GetOppositeBlock(direction);
                                                     }
 
                                                     if (BlockCheck.ThisBlockWithElement(oppositeBlock1) && oppositeBlock1.Element.Shape == elementsForNextMove.elementForMove.Shape)
@@ -885,7 +885,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                                         }                                                        
                                                     }
 
-                                                    if (oppositeBlock1check && BlockCheck.ThisBlockWithElement(oppositeBlock1) && oppositeBlock1.Element.Shape == elementsForNextMove.elementForMove.Shape)
+                                                    if (oppositeBlock1check && BlockCheck.ThisBlockWithElement(oppositeBlock2) && oppositeBlock2.Element.Shape == elementsForNextMove.elementForMove.Shape)
                                                     {
                                                         Block Block2 = GetNeighboringBlocks(blockOnDirection.PositionInGrid).GetBlock(direction);
 
