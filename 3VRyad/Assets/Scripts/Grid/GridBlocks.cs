@@ -823,14 +823,16 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                             } while (elementFound);
                         }
-                        //если количество найденных элементов больше двух то ищем следующую линию
+                        //если количество найденных элементов больше двух то сохраняем
                         if (elementsForNextMove.elementsList.Count > 2)
                         {
+                            //если количество найденных элементов больше трех то дополняем соседними элементами и переопределяем элемент для смещения
                             if (elementsForNextMove.elementsList.Count > 3)
                             {
                                 //Дополняем массив смежными эллементами
                                 NeighboringBlocks neighboringBlocks = GetNeighboringBlocks(elementsForNextMove.targetBlock.PositionInGrid);
-                                bool elementsForNextMoveFound = false;
+                                bool elementsForNextMoveFound = false;//элемент для смещения найден
+                                //обрабатываем каждую из 4 сторон
                                 foreach (Block item in neighboringBlocks.allBlockField)
                                 {
                                     if (item != null)
@@ -839,74 +841,67 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                         bool elementFound = false;                                        
                                         int iteration = 1;
                                         Block blockOnDirection = item;
+                                        //делаем по два прохода, смещаясь каждый раз на один блок
                                         do
                                         {                                            
-                                            if (BlockCheck.ThisBlockWithElement(blockOnDirection) && blockOnDirection.Element.Shape == elementsForNextMove.elementForMove.Shape)
+                                            if (BlockCheck.ThisBlockWithElementCreateLine(blockOnDirection) && blockOnDirection.Element.Shape == elementsForNextMove.elementForMove.Shape)
                                             {
+                                                //если этого элемента нет в массиве, то добавляем
                                                 if (!elementsForNextMove.elementsList.Contains(blockOnDirection.Element))
                                                 {
                                                     elementsForNextMove.elementsList.Add(blockOnDirection.Element);
                                                 }
-                                                elementFound = true;
+                                                elementFound = true;//элемент найден
 
-                                                if (iteration == 1 && !elementsForNextMoveFound)
+                                                //если работаем с первым блоком от позиции назначения, на найден элемент для смещения и текущий элемент можно двигать
+                                                if (iteration == 1 && !elementsForNextMoveFound && !blockOnDirection.Element.LockedForMove)
                                                 {
-                                                    //если в противоположном направлении есть два или ни одного элемента
-                                                    Block oppositeBlock1 = neighboringBlocks.GetOppositeBlock(direction);
-                                                    bool oppositeBlock1check = false;
-                                                    Block oppositeBlock2 = null;
+                                                    bool elementAndBlockForMove = false;//пометка, что этот блок и элемент для смещения
+                                                    Block oppositeBlock1 = neighboringBlocks.GetOppositeBlock(direction);//первый противоположный блок
+                                                    bool oppositeBlock1Match = false;//пометка, что первый противоположный блок с таким же элементом
+                                                    Block oppositeBlock2 = null;//второй противоположный блок
                                                     if (oppositeBlock1 != null)
                                                     {
                                                         oppositeBlock2 = GetNeighboringBlocks(oppositeBlock1.PositionInGrid).GetOppositeBlock(direction);
                                                     }
 
-                                                    if (BlockCheck.ThisBlockWithElement(oppositeBlock1) && oppositeBlock1.Element.Shape == elementsForNextMove.elementForMove.Shape)
+                                                    //если противоположный блок с таким же элементом, то проверяем дальше
+                                                    if (BlockCheck.ThisBlockWithElementCreateLine(oppositeBlock1) && oppositeBlock1.Element.Shape == elementsForNextMove.elementForMove.Shape)
                                                     {
-                                                        oppositeBlock1check = true;
+                                                        oppositeBlock1Match = true;
                                                     }
-                                                    else
+                                                    else//иначе если позади нашего блока нет такого же элмента, то обозначаем наш блок и элемент как - для смещения и более не ищем элемент для смещения
                                                     {
                                                         Block Block2 = GetNeighboringBlocks(blockOnDirection.PositionInGrid).GetBlock(direction);
 
-                                                        if (BlockCheck.ThisBlockWithElement(Block2) && Block2.Element.Shape == elementsForNextMove.elementForMove.Shape)
+                                                        if (!ElementsMatch(Block2, elementsForNextMove.blockElementForMove))
                                                         {
-                                                            //elementsForNextMove.elementForMove = blockOnDirection.Element;
-                                                            //elementsForNextMove.blockElementForMove = blockOnDirection;
-                                                            //elementsForNextMove.oppositeDirectionForMove = direction;
-                                                        }
-                                                        else
-                                                        {
-                                                            elementsForNextMove.elementForMove = blockOnDirection.Element;
-                                                            elementsForNextMove.blockElementForMove = blockOnDirection;
-                                                            elementsForNextMove.directionForMove = neighboringBlocks.GetOppositeDirection(blockOnDirection);
-                                                            elementsForNextMove.oppositeDirectionForMove = direction;
+                                                            elementAndBlockForMove = true;
                                                             elementsForNextMoveFound = true;
-                                                            break;
                                                         }                                                        
                                                     }
 
-                                                    if (oppositeBlock1check && BlockCheck.ThisBlockWithElement(oppositeBlock2) && oppositeBlock2.Element.Shape == elementsForNextMove.elementForMove.Shape)
+                                                    //если и в первом и во втором противоположных блоках такой же элемент 
+                                                    if (oppositeBlock1Match && BlockCheck.ThisBlockWithElementCreateLine(oppositeBlock2) && oppositeBlock2.Element.Shape == elementsForNextMove.elementForMove.Shape)
                                                     {
                                                         Block Block2 = GetNeighboringBlocks(blockOnDirection.PositionInGrid).GetBlock(direction);
-
-                                                        if (BlockCheck.ThisBlockWithElement(Block2) && Block2.Element.Shape == elementsForNextMove.elementForMove.Shape)
+                                                        //и позади нашего блока нет такого же элемента, то помечаем как блок и элемент для смещения
+                                                        if (!ElementsMatch(Block2, elementsForNextMove.blockElementForMove))
                                                         {
-                                                            //elementsForNextMove.elementForMove = blockOnDirection.Element;
-                                                            //elementsForNextMove.blockElementForMove = blockOnDirection;
-                                                            //elementsForNextMove.oppositeDirectionForMove = direction;
-                                                        }
-                                                        else
-                                                        {
-                                                            elementsForNextMove.elementForMove = blockOnDirection.Element;
-                                                            elementsForNextMove.blockElementForMove = blockOnDirection;
-                                                            elementsForNextMove.directionForMove = neighboringBlocks.GetOppositeDirection(blockOnDirection);
-                                                            elementsForNextMove.oppositeDirectionForMove = direction;
-                                                            //elementsForNextMoveFound = true;
-                                                            break;
+                                                            elementAndBlockForMove = true;                                                            
                                                         }
                                                     }
-                                                }
 
+                                                    //переопределяем новый блок для смещения, элемент для смещения и направление смещения
+                                                    if (elementAndBlockForMove)
+                                                    {
+                                                        elementsForNextMove.elementForMove = blockOnDirection.Element;
+                                                        elementsForNextMove.blockElementForMove = blockOnDirection;
+                                                        elementsForNextMove.directionForMove = neighboringBlocks.GetOppositeDirection(blockOnDirection);
+                                                        elementsForNextMove.oppositeDirectionForMove = direction;
+                                                    }
+                                                }
+                                                //берем следующий блок
                                                 blockOnDirection = GetNeighboringBlocks(blockOnDirection.PositionInGrid).GetBlock(direction);
                                             }
                                             else
@@ -942,71 +937,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 }                                
                             }
 
-
-                            //bool foundOnOldRecord = false;
-                            ////ищем в предыдущих записях совпадение, куда будет перемещаться элемент
-                            //foreach (ElementsForNextMove item in ElementsForNextMoveList)
-                            //{
-                            //    //если совпадает блок назначения, вид элемента и размер одного из массивов больше 3
-                            //    if (elementsForNextMove.targetBlock == item.targetBlock && elementsForNextMove.elementForMove.Shape == item.elementForMove.Shape &&
-                            //        (elementsForNextMove.elementsList.Count > 3 || item.elementsList.Count > 3))
-                            //    {
-                            //        //перемещаем все элементы в предыдущий массив
-                            //        foreach (Element element in elementsForNextMove.elementsList)
-                            //        {
-                            //            //если нет в списке
-                            //            if (!item.elementsList.Contains(element))
-                            //            {
-                            //                item.elementsList.Add(element);
-                            //            }
-                            //        }
-
-                            //        //ищем новый элемент для смещения
-                            //        NeighboringBlocks neighboringBlocks = GetNeighboringBlocks(item.targetBlock.PositionInGrid);
-                            //        //bool foundElement = false;
-                            //        int i = 0;
-                            //        foreach (Block block in neighboringBlocks.allBlockField)
-                            //        {
-                            //            i++;
-                            //            foreach (Element element in item.elementsList)
-                            //            {
-                            //                if (block.Element == element)
-                            //                {
-                            //                    //проверяем элемент позади
-                            //                    NeighboringBlocks nBlocks = GetNeighboringBlocks(block.PositionInGrid);
-                            //                    Block blockBehind = nBlocks.GetBlock(neighboringBlocks.GetDirection(block));
-                            //                    //и не последний проход
-                            //                    if (blockBehind != null && item.elementsList.Contains(blockBehind.Element) && i != neighboringBlocks.allBlockField.Count())
-                            //                    {
-                            //                        continue;
-                            //                    }
-                            //                    else
-                            //                    {
-                            //                        elementsForNextMove.elementForMove = block.Element;
-                            //                        elementsForNextMove.blockElementForMove = block;
-                            //                        elementsForNextMove.directionForMove = neighboringBlocks.GetOppositeDirection(block);
-                            //                        elementsForNextMove.oppositeDirectionForMove = neighboringBlocks.GetDirection(block);
-                            //                        foundOnOldRecord = true;
-                            //                        break;
-                            //                    }
-                            //                }
-                            //            }
-                            //            if (foundOnOldRecord)
-                            //            {
-                            //                break;
-                            //            }
-                            //        }
-                            //        break;
-                            //    }
-                            //}
-
-                            //if (!foundOnOldRecord)
-                            //{
-                                ElementsForNextMoveList.Add(elementsForNextMove);
-                            //}
-                            
+                            ElementsForNextMoveList.Add(elementsForNextMove);                            
                             elementsForNextMove = new ElementsForNextMove();
-                            break;
+                            //break;
                         }
                         else
                             elementsForNextMove.elementsList.Clear();
