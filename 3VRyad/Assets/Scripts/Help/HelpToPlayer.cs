@@ -44,7 +44,7 @@ public static class HelpToPlayer
             hintsStatus = new HintStatus[count];
 
             //загружаем сохранения
-            List <HelpSave> helpSaves = JsonSaveAndLoad.LoadSave().helpSave;
+            List<HelpSave> helpSaves = JsonSaveAndLoad.LoadSave().helpSave;
             int i = 0;
             foreach (Type enumType in enumTypes)
             {
@@ -81,32 +81,19 @@ public static class HelpToPlayer
     {
         AddHint(typeof(HelpEnum), helpEnum.ToString(), (int)helpEnum, true);
     }
-    
-    private static void AddHint(Type enumType, string help, int number, bool toTop) {
-        //проверяем показывали ли мы такую подсказку игроку
-        CreateHintStatusList();
 
-        //определяем позицию в энумах
-        int count = 0;
-        foreach (Type item in enumTypes)
-        {
-            if (item != enumType)
-            {
-                count+= Enum.GetNames(item).Length;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        //если уже показывали то не добавляем
-        if (hintsStatus[count + number].status == false)
+    private static void AddHint(Type enumType, string help, int number, bool toTop)
+    {        
+        //если не показывали то добавляем
+        if (!ShowedHint(enumType, number))
         {
             //если она уже добавлена в массив, то пропускаем
             Hint hint = hintsList.Find(item => item.help == help);
             if (hint == null)
             {
+                //определяем позицию в по длинам энумов
+                int count = GetEnumPosition(enumType);
+
                 if (toTop)
                 {
                     hintsList.Insert(0, new Hint(help, count + number));
@@ -114,9 +101,38 @@ public static class HelpToPlayer
                 else
                 {
                     hintsList.Add(new Hint(help, count + number));
-                }               
+                }
             }
         }
+    }
+
+    //проверяет показывали ли мы подсказку в указаном енумо под описанным номером
+    private static bool ShowedHint(Type enumType, int number)
+    {
+        //проверяем показывали ли мы такую подсказку игроку
+        CreateHintStatusList();
+
+        //определяем позицию в по длинам энумов
+        int count = GetEnumPosition(enumType);
+
+        return hintsStatus[count + number].status;
+    }
+
+    private static int GetEnumPosition(Type enumType) {
+        //определяем позицию в по длинам энумов
+        int count = 0;
+        foreach (Type item in enumTypes)
+        {
+            if (item != enumType)
+            {
+                count += Enum.GetNames(item).Length;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return count;
     }
 
     public static bool CreateNextGameHelp()
@@ -131,13 +147,20 @@ public static class HelpToPlayer
             //перебираем подскази до тех пор пока не создадим хоть одну
             foreach (Hint hint in hintsList)
             {
+                //перепроверяем не пометили ли эту подсказку как показанную
+                if (hintsStatus[hint.numberHelp].status)
+                {
+                    //добавляем для удаления
+                    hintForDell.Add(hint);
+                }
+
                 activeHint = hint;
                 activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.Instance.canvasHelpToPlayer);
 
                 //находим нужную подсказку
                 if (activeHint.help == ElementsTypeEnum.Standard.ToString())
                 {
-                    created = CreateStandardElementHelp();
+                    created = CreateStandardElementHelp(3);
                 }
                 else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
                 {                    
@@ -165,7 +188,7 @@ public static class HelpToPlayer
                 }
                 else if (activeHint.help == HelpEnum.Score.ToString())
                 {
-                    created = InterfaceHelp("Score");
+                    created = InterfaceHelp("ScorePanel");
                 }
                 else if (activeHint.help == HelpEnum.SuperBonus.ToString())
                 {
@@ -198,6 +221,18 @@ public static class HelpToPlayer
                     List<string> flashingItemsNames = new List<string>();
                     flashingItemsNames.Add("Instrument" + InstrumentsEnum.Repainting.ToString());
                     created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+                }
+                else if (activeHint.help == HelpEnum.Line4.ToString())
+                {
+                    created = CreateStandardElementHelp(4);
+                }
+                else if (activeHint.help == HelpEnum.Line5.ToString())
+                {
+                    created = CreateStandardElementHelp(5);
+                }
+                else if (activeHint.help == HelpEnum.Line6.ToString())
+                {
+                    created = CreateStandardElementHelp(6);
                 }
                 else
                 {
@@ -259,53 +294,73 @@ public static class HelpToPlayer
     {
         //собераем все трансформы
         List<Transform> transformsList = new List<Transform>();
+        List<RectTransform> rectTransformList = new List<RectTransform>();
         foreach (SpriteRenderSettings item in activeHint.spriteRendersSetingList)
         {
             transformsList.Add(item.spriteRenderer.transform);
         }
         foreach (ParentSettings item in activeHint.ParentSettingsList)
         {
-            transformsList.Add(item.gameObjectTransform);
+            rectTransformList.Add(item.gameObjectTransform.GetComponent<RectTransform>());
         }
 
-        if (transformsList.Count > 0)
+        if (transformsList.Count > 0 || rectTransformList.Count > 0)
         {
-            
-            Vector3 newPosition = transformsList[0].position;
-            float width = transformsList[0].localScale.x;
+             
             Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
             Transform textCloud = gOPanel.transform.Find("TextCloud");
             RectTransform rectTransformGOPanel = gOPanel.GetComponent<RectTransform>();
             RectTransform rectTransformTextCloud = textCloud.GetComponent<RectTransform>();
 
-            //находим самый левый верхний объект
-            foreach (Transform item in transformsList)
-            {
-                //обрабатываем все кроме элементов
-                if (!item.GetComponent<BaseElement>())
+            Vector3 newPosition = textCloud.position;
+            float width = 1;
+                //находим самый левый верхний объект
+                foreach (Transform item in transformsList)
                 {
-                    if (item.position.x < newPosition.x)
+                    //обрабатываем все кроме элементов
+                    if (!item.GetComponent<BaseElement>())
                     {
-                        newPosition.x = item.position.x;
-                        width = item.localScale.x; // ширина
-                    }
+                        if (item.position.x < newPosition.x)
+                        {
+                            newPosition.x = item.position.x;
+                            width = item.localScale.x; // ширина
+                        }
 
-                    if (item.position.y > newPosition.y)
-                    {
-                        newPosition.y = item.position.y;
-                        width = item.localScale.x; // ширина
+                        if (item.position.y > newPosition.y)
+                        {
+                            newPosition.y = item.position.y;
+                            width = item.localScale.x; // ширина
+                        }
                     }
                 }
+            textCloud.position = new Vector3(newPosition.x - width * 0.5f, newPosition.y, newPosition.z);
+
+            Vector3 newLocalPosition = textCloud.localPosition;
+            foreach (RectTransform item in rectTransformList)
+            {
+                    if (item.localPosition.x < newLocalPosition.x)
+                    {
+                    newLocalPosition.x = item.localPosition.x;
+                        width = item.rect.width; // ширина
+                    }
+
+                    if (item.localPosition.y > newLocalPosition.y)
+                    {
+                    newLocalPosition.y = item.localPosition.y;
+                        width = item.rect.width; // ширина
+                    }
             }
-            textCloud.position = new Vector3(newPosition.x - width, newPosition.y, newPosition.z);
+
+            textCloud.localPosition = new Vector3(newLocalPosition.x - width * 0.5f, newLocalPosition.y, newLocalPosition.z);
+            
             rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x - rectTransformTextCloud.rect.width * 0.5f, rectTransformTextCloud.anchoredPosition.y);
 
             //если выходит за пределы экрана слева переносим на право
             if (rectTransformTextCloud.anchoredPosition.x < rectTransformTextCloud.rect.width * 0.5f)
             {
-                //находим самый правый верхний объект
-                newPosition = transformsList[0].position;
-                width = transformsList[0].localScale.x;
+                newPosition = textCloud.position;
+                width = 1;
+                //находим самый левый верхний объект
                 foreach (Transform item in transformsList)
                 {
                     //обрабатываем все кроме элементов
@@ -324,7 +379,24 @@ public static class HelpToPlayer
                         }
                     }
                 }
-                textCloud.position = new Vector3(newPosition.x + width, newPosition.y, newPosition.z);
+                textCloud.position = new Vector3(newPosition.x + width * 0.5f, newPosition.y, newPosition.z);
+
+                newLocalPosition = textCloud.localPosition;
+                foreach (RectTransform item in rectTransformList)
+                {
+                    if (item.localPosition.x > newLocalPosition.x)
+                    {
+                        newLocalPosition.x = item.localPosition.x;
+                        width = item.rect.width; // ширина
+                    }
+
+                    if (item.localPosition.y > newLocalPosition.y)
+                    {
+                        newLocalPosition.y = item.localPosition.y;
+                        width = item.rect.width; // ширина
+                    }
+                }
+                textCloud.localPosition = new Vector3(newLocalPosition.x + width * 0.5f, newLocalPosition.y, newLocalPosition.z);
                 rectTransformTextCloud.anchoredPosition = new Vector3(rectTransformTextCloud.anchoredPosition.x + rectTransformTextCloud.rect.width * 0.5f, rectTransformTextCloud.anchoredPosition.y);
             }
 
@@ -409,6 +481,18 @@ public static class HelpToPlayer
             else if (activeHint.help == HelpEnum.Repainting.ToString())
             {
                 text.text = "Теперь вам доступпен новый инструмент Перекраска! Он перекрашивает несколько фруктов на поле в фрук который вы укажите. Попробуйте!";
+            }
+            else if (activeHint.help == HelpEnum.Line4.ToString())
+            {
+                text.text = "Попробуйте собрать линию из 4 элементов!";
+            }
+            else if (activeHint.help == HelpEnum.Line5.ToString())
+            {
+                text.text = "Попробуйте собрать линию из 5 элементов!";
+            }
+            else if (activeHint.help == HelpEnum.Line6.ToString())
+            {
+                text.text = "Попробуйте собрать линию из 6 элементов!";
             }
             else
             {
@@ -524,8 +608,41 @@ public static class HelpToPlayer
     }
 
     //подсказки для элементов
-    private static bool CreateStandardElementHelp()
+
+    //подсказка для стандартных элементов составляющие разную длинну
+    private static bool CreateStandardElementHelp(int count)
     {
+        //если линия больше 3, проверяем получим ли мы бонус за составление линии, если нет то выходим
+        //и проверяем показывали ли мы для этого бонуса подсказку
+        bool foundBonus = false;
+        foreach (Bonus item in Bonuses.Instance.bonusesList)
+        {
+            if (item.Cost == count)
+            {
+                //если для бонуса, который будет создан при сборе такой линии уже была показана подсказка, то не показываем
+                //и помечаем как показанную
+                if (ShowedHint(typeof(ElementsTypeEnum), (int)item.Type))
+                {
+                    //помечаем как показанную
+                    hintsStatus[activeHint.numberHelp].status = true;
+                    ////удаляем
+                    //hintsList.Remove(activeHint);
+                    return false;
+                }
+                else//иначе продолжаем создавать подсказку
+                {
+                    foundBonus = true;
+                    break;
+                } 
+            }            
+        }
+
+        if (!foundBonus)
+        {
+            return false;
+        }
+
+        //получаем все доступные ходы
         List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
         //Если нет доступных ходов, то выходим
         if (elementsForNextMoveList.Count == 0)
@@ -533,9 +650,18 @@ public static class HelpToPlayer
             return false;
         }
 
-        ElementsForNextMove elementsForNextMove = elementsForNextMoveList[0];
+        ElementsForNextMove elementsForNextMove = null;
+        foreach (ElementsForNextMove item in elementsForNextMoveList)
+        {
+            //если количество элементов соответствует длине линни которую мы хотим показать
+            if (item.elementsList.Count == count)
+            {
+                elementsForNextMove = item;
+                break;
+            }
+        }               
 
-        if (HighlightSpecifiedMove(elementsForNextMove))
+        if (elementsForNextMove != null && HighlightSpecifiedMove(elementsForNextMove))
         {
             return true;
         }
@@ -543,7 +669,6 @@ public static class HelpToPlayer
         {
             return false;
         }
-
     }
 
     private static bool CreateFlaskHelp(ElementsTypeEnum elementsTypeEnum)

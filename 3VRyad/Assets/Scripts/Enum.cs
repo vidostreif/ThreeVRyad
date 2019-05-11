@@ -157,4 +157,8 @@ public enum HelpEnum
     Hoe,
     Vortex, //вихрь
     Repainting, //перекраска
+    Line4,//линия из 4 элементов
+    Line5,
+    Line6,
+
 }//тип сглаженного перемещения

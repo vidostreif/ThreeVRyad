@@ -461,50 +461,27 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
 
             //проверка, что остались доступные ходы
-            List<ElementsForNextMove> elementsForNextMoveList;
-            int iteration2 = 1;
-            bool addMove = false;
-            do
+            FoundNextMove();
+
+            //если не конец игры, создаем подсказку
+            if (!Tasks.Instance.endGame)
             {
-                elementsForNextMoveList = CheckElementsForNextMove();
-                //Если нет доступных ходов, то перемешиваем поле
-                if (elementsForNextMoveList.Count == 0)
+                if (HelpToPlayer.CreateNextGameHelp())
                 {
-                    MixStandartElements();
-                    addMove = true;
-                }                   
-
-                if (iteration2 > 4)
-                {
-                    Debug.Log("Поле было перемешано " + iteration2 + " раз, но доступные ходы так и небыли найдены");
-                    break;
+                    Debug.Log("Создаем подсказку!");
+                    //если создали, то прерываем процесс
+                    elementsForMoveList.Clear();
+                    blockedForMove = false;
+                    yield break;
                 }
-                iteration2++;
-
-            } while (elementsForNextMoveList.Count == 0);//повторяем проверку
-
-            //пока первый
-            //Находим лучший ход лучший ход            
-            if (elementsForNextMoveList.Count > 0)
-            {
-                ElementsForNextMove elementsForNextMove = elementsForNextMoveList[0];
-                foreach (ElementsForNextMove item in elementsForNextMoveList)
-                {
-                    if (item.elementsList.Count > elementsForNextMove.elementsList.Count)
-                    {
-                        elementsForNextMove = item;
-                    }
-                }
-                MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
             }
-            
 
-            //если перемешивали поле, то делаем еще один ход
-            if (addMove)
+            //если остались совпадающие линии, то делаем еще ход
+            if (CheckMatchingLine().Count > 0)
             {
                 blockedForMove = false;
                 Move();
-            }                        
+            }
         }
         blockedForMove = false;
     }
@@ -736,6 +713,60 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         return listBlocksInLine;
     }
 
+    public void FoundNextMove() {
+        //проверка, что остались доступные ходы
+        MainAnimator.Instance.ClearElementsForNextMove();
+
+        List<ElementsForNextMove> elementsForNextMoveList;
+        int iteration2 = 1;
+        //bool addMove = false;
+        do
+        {
+            elementsForNextMoveList = CheckElementsForNextMove();
+            //Если нет доступных ходов, то перемешиваем поле
+            if (elementsForNextMoveList.Count == 0)
+            {
+                MixStandartElements();
+                //addMove = true;
+            }
+
+            if (iteration2 > 4)
+            {
+                Debug.Log("Поле было перемешано " + iteration2 + " раз, но доступные ходы так и небыли найдены");
+                break;
+            }
+            iteration2++;
+
+        } while (elementsForNextMoveList.Count == 0);//повторяем проверку
+
+        //Находим лучший ход           
+        if (elementsForNextMoveList.Count > 0)
+        {
+            ElementsForNextMove elementsForNextMove = elementsForNextMoveList[0];
+            foreach (ElementsForNextMove item in elementsForNextMoveList)
+            {
+                //добавляем подсказки для линий больше 3
+                if (item.elementsList.Count == 6)
+                {
+                    HelpToPlayer.AddHint(HelpEnum.Line6);
+                }
+                else if (item.elementsList.Count == 5)
+                {
+                    HelpToPlayer.AddHint(HelpEnum.Line5);
+                }
+                else if (item.elementsList.Count == 4)
+                {
+                    HelpToPlayer.AddHint(HelpEnum.Line4);
+                }
+
+                if (item.elementsList.Count > elementsForNextMove.elementsList.Count)
+                {
+                    elementsForNextMove = item;
+                }
+            }
+            MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
+        }
+    }
     //возвращает массив элементов которые могут составить линию в следующем ходу
     //можно использовать как подсказку игроку
     public List<ElementsForNextMove> CheckElementsForNextMove()

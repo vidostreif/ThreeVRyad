@@ -99,8 +99,12 @@ public class MainAnimator : MonoBehaviour {
             }                           
         }
 
-        SpriteRenderer spriteRenderer = elementsForNextMove.elementForMove.GetComponent<SpriteRenderer>();
-        AddElementForSmoothChangeColor(spriteRenderer, new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0.5f), 20, true, 5);
+        if (elementsForNextMove != null && elementsForNextMove.elementForMove != null)
+        {
+            SpriteRenderer spriteRenderer = elementsForNextMove.elementForMove.GetComponent<SpriteRenderer>();
+            AddElementForSmoothChangeColor(spriteRenderer, new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0.5f), 20, true, 5);
+        }
+        
         idleHintsTime = Time.time;
     }
 

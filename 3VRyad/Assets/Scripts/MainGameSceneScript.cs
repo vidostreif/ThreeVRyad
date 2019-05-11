@@ -47,8 +47,8 @@ public class MainGameSceneScript : MonoBehaviour {
         Time.timeScale = 1;
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
+        GridBlocks.Instance.FoundNextMove();//поиск хода
 
-        
         if (HelpFromGnome.Instance.helpEnum != HelpEnum.Empty)
         {
             HelpToPlayer.AddHint(HelpFromGnome.Instance.helpEnum);//подсказка

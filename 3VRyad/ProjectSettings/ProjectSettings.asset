@@ -239,8 +239,7 @@ PlayerSettings:
   AndroidTargetArchitectures: 7
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: "C:/Users/vido1/OneDrive/\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B/Unity
-    project/ThreeVRyad/3VRyad/user.keystore"
+  AndroidKeystoreName: C:/GameDave/Unity project/ThreeVRyad/3VRyad/user.keystore
   AndroidKeyaliasName: 3vradkey
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1
