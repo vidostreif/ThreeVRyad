@@ -423,6 +423,18 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 7457034389743375135}
+    - target: {fileID: 4383766326852242122, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
+        type: 3}
+      propertyPath: yesNoPanelPrefab
+      value: 
+      objectReference: {fileID: 4397172633841714702, guid: 4b400536d34284e44bf8629fddfd22a5,
+        type: 3}
+    - target: {fileID: 4383766326852242122, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
+        type: 3}
+      propertyPath: settingsPanelPrefab
+      value: 
+      objectReference: {fileID: 7607646752762789720, guid: 0a1090b72c3620446a1ea9a28d1e7da2,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
 --- !u!1001 &3411421770805389032
