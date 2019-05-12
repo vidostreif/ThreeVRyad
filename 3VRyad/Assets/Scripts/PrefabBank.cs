@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
 [ExecuteInEditMode]
-#endif
+//#endif
 public class PrefabBank : MonoBehaviour
 {
     public static PrefabBank Instance; // Синглтон
@@ -12,6 +12,8 @@ public class PrefabBank : MonoBehaviour
     //интерфейс
     public GameObject levelsCanvasPrefab;
     public GameObject regionsCanvasPrefab;
+    public GameObject settingsPanelPrefab;
+    public GameObject yesNoPanelPrefab;
     public GameObject levelButtonPrefab;
     public GameObject regionButtonPrefab;
     public GameObject imageMainLoad;
@@ -27,9 +29,6 @@ public class PrefabBank : MonoBehaviour
     public GameObject canvasHelpToPlayer;
     public GameObject canvasStartGame;
     public GameObject canvasEndGameMenu;
-
-    
-
 
     void Awake()
     {

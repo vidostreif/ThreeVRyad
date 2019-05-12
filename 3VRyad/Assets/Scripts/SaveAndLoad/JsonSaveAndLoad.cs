@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using System.Text;
+using UnityEngine.SceneManagement;
 
 public static class JsonSaveAndLoad
 {
@@ -100,6 +101,19 @@ public static class JsonSaveAndLoad
             //SetSaveToGPGS(saveString);
             saveIsChanged = false;
         }
+    }
+
+    public static void DeleteSave()
+    {
+        Debug.Log("Удаляем сохранения!");
+        LoadSaveFromFile();
+        save = new Save();
+        saveIsChanged = true;
+        SetSaveToFile();
+
+        //перезапускаем сцену
+        DontDestroyOnLoadManager.DestroyAll();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     //загрузка сохранений уровней
@@ -205,7 +219,6 @@ public class LevelSave
         this.passed = passed;
         this.stars = stars;
         this.score = score;
-
     }
 }
 

@@ -43,7 +43,7 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             Instance = this; //Make this object the only instance            
         }
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject);
         InitializePurchasing();
 
         panelShopOnGame = transform.Find("PanelShopOnGame");
@@ -60,6 +60,8 @@ public class Shop : MonoBehaviour, IStoreListener
         coins = save.shopSave.coins;
         UpdateTextCoins();
     }
+
+
 
     public void ExchangeStarsForCoins(Level level, int stars) {
 

@@ -8,6 +8,8 @@ using UnityEngine.UI;
 //вспомогательные функции 
 public static class SupportFunctions
 {
+    //static GameObject yesNoPanelPrefab;
+
     public static void MixArray(Array arr) {
         for (int i = (arr.Length - 1); i >= 1; i--)
         {
@@ -54,4 +56,37 @@ public static class SupportFunctions
         //color.a = 1f; // value between 0 and 1, where 1 is opaque
         text.color = new Color(text.color.r, text.color.g, text.color.b, alfa);
     }
+
+    //создание панели вопроса
+    public static void CreateYesNoPanel(Transform canvasTransform, string textQuestion, Action actionYesBut = null, Action actionNoBut = null)
+    {
+        GameObject yesNoPanelPrefab = GameObject.Instantiate(PrefabBank.Instance.yesNoPanelPrefab, canvasTransform);
+
+        Transform textQuestionTransform = yesNoPanelPrefab.transform.Find("PanelQuestion/TextQuestion");
+        Transform buttonYesTransform = yesNoPanelPrefab.transform.Find("PanelQuestion/ButtonYes");
+        Transform buttonNoTransform = yesNoPanelPrefab.transform.Find("PanelQuestion/ButtonNo");
+
+        Text TextQuestion = textQuestionTransform.GetComponent(typeof(Text)) as Text;
+        Button buttonYes = buttonYesTransform.GetComponent(typeof(Button)) as Button;
+        Button buttonNo = buttonNoTransform.GetComponent(typeof(Button)) as Button;
+
+        TextQuestion.text = textQuestion;
+
+        if (actionYesBut != null)
+        {
+            buttonYes.onClick.AddListener(delegate { actionYesBut(); });
+        }
+        buttonYes.onClick.AddListener(delegate { GameObject.Destroy(yesNoPanelPrefab); });
+
+        if (actionNoBut != null)
+        {
+            buttonNo.onClick.AddListener(delegate { actionNoBut(); });
+        }
+        buttonNo.onClick.AddListener(delegate { GameObject.Destroy(yesNoPanelPrefab); });
+    }
+
+    //public static void DestroyYesNoPanel(GameObject yesNoPanelPrefab)
+    //{
+    //    GameObject.Destroy(yesNoPanelPrefab);
+    //}
 }

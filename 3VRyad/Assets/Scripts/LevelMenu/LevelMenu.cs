@@ -17,6 +17,7 @@ public class LevelMenu : MonoBehaviour
     public bool levelSaved = false;//левел в начале загрузки сохранен
     private GameObject panelRegions = null;
     private GameObject panelLevels = null;
+    private GameObject panelSettings = null;
     //private AsyncOperation async;
 
     public void Awake()
@@ -33,7 +34,7 @@ public class LevelMenu : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            DontDestroyOnLoad(gameObject); //Set as do not destroy
+            DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy
         }
 
         ////заполнение regionsList из существующих файлов
@@ -86,7 +87,7 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
-    private void Prepare() {
+    public void Prepare() {
         //DontDestroyOnLoad(gameObject); //Set as do not destroy
         //загрузить данных из сохранения
         LoadSave();
@@ -477,6 +478,14 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelRegions);
         }
+        if (panelLevels != null)
+        {
+            Destroy(panelLevels);
+        }
+        if (panelSettings != null)
+        {
+            Destroy(panelSettings);
+        }
         panelLevels = Instantiate(PrefabBank.Instance.levelsCanvasPrefab, transform);
 
         //настройки кнопки назад
@@ -516,9 +525,17 @@ public class LevelMenu : MonoBehaviour
 
     public void CreateRegionMenu()
     {
+        if (panelRegions != null)
+        {
+            Destroy(panelRegions);
+        }
         if (panelLevels != null)
         {
             Destroy(panelLevels);
+        }
+        if (panelSettings != null)
+        {
+            Destroy(panelSettings);
         }
         panelRegions = Instantiate(PrefabBank.Instance.regionsCanvasPrefab, transform);
         Transform contentTransform = panelRegions.transform.Find("Viewport/Content");
@@ -543,6 +560,21 @@ public class LevelMenu : MonoBehaviour
 
             region.AddAction(regionelementGameObject);
         }
+
+        //добавляем действие к кнопке открытия настроек
+        Transform buttonSettingsTransform = panelRegions.transform.Find("ButtonSettings");
+        Button buttonSettings = buttonSettingsTransform.GetComponent(typeof(Button)) as Button;
+        buttonSettings.onClick.AddListener(delegate { CreateSettingsMenu(); });
+    }
+
+    //создание меню настроек
+    public void CreateSettingsMenu()
+    {
+        if (panelSettings != null)
+        {
+            Destroy(panelSettings);
+        }
+        panelSettings = Instantiate(PrefabBank.Instance.settingsPanelPrefab, transform);
     }
 
     public void LoadMainMenu()

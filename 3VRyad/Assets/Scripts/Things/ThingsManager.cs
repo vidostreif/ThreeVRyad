@@ -28,7 +28,7 @@ public class ThingsManager : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            DontDestroyOnLoad(gameObject); //Set as do not destroy
+            DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy
         }
 
         //загружаем сохранение
