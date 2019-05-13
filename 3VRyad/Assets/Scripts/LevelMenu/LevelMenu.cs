@@ -99,6 +99,8 @@ public class LevelMenu : MonoBehaviour
         {
             LoadMainMenu();
         }
+
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLogin);
     }
 
     private void LoadSave() {

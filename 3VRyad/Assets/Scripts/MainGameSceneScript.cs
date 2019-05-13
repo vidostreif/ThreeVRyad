@@ -82,6 +82,22 @@ public class MainGameSceneScript : MonoBehaviour {
 
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
 
+        //передача аналитики
+        Firebase.Analytics.Parameter[] LevelUpParameters = {
+          new Firebase.Analytics.Parameter(
+            Firebase.Analytics.FirebaseAnalytics.ParameterLocation, LevelMenu.Instance.lastLoadFolder),
+          new Firebase.Analytics.Parameter(
+            Firebase.Analytics.FirebaseAnalytics.ParameterLevel, LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
+          new Firebase.Analytics.Parameter(
+            Firebase.Analytics.FirebaseAnalytics.ParameterSuccess, Tasks.Instance.collectedAll.ToString()),
+          new Firebase.Analytics.Parameter(
+            Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
+          new Firebase.Analytics.Parameter(
+            "Stars", Score.Instance.NumberOfStarsReceived())
+        };
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLevelUp, LevelUpParameters);
+
+
         //если выполнили все задания
         if (Tasks.Instance.collectedAll)
         {
