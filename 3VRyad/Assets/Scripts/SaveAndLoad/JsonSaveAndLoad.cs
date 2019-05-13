@@ -13,6 +13,11 @@ public static class JsonSaveAndLoad
     private static bool saveFromFileLoad = false;//попытка загрузки из файла произведена
     private static string path;
 
+    // описание события
+    public static event ReloadSaveHandler ReloadSave;
+    // делегат для подписывающихся на событие обработчиков
+    public delegate void ReloadSaveHandler(EventArgs eventArgs);
+
     private static void LoadSaveFromFile()
     {
         if (!saveFromFileLoad)
@@ -83,6 +88,8 @@ public static class JsonSaveAndLoad
                 save = new Save();
             }
             saveFromFileLoad = true;
+
+            //ReloadSettings();//перезагружаем настройки для классов
         }
     }
 
@@ -107,13 +114,33 @@ public static class JsonSaveAndLoad
     {
         Debug.Log("Удаляем сохранения!");
         LoadSaveFromFile();
-        save = new Save();
+        //сохраняем все показанные подсказки и параметры настроек, остальное удаляем
+        Save saveForSave = new Save();
+        saveForSave.helpSave = save.helpSave;
+        saveForSave.SettingsSave = save.SettingsSave;
+        save = saveForSave;
         saveIsChanged = true;
         SetSaveToFile();
+    }
 
-        //перезапускаем сцену
-        DontDestroyOnLoadManager.DestroyAll();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    public static void DeleteHintSave()
+    {
+        Debug.Log("Удаляем статусы подсказок! Подсказки будут показаны заново.");
+        LoadSaveFromFile();
+        save.helpSave = new List<HelpSave>();
+        HelpToPlayer.ReloadSave();
+        saveIsChanged = true;
+        SetSaveToFile();
+    }
+
+    //Сбросить настройки по умолчанию
+    public static void DeleteSettingsSave()
+    {
+        Debug.Log("Сбрасываем настройки.");
+        LoadSaveFromFile();
+        save.SettingsSave = GetStandartSettings();
+        saveIsChanged = true;
+        SetSaveToFile();
     }
 
     //загрузка сохранений уровней
@@ -186,6 +213,37 @@ public static class JsonSaveAndLoad
 
         saveIsChanged = true;
     }
+
+    //запись количества инструментов
+    public static void RecordSave(SettingsSave settings)
+    {
+        LoadSaveFromFile();
+        //записываем новые данные
+        save.SettingsSave = settings;
+        //сразу сохраняем в файл
+        saveIsChanged = true;
+        SetSaveToFile();
+
+        //if (ReloadSave != null)
+        //{
+        //    EventArgs eventArgs = new EventArgs();
+        //    ReloadSave(eventArgs);
+        //}
+
+        ReloadSettings();//перезагружаем настройки для классов
+    }
+
+    //получить значение настроек по умолчанию
+    public static SettingsSave GetStandartSettings()
+    {
+        return new SettingsSave(true, true);
+    }
+
+    //получить значение настроек по умолчанию
+    public static void ReloadSettings()
+    {
+        HelpToPlayer.LoadShowHintsStatus();
+    }
 }
 
 [Serializable]
@@ -195,6 +253,20 @@ public class Save
     public ShopSave shopSave = new ShopSave();
     public List<HelpSave> helpSave = new List<HelpSave>();
     public List<InstrumentsSave> instrumentsSave = new List<InstrumentsSave>();
+    private SettingsSave settingsSave = JsonSaveAndLoad.GetStandartSettings();
+    public SettingsSave SettingsSave
+    {
+        get
+        {
+            return settingsSave;
+        }
+
+        set
+        {
+            settingsSave = value;
+            JsonSaveAndLoad.ReloadSettings();
+        }
+    }
 }
 
 [Serializable]
@@ -251,6 +323,19 @@ public class InstrumentsSave
     {
         this.instrumenTypeEnum = instrumenTypeEnum;
         this.count = count;
+    }
+}
+
+[Serializable]
+public class SettingsSave
+{
+    public bool showHints;//показывать подсказки
+    public bool sound;//проигрывать звуки
+
+    public SettingsSave(bool showHints, bool sound)
+    {
+        this.showHints = showHints;
+        this.sound = sound;
     }
 }
 

@@ -10,6 +10,7 @@ public static class HelpToPlayer
     private static List<Hint> hintsList = new List<Hint>();
     private static HintStatus[] hintsStatus = null;
     private static Hint activeHint = null;
+    private static bool showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;//показывать подсказки
 
     private static bool deletedByClickingOnCanvas = false;
     private static float timeCreateHints;
@@ -25,6 +26,20 @@ public static class HelpToPlayer
         {
             return false;
         }
+    }
+
+    //перезагрузка сохранений
+    public static void ReloadSave() {
+        DellGameHelp();
+        hintsStatus = null;
+        hintsList = new List<Hint>();
+        LoadShowHintsStatus();
+        CreateHintStatusList();
+    }
+
+    public static void LoadShowHintsStatus()
+    {
+        showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;
     }
 
     private static void CreateHintStatusList() {
@@ -73,13 +88,18 @@ public static class HelpToPlayer
     }
 
     public static void AddHint(ElementsTypeEnum elementsTypeEnum) {
-
-        AddHint(typeof(ElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum, false);
+        if (showHints)
+        {
+            AddHint(typeof(ElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum, false);
+        }        
     }
 
     public static void AddHint(HelpEnum helpEnum)
     {
-        AddHint(typeof(HelpEnum), helpEnum.ToString(), (int)helpEnum, true);
+        if (showHints)
+        {
+            AddHint(typeof(HelpEnum), helpEnum.ToString(), (int)helpEnum, true);
+        }
     }
 
     private static void AddHint(Type enumType, string help, int number, bool toTop)
@@ -612,35 +632,38 @@ public static class HelpToPlayer
     //подсказка для стандартных элементов составляющие разную длинну
     private static bool CreateStandardElementHelp(int count)
     {
-        //если линия больше 3, проверяем получим ли мы бонус за составление линии, если нет то выходим
-        //и проверяем показывали ли мы для этого бонуса подсказку
-        bool foundBonus = false;
-        foreach (Bonus item in Bonuses.Instance.bonusesList)
+        if (count > 3)
         {
-            if (item.Cost == count)
+            //если линия больше 3, проверяем получим ли мы бонус за составление линии, если нет то выходим
+            //и проверяем показывали ли мы для этого бонуса подсказку
+            bool foundBonus = false;
+            foreach (Bonus item in Bonuses.Instance.bonusesList)
             {
-                //если для бонуса, который будет создан при сборе такой линии уже была показана подсказка, то не показываем
-                //и помечаем как показанную
-                if (ShowedHint(typeof(ElementsTypeEnum), (int)item.Type))
+                if (item.Cost == count)
                 {
-                    //помечаем как показанную
-                    hintsStatus[activeHint.numberHelp].status = true;
-                    ////удаляем
-                    //hintsList.Remove(activeHint);
-                    return false;
+                    //если для бонуса, который будет создан при сборе такой линии уже была показана подсказка, то не показываем
+                    //и помечаем как показанную
+                    if (ShowedHint(typeof(ElementsTypeEnum), (int)item.Type))
+                    {
+                        //помечаем как показанную
+                        hintsStatus[activeHint.numberHelp].status = true;
+                        ////удаляем
+                        //hintsList.Remove(activeHint);
+                        return false;
+                    }
+                    else//иначе продолжаем создавать подсказку
+                    {
+                        foundBonus = true;
+                        break;
+                    }
                 }
-                else//иначе продолжаем создавать подсказку
-                {
-                    foundBonus = true;
-                    break;
-                } 
-            }            
-        }
+            }
 
-        if (!foundBonus)
-        {
-            return false;
-        }
+            if (!foundBonus)
+            {
+                return false;
+            }
+        }        
 
         //получаем все доступные ходы
         List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
