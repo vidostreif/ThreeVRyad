@@ -24,6 +24,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public GameObject prefabBlock;
     public GameObject prefabElement;
     public GameObject prefabBlockingWall;
+    
 
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
     private List<Element> elementsForMixList = new List<Element>();//элементы для замены во время микса

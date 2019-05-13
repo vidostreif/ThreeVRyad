@@ -9,6 +9,8 @@ public class Block : MonoBehaviour {
     public Transform thisTransform;
     [SerializeField] protected BlockTypeEnum type;
     [SerializeField] protected Element element;// элемент
+    [SerializeField] protected GameObject arrowUp;// стрекла сверху
+    [SerializeField] protected GameObject arrowDown;// стрелка снизу
     [SerializeField] protected BehindElement behindElement;// элемент на блоке за основным элементом
     [SerializeField] protected bool generatorElements; //признак, что блок генерирует новые элементы
     [SerializeField] protected SpriteRenderer spriteRenderer;
@@ -46,6 +48,12 @@ public class Block : MonoBehaviour {
                 if (type != BlockTypeEnum.Empty)
                 {
                     generatorElements = value;
+                    if (arrowUp == null)
+                    {
+                        arrowUp = Instantiate(Resources.Load("Prefabs/Arrow") as GameObject, new Vector3(thisTransform.position.x, thisTransform.position.y + 0.6f, thisTransform.position.z), Quaternion.identity);
+                        arrowUp.transform.SetParent(thisTransform, true);
+                    }
+                    
                 }
                 else
                 {
@@ -55,6 +63,7 @@ public class Block : MonoBehaviour {
             else
             {
                 generatorElements = value;
+                DestroyImmediate(arrowUp);
             }
             
         }
@@ -139,6 +148,18 @@ public class Block : MonoBehaviour {
         set
         {
             dropping = value;
+            if (value == true)
+            {
+                if (arrowDown == null)
+                {
+                    arrowDown = Instantiate(Resources.Load("Prefabs/Arrow") as GameObject, new Vector3(thisTransform.position.x, thisTransform.position.y - 0.6f, thisTransform.position.z), Quaternion.identity);
+                    arrowDown.transform.SetParent(thisTransform, true);
+                }
+            }
+            else
+            {
+                DestroyImmediate(arrowDown);
+            }
         }
     }
     public bool Blocked
