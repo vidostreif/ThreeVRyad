@@ -83,19 +83,41 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
 
         //передача аналитики
-        Firebase.Analytics.Parameter[] LevelUpParameters = {
+        //Firebase.Analytics.Parameter[] LevelUpParameters = {
+        //  new Firebase.Analytics.Parameter(
+        //    Firebase.Analytics.FirebaseAnalytics.ParameterLocation, LevelMenu.Instance.lastLoadFolder),
+        //  new Firebase.Analytics.Parameter(
+        //    Firebase.Analytics.FirebaseAnalytics.ParameterLevel, LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
+        //  new Firebase.Analytics.Parameter(
+        //    Firebase.Analytics.FirebaseAnalytics.ParameterSuccess, Tasks.Instance.collectedAll.ToString()),
+        //  new Firebase.Analytics.Parameter(
+        //    Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
+        //  new Firebase.Analytics.Parameter(
+        //    "Stars", Score.Instance.NumberOfStarsReceived())
+        //};
+
+        Firebase.Analytics.Parameter[] LevelEndParameters = {          
           new Firebase.Analytics.Parameter(
-            Firebase.Analytics.FirebaseAnalytics.ParameterLocation, LevelMenu.Instance.lastLoadFolder),
+            Firebase.Analytics.FirebaseAnalytics.ParameterLevelName, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
           new Firebase.Analytics.Parameter(
-            Firebase.Analytics.FirebaseAnalytics.ParameterLevel, LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
-          new Firebase.Analytics.Parameter(
-            Firebase.Analytics.FirebaseAnalytics.ParameterSuccess, Tasks.Instance.collectedAll.ToString()),
+            Firebase.Analytics.FirebaseAnalytics.ParameterSuccess, Tasks.Instance.collectedAll.ToString()),          
+        };
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLevelEnd, LevelEndParameters);
+
+        Firebase.Analytics.Parameter[] PostScoreParameters = {
+
+          
           new Firebase.Analytics.Parameter(
             Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
           new Firebase.Analytics.Parameter(
-            "Stars", Score.Instance.NumberOfStarsReceived())
+            Firebase.Analytics.FirebaseAnalytics.ParameterLevelName, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
+          new Firebase.Analytics.Parameter(
+            Firebase.Analytics.FirebaseAnalytics.ParameterCharacter, Score.Instance.NumberOfStarsReceived()),
+          //new Firebase.Analytics.Parameter(
+          //  "Stars", Score.Instance.NumberOfStarsReceived())
         };
-        Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLevelUp, LevelUpParameters);
+
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventPostScore, PostScoreParameters);
 
 
         //если выполнили все задания
