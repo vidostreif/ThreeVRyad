@@ -18,8 +18,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private bool activated = false;//активируется в текущий момент
     private bool activateSuperBonusOnEnd = false;
     private Image tankImage;
-    private List<HitSuperBonus> HitSuperBonusList = new List<HitSuperBonus>();
-    private List<HitSuperBonus> HitSuperBonusListForDelete = new List<HitSuperBonus>();
+    private List<HitSuperBonus> HitSuperBonusList;
+    private List<HitSuperBonus> HitSuperBonusListForDelete;
 
     void Awake()
     {
@@ -30,6 +30,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         }
 
         Instance = this;
+        HitSuperBonusList = new List<HitSuperBonus>();
+        HitSuperBonusListForDelete = new List<HitSuperBonus>();
         tankImage = transform.GetComponent(typeof(Image)) as Image;
         FilledImage();
     }

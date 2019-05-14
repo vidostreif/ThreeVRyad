@@ -175,7 +175,7 @@ public static class HelpToPlayer
                 }
 
                 activeHint = hint;
-                activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.Instance.canvasHelpToPlayer);
+                activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.CanvasHelpToPlayer);
 
                 //находим нужную подсказку
                 if (activeHint.help == ElementsTypeEnum.Standard.ToString())

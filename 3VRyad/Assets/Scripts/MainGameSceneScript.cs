@@ -66,7 +66,7 @@ public class MainGameSceneScript : MonoBehaviour {
         HelpToPlayer.ClearHintList();//очищаем список подсказок
         InstrumentPanel.Instance.DeactivateInstrument();//деактивируем инструмент
 
-        CanvasMenu = Instantiate(PrefabBank.Instance.canvasEndGameMenu);
+        CanvasMenu = Instantiate(PrefabBank.CanvasEndGameMenu);
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
         Text textEndGame = gOtextEndGame.GetComponent(typeof(Text)) as Text;
@@ -83,7 +83,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
 
         //передача аналитики
-        //Firebase.Analytics.Parameter[] LevelUpParameters = {
+        //Firebase.Analytics.Parameter[] Level_EndParameters = {
         //  new Firebase.Analytics.Parameter(
         //    Firebase.Analytics.FirebaseAnalytics.ParameterLocation, LevelMenu.Instance.lastLoadFolder),
         //  new Firebase.Analytics.Parameter(
@@ -96,6 +96,8 @@ public class MainGameSceneScript : MonoBehaviour {
         //    "Stars", Score.Instance.NumberOfStarsReceived())
         //};
 
+        //Firebase.Analytics.FirebaseAnalytics.LogEvent("Level_End", Level_EndParameters);
+
         Firebase.Analytics.Parameter[] LevelEndParameters = {          
           new Firebase.Analytics.Parameter(
             Firebase.Analytics.FirebaseAnalytics.ParameterLevelName, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
@@ -104,21 +106,30 @@ public class MainGameSceneScript : MonoBehaviour {
         };
         Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLevelEnd, LevelEndParameters);
 
-        Firebase.Analytics.Parameter[] PostScoreParameters = {
+        //Firebase.Analytics.Parameter[] PostScoreParameters = {
+        //  new Firebase.Analytics.Parameter(
+        //    Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
+        //  new Firebase.Analytics.Parameter(
+        //    Firebase.Analytics.FirebaseAnalytics.ParameterLevelName, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
+        //  new Firebase.Analytics.Parameter(
+        //    Firebase.Analytics.FirebaseAnalytics.ParameterCharacter, Score.Instance.NumberOfStarsReceived()),
+        //  //new Firebase.Analytics.Parameter(
+        //  //  "Stars", Score.Instance.NumberOfStarsReceived())
+        //};
 
-          
-          new Firebase.Analytics.Parameter(
-            Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
-          new Firebase.Analytics.Parameter(
-            Firebase.Analytics.FirebaseAnalytics.ParameterLevelName, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
-          new Firebase.Analytics.Parameter(
-            Firebase.Analytics.FirebaseAnalytics.ParameterCharacter, Score.Instance.NumberOfStarsReceived()),
-          //new Firebase.Analytics.Parameter(
-          //  "Stars", Score.Instance.NumberOfStarsReceived())
-        };
+        //Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventPostScore, PostScoreParameters);
 
-        Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventPostScore, PostScoreParameters);
-
+        Firebase.Analytics.FirebaseAnalytics.LogEvent(
+          Firebase.Analytics.FirebaseAnalytics.EventPostScore,
+          new Firebase.Analytics.Parameter[] {
+            new Firebase.Analytics.Parameter(
+              Firebase.Analytics.FirebaseAnalytics.ParameterCharacter, "Main"),
+            new Firebase.Analytics.Parameter(
+              Firebase.Analytics.FirebaseAnalytics.ParameterLevel, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
+            new Firebase.Analytics.Parameter(
+              Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
+          }
+        );
 
         //если выполнили все задания
         if (Tasks.Instance.collectedAll)

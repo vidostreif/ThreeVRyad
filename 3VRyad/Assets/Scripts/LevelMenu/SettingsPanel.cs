@@ -31,12 +31,6 @@ public class SettingsPanel : MonoBehaviour
         soundToggle.onValueChanged.AddListener(delegate { ChangeSound(soundToggle.isOn); });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     //закрытие панели настроек
     public void CloseSettingsPanel() {
         Destroy(this.gameObject);

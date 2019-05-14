@@ -11,7 +11,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
     public static Bonuses Instance; // Синглтон
     public List<Bonus> bonusesList;
 
-    private bool activateBonusOnEnd = false;
+    private bool activateBonusOnEnd;
 
     void Awake()
     {
@@ -20,6 +20,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
             Debug.LogError("Несколько экземпляров Bonuses!");
 
         Instance = this;
+        activateBonusOnEnd = false;
     }
 
     public void CheckBonuses(List<Block> findedBlockInLine, Block touchingBlock, Block destinationBlock)

@@ -107,7 +107,7 @@ public class ThingsManager : MonoBehaviour
 
                 for (int i = 0; i < instruments.Length; i++)
                 {
-                    GameObject go = Instantiate(PrefabBank.Instance.prefabButtonThing, new Vector3(startingXPoint + (i * (1 + distanceBetweenInstruments)), panelTransform.position.y, panelTransform.position.z), Quaternion.identity, panelTransform);
+                    GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + (i * (1 + distanceBetweenInstruments)), panelTransform.position.y, panelTransform.position.z), Quaternion.identity, panelTransform);
                     instruments[i].CreateShopThingButton(go);
                 }
             }

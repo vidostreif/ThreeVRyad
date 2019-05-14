@@ -14,9 +14,9 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     public float distanceBetweenInstruments;
     public InstrumentOnGame[] instrumentsOnGame;// список инструментов 
 
-    private bool instrumentPrepared = false;
+    private bool instrumentPrepared;
     private InstrumentOnGame preparedInstrument;
-    private bool successfulActivation = false;
+    private bool successfulActivation;
 
     void Awake()
     {
@@ -30,6 +30,9 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         {
             Instance = this; //Make this object the only instance            
         }
+
+        instrumentPrepared = false;
+        successfulActivation = false;
     }
 
     //создание коллекции инструментов в игре
@@ -57,7 +60,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
 
             for (int i = 0; i < instrumentsOnGame.Length; i++)
             {
-                GameObject go = Instantiate(PrefabBank.Instance.prefabButtonThing, new Vector3(panel.transform.position.x, startingYPoint + (i * (1 + distanceBetweenInstruments)), panel.transform.position.z), Quaternion.identity, instrumentsParent.transform);
+                GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(panel.transform.position.x, startingYPoint + (i * (1 + distanceBetweenInstruments)), panel.transform.position.z), Quaternion.identity, instrumentsParent.transform);
                 instrumentsOnGame[i].CreateGameInstrumentButton(go);
             }
         }

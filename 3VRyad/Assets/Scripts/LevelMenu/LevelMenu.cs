@@ -456,7 +456,7 @@ public class LevelMenu : MonoBehaviour
             Destroy(panelLevels);
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("SampleScene");
             //создаем изображение для отображения загрузки
-            GameObject imageMainLoadGO = Instantiate(PrefabBank.Instance.imageMainLoad, transform);
+            GameObject imageMainLoadGO = Instantiate(PrefabBank.ImageMainLoad, transform);
             Image imageLoad = imageMainLoadGO.transform.Find("ImageLoad").GetComponent<Image>();
             //ожидаем загрузки уровня
             float progress = 0;
@@ -488,7 +488,7 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelSettings);
         }
-        panelLevels = Instantiate(PrefabBank.Instance.levelsCanvasPrefab, transform);
+        panelLevels = Instantiate(PrefabBank.LevelsCanvasPrefab, transform);
 
         //настройки кнопки назад
         Transform returnButtonTransform = panelLevels.transform.Find("ReturnButton");
@@ -501,7 +501,7 @@ public class LevelMenu : MonoBehaviour
         int levelNumber = 1;
         foreach (Level level in region.levelList)
         {
-            GameObject levelGameObject = Instantiate(PrefabBank.Instance.levelButtonPrefab, LevelsCountTransform);
+            GameObject levelGameObject = Instantiate(PrefabBank.LevelButtonPrefab, LevelsCountTransform);
             //Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
             //image.sprite = SpriteBank.SetShape(instruments[i].Type);
             //instruments[i].Image = image;
@@ -539,13 +539,13 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelSettings);
         }
-        panelRegions = Instantiate(PrefabBank.Instance.regionsCanvasPrefab, transform);
+        panelRegions = Instantiate(PrefabBank.RegionsCanvasPrefab, transform);
         Transform contentTransform = panelRegions.transform.Find("Viewport/Content");
 
         //список регионов
         foreach (Region region in regionsList)
         {
-            GameObject regionelementGameObject = Instantiate(PrefabBank.Instance.regionButtonPrefab, contentTransform);
+            GameObject regionelementGameObject = Instantiate(PrefabBank.RegionButtonPrefab, contentTransform);
             Transform textNameTransform = regionelementGameObject.transform.Find("TextName");
             textNameTransform.GetComponentInChildren<Text>().text = region.name;
 
@@ -576,7 +576,7 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelSettings);
         }
-        panelSettings = Instantiate(PrefabBank.Instance.settingsPanelPrefab, transform);
+        panelSettings = Instantiate(PrefabBank.SettingsPanelPrefab, transform);
     }
 
     public void LoadMainMenu()

@@ -101,7 +101,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     {
         //создаем первичную анимацию если в игре
         Destroy(canvasStartGame);
-        canvasStartGame = Instantiate(PrefabBank.Instance.canvasStartGame);
+        canvasStartGame = Instantiate(PrefabBank.CanvasStartGame);
         canvasStartGame.GetComponent<Canvas>().worldCamera = Camera.main;
         Transform canvasStartGamePanel = canvasStartGame.transform.Find("Panel");
         //смещение по x

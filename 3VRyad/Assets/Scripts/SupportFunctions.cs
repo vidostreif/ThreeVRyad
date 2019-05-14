@@ -60,7 +60,7 @@ public static class SupportFunctions
     //создание панели вопроса
     public static void CreateYesNoPanel(Transform canvasTransform, string textQuestion, Action actionYesBut = null, Action actionNoBut = null)
     {
-        GameObject yesNoPanelPrefab = GameObject.Instantiate(PrefabBank.Instance.yesNoPanelPrefab, canvasTransform);
+        GameObject yesNoPanelPrefab = GameObject.Instantiate(PrefabBank.YesNoPanelPrefab, canvasTransform);
 
         Transform textQuestionTransform = yesNoPanelPrefab.transform.Find("PanelQuestion/TextQuestion");
         Transform buttonYesTransform = yesNoPanelPrefab.transform.Find("PanelQuestion/ButtonYes");

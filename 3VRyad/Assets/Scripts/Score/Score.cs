@@ -9,8 +9,8 @@ public class Score : MonoBehaviour, IESaveAndLoad
 {
     public static Score Instance; // Синглтон
     
-    private int score = 0;
-    private int addScore = 0;
+    private int score;
+    private int addScore;
     private Text text;
     private Image imagePanelImage;
 
@@ -42,6 +42,8 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
         Instance = this;
 
+        score = 0;
+        addScore = 0;
         text = transform.GetComponentInChildren<Text>();
         ResetParameters();
     }
@@ -108,7 +110,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
     public void CreateScoreElement(Vector3 position, int score)
     {
-        GameObject scoreElement = Instantiate(PrefabBank.Instance.scoreElementPrefab, transform);
+        GameObject scoreElement = Instantiate(PrefabBank.ScoreElementPrefab, transform);
         scoreElement.transform.position = position;
         Text scoreElementText = scoreElement.GetComponent<Text>();
         scoreElementText.text = score.ToString();

@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 114988500668735914}
   - component: {fileID: 114191125961773848}
   - component: {fileID: 713935765}
-  - component: {fileID: 4383766326852242122}
   - component: {fileID: 754313913625643757}
   m_Layer: 0
   m_Name: GameHelper
@@ -155,44 +154,6 @@ MonoBehaviour:
     type: 3}
   pSBeatsSuperBonus: {fileID: 41670316522004511, guid: 0ef67ff3713e84d46b8d6e91596fe7f3,
     type: 3}
---- !u!114 &4383766326852242122
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1234334804531704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d2585fca08d3a2408c7b87d41de681a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelsCanvasPrefab: {fileID: 2025017914175311533, guid: a4bf554d27bb35c49ba6533d01b0d6d0,
-    type: 3}
-  regionsCanvasPrefab: {fileID: 8009733685089108250, guid: d2d8ebd1ae0a8d44db2aae5112367924,
-    type: 3}
-  levelButtonPrefab: {fileID: 8229304379904151616, guid: c9e5f9747cbbd2c4cab1e84832ebc693,
-    type: 3}
-  regionButtonPrefab: {fileID: 5749990630111453082, guid: 1e1a00a06ecf4474e9ed1fcaaf13b70b,
-    type: 3}
-  imageMainLoad: {fileID: 3631243949167058397, guid: 1f03ac7229fb1a6419ad3ea1affecace,
-    type: 3}
-  shopPanelPrefab: {fileID: 7868385485302589415, guid: edd0deb54dc49904dbe1e21ef682fdd0,
-    type: 3}
-  shopButtonPrefab: {fileID: 1142045414171374012, guid: e6c62fc857545e24dbb923fe759cabf1,
-    type: 3}
-  prefabButtonThing: {fileID: 1061130453393650, guid: bc4b4ceb5fdbadb4ca8579eac98a182d,
-    type: 3}
-  panelShopConfirmation: {fileID: 4712337802733844449, guid: acbd03de5a973c44e96b54955631a454,
-    type: 3}
-  scoreElementPrefab: {fileID: 117811080947788871, guid: a205143d57c405547a4d1232b52256d3,
-    type: 3}
-  canvasHelpToPlayer: {fileID: 650881581553827240, guid: 72ad9d3f0fe88e749a803220bb397405,
-    type: 3}
-  canvasStartGame: {fileID: 6618326486082433069, guid: ec635800295e07a438133710c8979466,
-    type: 3}
-  canvasEndGameMenu: {fileID: 6577434973905200748, guid: 1dc5341ed8052334388bc69bdfb10467,
-    type: 3}
 --- !u!114 &754313913625643757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90c5bf617aa5d2f41b22f92469f5c328, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMod: 1
+  debugMod: 0
   messageBlock: {fileID: 8471964021566539737}
   blockCount: 10
   timeout: 0.5

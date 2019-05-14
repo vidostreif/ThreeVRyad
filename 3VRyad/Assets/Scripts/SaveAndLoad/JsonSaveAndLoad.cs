@@ -13,10 +13,10 @@ public static class JsonSaveAndLoad
     private static bool saveFromFileLoad = false;//попытка загрузки из файла произведена
     private static string path;
 
-    // описание события
-    public static event ReloadSaveHandler ReloadSave;
-    // делегат для подписывающихся на событие обработчиков
-    public delegate void ReloadSaveHandler(EventArgs eventArgs);
+    //// описание события
+    //public static event ReloadSaveHandler ReloadSave;
+    //// делегат для подписывающихся на событие обработчиков
+    //public delegate void ReloadSaveHandler(EventArgs eventArgs);
 
     private static void LoadSaveFromFile()
     {

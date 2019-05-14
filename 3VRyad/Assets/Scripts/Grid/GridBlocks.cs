@@ -31,7 +31,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     private List<Blocks> elementsForMoveList = new List<Blocks>();//элементы для последовательного выполнения ходов
     private List<Block> blockFieldsList = new List<Block>();// найденные блоки для удара
     private List<Block> droppingBlockList = new List<Block>();// список сбрасывающих блоков
-    private bool needFilling = false;
+    private bool needFilling;
 
     void Awake()
     {
@@ -42,6 +42,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
 
         Instance = this;
+        needFilling = false;
         thisTransform = transform;
         blockedForMove = false;
 

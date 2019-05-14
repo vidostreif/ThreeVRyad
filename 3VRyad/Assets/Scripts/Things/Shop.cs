@@ -87,13 +87,13 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             Destroy(panelShop);
         }
-        panelShop = Instantiate(PrefabBank.Instance.shopPanelPrefab, transform);
+        panelShop = Instantiate(PrefabBank.ShopPanelPrefab, transform);
         Transform contentTransform = panelShop.transform.Find("Viewport/Content");
 
         //витрина
         foreach (ProductV product in PRODUCTS)
         {
-            GameObject bottonGO = Instantiate(PrefabBank.Instance.shopButtonPrefab, contentTransform);
+            GameObject bottonGO = Instantiate(PrefabBank.ShopButtonPrefab, contentTransform);
             Transform textNameTransform = bottonGO.transform.Find("TextName");
             textNameTransform.GetComponentInChildren<Text>().text = product.name;
 
@@ -138,7 +138,7 @@ public class Shop : MonoBehaviour, IStoreListener
             {
                 Destroy(panelShopConfirmation);
             }
-            panelShopConfirmation = Instantiate(PrefabBank.Instance.panelShopConfirmation, panelShop.transform);
+            panelShopConfirmation = Instantiate(PrefabBank.PanelShopConfirmation, panelShop.transform);
             panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
             ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation, "OK");
         }
