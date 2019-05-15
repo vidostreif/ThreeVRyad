@@ -499,6 +499,7 @@ public class LevelMenu : MonoBehaviour
         //список уровней
         Transform LevelsCountTransform = panelLevels.transform.Find("Viewport/Content");
         int levelNumber = 1;
+        bool previousLevelOpenAndPassed = false;//предыдущий лвл открыт и пройден
         foreach (Level level in region.levelList)
         {
             GameObject levelGameObject = Instantiate(PrefabBank.LevelButtonPrefab, LevelsCountTransform);
@@ -516,9 +517,28 @@ public class LevelMenu : MonoBehaviour
             }
 
             levelGameObject.GetComponentInChildren<Text>().text = levelNumber.ToString();
+            //если лвл открыт то показываем, если предыдущий лвл был открыт, а наш нет, то тоже показываем
             if (level.Open)
             {
                 SupportFunctions.ChangeAlfa(levelGameObject.GetComponentInChildren<Text>(), 1);
+                if (level.Passed)
+                {
+                    previousLevelOpenAndPassed = true;
+                }
+                else
+                {
+                    previousLevelOpenAndPassed = false;
+                }                
+            }
+            else if (previousLevelOpenAndPassed)
+            {
+                SupportFunctions.ChangeAlfa(levelGameObject.GetComponentInChildren<Text>(), 1);
+                level.SetLevelOpend();
+                previousLevelOpenAndPassed = false;
+            }
+            else
+            {
+                previousLevelOpenAndPassed = false;
             }
             level.GetButtonFrom(levelGameObject);
             levelNumber++;
