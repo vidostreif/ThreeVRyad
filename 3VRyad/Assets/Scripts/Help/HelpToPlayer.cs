@@ -42,12 +42,15 @@ public static class HelpToPlayer
         showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;
     }
 
+    //здесь указываем enum для подсказок
     private static void CreateHintStatusList() {
         if (hintsStatus == null)
         {
             //список enum которые используются для подсказок
             enumTypes = new List<Type>();
             enumTypes.Add(typeof(ElementsTypeEnum));
+            enumTypes.Add(typeof(BlockingElementsTypeEnum));
+            enumTypes.Add(typeof(BehindElementsTypeEnum));
             enumTypes.Add(typeof(HelpEnum));
 
             //создаем массив статусов подсказок
@@ -85,6 +88,22 @@ public static class HelpToPlayer
     public static void ClearHintList()
     {
         hintsList.Clear();//очищаем список подсказок
+    }
+
+    public static void AddHint(BlockingElementsTypeEnum elementsTypeEnum)
+    {
+        if (showHints)
+        {
+            AddHint(typeof(BlockingElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum, false);
+        }
+    }
+
+    public static void AddHint(BehindElementsTypeEnum elementsTypeEnum)
+    {
+        if (showHints)
+        {
+            AddHint(typeof(BehindElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum, false);
+        }
     }
 
     public static void AddHint(ElementsTypeEnum elementsTypeEnum) {
@@ -185,6 +204,10 @@ public static class HelpToPlayer
                 else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
                 {                    
                     created = CreateCrushableWallHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
+                }
+                else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
+                {
+                    created = CreateLianaHelp((BlockingElementsTypeEnum)Enum.Parse(typeof(BlockingElementsTypeEnum), activeHint.help));
                 }
                 else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString() || activeHint.help == ElementsTypeEnum.MediumFlask.ToString() || activeHint.help == ElementsTypeEnum.BigFlask.ToString())
                 {
@@ -457,7 +480,7 @@ public static class HelpToPlayer
             else if (activeHint.help == ElementsTypeEnum.ImmortalWall.ToString())
             {
                 text.text = "Это стену вы не сможете разрушить, она очень крепкая!";
-            }
+            }            
             else if (activeHint.help == ElementsTypeEnum.Drop.ToString())
             {
                 text.text = "Этот элемент лишний на поле, и что бы его убрать, его нужно согнать через все поле в самый низ!";
@@ -465,6 +488,10 @@ public static class HelpToPlayer
             else if (activeHint.help == ElementsTypeEnum.SeedBarrel.ToString())
             {
                 text.text = "Это бочка с зернами, она наполняется когда рядом собираются растения указанные на бочке!";
+            }
+            else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
+            {
+                text.text = "Эта лиана захватила весь наш сад! Её можно уничтожить собрав комбинацию или взорвав магическую колбу!";
             }
             else if (activeHint.help == HelpEnum.Gnome.ToString())
             {
@@ -711,7 +738,8 @@ public static class HelpToPlayer
                 //высвечиваем блок
                 ChangeSorting(curBlock.gameObject, activeHint);
 
-                //добавляем эффект
+                //добавляем эффект мерцания
+                AddToFlashing(curBlock.gameObject, activeHint);
 
                 //отключаем перетаскивание у фласки
                 BlockController blockController = curBlock.GetComponent<BlockController>();
@@ -770,8 +798,8 @@ public static class HelpToPlayer
                 {
                     foreach (Element element in curElementsForNextMove.elementsList)
                     {
-                        //если элемент не для передвижения
-                        if (element != curElementsForNextMove.elementForMove)
+                        //если элемент не для передвижения и не заблокирвоан
+                        if (element != curElementsForNextMove.elementForMove && element.BlockingElement == null)
                         {
                             foreach (Block NeighboringBlock in blocks.allBlockField)
                             {
@@ -780,7 +808,8 @@ public static class HelpToPlayer
                                     //высвечиваем блок
                                     ChangeSorting(curBlock.gameObject, activeHint);
 
-                                    //добавляем эффект
+                                    //добавляем эффект мерцания
+                                    AddToFlashing(curBlock.gameObject, activeHint);
 
                                     //высвечиваем нужный ход
                                     return HighlightSpecifiedMove(curElementsForNextMove);
@@ -794,6 +823,60 @@ public static class HelpToPlayer
             }
         }
         Debug.Log("Не нашли подходящую разрушаемую стену для подсказки!");
+        return false;
+    }
+
+    private static bool CreateLianaHelp(BlockingElementsTypeEnum elementsTypeEnum)
+    {
+        //получаем возможные ходы
+        List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
+        //Если нет доступных ходов, то выходим
+        if (elementsForNextMoveList.Count == 0)
+        {
+            return false;
+        }
+
+        //получаем все стены
+        //ElementWall[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(ElementWall)) as ElementWall[];
+
+        ////если нашли хоть один элемент
+        //foreach (ElementWall item in findeObjects)
+        //{
+        //    //берем блок с нашим элементом
+        //    Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);
+
+            //if (item.Type == elementsTypeEnum && BlockCheck.ThisBlockWithElementWithoutBlockingElement(curBlock))
+            //{
+                ////получаем соседние блоки
+                //NeighboringBlocks blocks = GridBlocks.Instance.GetNeighboringBlocks(curBlock.PositionInGrid);
+                //пытаемся найти ход где есть соседний блок в следующем ходе
+                foreach (ElementsForNextMove curElementsForNextMove in elementsForNextMoveList)
+                {
+                    foreach (Element element in curElementsForNextMove.elementsList)
+                    {
+                        //если элемент не для передвижения и заблокирвоан нужным типом элемента
+                        if (element != curElementsForNextMove.elementForMove && element.BlockingElement != null && element.BlockingElement.Type == elementsTypeEnum)
+                        {
+                            //foreach (Block NeighboringBlock in blocks.allBlockField)
+                            //{
+                            //    if (NeighboringBlock == GridBlocks.Instance.GetBlock(element.PositionInGrid))
+                            //    {
+                                    //подсвечиваем элемент
+                                    //ChangeSorting(curBlock.gameObject, activeHint);
+                    AddToFlashing(element.BlockingElement.gameObject, activeHint);
+
+                                    //высвечиваем нужный ход
+                    return HighlightSpecifiedMove(curElementsForNextMove);
+                            //    }
+                            //}
+                        }
+                    }
+                }
+                ////если не нашли соседний блок
+                //return false;
+            //}
+        //}
+        Debug.Log("Не нашли подходящий блокирующий элемент!");
         return false;
     }
 
@@ -813,7 +896,8 @@ public static class HelpToPlayer
                 //высвечиваем блок
                 ChangeSorting(curBlock.gameObject, activeHint);
 
-                //добавляем эффект
+                //добавляем эффект мерцания
+                AddToFlashing(curBlock.gameObject, activeHint);
 
                 //таймаут для удаления подсказки
                 CanvasLiveTime(1);
@@ -840,7 +924,8 @@ public static class HelpToPlayer
                 //высвечиваем блок
                 ChangeSorting(curBlock.gameObject, activeHint);
 
-                //добавляем эффект
+                //добавляем эффект мерцания
+                AddToFlashing(curBlock.gameObject, activeHint);
 
                 //таймаут для удаления подсказки
                 CanvasLiveTime(1);

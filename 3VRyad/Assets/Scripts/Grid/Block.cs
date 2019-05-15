@@ -289,7 +289,7 @@ public class Block : MonoBehaviour {
             GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y, thisTransform.position.z), Quaternion.identity);
             BehindElement curElement;
 
-            if (typeElementsEnum == BehindElementsTypeEnum.Standard)
+            if (typeElementsEnum == BehindElementsTypeEnum.Grass)
             {
                 curElement = elementGameObject.AddComponent<BehindElement>();
                 curElement.InitialSettings(typeElementsEnum, false, 1, 100);
@@ -308,7 +308,7 @@ public class Block : MonoBehaviour {
             }
 
             curElement.Shape = shape;
-            //ElementsList.AddElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), curElement.Shape.ToString()));
+            HelpToPlayer.AddHint(typeElementsEnum);
             //Добавляем в блок
             this.BehindElement = curElement;
         }

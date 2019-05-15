@@ -194,7 +194,7 @@ public class Element : BaseElement
             GameObject blockingElementGameObject = Instantiate(prefabBlockingElement, thisTransform.position, Quaternion.identity);
             BlockingElement curElement;
 
-            if (typeBlockingElementsEnum == BlockingElementsTypeEnum.Standard)
+            if (typeBlockingElementsEnum == BlockingElementsTypeEnum.Liana)
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
                 curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 100);
@@ -215,6 +215,7 @@ public class Element : BaseElement
             }
 
             curElement.Shape = shape;
+            HelpToPlayer.AddHint(typeBlockingElementsEnum);
             //Добавляем в элемент
             this.BlockingElement = curElement;
         }        

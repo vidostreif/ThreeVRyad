@@ -74,10 +74,10 @@ public class BaseElement : MonoBehaviour
 
         set
         {
-            //if (shape != AllShapeEnum.Empty)
-            //{
-            //    ElementsList.DellElement(shape);
-            //}
+            if (shape != AllShapeEnum.Empty)
+            {
+                ElementsList.DellElement(shape);
+            }
             shape = value;
             ElementsList.AddElement(shape);
             spriteRenderer.sprite = SpriteBank.SetShape(value);

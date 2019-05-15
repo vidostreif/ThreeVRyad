@@ -73,7 +73,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //стартовое заполнение сетки и параметров
     public void StartFilling(List<ElementsPriority> elementsSAndP = null)
     {
-        ElementsList.ClearElementsOnField();
+        //ElementsList.ClearElementsOnField();
         //проверяем что заполнены все GameObject
         if (prefabElement == null || prefabBlock == null || prefabBlockingWall == null)
         {
@@ -165,13 +165,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         if (element != null)
                         {
                             containers[x].block[y].Element = element;
-                            ElementsList.AddElement(element.Shape);
+                            //ElementsList.AddElement(element.Shape);
                             int index = elementsForMixList.IndexOf(element);
                             elementsForMixList.RemoveAt(index);
                             elementsPriority.limitOnAmountCreated--;
                             continue;
                         }
-
                     }
                     // иначе создаем новый элемент
                     containers[x].block[y].CreatElement(prefabElement, elementsPriority.ElementsShape, elementsPriority.elementsType);
@@ -180,9 +179,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
         }
 
-        //очищаем массив для микса от оставшихся элементов
+        //очищаем массив для микса от оставшихся элементов и удаляем их из списка элементов
         foreach (Element element in elementsForMixList)
         {
+            ElementsList.DellElement(element.Shape);
             Destroy(element.gameObject);
         }
         elementsForMixList.Clear();
@@ -995,6 +995,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         {
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
+                //берем только элементы стандартные и не заблокированные
                 if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]))
                 {
                     ElementsPriority elementsSAndP = listPriority.Find(item => item.ElementsShape == containers[x].block[y].Element.Shape);
@@ -1623,6 +1624,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         needFilling = false;
         elementsPriorityList = new List<ElementsPriority>();
 
+        this.blockSize = float.Parse(gridXElement.Element("blockSize").Value);
+        int XSize = int.Parse(gridXElement.Element("XSize").Value);
+        int YSize = int.Parse(gridXElement.Element("YSize").Value);
+
+        //смещаем таблицу на новую позицию
+        this.transform.position = new Vector3(-blockSize * XSize * 0.5f + (blockSize * 0.5f), this.transform.position.y, this.transform.position.z);
+
         //удаляем все блоки
         string blocksName = "Blocks";        
         Transform blocksTransform = transform.Find(blocksName);
@@ -1635,10 +1643,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         blocks = new GameObject();
         blocks.name = blocksName;
         blocks.transform.parent = transform;        
-
-        this.blockSize = float.Parse(gridXElement.Element("blockSize").Value);
-        int XSize = int.Parse(gridXElement.Element("XSize").Value);
-        int YSize = int.Parse(gridXElement.Element("YSize").Value);
         
         //восстанавливаем приоритеты
         foreach (XElement shapeAndPriority in gridXElement.Element("elementsShape").Elements("shapeAndPriority"))

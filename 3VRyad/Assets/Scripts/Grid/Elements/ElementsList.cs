@@ -19,14 +19,19 @@ public static class ElementsList
         }
 
         //наоходим все объекты с базовым элементом и подсчитываем количество элементов каждого вида
-        BaseElement[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
+        BaseElement[] findeObjects = GridBlocks.Instance.transform.GetComponentsInChildren<BaseElement>() as BaseElement[];
+        //BaseElement[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
 
         foreach (BaseElement item in findeObjects)
         {
-            AddElement(item.Shape);
+            if (item.PositionInGrid != null && !item.Destroyed)
+            {
+                AddElement(item.Shape);
+            }            
         }
     }
 
+    //очищение от всех элементов
     public static void ClearElementsOnField()
     {
         //Debug.Log("Уничтожение elementsOnField");

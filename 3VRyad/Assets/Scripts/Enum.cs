@@ -39,7 +39,7 @@ public enum ElementsShapeEnum
 public enum BehindElementsTypeEnum
 {
     Empty, //пустой 
-    Standard, //стандартный элемент
+    Grass, //стандартный элемент
     Dirt, //грязь
 }//Типы элементов позади
 
@@ -53,7 +53,7 @@ public enum BehindElementsShapeEnum
 public enum BlockingElementsTypeEnum
 {
     Empty, //пустой элемент
-    Standard, //стандарртный блокирующий элемент
+    Liana, //стандарртный блокирующий элемент
     Spread, //распространяемый
 }//Типы блокирующих элементов
 
@@ -92,7 +92,6 @@ public enum BlockTypeEnum
     Empty, //пустой блок
     Standard //стандартный блок
 }//Типы блоков
-
 
 public enum InstrumentsEnum
 {
