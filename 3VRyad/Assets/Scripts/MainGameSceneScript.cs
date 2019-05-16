@@ -119,17 +119,28 @@ public class MainGameSceneScript : MonoBehaviour {
 
         //Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventPostScore, PostScoreParameters);
 
+        string nameEvent;
+        if (Tasks.Instance.collectedAll)
+        {
+            nameEvent = "Level_passed";
+        }
+        else
+        {
+            nameEvent = "Level_loss";
+        }
+
         Firebase.Analytics.FirebaseAnalytics.LogEvent(
-          Firebase.Analytics.FirebaseAnalytics.EventPostScore,
+          nameEvent,
           new Firebase.Analytics.Parameter[] {
-            new Firebase.Analytics.Parameter(
-              Firebase.Analytics.FirebaseAnalytics.ParameterCharacter, "Main"),
+            new Firebase.Analytics.Parameter("Stars", Score.Instance.NumberOfStarsReceived()),
             new Firebase.Analytics.Parameter(
               Firebase.Analytics.FirebaseAnalytics.ParameterLevel, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
             new Firebase.Analytics.Parameter(
               Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
           }
         );
+
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("Stars", LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name, Score.Instance.getScore());
 
         //если выполнили все задания
         if (Tasks.Instance.collectedAll)
