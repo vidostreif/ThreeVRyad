@@ -26,11 +26,13 @@ public class ElementsPriority
         }
     }
 
-    public ElementsPriority(ElementsShapeEnum elementsShape, ElementsTypeEnum elementsType, int priority)
+    public ElementsPriority(ElementsShapeEnum elementsShape, ElementsTypeEnum elementsType, int priority, int maxAmountOnField, int limitOnAmountCreated)
     {
         this.elementsShape = elementsShape;
         this.elementsType = elementsType;
         this.priority = priority;
+        this.maxAmountOnField = maxAmountOnField;
+        this.limitOnAmountCreated = limitOnAmountCreated;
     }
 
     public ElementsPriority(AllShapeEnum elementsShape, ElementsTypeEnum elementsType, int priority, int limitOnAmountCreated = 9999)

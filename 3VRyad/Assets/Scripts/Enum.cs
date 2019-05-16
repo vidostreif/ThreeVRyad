@@ -90,7 +90,8 @@ public enum AllShapeEnum
 public enum BlockTypeEnum
 {
     Empty, //пустой блок
-    Standard //стандартный блок
+    Standard, //стандартный блок
+    Sliding //скользящий
 }//Типы блоков
 
 public enum InstrumentsEnum

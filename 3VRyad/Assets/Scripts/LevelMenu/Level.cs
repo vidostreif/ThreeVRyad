@@ -205,11 +205,15 @@ public class LevelDrawer : PropertyDrawer
 
         var xmlDocument = property.FindPropertyRelative("xmlDocument").objectReferenceValue;
 
-        
+        UnityEngine.Object LastLoadxmlDocument = null;
+        if (levelMenu.LastLoadLevel != null)
+        {
+            LastLoadxmlDocument = levelMenu.LastLoadLevel.xmlDocument;
+        }
 
         if (xmlDocument != null)
         {
-            if (SaveAndLoadScene.Instance().lastLoadXmlDocument != xmlDocument)
+            if (LastLoadxmlDocument != xmlDocument)
             {
                 if (GUI.Button(buttonRect, "Загрузить"))
                 {                    

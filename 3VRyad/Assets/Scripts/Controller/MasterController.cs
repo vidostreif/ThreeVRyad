@@ -185,9 +185,9 @@ public class MasterController : MonoBehaviour
                 canMove = false;
             }
 
-            //узнаем заблокирован ли элемент в укзанном направлении 
+            //если блок в указанном направлении существует и он стандартный и в этом направлении нам разрешено двигаться
             Block neighboringBlock = neighboringBlocks.GetBlock(offsetDirection);
-            if (neighboringBlock != null && canMove)
+            if (BlockCheck.ThisStandartBlock(neighboringBlock) && canMove)
             {
                 //проверяем что блока нет в текущих массивах для обработки
                 if (GridBlocks.Instance.BlockInProcessing(neighboringBlock))

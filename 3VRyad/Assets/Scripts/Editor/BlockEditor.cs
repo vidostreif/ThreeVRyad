@@ -116,7 +116,7 @@ public class BlockEditor : Editor
             }
 
             //условия для указания блокирующего элемента, иначе элемент удаляем
-            if (elementType == ElementsTypeEnum.Standard && block.Element != null) {
+            if (block.Element != null) {
                 EditorGUILayout.LabelField("Настройка блокирующего элемента:", EditorStyles.boldLabel);
 
                 Element element = block.Element;                

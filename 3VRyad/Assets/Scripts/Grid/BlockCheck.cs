@@ -95,6 +95,45 @@ public static class BlockCheck
         }
     }
 
+    public static bool ThisSlidingBlock(Block block)
+    {
+
+        if (block != null && block.Type == BlockTypeEnum.Sliding)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool ThisStandartBlock(Block block)
+    {
+
+        if (block != null && block.Type == BlockTypeEnum.Standard)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool ThisNotStandartBlock(Block block)
+    {
+
+        if (block != null && block.Type != BlockTypeEnum.Standard)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static bool ThisStandardBlockWithoutElement(Block block)
     {
 

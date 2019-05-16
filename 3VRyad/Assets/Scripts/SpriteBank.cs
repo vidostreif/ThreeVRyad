@@ -107,7 +107,9 @@ public class SpriteBank : MonoBehaviour
             case BlockTypeEnum.Empty:
                 return null;
             case BlockTypeEnum.Standard:
-                return Resources.Load<Sprite>("Sprites/ground") as Sprite;
+                return Resources.Load<Sprite>("Sprites/Blocks/ground") as Sprite;
+            case BlockTypeEnum.Sliding:
+                return Resources.Load<Sprite>("Sprites/Blocks/Sliding") as Sprite;
             default:
                 Debug.LogError("Не определен тип " + shape);
                 return null;

@@ -140,7 +140,7 @@ public class MainGameSceneScript : MonoBehaviour {
           }
         );
 
-        Firebase.Analytics.FirebaseAnalytics.LogEvent("Stars", LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name, Score.Instance.getScore());
+        Firebase.Analytics.FirebaseAnalytics.LogEvent("Score", LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name, Score.Instance.getScore());
 
         //если выполнили все задания
         if (Tasks.Instance.collectedAll)

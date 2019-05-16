@@ -11,11 +11,11 @@
     <XSize>12</XSize>
     <YSize>9</YSize>
     <elementsShape>
-      <shapeAndPriority shape="Apple" type="Standard" priority="10" />
-      <shapeAndPriority shape="Strawberry" type="Standard" priority="15" />
-      <shapeAndPriority shape="Plum" type="Standard" priority="10" />
-      <shapeAndPriority shape="Mushroom" type="Standard" priority="10" />
-      <shapeAndPriority shape="Orange" type="Standard" priority="10" />
+      <shapeAndPriority shape="Apple" type="Standard" priority="10" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Strawberry" type="Standard" priority="15" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Plum" type="Standard" priority="10" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Mushroom" type="Standard" priority="10" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Orange" type="Standard" priority="10" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
     </elementsShape>
     <blocks>
       <block posX="1" posY="1" blockType="Standard" generatorElements="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />

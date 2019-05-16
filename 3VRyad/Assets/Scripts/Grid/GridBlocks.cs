@@ -1354,11 +1354,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (currentBlock != null && !BlockInProcessing(currentBlock))
                 {
                     //если пустой блок и не умеет генерировать элемент, идем дальше
-                    if (BlockCheck.ThisBlockWithoutElement(currentBlock) && !currentBlock.GeneratorElements)
-                    { continue; }
-
+                    if ((BlockCheck.ThisStandardBlockWithoutElement(currentBlock) && !currentBlock.GeneratorElements) || BlockCheck.ThisNotStandartBlock(currentBlock))
+                    {
+                        continue;
+                    }
                     //если пустой блок и умеет генерировать элемент, то предварительно создаем случайный элемент
-                    else if (BlockCheck.ThisBlockWithoutElement(currentBlock) && currentBlock.GeneratorElements)
+                    else if (BlockCheck.ThisStandardBlockWithoutElement(currentBlock) && currentBlock.GeneratorElements)
                     {
                         elementPriorit = ProportionalWheelSelection.SelectElement(elementsPriorityList);
                         if (elementPriorit == null)
@@ -1374,7 +1375,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         needIteration = true;
                         createdElement = true;
                     }
-
                     //если текущий элемент заблокирован для движения, то переходим к следующему
                     else if (BlockCheck.ThisBlockWithElementCantMove(currentBlock))
                     { continue; }
@@ -1383,27 +1383,39 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     {
                         //ищем место для смещения
                         //если нижний блок не имеет элемента, то смещаем к нему
-                        if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y - 1]))
+                        //или нижний блок скользящий
+                        if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y - 1]) || BlockCheck.ThisSlidingBlock(containers[x].block[y - 1]))
                         {
-                            Block newBlock = containers[x].block[y - 1];
+                            Block newBlock = null;
                             int distance = 1;
-                            for (int i = y - 2; i >= 0; i--)
+                            int slidinDistance = 0;
+                            for (int i = y - 1; i >= 0; i--)
                             {
                                 if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[i]))
                                 {
                                     newBlock = containers[x].block[i];
                                     distance++;
+                                    distance += slidinDistance;
+                                    slidinDistance = 0;
+                                }
+                                else if (BlockCheck.ThisSlidingBlock(containers[x].block[i]))
+                                {
+                                    slidinDistance++;
                                 }
                                 else
                                 {
                                     break;
                                 }
                             }
-                            ExchangeElements(currentBlock, newBlock);
-                            MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithAcceleration, smoothTime: speed + distance  * 0.009f, addToQueue: !createdElement);
-                            needIteration = true;
-                            dropBlock = containers[x].block[y];
-                            continue;
+                            //если нашли блок для смещения
+                            if (newBlock != null)
+                            {
+                                ExchangeElements(currentBlock, newBlock);
+                                MainAnimator.Instance.AddElementForSmoothMove(newBlock.Element.thisTransform, new Vector3(newBlock.thisTransform.position.x, newBlock.thisTransform.position.y - 0.1f, newBlock.thisTransform.position.z), 2, SmoothEnum.InLineWithAcceleration, smoothTime: speed + distance * 0.009f, addToQueue: !createdElement);
+                                needIteration = true;
+                                dropBlock = containers[x].block[y];
+                                continue;
+                            }                            
                         }
                         //иначе, проверяем правый нижний блок по диагонали, при условии, что справа нет элементов в блоках
                         if ((x < containers.GetLength(0) - 1) && BlockCheck.ThisStandardBlockWithoutElement(containers[x + 1].block[y - 1]))
@@ -1555,7 +1567,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             XAttribute shape = new XAttribute("shape", shapeAndPriority.ElementsShape);
             XAttribute type = new XAttribute("type", shapeAndPriority.elementsType);
             XAttribute priority = new XAttribute("priority", shapeAndPriority.priority);
-            XElement shapeXElement = new XElement("shapeAndPriority", shape, type, priority);
+            XAttribute maxAmountOnField = new XAttribute("maxAmountOnField", shapeAndPriority.maxAmountOnField);
+            XAttribute limitOnAmountCreated = new XAttribute("limitOnAmountCreated", shapeAndPriority.limitOnAmountCreated);
+            XElement shapeXElement = new XElement("shapeAndPriority", shape, type, priority, maxAmountOnField, limitOnAmountCreated);
             elementsShapeXElement.Add(shapeXElement);
         }
         gridXElement.Add(elementsShapeXElement);
@@ -1650,7 +1664,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             ElementsShapeEnum shape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shapeAndPriority.Attribute("shape").Value);
             ElementsTypeEnum type = (ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), shapeAndPriority.Attribute("type").Value);
             int priority = int.Parse(shapeAndPriority.Attribute("priority").Value);
-            ElementsPriority curShapeAndPriority = new ElementsPriority(shape, type, priority);
+            int maxAmountOnField = int.MaxValue;
+            try { maxAmountOnField = int.Parse(shapeAndPriority.Attribute("maxAmountOnField").Value); } catch (Exception) { }
+            int limitOnAmountCreated = int.MaxValue;
+            try { limitOnAmountCreated = int.Parse(shapeAndPriority.Attribute("limitOnAmountCreated").Value); } catch (Exception) { }
+            ElementsPriority curShapeAndPriority = new ElementsPriority(shape, type, priority, maxAmountOnField, limitOnAmountCreated);
             this.elementsPriorityList.Add(curShapeAndPriority);
         }
 
@@ -1733,6 +1751,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 blockField.PositionInGrid = new Position(posX, posY);
                 //добавляем блок в массив блоков
                 containers[posX].block[posY] = blockField;
+
+                //добавляем в массив подсказок
+                HelpToPlayer.AddHint(blockType);
 
                 //создаем элемент на заднем фоне
                 if (behindElementsType != BehindElementsTypeEnum.Empty)
