@@ -50,9 +50,9 @@ public class Target
         //если нужно собрать все элементы на поле, то проверяем поле и обновляем счетчик
         if (collectEverything)
         {
-            goal = ElementsList.GetAmountOfThisShapeElemets(elementsShape);
-            UpdateText();
+            goal = ElementsList.GetAmountOfThisShapeElemets(elementsShape);            
         }
+        UpdateText();
     }
 
     //обнолвление текста
@@ -156,7 +156,7 @@ public class Target
             if (goal <= 0)
             {
                 //создаем эффект 
-                GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
+                GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollectAll") as GameObject, gameObject.transform);
 
                 //Color32 color = AverageColorFromTexture(image.sprite.texture);
                 //изменяем цвет
@@ -167,6 +167,13 @@ public class Target
                 //Gradient grad = new Gradient();
                 //grad.SetKeys(new GradientColorKey[] { new GradientColorKey(color, 0.0f) }, new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(1.0f, 0.7f), new GradientAlphaKey(0.0f, 1.0f) });
                 //col.color = grad;
+            }
+            else
+            {
+                //создаем эффект 
+                GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
+                ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
+                ps.textureSheetAnimation.AddSprite(image.sprite);
             }
             UpdateGoal();
         }        

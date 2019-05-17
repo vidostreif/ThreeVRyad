@@ -93,7 +93,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     //эффек добавления в чан
     public void CreatePowerSuperBonus(Vector3 position, int power)
     {
-        if (allow)
+        //если разрешен и не конец игры
+        if (allow && !Tasks.Instance.endGame)
         {
             GameObject powerSuperBonus = new GameObject();
             powerSuperBonus.transform.parent = transform;
@@ -157,17 +158,17 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                 ActivateSuperBonus();
             }
 
-            //если еще остались заряды, то и их используем
-            while (charges > 0)
-            {
-                //если супер бонус выполняет действие, то ожидаем
-                do
-                {
-                    yield return new WaitForSeconds(0.2f);
-                } while (activated);
+            ////если еще остались заряды, то и их используем
+            //while (charges > 0)
+            //{
+            //    //если супер бонус выполняет действие, то ожидаем
+            //    do
+            //    {
+            //        yield return new WaitForSeconds(0.2f);
+            //    } while (activated);
 
-                ActivateSuperBonus();
-            }
+            //    ActivateSuperBonus();
+            //}
 
         //ожидаем, пока все ракеты не долетят до своих целей
         do
@@ -184,7 +185,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         //и возвращяем true до тех пор пока выполняем процедцрц конвертации и запуска всех ракет
         if (allow)
         {
-            if (!activateSuperBonusOnEnd && (Tasks.Instance.Moves > 0 || charges > 0))
+            if (!activateSuperBonusOnEnd && (Tasks.Instance.Moves > 0 ))
             {
                 StartCoroutine(CurActivateSuperBonusOnEnd());
                 return true;
@@ -210,31 +211,64 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         if (allow && charges > 0 && !activated)
         {
             charges--;
-            //activated = true;
             tankImage.fillAmount = 1;
             Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
+            //получаем все возможные блоки для следующего хода
+            List<ElementsForNextMove> elementsForNextMove = GridBlocks.Instance.CheckElementsForNextMove();
 
             if (blocks.Length > 1)
             {
                 //перемешиваем
                 SupportFunctions.MixArray(blocks);
                 List<Block> blocksForWork = new List<Block>();
-                for (int i = 0; i < beats; i++)
+                int foundedBlock = 0;
+                int iteration = 0;
+                //ищем блоки для удара, пока не найдем нужное количество
+                do
                 {
-                    if (blocks.Length > i)
+                    if (blocks.Length > iteration)
                     {
                         //если блок сейчас не обрабатывается
-                        if (!GridBlocks.Instance.BlockInProcessing(blocks[i]))
+                        if (!GridBlocks.Instance.BlockInProcessing(blocks[iteration]))
                         {
-                            blocks[i].Blocked = true;//предварительно блокируем  
-                            blocksForWork.Add(blocks[i]);
+                            //и его нет в списке для следующего хода
+                            bool found = false;
+                            foreach (ElementsForNextMove item in elementsForNextMove)
+                            {
+                                foreach (Element element in item.elementsList)
+                                {
+                                    if (element != null && GridBlocks.Instance.GetBlock(element) == blocks[iteration])
+                                    {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found)
+                                {
+                                    break;
+                                }
+                            }
+
+                            if (!found)
+                            {
+                                blocks[iteration].Blocked = true;//предварительно блокируем  
+                                blocksForWork.Add(blocks[iteration]);
+                                foundedBlock++;
+                            }
                         }
                     }
-                }
+                    else
+                    {
+                        break;
+                    }
+
+                    iteration++;
+                } while (foundedBlock < beats);
+                    
+                
                 //запускаем дальнейшую обработку блоков
                 StartCoroutine(CreatingEffects(blocksForWork));
             }
-            //activated = false;
             FilledImage();
         }        
     }

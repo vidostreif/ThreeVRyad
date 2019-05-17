@@ -258,7 +258,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         if (Time.timeScale < 3)
                         {
                             Time.timeScale += 0.05f;
-                            Debug.Log("Time.timeScale " + Time.timeScale);
+                            //Debug.Log("Time.timeScale " + Time.timeScale);
                         }
                     }                    
 
@@ -448,11 +448,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (Tasks.Instance.collectedAll && Bonuses.Instance.ActivateBonusOnEnd())
                 {
                     blockedForMove = false;
+                    Debug.Log("Активируем все бонусы на поле!");
                 }
                 //если собрали все задачи и активируем супер бонус в конце уровня
                 else if(Tasks.Instance.collectedAll && SuperBonus.Instance.ActivateSuperBonusOnEnd())
                 {
                     blockedForMove = false;
+                    Debug.Log("Активируем супер бонус!");
                 }
                 else
                 {
@@ -461,13 +463,14 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
                 yield break;
             }
-
-            //проверка, что остались доступные ходы
-            FoundNextMove();
+                       
 
             //если не конец игры, создаем подсказку
             if (!Tasks.Instance.endGame)
             {
+                //проверка, что остались доступные ходы
+                FoundNextMove();
+
                 if (HelpToPlayer.CreateNextGameHelp())
                 {
                     Debug.Log("Создаем подсказку!");
@@ -857,7 +860,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             } while (elementFound);
                         }
                         //если количество найденных элементов больше двух то сохраняем
-                        if (elementsForNextMove.elementsList.Count > 2)
+                        if (elementsForNextMove.elementsList.Count > 2 && elementForMoveFound)
                         {
                             //если количество найденных элементов больше трех то дополняем соседними элементами и переопределяем элемент для смещения
                             if (elementsForNextMove.elementsList.Count > 3)

@@ -21,6 +21,8 @@ public class ElementSmallFlask : Element
     {
         explosionRadius = 1;
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Standart, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick, HitTypeEnum.Instrument };
+        //находим аниматор
+        transform.GetComponent<AnimatorElement>().playIdleAnimationRandomTime = true;
     }
 
     //действие после удара

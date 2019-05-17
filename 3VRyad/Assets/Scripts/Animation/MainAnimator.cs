@@ -14,7 +14,7 @@ public class MainAnimator : MonoBehaviour {
 
     private ElementsForNextMove elementsForNextMove = new ElementsForNextMove(); //элементы для следующей подсказки игроку
     private List<AnimatorElement> animatorsElementsForNextMove = new List<AnimatorElement>(); //аниматоры элементов для следующей подсказки игроку
-    private float timeToHint = 3; //время до подсказки
+    private float timeToHint = 2; //время до подсказки
     private float idleHintsTime; //момент отсчета
 
     private List<MoveElement> moveElements = new List<MoveElement>();//элементы для перемещения
@@ -102,7 +102,26 @@ public class MainAnimator : MonoBehaviour {
         if (elementsForNextMove != null && elementsForNextMove.elementForMove != null)
         {
             SpriteRenderer spriteRenderer = elementsForNextMove.elementForMove.GetComponent<SpriteRenderer>();
-            AddElementForSmoothChangeColor(spriteRenderer, new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0.5f), 20, true, 5);
+            //AddElementForSmoothChangeColor(spriteRenderer, new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0.5f), 20, true, 1);
+            Vector3 newPosition = elementsForNextMove.elementForMove.transform.position;
+            if (elementsForNextMove.directionForMove == DirectionEnum.Down)
+            {
+                newPosition = new Vector3(newPosition.x, newPosition.y - 0.2f, newPosition.z);
+            }
+            else if (elementsForNextMove.directionForMove == DirectionEnum.Up)
+            {
+                newPosition = new Vector3(newPosition.x, newPosition.y + 0.2f, newPosition.z);
+            }
+            else if (elementsForNextMove.directionForMove == DirectionEnum.Left)
+            {
+                newPosition = new Vector3(newPosition.x - 0.2f, newPosition.y, newPosition.z);
+            }
+            else if (elementsForNextMove.directionForMove == DirectionEnum.Right)
+            {
+                newPosition = new Vector3(newPosition.x + 0.2f, newPosition.y, newPosition.z);
+            }
+            AddElementForSmoothMove(elementsForNextMove.elementForMove.transform, newPosition, 2, SmoothEnum.InLineWithSlowdown, 0.05f);
+            //elementsForNextMove.elementForMove.transform.position = newPosition;
         }
         
         idleHintsTime = Time.time;

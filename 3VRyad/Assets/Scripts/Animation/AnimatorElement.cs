@@ -7,12 +7,14 @@ public class AnimatorElement : MonoBehaviour
     //public bool destroyThisObject = false;
     //private Animator thisAnimator;
     private Animation thisAnimation;
-    //private float idleAnimationTime;
+    private float idleAnimationTime;
+    public bool playIdleAnimationRandomTime;
 
     void Awake()
     {
         //ссылка на аниматор
         thisAnimation = GetComponent<Animation>();
+        playIdleAnimationRandomTime = false;
         //определяем когда в следующий раз проиграть анимацию
         SetidleAnimationTime();
 
@@ -23,19 +25,19 @@ public class AnimatorElement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (idleAnimationTime < Time.time)
-        //{
-        //    //запускаем анимацию
-        //    PlayIdleAnimation();
-        //    //определяем когда в следующий раз проиграть анимацию
-        //    SetidleAnimationTime();
-        //}
+        if (playIdleAnimationRandomTime && idleAnimationTime < Time.time)
+        {
+            //запускаем анимацию
+            PlayIdleAnimation();
+            //определяем когда в следующий раз проиграть анимацию
+            SetidleAnimationTime();
+        }
     }
 
     private void SetidleAnimationTime() {
         //определяем когда в следующий раз проиграть анимацию
-        //int random = UnityEngine.Random.Range(1, 30);
-        //idleAnimationTime = Time.time + random;
+        int random = UnityEngine.Random.Range(1, 10);
+        idleAnimationTime = Time.time + random;
     }
 
     //Если закончилась анимация смерти, то удаляем этот элемент
