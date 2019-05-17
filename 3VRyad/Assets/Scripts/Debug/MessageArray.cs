@@ -39,6 +39,9 @@ public class MessageArray : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject); //Set as do not destroy
         }
+#if UNITY_EDITOR
+        debug = true;
+#endif
     }
 
     public static void AddDebugMessage(string message, Color color) {

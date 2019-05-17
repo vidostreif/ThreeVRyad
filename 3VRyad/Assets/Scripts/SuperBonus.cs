@@ -109,7 +109,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private GameObject CreateBeatsSuperBonus(Transform targetTransform)
     {
         GameObject beatsSuperBonus = new GameObject();
-        beatsSuperBonus.transform.parent = targetTransform;
+        beatsSuperBonus.transform.parent = targetTransform;        
         GameObject element = Instantiate(MainParticleSystem.Instance.pSBeatsSuperBonus, beatsSuperBonus.transform);
         beatsSuperBonus.transform.position = transform.position;
         MainAnimator.Instance.AddElementForSmoothMove(beatsSuperBonus.transform, targetTransform.position, 1, SmoothEnum.InArc, smoothTime: 0.1f, destroyAfterMoving: true);
@@ -284,7 +284,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                 break;
             }
             //подсветка
-            GameObject backlight = Instantiate(MainParticleSystem.Instance.pSSelect, block.transform);
+            //GameObject backlight = Instantiate(MainParticleSystem.Instance.pSSelect, block.transform);
+            GameObject backlight = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSelectTargetBlock") as GameObject, block.transform);
             backlight.transform.position = block.transform.position;
             HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(block.transform), block));//добавляем в список для последующей обработки                        
             yield return new WaitForSeconds(0.1f);

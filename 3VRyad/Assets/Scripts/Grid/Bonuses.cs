@@ -96,10 +96,13 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
                 //делаем анимацию перемещения уничтоженных элементов
                 foreach (Block item in findedBlockInLine)
                 {
-                    MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, destroyAfterMoving: true);
-                    //AnimatorElement animatorElement = item.Element.GetComponent<AnimatorElement>();
-                    //animatorElement.StopDestroyAnimation();
-                    item.Element = null;
+                    if (item.Element != null)
+                    {
+                        MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, destroyAfterMoving: true);
+                        //AnimatorElement animatorElement = item.Element.GetComponent<AnimatorElement>();
+                        //animatorElement.StopDestroyAnimation();
+                        item.Element = null;
+                    }                    
                 }
 
                 //выбираем случайный бонус и выдаем его
@@ -108,12 +111,12 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
             }
             else
             {
-                Debug.Log("Не удалось создать бонус! 1");
+                //Debug.Log("Не удалось создать бонус! 1");
             }
         }
         else
         {
-            Debug.Log("Не удалось создать бонус! 2");
+            //Debug.Log("Не удалось создать бонус! 2");
         }
     }
 

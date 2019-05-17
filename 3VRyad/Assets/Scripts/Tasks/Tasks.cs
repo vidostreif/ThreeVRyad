@@ -184,14 +184,14 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             if (target.Collect(allShape, transformElement))
             {                
-                GameObject go = new GameObject();
-                go.transform.position = transformElement.position;
-                go.transform.parent = this.thisTransform;
-                transformElement.parent = go.transform;
+                //GameObject go = new GameObject();
+                //go.transform.position = transformElement.position;
+                //go.transform.parent = this.thisTransform;
+                transformElement.parent = this.thisTransform;
                 transformElement.GetComponent<SpriteRenderer>().sortingLayerName = "Magic";
-                transformElement.GetComponent<AnimatorElement>().PlayIdleAnimation();
+                //transformElement.GetComponent<AnimatorElement>().PlayIdleAnimation();
                 //перемещаем элемент к нашему объекту
-                MainAnimator.Instance.AddElementForSmoothMove(go.transform, target.Image.transform.position, 7, SmoothEnum.InLineWithOneSpeed, 1.30f, true, true, delegate { target.ItemReached(transformElement); } );
+                MainAnimator.Instance.AddElementForSmoothMove(transformElement, target.Image.transform.position, 7, SmoothEnum.InLineWithOneSpeed, 1.30f, true, false, delegate { target.ItemReached(transformElement); } );
                 //проверяем, не собрали ли мы коллекцию
                 CheckAll();
                 return true;

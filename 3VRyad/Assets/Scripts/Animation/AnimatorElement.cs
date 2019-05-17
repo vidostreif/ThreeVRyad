@@ -36,7 +36,7 @@ public class AnimatorElement : MonoBehaviour
 
     private void SetidleAnimationTime() {
         //определяем когда в следующий раз проиграть анимацию
-        int random = UnityEngine.Random.Range(1, 10);
+        int random = UnityEngine.Random.Range(5, 10);
         idleAnimationTime = Time.time + random;
     }
 
