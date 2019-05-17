@@ -187,7 +187,7 @@ public class Block : MonoBehaviour {
         //если есть элемент и он не на позиции нашего блока то медлено премещаем его к блоку
         if (MainAnimator.Instance != null && this.Element != null && this.Element.thisTransform.position != thisTransform.position && !this.Element.drag && !this.Element.Destroyed)
         {
-            MainAnimator.Instance.AddElementForSmoothMove(this.Element.thisTransform, thisTransform.position, 1, SmoothEnum.InLine, smoothTime: 0.1f);
+            MainAnimator.Instance.AddElementForSmoothMove(this.Element.thisTransform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
         }
     }
 

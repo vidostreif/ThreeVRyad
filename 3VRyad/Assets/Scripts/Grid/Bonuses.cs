@@ -96,7 +96,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
                 //делаем анимацию перемещения уничтоженных элементов
                 foreach (Block item in findedBlockInLine)
                 {
-                    MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLine, smoothTime: 0.2f, destroyAfterMoving: true);
+                    MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, destroyAfterMoving: true);
                     //AnimatorElement animatorElement = item.Element.GetComponent<AnimatorElement>();
                     //animatorElement.StopDestroyAnimation();
                     item.Element = null;

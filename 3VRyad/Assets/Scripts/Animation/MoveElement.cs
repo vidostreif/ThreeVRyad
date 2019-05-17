@@ -16,6 +16,7 @@ public class MoveElement {
     public SmoothEnum smoothEnum;
     public bool destroyAfterMoving;
     public float yVelocity = 0.0f;
+    public Vector3 vectorVelocity = Vector3.zero;
     public Action action;
 
     public MoveElement(Transform objTransform, Vector3 targetPosition, float smoothTime, SmoothEnum smoothEnum, int priority, bool destroyAfterMoving, Action action)

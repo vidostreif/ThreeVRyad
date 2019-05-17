@@ -130,7 +130,7 @@ public class MainAnimator : MonoBehaviour {
                 else if (item.priority < priority)
                 {
                     dellOld = true;
-                    break;
+                    //break;
                 }           
             }
         }
@@ -184,9 +184,23 @@ public class MainAnimator : MonoBehaviour {
                         item.thisTransform.position = Vector3.Lerp(m1, m2, item.yVelocity);
                     //}
                 }
-                else if (item.smoothEnum == SmoothEnum.InLine)
-                {
-                    item.thisTransform.position = Vector3.Lerp(item.thisTransform.position, item.targetPosition, Time.deltaTime * 100 * item.smoothTime);
+                else if (item.smoothEnum == SmoothEnum.InLineWithSlowdown)
+                {                    
+                    //расчитываем вектор смещения
+                    Vector3 translation = item.targetPosition - item.thisTransform.position;
+                    //вычисляем расстояние на которое смещаем объект
+                    float offsetDistance = translation.magnitude;
+                    //если растояние меньше чем указанно, то моментально перемещаем объект
+                    if (offsetDistance < 0.005f)
+                    {
+                        item.thisTransform.position = item.targetPosition;
+                    }
+                    else
+                    {
+                        //item.thisTransform.position = Vector3.SmoothDamp(item.thisTransform.position, item.targetPosition, ref item.vectorVelocity, Time.deltaTime * 100 * 1/item.smoothTime);
+                        item.thisTransform.position = Vector3.Lerp(item.thisTransform.position, item.targetPosition, Time.deltaTime * 100 * item.smoothTime);
+                    }
+                    
                 }
                 else if (item.smoothEnum == SmoothEnum.InLineWithAcceleration)
                 {
@@ -226,34 +240,33 @@ public class MainAnimator : MonoBehaviour {
                     {
                         item.thisTransform.position = item.targetPosition;
                     }
-
                 }
 
                 if (item.thisTransform.position == item.targetPosition)
                 {
-                    //if (item.smoothEnum == SmoothEnum.InLineWithOneSpeed)
-                    //{
-                    //    AnimatorElement animatorElement = item.thisTransform.GetComponent<AnimatorElement>();
-                    //    animatorElement.PlayFallAnimation();
-                    //}
-
-                    //выполняем прописанный делегат
-                    if (item.action != null)
-                        item.action();
+                    ////выполняем прописанный делегат
+                    //if (item.action != null)
+                    //    item.action();
                     //удаляем если требуется
                     if (item.destroyAfterMoving)
-                        Destroy(item.thisTransform.gameObject, 0.1f);
+                        Destroy(item.thisTransform.gameObject, 0.3f);
                     moveElementsForRemove.Add(item);
                 }
             }
             else if (item.thisTransform == null)
             {
+                ////выполняем прописанный делегат
+                //if (item.action != null)
+                //    item.action();
                 moveElementsForRemove.Add(item);
             }
         }
 
         foreach (MoveElement item in moveElementsForRemove)
         {
+            //выполняем прописанный делегат
+            if (item.action != null)
+                item.action();
             moveElements.Remove(item);
         }
         moveElementsForRemove.Clear();
@@ -284,16 +297,20 @@ public class MainAnimator : MonoBehaviour {
                     {
                         if (objectToMove.transform != null)
                         {
-                            //расчитываем вектор смещения
-                            Vector3 translation = objectToMove.transform.position - item.epicenter;
-                            //вычисляем расстояние до объекта
-                            float offsetDistance = translation.magnitude;
-                            //нормализируем вектор для упрощения вычисления направления
-                            Vector3 direction = translation / offsetDistance;
-                            AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.2f, 5, SmoothEnum.InArcWithSlowdown, 0.01f);
-                            //AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);
-                            AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
-                            animatorElement.PlayIdleAnimation();
+                            Element element = objectToMove.transform.GetComponent<Element>();
+                            if (!element.Destroyed)
+                            {
+                                //расчитываем вектор смещения
+                                Vector3 translation = objectToMove.transform.position - item.epicenter;
+                                //вычисляем расстояние до объекта
+                                float offsetDistance = translation.magnitude;
+                                //нормализируем вектор для упрощения вычисления направления
+                                Vector3 direction = translation / offsetDistance;
+                                AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.2f, 5, SmoothEnum.InArcWithSlowdown, 0.01f);
+                                //AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);
+                                AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
+                                animatorElement.PlayIdleAnimation();
+                            }                            
                         }
                     }
                              
