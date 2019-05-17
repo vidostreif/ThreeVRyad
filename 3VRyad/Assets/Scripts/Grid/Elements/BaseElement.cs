@@ -173,6 +173,20 @@ public class BaseElement : MonoBehaviour
 
     protected virtual void DestroyElement()
     {
+        ////удаляем из блока
+        //Block block = GridBlocks.Instance.GetBlock(this.positionInGrid);
+        //if (block != null)
+        //{
+        //    if (block.BehindElement == this)
+        //    {
+        //        block.BehindElement = null;
+        //    }
+        //    if (block.Element == this)
+        //    {
+        //        block.Element = null;
+        //    }
+        //}
+
         destroyed = true;
         ElementsList.DellElement(shape);
         Score.Instance.CreateScoreElement(transform.position, score);

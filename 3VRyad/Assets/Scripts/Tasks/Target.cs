@@ -109,13 +109,13 @@ public class Target
             
             if (goal - itemsInTransit > 0)
             {
-                foreach (Transform item in transformsInTransitList)
-                {
-                    if (item == transformElement)
-                    {
-                        Debug.Log("Найден дубликат");
-                    }
-                }
+                //foreach (Transform item in transformsInTransitList)
+                //{
+                //    if (item == transformElement)
+                //    {
+                //        Debug.Log("Найден дубликат");
+                //    }
+                //}
                 transformsInTransitList.Add(transformElement);
                 itemsInTransit++;
                 Check();

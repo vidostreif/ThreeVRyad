@@ -15,8 +15,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private int strikesOnBlocks = 0;//количество ударов по блокам
     private int bonusPower = 0;
     private int charges = 0; //заряды супербонуса
-    private bool activated = false;//активируется в текущий момент
-    private bool activateSuperBonusOnEnd = false;
+    private bool activated;//активируется в текущий момент
+    private bool activateSuperBonusOnEnd;
     private Image tankImage;
     private List<HitSuperBonus> HitSuperBonusList;
     private List<HitSuperBonus> HitSuperBonusListForDelete;
@@ -30,6 +30,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         }
 
         Instance = this;
+        activated = false;//активируется в текущий момент
+        activateSuperBonusOnEnd = false;
         HitSuperBonusList = new List<HitSuperBonus>();
         HitSuperBonusListForDelete = new List<HitSuperBonus>();
         tankImage = transform.GetComponent(typeof(Image)) as Image;

@@ -101,7 +101,7 @@ public class Element : BaseElement
 
     protected virtual void DopSettings()
     {
-        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Standart, HitTypeEnum.Explosion };
+        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Standart, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
     }
 
     //удар по элементу
@@ -141,7 +141,7 @@ public class Element : BaseElement
         Position position = new Position(PositionInGrid.posX, PositionInGrid.posY);
         base.DestroyElement();
 
-        if (hitType == HitTypeEnum.Standart)
+        if (hitType == HitTypeEnum.Standart || hitType == HitTypeEnum.Instrument)
             HitNeighboringBlocks(thisHitTypeEnum, position);
     }
 

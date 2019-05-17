@@ -111,7 +111,7 @@ public enum HitTypeEnum
     Explosion, //взрыв
     DoubleClick, //двойной клик по элементу
     Drop, //сброс
-    //Instrument, //удар от инструмента
+    Instrument, //удар от инструмента
 }//Типы ударов по блоку
 
 public enum CollectionTypesEnum {

@@ -202,7 +202,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     {
         if (BlockCheck.ThisBlockWithMortalElement(block))
         {
-            block.Hit(HitTypeEnum.Explosion);
+            block.Hit(HitTypeEnum.Instrument);
             yield return new WaitForSeconds(0.3f);
             successfulActivation = true;
             yield break;
@@ -248,7 +248,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                 }
             } while (GridBlocks.Instance.blockedForMove);
 
-            block.Hit(HitTypeEnum.Explosion);
+            block.Hit(HitTypeEnum.Instrument);
             foreach (Block curBlock in blocks)
             {
                 if (curBlock != null)
@@ -259,7 +259,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                     {
                         yield return new WaitForSeconds(0.01f);
                     } while (instrumentGO.transform.position != curBlock.transform.position);
-                    curBlock.Hit(HitTypeEnum.Explosion);
+                    curBlock.Hit(HitTypeEnum.Instrument);
                 }
             }
             spriteRenderer.sprite = null;

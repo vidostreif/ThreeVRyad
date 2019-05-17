@@ -244,9 +244,7 @@ public class MainAnimator : MonoBehaviour {
 
                 if (item.thisTransform.position == item.targetPosition)
                 {
-                    ////выполняем прописанный делегат
-                    //if (item.action != null)
-                    //    item.action();
+                    
                     //удаляем если требуется
                     if (item.destroyAfterMoving)
                         Destroy(item.thisTransform.gameObject, 0.3f);

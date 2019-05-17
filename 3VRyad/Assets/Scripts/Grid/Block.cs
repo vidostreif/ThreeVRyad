@@ -80,7 +80,7 @@ public class Block : MonoBehaviour {
             if (this.Type != BlockTypeEnum.Empty)
             {
                 //если елемент не заблокирован
-                if (value != null)
+                if (value != null && !value.Destroyed)
                 {
                     element = value;
                     element.PositionInGrid = positionInGrid;
@@ -90,10 +90,11 @@ public class Block : MonoBehaviour {
                 {
                     element = value;
                 }
-                else
+                else if (value.Destroyed)
                 {
-                    Debug.LogError("Попытка замены элемента у заблокированного блока " + this.name);
-                    return;
+                   element = null;
+                   //Debug.Log("Попытка замены уничтоженного элемента " + this.name);
+                   return;
                 }
             }
             else if (value == null)
@@ -113,9 +114,16 @@ public class Block : MonoBehaviour {
 
         set
         {
-            behindElement = value;
-            behindElement.PositionInGrid = positionInGrid;
-            behindElement.thisTransform.parent = thisTransform;
+            if (value != null)
+            {
+                behindElement = value;
+                behindElement.PositionInGrid = positionInGrid;
+                behindElement.thisTransform.parent = thisTransform;
+            }
+            else if (value == null)
+            {
+                behindElement = value;
+            }
         }
     }
     public Position PositionInGrid
@@ -197,7 +205,7 @@ public class Block : MonoBehaviour {
         if (this.Type != BlockTypeEnum.Empty)
         {
             //если уже есть элемент то удаляем его
-            if (element != null)
+            if (element != null && !element.Destroyed)
             {
                 //ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()));
                 DellElement();
