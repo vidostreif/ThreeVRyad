@@ -1,4 +1,9 @@
 <root>
+  <GiftScript>
+    <bundles />
+    <bundelCount>0</bundelCount>
+    <coins>0</coins>
+  </GiftScript>
   <Bonuses>
     <bonusesList>
       <bonus shape="SmallFlask" type="SmallFlask" cost="4" />

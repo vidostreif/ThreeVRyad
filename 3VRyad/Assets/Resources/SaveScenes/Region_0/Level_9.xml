@@ -1,4 +1,14 @@
 <root>
+  <GiftScript>
+    <bundles>
+      <bundleShopV type="Shovel" count="1" />
+      <bundleShopV type="Shovel" count="1" />
+      <bundleShopV type="Vortex" count="1" />
+      <bundleShopV type="Repainting" count="3" />
+    </bundles>
+    <bundelCount>4</bundelCount>
+    <coins>10</coins>
+  </GiftScript>
   <Bonuses>
     <bonusesList>
       <bonus shape="SmallFlask" type="SmallFlask" cost="4" />
@@ -142,7 +152,7 @@
     <moves>30</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Grass" goal="30" collectEverything="true" />
+      <shapeAndGoal shape="Grass" goal="36" collectEverything="true" />
     </targets>
   </Tasks>
   <InstrumentPanel>

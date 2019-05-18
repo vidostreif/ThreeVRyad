@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 114700188932694780}
   - component: {fileID: 8462735856040924101}
   m_Layer: 5
-  m_Name: Instrument
+  m_Name: ButtonThing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -164,7 +164,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -13, y: -14.6}
+  m_AnchoredPosition: {x: -14.5, y: -19.8}
   m_SizeDelta: {x: 54.45, y: 47.68}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222658866782464528
@@ -199,7 +199,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 803bcd630405c02438ec18783a026145, type: 3}
     m_FontSize: 40
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
     m_MaxSize: 50
     m_Alignment: 4

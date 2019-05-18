@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class Shop : MonoBehaviour, IStoreListener
 {
     public static Shop Instance; // Синглтон
+    private float timeToAddCoins; //момент отсчета
+    private float pauseToAddCoins = 0.05f;//время следующего визуального начисления монет
     private int coins = 0; //валюта магазина
     private int addCoins;
     private int exchangeRate = 3; //курс обмена звезд на коины
@@ -72,37 +74,61 @@ public class Shop : MonoBehaviour, IStoreListener
     {
         Save save = JsonSaveAndLoad.LoadSave();
         addCoins = save.shopSave.coins;
-        //UpdateTextCoins();
+        UpdateTextCoins();
     }
 
     void FixedUpdate()
     {
+        //!!!Звук выдачи монет или траты монет
+
         if (addCoins > 50)
         {
-            int i = addCoins / 15;
-            coins += i;
-            addCoins -= i;
-            UpdateTextCoins();
+            pauseToAddCoins = 0.02f;
+        }
+        else if (addCoins > 15)
+        {
+            pauseToAddCoins = 0.05f;
         }
         else if (addCoins > 0)
         {
-            coins += 1;
-            addCoins -= 1;
-            UpdateTextCoins();
+            pauseToAddCoins = 0.08f;
         }
-        else if (addCoins < -50)
+        else
         {
-            int i = addCoins / 15;
-            coins -= i;
-            addCoins += i;
-            UpdateTextCoins();
+            pauseToAddCoins = 0.03f;
         }
-        else if (addCoins < 0)
+
+        if ((addCoins > 0 || addCoins < 0) && (timeToAddCoins + pauseToAddCoins) < Time.time)
         {
-            coins -= 1;
-            addCoins += 1;
-            UpdateTextCoins();
+            timeToAddCoins = Time.time;
+            if (addCoins > 50)
+            {
+                int i = addCoins / 15;
+                coins += i;
+                addCoins -= i;
+                UpdateTextCoins();
+            }
+            else if (addCoins > 0)
+            {
+                coins += 1;
+                addCoins -= 1;
+                UpdateTextCoins();
+            }
+            else if (addCoins < -50)
+            {
+                int i = addCoins / 15;
+                coins -= i;
+                addCoins += i;
+                UpdateTextCoins();
+            }
+            else if (addCoins < 0)
+            {
+                coins -= 1;
+                addCoins += 1;
+                UpdateTextCoins();
+            }
         }
+
     }
 
     public int ExchangeStarsForCoins(Level level, int stars) {
