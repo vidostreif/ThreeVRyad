@@ -44,7 +44,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
     public void Prepare()
     {
-        Time.timeScale = 1;
+        Time.timeScale = 1;        
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
         GridBlocks.Instance.FoundNextMove();//поиск хода
@@ -185,10 +185,12 @@ public class MainGameSceneScript : MonoBehaviour {
         //Сбрасываем значения  
         Time.timeScale = 1;
         HelpToPlayer.ClearHintList();//очищаем список подсказок
+        MainAnimator.Instance.ClearAllMassive();
         Tasks.Instance.ResetParameters();
         Score.Instance.ResetParameters();
         SuperBonus.Instance.ResetParameters();
         InstrumentPanel.Instance.ResetParameters();
+        MainAnimator.Instance.ClearAllMassive();
     }
 
     public void RestartLevel()
@@ -196,7 +198,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Destroy(CanvasMenu);
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
-            
+            MainAnimator.Instance.ClearAllMassive();
             LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
         }
         else
@@ -213,7 +215,8 @@ public class MainGameSceneScript : MonoBehaviour {
 
     public void ExitToMenu()
     {
-        ResetScene();
+        MainAnimator.Instance.ClearAllMassive();
+        HelpToPlayer.ClearHintList();//очищаем список подсказок
         LevelMenu.Instance.LoadMainMenu();
     }
 

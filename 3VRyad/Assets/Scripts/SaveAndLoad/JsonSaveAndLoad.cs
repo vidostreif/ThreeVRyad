@@ -168,7 +168,7 @@ public static class JsonSaveAndLoad
         //записываем новые данные
         foreach (Level level in levelList)
         {
-            save.regionSave[region].levelSave.Add(new LevelSave(level.Open, level.Passed, level.Stars, level.Score));
+            save.regionSave[region].levelSave.Add(new LevelSave(level.Open, level.Passed, level.GiftIssued, level.Stars, level.Score));
         }
 
         saveIsChanged = true;
@@ -282,13 +282,15 @@ public class LevelSave
     //public int level;
     public bool open;//открыт
     public bool passed;//пройден
+    public bool giftIssued;//есть подарок
     public int stars = 0;//количество звезд
     public int score = 0;//количество очков
 
-    public LevelSave(bool open, bool passed, int stars, int score)
+    public LevelSave(bool open, bool passed, bool giftIssued, int stars, int score)
     {
         this.open = open;
         this.passed = passed;
+        this.giftIssued = giftIssued;
         this.stars = stars;
         this.score = score;
     }

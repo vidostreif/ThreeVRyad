@@ -13,7 +13,6 @@ using System.Xml.Linq;
 //задания
 public class Tasks : MonoBehaviour, IESaveAndLoad
 {
-
     public static Tasks Instance; // Синглтон
     [HideInInspector] public Transform thisTransform;
     public GameObject prefabcollectedElements;

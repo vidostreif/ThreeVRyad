@@ -101,6 +101,9 @@ public class Target
         set
         {
             gameObject = value;
+            //если получаем новый объект, то сбрасываем все параметры связанныес с элементами в пути
+            transformsInTransitList = new List<Transform>();
+            itemsInTransit = 0;
         }
     }
 
@@ -154,22 +157,25 @@ public class Target
             itemsInTransit--;
             if (goal + itemsInTransit <= 0)
             {
-                //collected = true;
-                //создаем эффект 
-                GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollectAll") as GameObject, gameObject.transform);
-                //изменяем цвет
-                ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-                ps.textureSheetAnimation.AddSprite(image.sprite);
-
-                //Debug.Log("ItemReached goal " + goal);
-                //Debug.Log("ItemReached itemsInTransit " + itemsInTransit);
+                if (gameObject != null)
+                {
+                    //создаем эффект 
+                    GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollectAll") as GameObject, gameObject.transform);
+                    //изменяем цвет
+                    ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
+                    ps.textureSheetAnimation.AddSprite(image.sprite);
+                }
             }
             else
             {
-                //создаем эффект 
-                GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
-                ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-                ps.textureSheetAnimation.AddSprite(image.sprite);
+                if (gameObject != null)
+                {
+                    //создаем эффект 
+                    GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
+                    ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
+                    ps.textureSheetAnimation.AddSprite(image.sprite);
+                }
+                
             }
             UpdateText();
         }        

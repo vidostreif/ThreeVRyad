@@ -7,27 +7,27 @@ using UnityEngine.UI;
 
 //!!!Сделать статичным
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class MainAnimator : MonoBehaviour {
 
     public static MainAnimator Instance; // Синглтон
 
-    private ElementsForNextMove elementsForNextMove = new ElementsForNextMove(); //элементы для следующей подсказки игроку
-    private List<AnimatorElement> animatorsElementsForNextMove = new List<AnimatorElement>(); //аниматоры элементов для следующей подсказки игроку
+    private ElementsForNextMove elementsForNextMove; //элементы для следующей подсказки игроку
+    private List<AnimatorElement> animatorsElementsForNextMove; //аниматоры элементов для следующей подсказки игроку
     private float timeToHint = 2; //время до подсказки
     private float idleHintsTime; //момент отсчета
 
-    private List<MoveElement> moveElements = new List<MoveElement>();//элементы для перемещения
-    private List<MoveElement> moveElementsForRemove = new List<MoveElement>();//элементы которые можно удалить из коллекции
+    private List<MoveElement> moveElements;//элементы для перемещения
+    private List<MoveElement> moveElementsForRemove;//элементы которые можно удалить из коллекции
 
-    private List<Explosion> explosions = new List<Explosion>();//данные о взрывах
-    private List<Explosion> explosionsForRemove = new List<Explosion>();//элементы которые можно удалить из коллекции
+    private List<Explosion> explosions;//данные о взрывах
+    private List<Explosion> explosionsForRemove;//элементы которые можно удалить из коллекции
 
-    private List<CompressAndRecover> CompressAndRecoverElements = new List<CompressAndRecover>();//элементы для перемещения
-    private List<CompressAndRecover> CompressAndRecoverElementsForRemove = new List<CompressAndRecover>();//элементы которые можно удалить из коллекции
+    private List<CompressAndRecover> CompressAndRecoverElements;//элементы для перемещения
+    private List<CompressAndRecover> CompressAndRecoverElementsForRemove;//элементы которые можно удалить из коллекции
 
-    private List<ChangeColorElement> changeColorElements = new List<ChangeColorElement>();//элементы для смены цвета
-    private List<ChangeColorElement> changeColorElementsForRemove = new List<ChangeColorElement>();//элементы которые можно удалить из коллекции
+    private List<ChangeColorElement> changeColorElements;//элементы для смены цвета
+    private List<ChangeColorElement> changeColorElementsForRemove;//элементы которые можно удалить из коллекции
 
     public GameObject boom;
     public GameObject explosionEffect;//префаб
@@ -75,6 +75,7 @@ public class MainAnimator : MonoBehaviour {
         {
             DontDestroyOnLoad(gameObject); //Set as do not destroy
         }
+        ClearAllMassive();
     }
 	
 	// Update is called once per frame
@@ -88,6 +89,34 @@ public class MainAnimator : MonoBehaviour {
         CompressAndRecover();
         SmoothChangeColor();
     }
+
+    public void ClearAllMassive() {
+        elementsForNextMove = new ElementsForNextMove(); //элементы для следующей подсказки игроку
+        animatorsElementsForNextMove = new List<AnimatorElement>(); //аниматоры элементов для следующей подсказки игроку
+
+        //если остались объекты для передвижения которые нужно уничтожить
+        if (moveElements != null && moveElements.Count > 0)
+        {
+            foreach (MoveElement item in moveElements)
+            {
+                if (item.destroyAfterMoving)
+                {
+                    Destroy(item.thisTransform.gameObject);
+                }
+            }
+        }
+        moveElements = new List<MoveElement>();//элементы для перемещения
+        moveElementsForRemove = new List<MoveElement>();//элементы которые можно удалить из коллекции
+
+        explosions = new List<Explosion>();//данные о взрывах
+        explosionsForRemove = new List<Explosion>();//элементы которые можно удалить из коллекции
+
+        CompressAndRecoverElements = new List<CompressAndRecover>();//элементы для перемещения
+        CompressAndRecoverElementsForRemove = new List<CompressAndRecover>();//элементы которые можно удалить из коллекции
+
+        changeColorElements = new List<ChangeColorElement>();//элементы для смены цвета
+        changeColorElementsForRemove = new List<ChangeColorElement>();//элементы которые можно удалить из коллекции
+}
 
     //проигрование подскази игроку
     private void PlayHintAnimations() {
@@ -174,7 +203,6 @@ public class MainAnimator : MonoBehaviour {
     //процедура сглаженного перемещения объектов к указанной позиции
     private void SmoothMove()
     {
-
         //список элементов которые уже двигали, что бы не двигать повторно
         List<Transform> moveIitems = new List<Transform>();
 
@@ -283,7 +311,13 @@ public class MainAnimator : MonoBehaviour {
         {
             //выполняем прописанный делегат
             if (item.action != null)
-                item.action();
+            {
+                if (item.action.Method != null && item.action.Target != null)
+                {
+                    item.action();
+                }
+            }
+                
             moveElements.Remove(item);
         }
         moveElementsForRemove.Clear();
@@ -515,7 +549,6 @@ public class MainAnimator : MonoBehaviour {
         }
         changeColorElementsForRemove.Clear();
     }
-
 
 
     //вспомогательные

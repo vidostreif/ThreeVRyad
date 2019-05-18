@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -123,7 +124,7 @@ public class LevelMenu : MonoBehaviour
                 {
                     if (save.regionSave.Count > r && save.regionSave[r].levelSave.Count > l)
                     {
-                        regionsList[r].levelList[l].LoadSave(save.regionSave[r].levelSave[l].open, save.regionSave[r].levelSave[l].passed,
+                        regionsList[r].levelList[l].LoadSave(save.regionSave[r].levelSave[l].open, save.regionSave[r].levelSave[l].passed, save.regionSave[r].levelSave[l].giftIssued,
                             save.regionSave[r].levelSave[l].stars, save.regionSave[r].levelSave[l].score);
                     }
                 }
@@ -135,7 +136,9 @@ public class LevelMenu : MonoBehaviour
         this.regionsList = new List<Region>();
         UnityEngine.Object xmlDocument = null;
         Level level = null;
-        
+
+        //Debug.Log("Start parse " + Time.fixedTime);
+
         int r = 0;        
         do
         {
@@ -149,7 +152,7 @@ public class LevelMenu : MonoBehaviour
                     xmlDocument = SaveAndLoadScene.Instance().GetXmlDocument("Level_" + l, "Region_" + r);
                     if (xmlDocument != null)
                     {
-                        level = new Level(xmlDocument);
+                        level = new Level(xmlDocument);                      
                         regionsList[r].levelList.Add(level);
                     }
                     else
@@ -165,6 +168,8 @@ public class LevelMenu : MonoBehaviour
             }
             r++;
         } while (true);
+
+        //Debug.Log("Stop parse " + Time.fixedTime);
     }
 
     public Level LastLoadLevel
@@ -513,27 +518,71 @@ public class LevelMenu : MonoBehaviour
         foreach (Level level in region.levelList)
         {
             GameObject levelGameObject = Instantiate(PrefabBank.LevelButtonPrefab, LevelsCountTransform);
-            //Image image = elementGameObject.GetComponent(typeof(Image)) as Image;
-            //image.sprite = SpriteBank.SetShape(instruments[i].Type);
-            //instruments[i].Image = image;
-
-            //Выдаем звезды
-            for (int i = 1; i <= level.Stars; i++)
+            Transform textLevelTransform = levelGameObject.transform.Find("TextLevel");
+            textLevelTransform.GetComponent<Text>().text = levelNumber.ToString();
+            Text textLevel = textLevelTransform.GetComponent(typeof(Text)) as Text;
+            
+            //!!!Тест запихнуть в отдельную куротину, что бы данные загружались в фоне?      
+            if (!level.GiftIssued)
             {
-                Transform starTransform = levelGameObject.transform.Find("Star" + i);
-                Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
-                starImage.color = Color.white;
-                //SupportFunctions.ChangeAlfa(starImage, 1);
+                TextAsset txt = level.xmlDocument as TextAsset;
+                XElement root = XDocument.Parse(txt.text).Element("root");
+                bool destroyGiftBox = true;
+                foreach (XElement ListXElement in root.Elements())
+                {
+                    if (ListXElement.Name.ToString() == "GiftScript")
+                    {
+                        if (int.Parse(ListXElement.Element("coins").Value) > 0 || int.Parse(ListXElement.Element("bundelCount").Value) > 0)
+                        {
+                            destroyGiftBox = false;
+                        }
+                        break;
+                    }
+                }
+                //если не нашли скрипт или нет подарка
+                if (destroyGiftBox)
+                {
+                    //удаляем сундук
+                    Destroy(levelGameObject.transform.Find("ImageGiftBox").gameObject);
+                }
             }
+            else
+            {
+                //удаляем сундук
+                Destroy(levelGameObject.transform.Find("ImageGiftBox").gameObject);
+            }
+            
+            //!!! конец теста 
 
-            levelGameObject.GetComponentInChildren<Text>().text = levelNumber.ToString();
+
+
             //если лвл открыт то показываем, если предыдущий лвл был открыт, а наш нет, то тоже показываем
             if (level.Open)
-            {
-                SupportFunctions.ChangeAlfa(levelGameObject.GetComponentInChildren<Text>(), 1);
+            {                
+                SupportFunctions.ChangeAlfa(textLevel, 1);
+                //массив звезд
+                Image[] starsImages = new Image[3];
+                //показываем темные звезды
+                for (int j = 1; j <= 3; j++)
+                {
+                    Transform starTransform = levelGameObject.transform.Find("Star" + j);
+                    Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
+                    SupportFunctions.ChangeAlfa(starImage, 1);
+                    starsImages[j-1] = starImage;
+                }                
                 if (level.Passed)
                 {
                     previousLevelOpenAndPassed = true;
+                    //Выдаем звезды
+                    for (int i = 1; i <= level.Stars; i++)
+                    {
+                        starsImages[i-1].color = Color.white;
+                    }
+                    //показываем score
+                    Transform textScoreTransform = levelGameObject.transform.Find("TextScore");
+                    textScoreTransform.GetComponent<Text>().text = level.Score.ToString();
+                    Text textScore = textScoreTransform.GetComponent(typeof(Text)) as Text;
+                    SupportFunctions.ChangeAlfa(textScore, 1);
                 }
                 else
                 {
@@ -542,7 +591,14 @@ public class LevelMenu : MonoBehaviour
             }
             else if (previousLevelOpenAndPassed)
             {
-                SupportFunctions.ChangeAlfa(levelGameObject.GetComponentInChildren<Text>(), 1);
+                SupportFunctions.ChangeAlfa(textLevel, 1);
+                //показываем темные звезды
+                for (int j = 1; j <= 3; j++)
+                {
+                    Transform starTransform = levelGameObject.transform.Find("Star" + j);
+                    Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
+                    SupportFunctions.ChangeAlfa(starImage, 1);
+                }
                 level.SetLevelOpend();
                 previousLevelOpenAndPassed = false;
             }

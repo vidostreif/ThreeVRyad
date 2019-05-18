@@ -32,6 +32,19 @@ public class Shop : MonoBehaviour, IStoreListener
         }
     }
 
+    public bool AddGiftCoins(Level level, int coins) {
+        if (!level.GiftIssued)
+        {
+            this.coins += coins;
+            UpdateTextCoins();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void Awake()
     {
         if (Instance)
@@ -60,8 +73,7 @@ public class Shop : MonoBehaviour, IStoreListener
         coins = save.shopSave.coins;
         UpdateTextCoins();
     }
-
-
+    
 
     public void ExchangeStarsForCoins(Level level, int stars) {
 
@@ -230,7 +242,7 @@ public class Shop : MonoBehaviour, IStoreListener
         }
         else
         {
-            Debug.Log("Недалось распознать тип покупки: " + product.id);
+            Debug.Log("Неудалось распознать тип покупки: " + product.id);
         }
     }
 
@@ -404,4 +416,10 @@ public class ProductV {
 public class BundleShopV {
     public InstrumentsEnum type;//какой вид инструмента
     public int count;//количество
+
+    public BundleShopV(InstrumentsEnum type, int count)
+    {
+        this.type = type;
+        this.count = count;
+    }
 }

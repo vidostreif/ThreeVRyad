@@ -13,6 +13,8 @@ public class Level
     [SerializeField] public UnityEngine.Object xmlDocument = null;
     private bool open = false;//открыт
     private bool passed = false;//пройден
+    //public bool haveGift = false;//имеет подарок
+    private bool giftIssued = false;//подарок выдан
     private int stars = 0;//количество звезд
     private int score = 0;//количество очков
 
@@ -98,9 +100,18 @@ public class Level
         }
     }
 
-    public void LoadSave(bool open, bool passed, int stars, int score) {
+    public bool GiftIssued
+    {
+        get
+        {
+            return giftIssued;
+        }
+    }
+
+    public void LoadSave(bool open, bool passed, bool giftIssued, int stars, int score) {
         this.open = open;
         this.passed = passed;
+        this.giftIssued = giftIssued;
         this.stars = stars;
         this.score = score;
     }
@@ -115,15 +126,39 @@ public class Level
         open = true;
         passed = true;
 
-            if (this.stars < stars)
+        //есть подарок и он не выдан
+        if (!giftIssued)
+        {
+            //выдаем подарок
+            bool result = true;
+            //если есть бандл инструментов
+            if (GiftScript.Instance.bundel.Length > 0)
             {
-                if (stars > 3)
-                {
-                stars = 3;
-                }
-            Shop.Instance.ExchangeStarsForCoins(this, stars);
-                this.stars = stars;
+                result = ThingsManager.Instance.addinstruments(GiftScript.Instance.bundel);
             }
+
+            //если небыло никаких ошибок и есть монеты - добавляем монеты
+            if (result && GiftScript.Instance.coins > 0)
+            {
+                result = Shop.Instance.AddGiftCoins(this, GiftScript.Instance.coins);                
+            }
+
+            //если небыло никаких ошибок помечаем подарок как выданный
+            if (result)
+            {
+                giftIssued = true;
+            }            
+        }
+
+        if (this.stars < stars)
+        {
+            if (stars > 3)
+            {
+            stars = 3;
+            }
+            Shop.Instance.ExchangeStarsForCoins(this, stars);
+            this.stars = stars;
+        }
 
         if (this.score < score)
         {

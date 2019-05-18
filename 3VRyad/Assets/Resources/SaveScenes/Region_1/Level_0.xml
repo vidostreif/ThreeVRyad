@@ -1,4 +1,12 @@
 <root>
+  <GiftScript>
+    <bundles>
+      <bundleShopV type="Shovel" count="1" />
+      <bundleShopV type="Hoe" count="1" />
+    </bundles>
+    <bundelCount>2</bundelCount>
+    <coins>10</coins>
+  </GiftScript>
   <Bonuses>
     <bonusesList>
       <bonus shape="MediumFlask" type="MediumFlask" cost="30" />
