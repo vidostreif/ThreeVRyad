@@ -360,6 +360,8 @@ public class LevelMenu : MonoBehaviour
 
     //работа с переходом между уровнями
     public void LoadLevel(Level inLevel) {
+        MainAnimator.Instance.ClearAllMassive();
+        HelpToPlayer.ClearHintList();//очищаем список подсказок
         StartCoroutine(CurLoadLevel(inLevel));
     }
 
@@ -448,13 +450,15 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
-    public void SetLevelPassed(int stars, int score)
+    public LevelPassedResult SetLevelPassed(int stars, int score)
     {
+        LevelPassedResult levelPassedResult = new LevelPassedResult();
         if (lastLoadLevel != null)
         {
-            lastLoadLevel.SetLevelPassed(stars, score);
+            levelPassedResult = lastLoadLevel.SetLevelPassed(stars, score);
             SetOpenNextLevel();
-        }        
+        }
+        return levelPassedResult;
     }
 
     private IEnumerator CurLoadLevel(Level inLevel) {
@@ -667,6 +671,8 @@ public class LevelMenu : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        MainAnimator.Instance.ClearAllMassive();
+        HelpToPlayer.ClearHintList();//очищаем список подсказок
         StartCoroutine(CurLoadMainMenu());
     }
 

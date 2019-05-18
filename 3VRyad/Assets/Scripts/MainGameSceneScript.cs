@@ -83,21 +83,6 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
 
         //передача аналитики
-        //Firebase.Analytics.Parameter[] Level_EndParameters = {
-        //  new Firebase.Analytics.Parameter(
-        //    Firebase.Analytics.FirebaseAnalytics.ParameterLocation, LevelMenu.Instance.lastLoadFolder),
-        //  new Firebase.Analytics.Parameter(
-        //    Firebase.Analytics.FirebaseAnalytics.ParameterLevel, LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
-        //  new Firebase.Analytics.Parameter(
-        //    Firebase.Analytics.FirebaseAnalytics.ParameterSuccess, Tasks.Instance.collectedAll.ToString()),
-        //  new Firebase.Analytics.Parameter(
-        //    Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
-        //  new Firebase.Analytics.Parameter(
-        //    "Stars", Score.Instance.NumberOfStarsReceived())
-        //};
-
-        //Firebase.Analytics.FirebaseAnalytics.LogEvent("Level_End", Level_EndParameters);
-
         Firebase.Analytics.Parameter[] LevelEndParameters = {          
           new Firebase.Analytics.Parameter(
             Firebase.Analytics.FirebaseAnalytics.ParameterLevelName, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
@@ -105,19 +90,6 @@ public class MainGameSceneScript : MonoBehaviour {
             Firebase.Analytics.FirebaseAnalytics.ParameterSuccess, Tasks.Instance.collectedAll.ToString()),          
         };
         Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLevelEnd, LevelEndParameters);
-
-        //Firebase.Analytics.Parameter[] PostScoreParameters = {
-        //  new Firebase.Analytics.Parameter(
-        //    Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore()),
-        //  new Firebase.Analytics.Parameter(
-        //    Firebase.Analytics.FirebaseAnalytics.ParameterLevelName, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
-        //  new Firebase.Analytics.Parameter(
-        //    Firebase.Analytics.FirebaseAnalytics.ParameterCharacter, Score.Instance.NumberOfStarsReceived()),
-        //  //new Firebase.Analytics.Parameter(
-        //  //  "Stars", Score.Instance.NumberOfStarsReceived())
-        //};
-
-        //Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventPostScore, PostScoreParameters);
 
         string nameEvent;
         if (Tasks.Instance.collectedAll)
@@ -142,6 +114,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
         Firebase.Analytics.FirebaseAnalytics.LogEvent("Score", LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name, Score.Instance.getScore());
 
+        //запускаем куротину для постепенного отображения элементов
         //если выполнили все задания
         if (Tasks.Instance.collectedAll)
         {
@@ -150,15 +123,13 @@ public class MainGameSceneScript : MonoBehaviour {
                         
             //Выдаем звезды
             int stars = Score.Instance.NumberOfStarsReceived();
+            LevelPassedResult levelPassedResult = LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore());
 
-            for (int i = 1; i <= stars; i++)
-            {
-                Transform starTransform = PanelMenu.transform.Find("Star" + i);
-                Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
-                SupportFunctions.ChangeAlfa(starImage, 1);
-            }
+            StartCoroutine(EndGameAnimationStars(PanelMenu, levelPassedResult));
 
-            LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore());
+            //показываем количество очков
+
+            
 
             if (LevelMenu.Instance.NextLevelIsOpen())
             {
@@ -174,11 +145,46 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
+            //удаляем звезды и текст количества очков
+
             //поражение
             textEndGame.text = "Поражение!";
             Destroy(gONextLevelButton.gameObject);
         }
     }
+
+    //анимация выдачи звезд в конце уровня
+    private IEnumerator EndGameAnimationStars(Transform panelMenu, LevelPassedResult levelPassedResult)
+    {
+        for (int i = 1; i <= levelPassedResult.stars; i++)
+        {
+            Transform starTransform = panelMenu.transform.Find("Star" + i);
+            Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
+            SupportFunctions.ChangeAlfa(starImage, 1);
+            //создаем эффект 
+            GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollectAll") as GameObject, starTransform);
+            //изменяем спрайт у эффекта
+            ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
+            ps.textureSheetAnimation.AddSprite(starImage.sprite);
+
+            //!!!Звук выдачи звезды
+
+            //анимация передачи монет в магазин
+            if (true)
+            {
+
+            }
+
+
+            yield return new WaitForSeconds(0.3f);
+        }
+    }
+
+    ////анимация набора очков в конце уровня
+    //private IEnumerator EndGameAnimationScore()
+    //{
+
+    //}
 
     private void ResetScene()
     {
@@ -198,7 +204,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Destroy(CanvasMenu);
         if (LevelMenu.Instance.LastLoadLevel != null)
         {
-            MainAnimator.Instance.ClearAllMassive();
+            //MainAnimator.Instance.ClearAllMassive();
             LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
         }
         else
@@ -214,9 +220,7 @@ public class MainGameSceneScript : MonoBehaviour {
     }
 
     public void ExitToMenu()
-    {
-        MainAnimator.Instance.ClearAllMassive();
-        HelpToPlayer.ClearHintList();//очищаем список подсказок
+    {        
         LevelMenu.Instance.LoadMainMenu();
     }
 

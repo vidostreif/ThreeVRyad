@@ -9,6 +9,7 @@ public class Shop : MonoBehaviour, IStoreListener
 {
     public static Shop Instance; // Синглтон
     private int coins = 0; //валюта магазина
+    private int addCoins;
     private int exchangeRate = 3; //курс обмена звезд на коины
     
     private GameObject panelShop; //магазин
@@ -28,15 +29,15 @@ public class Shop : MonoBehaviour, IStoreListener
     {
         get
         {
-            return coins;
+            return coins + addCoins;
         }
     }
 
     public bool AddGiftCoins(Level level, int coins) {
         if (!level.GiftIssued)
         {
-            this.coins += coins;
-            UpdateTextCoins();
+            this.addCoins += coins;
+            //UpdateTextCoins();
             return true;
         }
         else
@@ -70,18 +71,51 @@ public class Shop : MonoBehaviour, IStoreListener
     void Start()
     {
         Save save = JsonSaveAndLoad.LoadSave();
-        coins = save.shopSave.coins;
-        UpdateTextCoins();
+        addCoins = save.shopSave.coins;
+        //UpdateTextCoins();
     }
-    
 
-    public void ExchangeStarsForCoins(Level level, int stars) {
+    void FixedUpdate()
+    {
+        if (addCoins > 50)
+        {
+            int i = addCoins / 15;
+            coins += i;
+            addCoins -= i;
+            UpdateTextCoins();
+        }
+        else if (addCoins > 0)
+        {
+            coins += 1;
+            addCoins -= 1;
+            UpdateTextCoins();
+        }
+        else if (addCoins < -50)
+        {
+            int i = addCoins / 15;
+            coins -= i;
+            addCoins += i;
+            UpdateTextCoins();
+        }
+        else if (addCoins < 0)
+        {
+            coins -= 1;
+            addCoins += 1;
+            UpdateTextCoins();
+        }
+    }
 
+    public int ExchangeStarsForCoins(Level level, int stars) {
         if (level.Stars < stars )
         {
-            coins += (stars - level.Stars) * exchangeRate;
+            int newCoins = (stars - level.Stars) * exchangeRate;
+            addCoins += newCoins;
             JsonSaveAndLoad.RecordSave(this);
-            UpdateTextCoins();
+            return newCoins;
+        }
+        else
+        {
+            return 0;
         }
     }
 
@@ -217,7 +251,7 @@ public class Shop : MonoBehaviour, IStoreListener
     //купить товар
     public void Buy(ProductV product)
     {
-        if (product.priceCoins <= coins && product.priceCoins != 0)
+        if (product.priceCoins <= Coins && product.priceCoins != 0)
         {
             //если достаточно монет
             if (product.productType == ProductType.Consumable)
@@ -308,7 +342,7 @@ public class Shop : MonoBehaviour, IStoreListener
             //если небыло никаких ошибок и в купленном бандле есть монеты - добавляем монеты
             if (result)
             {
-                coins += product.coins;
+                addCoins += product.coins;
                 JsonSaveAndLoad.RecordSave(this);
             }
 
@@ -318,8 +352,8 @@ public class Shop : MonoBehaviour, IStoreListener
                 //Debug.Log("успешная покупка " + product.id);
 
                 //выводим панель подтверждения
-                CreateShopConfirmation("Вы успешно преобрели " + product.name);                
-                coins -= product.priceCoins;
+                CreateShopConfirmation("Вы успешно преобрели " + product.name);
+                addCoins -= product.priceCoins;
                 JsonSaveAndLoad.SetSaveToFile();
             }
             else
@@ -328,7 +362,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 CreateShopConfirmation("Мы не смогли обработать вашу покупку!");
             }
 
-            UpdateTextCoins();
+            //UpdateTextCoins();
             product = null;
             return result;
         }

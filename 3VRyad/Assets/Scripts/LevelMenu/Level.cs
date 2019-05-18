@@ -121,26 +121,35 @@ public class Level
         open = true;
     }
 
-    public void SetLevelPassed(int stars, int score)
+    public LevelPassedResult SetLevelPassed(int stars, int score)
     {
         open = true;
         passed = true;
-
+        
         //есть подарок и он не выдан
+        Gift gift = new Gift();
         if (!giftIssued)
         {
             //выдаем подарок
             bool result = true;
             //если есть бандл инструментов
-            if (GiftScript.Instance.bundel.Length > 0)
+            if (GiftScript.Instance.gift.bundel.Length > 0)
             {
-                result = ThingsManager.Instance.addinstruments(GiftScript.Instance.bundel);
+                result = ThingsManager.Instance.addinstruments(GiftScript.Instance.gift.bundel);
+                if (result)
+                {
+                    gift.bundel = GiftScript.Instance.gift.bundel;
+                }
             }
 
             //если небыло никаких ошибок и есть монеты - добавляем монеты
-            if (result && GiftScript.Instance.coins > 0)
+            if (result && GiftScript.Instance.gift.coins > 0)
             {
-                result = Shop.Instance.AddGiftCoins(this, GiftScript.Instance.coins);                
+                result = Shop.Instance.AddGiftCoins(this, GiftScript.Instance.gift.coins);
+                if (result)
+                {
+                    gift.coins += GiftScript.Instance.gift.coins;
+                }
             }
 
             //если небыло никаких ошибок помечаем подарок как выданный
@@ -150,20 +159,27 @@ public class Level
             }            
         }
 
+        int plusStars = 0;
+        int plusCoins = 0;
         if (this.stars < stars)
         {
             if (stars > 3)
             {
             stars = 3;
             }
-            Shop.Instance.ExchangeStarsForCoins(this, stars);
+            plusStars = stars - this.stars;
+            plusCoins = Shop.Instance.ExchangeStarsForCoins(this, stars);
             this.stars = stars;
         }
 
+        int plusScore = 0;
         if (this.score < score)
         {
+            plusScore = score - this.score;
             this.score = score;
-        }                   
+        }
+
+        return new LevelPassedResult(score, plusScore, stars, plusStars, plusCoins, gift);
     }
 
     public void GetButtonFrom(GameObject elementGameObject)
@@ -359,3 +375,33 @@ public class PropertyDrawerUtility
     }
 }
 #endif
+
+public class LevelPassedResult
+{
+    public int score;
+    public int plusScore;
+    public int stars;
+    public int plusStars;
+    public int plusCoins;
+    public Gift gift;
+
+    public LevelPassedResult()
+    {
+        score = 0;
+        plusScore = 0;
+        stars = 0;
+        plusStars = 0;
+        plusCoins = 0;
+        gift = new Gift();
+    }
+
+    public LevelPassedResult(int score, int plusScore, int stars, int plusStars, int plusCoins, Gift gift)
+    {
+        this.score = score;
+        this.plusScore = plusScore;
+        this.stars = stars;
+        this.plusStars = plusStars;
+        this.plusCoins = plusCoins;
+        this.gift = gift;
+    }
+}

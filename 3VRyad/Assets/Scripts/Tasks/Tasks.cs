@@ -173,7 +173,10 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
     public void SetParentTargets(Transform targetTransform)
     {
-        targetTransform.SetParent(targetsParent.transform, true);
+        if (targetTransform != null && targetsParent != null)
+        {
+            targetTransform.SetParent(targetsParent.transform, true);
+        }        
     }
 
 
