@@ -40,7 +40,7 @@ public class Shop : MonoBehaviour, IStoreListener
         if (!level.GiftIssued)
         {
             this.addCoins += coins;
-            StartCoroutine(UpdateTextCoins(3));
+            //StartCoroutine(UpdateTextCoins(3));
             return true;
         }
         else
@@ -78,36 +78,42 @@ public class Shop : MonoBehaviour, IStoreListener
         textCoins.text = "" + coins;
     }
 
-    //void FixedUpdate()
-    //{
-    //    //!!!Звук выдачи монет или траты монет            
-    //}
+    public void CoinFlew(int price) {
 
-    private IEnumerator UpdateTextCoins(float pause = 0)
+        if (price > addCoins)
+        {
+            price = addCoins;
+        }
+        coins += price;
+        addCoins -= price;
+        textCoins.text = "" + coins;
+    }
+
+    private IEnumerator UpdateTextCoins()
     {
         if (!updateCoins)
         {
             textCoins.text = "" + coins;
-            yield return new WaitForSeconds(pause);
+            yield return new WaitForSeconds(0.1f);
             updateCoins = true;
             do
             {
                 yield return new WaitForFixedUpdate();
-                if (addCoins > 50)
-                {
-                    double d = addCoins * 0.1f;
-                    int i = (int)Math.Truncate(d);
-                    coins += i;
-                    addCoins -= i;
-                    textCoins.text = "" + coins;
-                }
-                else if (addCoins > 0)
-                {
-                    coins += 1;
-                    addCoins -= 1;
-                    textCoins.text = "" + coins;
-                }
-                else if (addCoins < -50)
+                //if (addCoins > 50)
+                //{
+                //    double d = addCoins * 0.1f;
+                //    int i = (int)Math.Truncate(d);
+                //    coins += i;
+                //    addCoins -= i;
+                //    textCoins.text = "" + coins;
+                //}
+                //else if (addCoins > 0)
+                //{
+                //    coins += 1;
+                //    addCoins -= 1;
+                //    textCoins.text = "" + coins;
+                //}
+                if (addCoins < -50)
                 {
                     double d = -addCoins * 0.1f;
                     int i = (int)Math.Truncate(d);
@@ -133,7 +139,7 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             int newCoins = (stars - level.Stars) * exchangeRate;
             addCoins += newCoins;
-            StartCoroutine(UpdateTextCoins(2));
+            //StartCoroutine(UpdateTextCoins(2));
             JsonSaveAndLoad.RecordSave(this);
             return newCoins;
         }
@@ -367,7 +373,7 @@ public class Shop : MonoBehaviour, IStoreListener
             if (result)
             {
                 addCoins += product.coins;
-                StartCoroutine(UpdateTextCoins(0.3f));
+                //StartCoroutine(UpdateTextCoins());
                 JsonSaveAndLoad.RecordSave(this);
             }
 
@@ -379,7 +385,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 //выводим панель подтверждения
                 CreateShopConfirmation("Вы успешно преобрели " + product.name);
                 addCoins -= product.priceCoins;
-                StartCoroutine(UpdateTextCoins(0.3f));
+                StartCoroutine(UpdateTextCoins());
                 JsonSaveAndLoad.SetSaveToFile();
             }
             else

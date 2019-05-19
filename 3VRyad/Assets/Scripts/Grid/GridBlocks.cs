@@ -459,7 +459,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 else
                 {
                     Time.timeScale = 1;
-                    MainGameSceneScript.Instance.CompleteGame();
+                    StartCoroutine(MainGameSceneScript.Instance.CompleteGame());
                 }
                 yield break;
             }

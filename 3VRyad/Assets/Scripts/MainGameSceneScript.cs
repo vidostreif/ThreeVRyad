@@ -10,6 +10,10 @@ public class MainGameSceneScript : MonoBehaviour {
     public static MainGameSceneScript Instance; // Синглтон
     private GameObject CanvasMenu;
 
+    bool animationStarsComplete = false;
+    bool animationScoreComplete = false;
+    bool animationGiftComplete = false;
+
     void Awake()
     {
         // регистрация синглтона
@@ -60,7 +64,7 @@ public class MainGameSceneScript : MonoBehaviour {
         }              
     }
 
-    public void CompleteGame()
+    public IEnumerator CompleteGame()
     {
         Time.timeScale = 1;
         HelpToPlayer.ClearHintList();//очищаем список подсказок
@@ -76,12 +80,17 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform gORestartButton = PanelMenu.transform.Find("RestartButton");
         Button restartButton = gORestartButton.GetComponent<Button>();
         restartButton.onClick.AddListener(delegate { RestartLevel(); });
+        restartButton.interactable = false;
 
         Transform gOExitButton = PanelMenu.transform.Find("ExitButton");
         Button exitButton = gOExitButton.GetComponent<Button>();
         exitButton.onClick.AddListener(delegate { ExitToMenu(); });
+        exitButton.interactable = false;
 
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
+        Button nextLevelButton = gONextLevelButton.GetComponent<Button>();
+        nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
+        nextLevelButton.interactable = false;
 
         //передача аналитики
         string nameEvent;
@@ -130,20 +139,18 @@ public class MainGameSceneScript : MonoBehaviour {
             LevelPassedResult levelPassedResult = LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore());
 
             //показываем звезды
+            animationStarsComplete = false;
             StartCoroutine(EndGameAnimationStars(PanelMenu, levelPassedResult));
 
             //показываем количество очков
+            animationScoreComplete = false;
             StartCoroutine(EndGameAnimationScore(PanelMenu, levelPassedResult));
 
             //показываем подарки
+            animationGiftComplete = false;
             StartCoroutine(EndGameAnimationGift(PanelMenu, levelPassedResult));
 
-            if (LevelMenu.Instance.NextLevelIsOpen())
-            {
-                Button nextLevelButton = gONextLevelButton.GetComponent<Button>();
-                nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
-            }
-            else
+            if (!LevelMenu.Instance.NextLevelIsOpen())
             {
                 Destroy(gONextLevelButton.gameObject);
             }
@@ -152,14 +159,34 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
-            //удаляем текст количества очков и панель подарков
-            Destroy(PanelMenu.transform.Find("PanelGift").gameObject);
-            Destroy(PanelMenu.transform.Find("TextScore").gameObject);
-
+            //animationStarsComplete = true;
+            //animationScoreComplete = true;
+            //animationGiftComplete = true;
+            
             //поражение
             textEndGame.text = "Поражение!";
             Destroy(gONextLevelButton.gameObject);
+            //удаляем текст количества очков и панель подарков
+            Destroy(PanelMenu.transform.Find("PanelGift").gameObject);
+            Destroy(PanelMenu.transform.Find("TextScore").gameObject);
         }
+
+        //ждем до тех пор
+        do
+        {
+            //если все анимации закончили свои действия активируем кнопки
+            if ((animationStarsComplete && animationScoreComplete && animationGiftComplete) || !Tasks.Instance.collectedAll)
+            {
+                restartButton.interactable = true;
+                exitButton.interactable = true;
+                if (Tasks.Instance.collectedAll && LevelMenu.Instance.NextLevelIsOpen())
+                {
+                    nextLevelButton.interactable = true;
+                }
+                break;
+            }
+            yield return new WaitForSeconds(0.2f);
+        } while (true);
     }
 
     //анимация выдачи звезд в конце уровня
@@ -177,7 +204,7 @@ public class MainGameSceneScript : MonoBehaviour {
         }
 
         //Находим монету в магазине
-        GameObject imageCoinsGO = GameObject.Find("ImageCoins");
+        GameObject shopImageCoinsGO = GameObject.Find("ImageCoins");
 
         for (int i = 1; i <= levelPassedResult.stars; i++)
         {
@@ -198,16 +225,18 @@ public class MainGameSceneScript : MonoBehaviour {
                 //создаем монеты
                 for (int j = 0; j < coinsForOneStar; j++)
                 {
-                    GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, starTransform);
+                    GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, starTransform.position, Quaternion.identity, shopImageCoinsGO.transform);
                     //перемещаем чуть выше
                     MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, new Vector3(starTransform.position.x - 0.5f + j * 0.5f, starTransform.position.y + 1, starTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
                     //перемещаем к монете в магазине
-                    MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, imageCoinsGO.transform.position, 1, SmoothEnum.InLineWithSlowdown, 0.05f, true, true);
+                    MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, shopImageCoinsGO.transform.position, 1, SmoothEnum.InLineWithOneSpeed, 1.35f, true, true, delegate { Shop.Instance.CoinFlew(1); });
                 }
             }
 
             yield return new WaitForSeconds(0.7f);
         }
+
+        animationStarsComplete = true;
     }
 
     ////анимация набора очков в конце уровня
@@ -257,6 +286,8 @@ public class MainGameSceneScript : MonoBehaviour {
 
             yield return new WaitForEndOfFrame();
         } while (score > 0);
+
+        animationScoreComplete = true;
     }
 
     //анимация выдачи подарков в конце уровня
@@ -277,7 +308,7 @@ public class MainGameSceneScript : MonoBehaviour {
         //если есть подарки то продолжаем
         if (giftLength > 0)
         {
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(1.2f);
             //находим наш сундук
             Transform imageOpenGiftBoxTransform = panelGiftTransform.Find("ImageOpenGiftBox");
 
@@ -289,7 +320,7 @@ public class MainGameSceneScript : MonoBehaviour {
             {
                 startPoint = 1;
                 //Находим монету в магазине
-                GameObject imageCoinsGO = GameObject.Find("ImageCoins");
+                GameObject shopImageCoinsGO = GameObject.Find("ImageCoins");
 
                 //показываем монету среди подарков
                 //создаем рядом с сундуком
@@ -300,13 +331,13 @@ public class MainGameSceneScript : MonoBehaviour {
                 //перемещаем на свою позицию
                 MainAnimator.Instance.AddElementForSmoothMove(giftCoinGO.transform, new Vector3(startingXPoint, panelGiftTransform.position.y, panelGiftTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
 
-                //создаем монеты
+                //создаем монеты рядом с монетой подарком
                 for (int j = 0; j < levelPassedResult.gift.coins; j++)
                 {
-                    GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftCoinGO.transform);
+                    GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftCoinGO.transform.position, Quaternion.identity, shopImageCoinsGO.transform);
 
-                    //перемещаем к монете в магазине
-                    MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, imageCoinsGO.transform.position, 1, SmoothEnum.InLineWithSlowdown, 0.05f, true, true);
+                    //перемещаем к монеты в магазин
+                    MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, shopImageCoinsGO.transform.position, 1, SmoothEnum.InLineWithOneSpeed, 1.05f, true, true, delegate { Shop.Instance.CoinFlew(1); });
 
                     yield return new WaitForEndOfFrame();
                 }
@@ -332,8 +363,8 @@ public class MainGameSceneScript : MonoBehaviour {
         {
             Destroy(panelGiftTransform.gameObject);
         }
-        
-        
+
+        animationGiftComplete = true;
     }
 
     private void ResetScene()
