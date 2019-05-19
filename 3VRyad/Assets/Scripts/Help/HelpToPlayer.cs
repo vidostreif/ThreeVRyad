@@ -211,7 +211,7 @@ public static class HelpToPlayer
                 activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.CanvasHelpToPlayer);
 
                 //находим нужную подсказку
-                if (activeHint.help == BlockTypeEnum.Standard.ToString())
+                if (activeHint.help == BlockTypeEnum.StandardBlock.ToString())
                 {
                     //для стандартного блока не показываем подсказку
                     created = false;
@@ -224,7 +224,7 @@ public static class HelpToPlayer
                 {
                     created = CreateBlockHelp(BlockTypeEnum.Sliding);
                 }
-                else if (activeHint.help == ElementsTypeEnum.Standard.ToString())
+                else if (activeHint.help == ElementsTypeEnum.StandardElement.ToString())
                 {
                     created = CreateStandardElementHelp(3);
                 }
@@ -492,7 +492,7 @@ public static class HelpToPlayer
             {
                 text.text = "По этому блоку все скользит в низ!";
             }
-            else if (activeHint.help == ElementsTypeEnum.Standard.ToString())
+            else if (activeHint.help == ElementsTypeEnum.StandardElement.ToString())
             {
                 text.text = "Что бы собрать растения в нашем саду, их нужно собрать в линии из более чем двух растений. Попробуйте передвинуть выделяющееся растение!";
             }

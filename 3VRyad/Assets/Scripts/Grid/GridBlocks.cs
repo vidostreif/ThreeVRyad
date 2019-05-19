@@ -820,7 +820,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     continue;
                                 if (curBlock == null)//если блок не существует
                                     continue;
-                                if (curBlock != null && curBlock.Type != BlockTypeEnum.Standard)//если тип не стандартный
+                                if (curBlock != null && curBlock.Type != BlockTypeEnum.StandardBlock)//если тип не стандартный
                                     continue;
                                 if (BlockCheck.ThisBlockWithElementCantMove(curBlock))//если элемент заблокирован для движения
                                     continue;
@@ -1004,7 +1004,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     ElementsPriority elementsSAndP = listPriority.Find(item => item.ElementsShape == containers[x].block[y].Element.Shape);
                     if (elementsSAndP == null)
                     {
-                        listPriority.Add(new ElementsPriority(containers[x].block[y].Element.Shape, ElementsTypeEnum.Standard, 1, 1));
+                        listPriority.Add(new ElementsPriority(containers[x].block[y].Element.Shape, ElementsTypeEnum.StandardElement, 1, 1));
                     }
                     else
                     {

@@ -20,7 +20,7 @@ public class ElementSmallFlask : Element
     protected override void DopSettings()
     {
         explosionRadius = 1;
-        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Standart, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick, HitTypeEnum.Instrument };
+        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick, HitTypeEnum.Instrument };
         //находим аниматор
         transform.GetComponent<AnimatorElement>().playIdleAnimationRandomTime = true;
     }

@@ -46,7 +46,7 @@ public static class BlockCheck
     public static bool ThisBlockWithStandartElement(Block block)
     {
 
-        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.Standard)
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.StandardElement)
         {
             return true;
         }
@@ -111,7 +111,7 @@ public static class BlockCheck
     public static bool ThisStandartBlock(Block block)
     {
 
-        if (block != null && block.Type == BlockTypeEnum.Standard)
+        if (block != null && block.Type == BlockTypeEnum.StandardBlock)
         {
             return true;
         }
@@ -124,7 +124,7 @@ public static class BlockCheck
     public static bool ThisNotStandartBlock(Block block)
     {
 
-        if (block != null && block.Type != BlockTypeEnum.Standard)
+        if (block != null && block.Type != BlockTypeEnum.StandardBlock)
         {
             return true;
         }
@@ -137,7 +137,7 @@ public static class BlockCheck
     public static bool ThisStandardBlockWithoutElement(Block block)
     {
 
-        if (block != null && block.Type == BlockTypeEnum.Standard && (block.Element == null || block.Element.Destroyed))
+        if (block != null && block.Type == BlockTypeEnum.StandardBlock && (block.Element == null || block.Element.Destroyed))
         {
             return true;
         }
@@ -163,7 +163,7 @@ public static class BlockCheck
     public static bool ThisStandardBlockWithStandartElementCanMove(Block block)
     {
 
-        if (block != null && block.Type == BlockTypeEnum.Standard && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.Standard && !block.Element.LockedForMove)
+        if (block != null && block.Type == BlockTypeEnum.StandardBlock && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.StandardElement && !block.Element.LockedForMove)
         {
             return true;
         }

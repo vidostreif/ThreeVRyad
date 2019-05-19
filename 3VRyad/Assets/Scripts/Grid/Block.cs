@@ -222,7 +222,7 @@ public class Block : MonoBehaviour {
             GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), Quaternion.identity);
             Element curElement;
                     
-            if (typeElementsEnum == ElementsTypeEnum.Standard)
+            if (typeElementsEnum == ElementsTypeEnum.StandardElement)
             {                
                 curElement = elementGameObject.AddComponent<Element>();
                 curElement.InitialSettings(typeElementsEnum, false, false, true, false, HitTypeEnum.HitFromNearbyElement, 100);
@@ -323,7 +323,7 @@ public class Block : MonoBehaviour {
     }
     
     //удар по блоку
-    public void Hit(HitTypeEnum hitTypeEnum = HitTypeEnum.Standart, AllShapeEnum hitElementShape = AllShapeEnum.Empty) {
+    public void Hit(HitTypeEnum hitTypeEnum = HitTypeEnum.StandartHit, AllShapeEnum hitElementShape = AllShapeEnum.Empty) {
 
         if (element != null && !element.Destroyed)
         {

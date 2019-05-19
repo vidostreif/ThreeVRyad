@@ -5,7 +5,7 @@ using System.Collections;
 public enum ElementsTypeEnum
 {
     Empty, //пустой блок
-    Standard, //стандартный блок в который вкладывается элемент
+    StandardElement, //стандартный блок в который вкладывается элемент
     SpecElement,
     ImmortalWall, //неразрушаемая стена
     CrushableWall, //разрушаемый блок, который предварительно нужно разбить
@@ -90,7 +90,7 @@ public enum AllShapeEnum
 public enum BlockTypeEnum
 {
     Empty, //пустой блок
-    Standard, //стандартный блок
+    StandardBlock, //стандартный блок
     Sliding //скользящий
 }//Типы блоков
 
@@ -106,7 +106,7 @@ public enum InstrumentsEnum
 public enum HitTypeEnum
 {
     Empty,
-    Standart, //прямой удар по элементу
+    StandartHit, //прямой удар по элементу
     HitFromNearbyElement, //удар от соседнего элемента
     Explosion, //взрыв
     DoubleClick, //двойной клик по элементу

@@ -152,7 +152,9 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
-            //удаляем звезды и текст количества очков
+            //удаляем текст количества очков и панель подарков
+            Destroy(PanelMenu.transform.Find("PanelGift").gameObject);
+            Destroy(PanelMenu.transform.Find("TextScore").gameObject);
 
             //поражение
             textEndGame.text = "Поражение!";
@@ -216,7 +218,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
         int score = levelPassedResult.score;
         int newScore = 0;
-        int plusScore = levelPassedResult.plusScore;
+        //int plusScore = levelPassedResult.plusScore;
         int oldScore = levelPassedResult.score - levelPassedResult.plusScore;
 
         bool createdNewScore = false;
@@ -227,7 +229,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 int i = score / 15;
                 newScore += i;
                 score -= i;
-                textScore.text = "" + newScore;
+                textScore.text = "Score: " + newScore;
             }
             else if (score > 0)
             {
@@ -254,7 +256,7 @@ public class MainGameSceneScript : MonoBehaviour {
         } while (score > 0);
     }
 
-    //анимация выдачи звезд в конце уровня
+    //анимация выдачи подарков в конце уровня
     private IEnumerator EndGameAnimationGift(Transform panelMenu, LevelPassedResult levelPassedResult)
     {
         int giftLength = 0;
@@ -272,6 +274,10 @@ public class MainGameSceneScript : MonoBehaviour {
         //если есть подарки то продолжаем
         if (giftLength > 0)
         {
+            yield return new WaitForSeconds(0.5f);
+            //находим наш сундук
+            Transform imageOpenGiftBoxTransform = panelGiftTransform.Find("ImageOpenGiftBox");
+
             //смещение по x
             float startingXPoint = panelGiftTransform.position.x - ((1 + 0.5f) * (giftLength-1)) * 0.5f;
 
@@ -283,9 +289,13 @@ public class MainGameSceneScript : MonoBehaviour {
                 GameObject imageCoinsGO = GameObject.Find("ImageCoins");
 
                 //показываем монету среди подарков
-                GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint, panelGiftTransform.position.y, panelGiftTransform.position.z), Quaternion.identity, panelGiftTransform);
+                //создаем рядом с сундуком
+                GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z), Quaternion.identity, panelGiftTransform);
                 giftCoinGO.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/coin") as Sprite;
                 giftCoinGO.GetComponentInChildren<Text>().text = "+" + levelPassedResult.gift.coins;
+
+                //перемещаем на свою позицию
+                MainAnimator.Instance.AddElementForSmoothMove(giftCoinGO.transform, new Vector3(startingXPoint, panelGiftTransform.position.y, panelGiftTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
 
                 //создаем монеты
                 for (int j = 0; j < levelPassedResult.gift.coins; j++)
@@ -297,7 +307,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
                     yield return new WaitForEndOfFrame();
                 }
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.2f);
             }
 
             //показываем подарки
@@ -305,11 +315,14 @@ public class MainGameSceneScript : MonoBehaviour {
             {
                 if (levelPassedResult.gift.bundel[i].count > 0)
                 {
-                    GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + ((i + startPoint) * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z), Quaternion.identity, panelGiftTransform);
+                    GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z), Quaternion.identity, panelGiftTransform);
                     go.GetComponent<Image>().sprite = SpriteBank.SetShape(levelPassedResult.gift.bundel[i].type);
                     go.GetComponentInChildren<Text>().text = "+" + levelPassedResult.gift.bundel[i].count;
+                    //перемещаем на свою позицию
+                    MainAnimator.Instance.AddElementForSmoothMove(go.transform, new Vector3(startingXPoint + ((i + startPoint) * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+
                 }
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.3f);
             }
         }
         else

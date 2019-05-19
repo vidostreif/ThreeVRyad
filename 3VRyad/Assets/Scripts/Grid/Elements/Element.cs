@@ -101,11 +101,11 @@ public class Element : BaseElement
 
     protected virtual void DopSettings()
     {
-        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Standart, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
+        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
     }
 
     //удар по элементу
-    public override void Hit(HitTypeEnum hitType = HitTypeEnum.Standart, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
+    public override void Hit(HitTypeEnum hitType = HitTypeEnum.StandartHit, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
     {
         if (!destroyed)
         {
@@ -141,7 +141,7 @@ public class Element : BaseElement
         Position position = new Position(PositionInGrid.posX, PositionInGrid.posY);
         base.DestroyElement();
 
-        if (hitType == HitTypeEnum.Standart || hitType == HitTypeEnum.Instrument)
+        if (hitType == HitTypeEnum.StandartHit || hitType == HitTypeEnum.Instrument)
             HitNeighboringBlocks(thisHitTypeEnum, position);
     }
 

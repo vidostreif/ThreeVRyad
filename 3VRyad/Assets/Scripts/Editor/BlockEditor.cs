@@ -23,7 +23,7 @@ public class BlockEditor : Editor
         EditorGUILayout.LabelField("Настройка блока:", EditorStyles.boldLabel);
         block.Type = (BlockTypeEnum)EditorGUILayout.EnumPopup("Тип блока", block.Type);
 
-        if (block.Type == BlockTypeEnum.Standard) {
+        if (block.Type == BlockTypeEnum.StandardBlock) {
             block.GeneratorElements = EditorGUILayout.Toggle("Генератор элементов", block.GeneratorElements);
             block.Dropping = EditorGUILayout.Toggle("Сбрасываает элементы", block.Dropping);
 
