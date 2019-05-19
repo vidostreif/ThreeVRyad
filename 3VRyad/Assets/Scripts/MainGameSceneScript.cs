@@ -277,7 +277,7 @@ public class MainGameSceneScript : MonoBehaviour {
         //если есть подарки то продолжаем
         if (giftLength > 0)
         {
-            yield return new WaitForSeconds(0.9f);
+            yield return new WaitForSeconds(1.0f);
             //находим наш сундук
             Transform imageOpenGiftBoxTransform = panelGiftTransform.Find("ImageOpenGiftBox");
 

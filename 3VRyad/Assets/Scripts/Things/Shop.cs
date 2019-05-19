@@ -8,8 +8,9 @@ using UnityEngine.UI;
 public class Shop : MonoBehaviour, IStoreListener
 {
     public static Shop Instance; // Синглтон
-    private float timeToAddCoins; //момент отсчета
-    private float pauseToAddCoins = 0.05f;//время следующего визуального начисления монет
+    //private float timeToAddCoins; //момент отсчета
+    //private float pauseToAddCoins = 0.05f;//время следующего визуального начисления монет
+    private bool updateCoins;
     private int coins = 0; //валюта магазина
     private int addCoins;
     private int exchangeRate = 3; //курс обмена звезд на коины
@@ -39,7 +40,7 @@ public class Shop : MonoBehaviour, IStoreListener
         if (!level.GiftIssued)
         {
             this.addCoins += coins;
-            //UpdateTextCoins();
+            StartCoroutine(UpdateTextCoins(3));
             return true;
         }
         else
@@ -73,62 +74,58 @@ public class Shop : MonoBehaviour, IStoreListener
     void Start()
     {
         Save save = JsonSaveAndLoad.LoadSave();
-        addCoins = save.shopSave.coins;
-        UpdateTextCoins();
+        coins = save.shopSave.coins;
+        textCoins.text = "" + coins;
     }
 
-    void FixedUpdate()
+    //void FixedUpdate()
+    //{
+    //    //!!!Звук выдачи монет или траты монет            
+    //}
+
+    private IEnumerator UpdateTextCoins(float pause = 0)
     {
-        //!!!Звук выдачи монет или траты монет
-
-        if (addCoins > 50)
+        if (!updateCoins)
         {
-            pauseToAddCoins = 0.02f;
-        }
-        else if (addCoins > 15)
-        {
-            pauseToAddCoins = 0.05f;
-        }
-        else if (addCoins > 0)
-        {
-            pauseToAddCoins = 0.08f;
-        }
-        else
-        {
-            pauseToAddCoins = 0.03f;
-        }
-
-        if ((addCoins > 0 || addCoins < 0) && (timeToAddCoins + pauseToAddCoins) < Time.time)
-        {
-            timeToAddCoins = Time.time;
-            if (addCoins > 50)
+            textCoins.text = "" + coins;
+            yield return new WaitForSeconds(pause);
+            updateCoins = true;
+            do
             {
-                int i = addCoins / 15;
-                coins += i;
-                addCoins -= i;
-                UpdateTextCoins();
-            }
-            else if (addCoins > 0)
-            {
-                coins += 1;
-                addCoins -= 1;
-                UpdateTextCoins();
-            }
-            else if (addCoins < -50)
-            {
-                int i = addCoins / 15;
-                coins -= i;
-                addCoins += i;
-                UpdateTextCoins();
-            }
-            else if (addCoins < 0)
-            {
-                coins -= 1;
-                addCoins += 1;
-                UpdateTextCoins();
-            }
-        }
-
+                yield return new WaitForFixedUpdate();
+                if (addCoins > 50)
+                {
+                    double d = addCoins * 0.1f;
+                    int i = (int)Math.Truncate(d);
+                    coins += i;
+                    addCoins -= i;
+                    textCoins.text = "" + coins;
+                }
+                else if (addCoins > 0)
+                {
+                    coins += 1;
+                    addCoins -= 1;
+                    textCoins.text = "" + coins;
+                }
+                else if (addCoins < -50)
+                {
+                    double d = -addCoins * 0.1f;
+                    int i = (int)Math.Truncate(d);
+                    coins -= i;
+                    addCoins += i;
+                    textCoins.text = "" + coins;
+                }
+                else if (addCoins < 0)
+                {
+                    coins -= 1;
+                    addCoins += 1;
+                    textCoins.text = "" + coins;
+                }
+                                
+            } while (addCoins != 0);
+            textCoins.text = "" + coins;
+            updateCoins = false;
+        }       
     }
 
     public int ExchangeStarsForCoins(Level level, int stars) {
@@ -136,6 +133,7 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             int newCoins = (stars - level.Stars) * exchangeRate;
             addCoins += newCoins;
+            StartCoroutine(UpdateTextCoins(2));
             JsonSaveAndLoad.RecordSave(this);
             return newCoins;
         }
@@ -145,11 +143,11 @@ public class Shop : MonoBehaviour, IStoreListener
         }
     }
 
-    //обнолвление текста
-    private void UpdateTextCoins()
-    {
-        textCoins.text = coins.ToString();
-    }
+    ////обнолвление текста
+    //private void UpdateTextCoins()
+    //{
+    //    textCoins.text = "" + coins;
+    //}
 
     //создание меню магазина
     public void CreateShop()
@@ -369,6 +367,7 @@ public class Shop : MonoBehaviour, IStoreListener
             if (result)
             {
                 addCoins += product.coins;
+                StartCoroutine(UpdateTextCoins(0.3f));
                 JsonSaveAndLoad.RecordSave(this);
             }
 
@@ -380,6 +379,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 //выводим панель подтверждения
                 CreateShopConfirmation("Вы успешно преобрели " + product.name);
                 addCoins -= product.priceCoins;
+                StartCoroutine(UpdateTextCoins(0.3f));
                 JsonSaveAndLoad.SetSaveToFile();
             }
             else
