@@ -165,6 +165,7 @@ public class MainGameSceneScript : MonoBehaviour {
     //анимация выдачи звезд в конце уровня
     private IEnumerator EndGameAnimationStars(Transform panelMenu, LevelPassedResult levelPassedResult)
     {
+        yield return new WaitForSeconds(0.4f);
         //номер звезды с которой начинаем выдавать монеты
         int numberStarForCoin = levelPassedResult.stars - levelPassedResult.plusStars + 1;
 
@@ -205,7 +206,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 }
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.7f);
         }
     }
 
@@ -218,10 +219,12 @@ public class MainGameSceneScript : MonoBehaviour {
 
         int score = levelPassedResult.score;
         int newScore = 0;
+        textScore.text = "Score: " + newScore;
         //int plusScore = levelPassedResult.plusScore;
         int oldScore = levelPassedResult.score - levelPassedResult.plusScore;
 
         bool createdNewScore = false;
+        yield return new WaitForSeconds(0.2f);
         do
         {
             if (score > 50)
@@ -246,7 +249,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 SupportFunctions.ChangeAlfa(imageNewScore, 1);
 
                 //создаем эффект 
-                GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollectAll") as GameObject, imageNewScore.transform);
+                GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, imageNewScore.transform);
                 //изменяем спрайт у эффекта
                 ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
                 ps.textureSheetAnimation.AddSprite(imageNewScore.sprite);
@@ -274,7 +277,7 @@ public class MainGameSceneScript : MonoBehaviour {
         //если есть подарки то продолжаем
         if (giftLength > 0)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.9f);
             //находим наш сундук
             Transform imageOpenGiftBoxTransform = panelGiftTransform.Find("ImageOpenGiftBox");
 
