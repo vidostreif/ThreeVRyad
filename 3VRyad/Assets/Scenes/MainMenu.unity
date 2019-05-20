@@ -234,6 +234,31 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 7457034389743375135}
+    - target: {fileID: 415568049360065173, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_PlaneDistance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 415568049360065173, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 415568049360065173, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_PixelPerfect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939963624915304202, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000022888184
+      objectReference: {fileID: 0}
+    - target: {fileID: 3939963624915304202, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00025177002
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef0be9df780aeef448c6023379b6a320, type: 3}
 --- !u!1 &630875481
@@ -648,7 +673,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 7457034389743375329, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1368275442, guid: c5fa6683a9f5e704a9133c3b1a2bcb88, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c5fa6683a9f5e704a9133c3b1a2bcb88, type: 3}
 --- !u!20 &7457034389743375135 stripped
 Camera:

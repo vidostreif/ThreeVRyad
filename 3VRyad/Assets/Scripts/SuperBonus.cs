@@ -17,7 +17,9 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private int charges = 0; //заряды супербонуса
     private bool activated;//активируется в текущий момент
     private bool activateSuperBonusOnEnd;
-    private Image tankImage;
+    ParticleSystem pSSuperBonus;
+    //private Image tankImage;
+
     private List<HitSuperBonus> HitSuperBonusList;
     private List<HitSuperBonus> HitSuperBonusListForDelete;
 
@@ -34,7 +36,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         activateSuperBonusOnEnd = false;
         HitSuperBonusList = new List<HitSuperBonus>();
         HitSuperBonusListForDelete = new List<HitSuperBonus>();
-        tankImage = transform.GetComponent(typeof(Image)) as Image;
+        //tankImage = transform.GetComponent(typeof(Image)) as Image;
+        pSSuperBonus = transform.GetComponentInChildren<ParticleSystem>();
         FilledImage();
     }
 
@@ -133,11 +136,18 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
 
     //заполнение картинки, в соответсвии с заполнением бонуса
     private void FilledImage() {
-
-
-        if (maxBonusPower != 0 && tankImage != null)
+        
+        if (maxBonusPower != 0 && pSSuperBonus != null && allow)
         {
-            tankImage.fillAmount = (float)bonusPower / (float)maxBonusPower;
+            var emission = pSSuperBonus.emission;
+            if (charges > 0 || activated)
+            {
+                emission.rateOverTime = 1000;
+            }
+            else
+            {
+                emission.rateOverTime = (float)bonusPower / (float)maxBonusPower * 1000;
+            }            
         }        
     }
 
@@ -176,6 +186,10 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             yield return new WaitForSeconds(0.01f);
         } while (HitSuperBonusList.Count > 0);
 
+        //визуально деактивируем
+        bonusPower = 0;
+        FilledImage();
+
         activateSuperBonusOnEnd = false;
     }
 
@@ -211,7 +225,9 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         if (allow && charges > 0 && !activated)
         {
             charges--;
-            tankImage.fillAmount = 1;
+            var emission = pSSuperBonus.emission;
+            emission.rateOverTime = 1000;
+            //tankImage.fillAmount = 1;
             Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
             //получаем все возможные блоки для следующего хода
             List<ElementsForNextMove> elementsForNextMove = GridBlocks.Instance.CheckElementsForNextMove();
@@ -268,8 +284,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                 
                 //запускаем дальнейшую обработку блоков
                 StartCoroutine(CreatingEffects(blocksForWork));
-            }
-            FilledImage();
+            }            
         }        
     }
 
@@ -290,6 +305,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(block.transform), block));//добавляем в список для последующей обработки                        
             yield return new WaitForSeconds(0.1f);
         }
+        FilledImage();
         activated = false;
     }
 
