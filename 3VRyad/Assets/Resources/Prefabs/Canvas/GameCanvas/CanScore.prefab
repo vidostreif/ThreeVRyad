@@ -604,9 +604,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2039d5d79a337048821e915a8b576b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreForFirstStar: 3000
-  scoreForSecondStar: 5000
-  scoreForThirdStar: 10000
+  scoreFor1Star: 0
+  scoreFor2Star: 0
+  scoreFor3Star: 0
 --- !u!1 &7801321878377496528
 GameObject:
   m_ObjectHideFlags: 0

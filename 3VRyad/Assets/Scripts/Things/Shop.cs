@@ -222,7 +222,7 @@ public class Shop : MonoBehaviour, IStoreListener
             panelShopConfirmation = Instantiate(PrefabBank.PanelShopConfirmation, panelShop.transform);
             panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = "Вы успешно преобрели " + product.name;
             Transform buttonOkTransform = panelShopConfirmation.transform.Find("ButtonOk");
-            ChangeButtonAction(buttonOkTransform, DestroyPanelShopConfirmation, "OK");
+            ChangeButtonAction(buttonOkTransform, DestroyPanelShopConfirmation);
             Button buttonOk = buttonOkTransform.GetComponent<Button>();
             buttonOk.interactable = false;//отключаем кнопку до конца проигрования анимации
             
@@ -308,7 +308,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 giftCoinGO.GetComponentInChildren<Text>().text = "+" + product.coins;
 
                 int coins = product.coins;
-                int exchangeRate = (int)coins / 5;
+                int exchangeRate = 5;
                 //создаем монеты рядом с монетой
                 do
                 {
@@ -349,7 +349,7 @@ public class Shop : MonoBehaviour, IStoreListener
             }
             panelShopConfirmation = Instantiate(PrefabBank.PanelShopInformation, panelShop.transform);
             panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
-            ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation, "OK");
+            ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation);
         }
     }
 
@@ -377,7 +377,17 @@ public class Shop : MonoBehaviour, IStoreListener
 
     private void ChangeButtonAction(Transform buttonTransform, Action action, string str) {
         Button ButtonE = buttonTransform.GetComponent(typeof(Button)) as Button;
-        buttonTransform.GetComponentInChildren<Text>().text = str;
+        if (buttonTransform.GetComponentInChildren<Text>())
+        {
+            buttonTransform.GetComponentInChildren<Text>().text = str;
+        }        
+        ButtonE.onClick.RemoveAllListeners();
+        ButtonE.onClick.AddListener(delegate { action(); });
+    }
+
+    private void ChangeButtonAction(Transform buttonTransform, Action action)
+    {
+        Button ButtonE = buttonTransform.GetComponent(typeof(Button)) as Button;
         ButtonE.onClick.RemoveAllListeners();
         ButtonE.onClick.AddListener(delegate { action(); });
     }
