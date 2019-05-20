@@ -11,7 +11,7 @@ public class ThingsManager : MonoBehaviour
 {
     public static ThingsManager Instance; // Синглтон
     public float distanceBetweenInstruments;
-    public Thing[] instruments;// список инструментов 
+    private Thing[] instruments;// список инструментов 
     
     void Awake()
     {
@@ -33,18 +33,22 @@ public class ThingsManager : MonoBehaviour
 
         //загружаем сохранение
         Save save = JsonSaveAndLoad.LoadSave();
-        foreach (InstrumentsSave instrumentsSave in save.instrumentsSave)
+        //создаем список инструментов и проставляем данные
+        instruments = new Thing[Enum.GetNames(typeof(InstrumentsEnum)).Length];
+        for (int i = 0; i < instruments.Length; i++)
         {
-            foreach (Thing instrument in instruments)
+            int quantity = 0;
+            InstrumentsEnum instrumentsEnum = (InstrumentsEnum)Enum.GetValues(typeof(InstrumentsEnum)).GetValue(i);
+            foreach (InstrumentsSave instrumentsSave in save.instrumentsSave)
             {
-                if (instrumentsSave.instrumenTypeEnum == instrument.Type.ToString())
+                if (instrumentsSave.instrumenTypeEnum == instrumentsEnum.ToString())
                 {
-                    instrument.AddQuantity(instrumentsSave.count);
+                    quantity = instrumentsSave.count;
                     break;
                 }
             }
+            instruments[i] = new Thing(instrumentsEnum, quantity);
         }
-        
     }
    
     //добавление количества инструментов из бандла
@@ -116,5 +120,31 @@ public class ThingsManager : MonoBehaviour
                 Debug.Log("Не нашли панель в магазине для отображения инструментов!");
             }
     }
-        
+
+    public Thing GetThing(InstrumentsEnum type) {
+        if (instruments != null)
+        {
+            foreach (Thing item in instruments)
+            {
+                if (item.Type == type)
+                {
+                    return item;
+                }
+            }
+        }
+         return null;
+    }
+
+    public void RecordSave()
+    {
+        JsonSaveAndLoad.RecordSave(instruments);
+    }
+
+    public void CountAllNumber()
+    {
+        foreach (var item in instruments)
+        {
+            item.CountNumber();
+        }
+    }
 }

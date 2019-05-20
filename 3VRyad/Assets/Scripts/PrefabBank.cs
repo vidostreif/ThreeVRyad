@@ -24,6 +24,8 @@ public static class PrefabBank
     private static GameObject shopButtonPrefab = Resources.Load(prefabFolder + "Canvas/Shop/ShopButton") as GameObject;
     private static GameObject prefabButtonThing = Resources.Load(prefabFolder + "Canvas/GameCanvas/ButtonThing") as GameObject;
     private static GameObject panelShopConfirmation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopConfirmation") as GameObject;
+    private static GameObject panelShopInformation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopConfirmation") as GameObject;
+    
 
     private static GameObject scoreElementPrefab = Resources.Load(prefabFolder + "Canvas/GameCanvas/ScoreElement") as GameObject;
 
@@ -43,6 +45,7 @@ public static class PrefabBank
     public static GameObject ShopButtonPrefab { get => shopButtonPrefab;}
     public static GameObject PrefabButtonThing { get => prefabButtonThing;}
     public static GameObject PanelShopConfirmation { get => panelShopConfirmation;}
+    public static GameObject PanelShopInformation { get => panelShopInformation; }
     public static GameObject ScoreElementPrefab { get => scoreElementPrefab;}
     public static GameObject CanvasHelpToPlayer { get => canvasHelpToPlayer;}
     public static GameObject CanvasStartGame { get => canvasStartGame;}

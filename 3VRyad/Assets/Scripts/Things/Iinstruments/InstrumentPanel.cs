@@ -76,12 +76,10 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         {
             foreach (InstrumentOnGame instrumentOnGame in instrumentsOnGame)
             {
-                foreach (Thing instrument in ThingsManager.Instance.instruments)
+                Thing thing = ThingsManager.Instance.GetThing(instrumentOnGame.Type);
+                if (thing != null)
                 {
-                    if (instrumentOnGame.Type == instrument.Type)
-                    {
-                        instrumentOnGame.InstrumentOnManager = instrument;
-                    }
+                    instrumentOnGame.InstrumentOnManager = thing;
                 }
             }
         }        
@@ -188,7 +186,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             {
                 Debug.Log("Инструмент активирован!");
                 preparedInstrument.InstrumentOnManager.SubQuantity();
-                JsonSaveAndLoad.RecordSave(ThingsManager.Instance.instruments);
+                ThingsManager.Instance.RecordSave();
                 GridBlocks.Instance.Move();
                 successfulActivation = false;
             }

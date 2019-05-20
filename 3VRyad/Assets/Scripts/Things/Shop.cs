@@ -8,8 +8,6 @@ using UnityEngine.UI;
 public class Shop : MonoBehaviour, IStoreListener
 {
     public static Shop Instance; // Синглтон
-    //private float timeToAddCoins; //момент отсчета
-    //private float pauseToAddCoins = 0.05f;//время следующего визуального начисления монет
     private bool updateCoins;
     private int coins = 0; //валюта магазина
     private int addCoins;
@@ -24,6 +22,7 @@ public class Shop : MonoBehaviour, IStoreListener
     private static IStoreController m_StoreController;
     private static IExtensionProvider m_StoreExtensionProvider;
     private ProductV currentProduct;
+    bool stateOfPurchase = false;
 
     [Tooltip("Список товаров для доступные для покупки")]
     public ProductV[] PRODUCTS;
@@ -47,6 +46,14 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             return false;
         }
+    }
+
+    //принудительно пересчитываем количество
+    public void CountCoins()
+    {
+        coins += addCoins;
+        addCoins = 0;
+        textCoins.text = "" + coins;
     }
 
     public void Awake()
@@ -149,12 +156,6 @@ public class Shop : MonoBehaviour, IStoreListener
         }
     }
 
-    ////обнолвление текста
-    //private void UpdateTextCoins()
-    //{
-    //    textCoins.text = "" + coins;
-    //}
-
     //создание меню магазина
     public void CreateShop()
     {
@@ -165,6 +166,10 @@ public class Shop : MonoBehaviour, IStoreListener
         }
         panelShop = Instantiate(PrefabBank.ShopPanelPrefab, transform);
         Transform contentTransform = panelShop.transform.Find("Viewport/Content");
+
+        //принудительно пересчитываем количество вещей и монет
+        ThingsManager.Instance.CountAllNumber();
+        CountCoins();
 
         //витрина
         foreach (ProductV product in PRODUCTS)
@@ -206,7 +211,7 @@ public class Shop : MonoBehaviour, IStoreListener
     }
 
     //создаем панель подтверждения покупки
-    public void CreateShopConfirmation(string str)
+    public IEnumerator CreateShopConfirmation(ProductV product)
     {        
         if (panelShop != null)
         {
@@ -215,6 +220,134 @@ public class Shop : MonoBehaviour, IStoreListener
                 Destroy(panelShopConfirmation);
             }
             panelShopConfirmation = Instantiate(PrefabBank.PanelShopConfirmation, panelShop.transform);
+            panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = "Вы успешно преобрели " + product.name;
+            Transform buttonOkTransform = panelShopConfirmation.transform.Find("ButtonOk");
+            ChangeButtonAction(buttonOkTransform, DestroyPanelShopConfirmation, "OK");
+            Button buttonOk = buttonOkTransform.GetComponent<Button>();
+            buttonOk.interactable = false;//отключаем кнопку до конца проигрования анимации
+            
+            //проигрываем анимацию 
+            yield return StartCoroutine(ShopConfirmationAnimation(panelShop, panelShopConfirmation, product));
+
+            stateOfPurchase = false;
+            buttonOk.interactable = true;//включаем кнопку
+        }
+    }
+
+    private IEnumerator ShopConfirmationAnimation(GameObject panelShop, GameObject panelShopConfirmation, ProductV product) {
+        yield return new WaitForSeconds(0.1f);
+
+        Transform panelShoppingListTransform = panelShopConfirmation.transform.Find("PanelShoppingList");
+        //Transform PanelShopInstrumentsTransform = panelShop.transform.Find("PanelShopInstruments");
+
+        //определяем длинну массива подарков
+        int giftLength = 0;
+        if (product.coins > 0)
+        {
+            giftLength++;
+        }
+        if (product.compositionBundle.Length > 0)
+        {
+            giftLength += product.compositionBundle.Length;
+        }
+
+            //показываем наши покупки
+        if (giftLength > 0)
+        {
+            //смещение по x
+            float startingXPoint = panelShoppingListTransform.position.x - ((1 + 0.5f) * (giftLength - 1)) * 0.5f;
+
+            for (int i = 0; i < product.compositionBundle.Length; i++)
+            {
+                if (product.compositionBundle[i].count > 0)
+                {
+                    GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + (i * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), Quaternion.identity, panelShoppingListTransform);
+                    go.GetComponent<Image>().sprite = SpriteBank.SetShape(product.compositionBundle[i].type);
+                    go.GetComponentInChildren<Text>().text = "+" + product.compositionBundle[i].count;
+
+                    //находим нашу вещ в менеджере вещей
+                    Thing thing = ThingsManager.Instance.GetThing(product.compositionBundle[i].type);
+
+                    if (thing != null)
+                    {
+                        //создаем новые покупки рядом с основной
+                        int count = product.compositionBundle[i].count;
+                        do
+                        {
+                            count -= 1;
+                            //добавим рандома в месте создания монет
+                            float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
+                            float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
+
+                            //берем монетку и меняем у нее вид
+                            GameObject mminiThingGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, go.transform.position, Quaternion.identity, panelShoppingListTransform);
+                            mminiThingGO.GetComponent<Image>().sprite = SpriteBank.SetShape(product.compositionBundle[i].type);
+
+                            //перемещаем на рандомную позицию
+                            MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, new Vector3(go.transform.position.x + randomNumberX, go.transform.position.y + randomNumberY, go.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+
+                            //перемещаем к панеле вещей в магазине
+                            MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, thing.Go.transform.position, 1, SmoothEnum.InLineWithOneSpeed, 0.85f, true, true, delegate { thing.ThingFlew(1); });
+
+                            yield return new WaitForEndOfFrame();
+                        } while (count > 0);
+                    }                    
+                }
+                yield return new WaitForSeconds(0.3f);
+            }
+
+            if (product.coins > 0)
+            {
+                //показываем монету
+                //Находим монету в магазине
+                Transform shopImageCoinsTransform = panelShopOnGame.transform.Find("ImageCoins");
+
+                //показываем монету среди подарков
+                GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + ((0 + product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), Quaternion.identity, panelShoppingListTransform);
+                giftCoinGO.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/coin") as Sprite;
+                giftCoinGO.GetComponentInChildren<Text>().text = "+" + product.coins;
+
+                int coins = product.coins;
+                int exchangeRate = (int)coins / 5;
+                //создаем монеты рядом с монетой
+                do
+                {
+                    //определяем какое количество будет передано в монете
+                    if (coins < exchangeRate)
+                    {
+                        exchangeRate = coins;
+                    }
+                    coins -= exchangeRate;
+
+                    //добавим рандома в месте создания монет
+                    float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
+                    float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
+
+                    GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftCoinGO.transform.position, Quaternion.identity, panelShoppingListTransform);
+
+                    //перемещаем на рандомную позицию
+                    MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, new Vector3(giftCoinGO.transform.position.x + randomNumberX, giftCoinGO.transform.position.y + randomNumberY, giftCoinGO.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+
+                    //перемещаем к монете в магазине
+                    MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, shopImageCoinsTransform.position, 1, SmoothEnum.InLineWithOneSpeed, 0.85f, true, true, delegate { Shop.Instance.CoinFlew(exchangeRate); });
+
+                    yield return new WaitForEndOfFrame();
+                } while (coins > 0);
+            }            
+        }
+        yield return new WaitForSeconds(1.0f);
+    }
+
+    //создаем панель инфформации
+    public void CreateShopInformation(string str)
+    {
+        if (panelShop != null)
+        {
+            if (panelShopConfirmation != null)
+            {
+                Destroy(panelShopConfirmation);
+            }
+            panelShopConfirmation = Instantiate(PrefabBank.PanelShopInformation, panelShop.transform);
             panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
             ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation, "OK");
         }
@@ -222,11 +355,19 @@ public class Shop : MonoBehaviour, IStoreListener
 
     public void DestroyPanelShop()
     {
-        //уменьшаем панель в верхнем углу
-        panelShopOnGame.localScale = panelShopOnGame.localScale / 2.0f;
+        //если не в состоянии покупки
+        if (!stateOfPurchase)
+        {
+            //уменьшаем панель в верхнем углу
+            panelShopOnGame.localScale = panelShopOnGame.localScale / 2.0f;
 
-        Destroy(panelShop);
-        ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");        
+            Destroy(panelShop);
+            ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
+
+            //принудительно пересчитываем количество вещей и монет
+            ThingsManager.Instance.CountAllNumber();
+            CountCoins();
+        }
     }
 
     public void DestroyPanelShopConfirmation()
@@ -281,33 +422,41 @@ public class Shop : MonoBehaviour, IStoreListener
     //купить товар
     public void Buy(ProductV product)
     {
-        if (product.priceCoins <= Coins && product.priceCoins != 0)
+        //если не уже в состоянии покупки
+        if (!stateOfPurchase)
         {
-            //если достаточно монет
-            if (product.productType == ProductType.Consumable)
+            stateOfPurchase = true;
+            if (product.priceCoins <= Coins && product.priceCoins != 0)
             {
-                Shop_OnPurchaseConsumable(product);
+                //если достаточно монет
+                if (product.productType == ProductType.Consumable)
+                {
+                    Shop_OnPurchaseConsumable(product);
+                }
+                else if (product.productType == ProductType.NonConsumable)
+                {
+                    Shop_OnPurchaseNonConsumable(product);
+                }
             }
-            else if (product.productType == ProductType.NonConsumable)
+            else if (product.priceCoins != 0)
             {
-                Shop_OnPurchaseNonConsumable(product);
-            }            
-        }
-        else if (product.priceCoins != 0)
-        {
-            //если недостаточно монет 
-            //!!!предолжить купить монет
-        }
-        else if(product.priceCoins == 0)
-        { 
-            //покупка за реальные деньги
-            currentProduct = product;
-            BuyProductForRealMoney(product);
-        }
-        else
-        {
-            Debug.Log("Неудалось распознать тип покупки: " + product.id);
-        }
+                //если недостаточно монет 
+                //!!!предолжить купить монет
+                CreateShopInformation("У вас недостаточно монет для покупки!");
+                stateOfPurchase = false;
+            }
+            else if (product.priceCoins == 0)
+            {
+                //покупка за реальные деньги
+                currentProduct = product;
+                BuyProductForRealMoney(product);
+            }
+            else
+            {
+                Debug.Log("Неудалось распознать тип покупки: " + product.id);
+                stateOfPurchase = false;
+            }
+        }        
     }
 
     //покупка продукта используя его идентификатор
@@ -340,8 +489,9 @@ public class Shop : MonoBehaviour, IStoreListener
             result = Shop_OnPurchaseNonConsumable(currentProduct);
         else
         {
-            CreateShopConfirmation("Во время обработки вашей покупки, что-то пошло не так!");
+            CreateShopInformation("Во время обработки вашей покупки, что-то пошло не так!");
             Debug.Log(string.Format("ProcessPurchase: FAIL. Unrecognized product: '{0}'", args.purchasedProduct.definition.id));
+            stateOfPurchase = false;
             result = false;
         }        
 
@@ -373,36 +523,33 @@ public class Shop : MonoBehaviour, IStoreListener
             if (result)
             {
                 addCoins += product.coins;
-                //StartCoroutine(UpdateTextCoins());
                 JsonSaveAndLoad.RecordSave(this);
             }
 
             //если успешная покупка, то отнимаем стоимось покупки в монетах (если она есть)
             if (result)
             {
-                //Debug.Log("успешная покупка " + product.id);
-
                 //выводим панель подтверждения
-                CreateShopConfirmation("Вы успешно преобрели " + product.name);
+                StartCoroutine(CreateShopConfirmation(product));
                 addCoins -= product.priceCoins;
                 StartCoroutine(UpdateTextCoins());
                 JsonSaveAndLoad.SetSaveToFile();
             }
             else
             {
-                //Debug.Log("неудачная покупка " + product.id);
-                CreateShopConfirmation("Мы не смогли обработать вашу покупку!");
+                CreateShopInformation("Мы не смогли обработать вашу покупку!");
+                stateOfPurchase = false;
             }
 
-            //UpdateTextCoins();
-            product = null;
+            product = null;            
             return result;
         }
         else
         {
             Debug.Log("Была произведена успешная покупка, но целевой бандел не найден!! " + product.id);
-            CreateShopConfirmation("Мы не смогли обработать вашу покупку!");
+            CreateShopInformation("Мы не смогли обработать вашу покупку!");
             product = null;
+            stateOfPurchase = false;
             return false;
         }        
     }
@@ -422,7 +569,7 @@ public class Shop : MonoBehaviour, IStoreListener
         //{
         //    Debug.Log("Была произведена успешная покупка, но целевой бандел не найден!! " + args.purchasedProduct.definition.id);
         //}
-
+        stateOfPurchase = false;
         return false;
     }
 
@@ -431,8 +578,9 @@ public class Shop : MonoBehaviour, IStoreListener
     {
         //OnFailedP(product, failureReason);
         //выводим панель подтверждения
-        CreateShopConfirmation("Во время обработки вашей покупки, что-то пошло не так!");
+        CreateShopInformation("Во время обработки вашей покупки, что-то пошло не так!");
         Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
+        stateOfPurchase = false;
     }
 }
 

@@ -8,9 +8,18 @@ using UnityEngine.UI;
 public class Thing
 {
     [SerializeField] private InstrumentsEnum type;//какой вид инструмента
-    private int quantity;//доступное количество
+    private int addQuantity = 0;//количество которое добавляем
+    private int quantity = 0;//доступное количество
+    private GameObject go;
     private ThingsButton shopThingButton; //кнопка вещи в магазине
-    
+
+    public Thing(InstrumentsEnum type, int quantity)
+    {
+        this.type = type;
+        this.quantity = quantity;
+        UpdateText();
+    }
+
     public ThingsButton ShopThingButton
     {
         get
@@ -22,7 +31,7 @@ public class Thing
     {
         get
         {
-            return quantity;
+            return quantity + addQuantity;
         }
     }
     public InstrumentsEnum Type
@@ -33,12 +42,15 @@ public class Thing
         }
     }
 
+    public GameObject Go { get => go; }
+
     public void CreateShopThingButton(GameObject go)
     {
         if (shopThingButton != null)
         {
             GameObject.Destroy(shopThingButton.GameObject);
         }
+        this.go = go;
         shopThingButton = new ThingsButton(go, type);
         UpdateText();
 
@@ -79,10 +91,28 @@ public class Thing
         }
         UpdateText();
     }
-    //добавляем количество
+   
+    //добавляем количество и ожидаем прилета вещей
     public void AddQuantity(int count = 1)
     {
-        quantity += count;
+        addQuantity += count;        
+    }
+
+    //вещ прилетела - добавляем количество и отображаем
+    public void ThingFlew(int addCount)
+    {
+        if (addQuantity < addCount)
+        {
+            addCount = addQuantity;
+        }
+        quantity += addCount;
+        addQuantity -= addCount;
+        UpdateText();
+    }
+
+    public void CountNumber() {
+        quantity += addQuantity;
+        addQuantity = 0;
         UpdateText();
     }
 }
