@@ -66,6 +66,9 @@ TagManager:
   - name: Menu
     uniqueID: 3674702191
     locked: 0
+  - name: Salut
+    uniqueID: 595325015
+    locked: 0
   - name: Shop
     uniqueID: 400564007
     locked: 0
