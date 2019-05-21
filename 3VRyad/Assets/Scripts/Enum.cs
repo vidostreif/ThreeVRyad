@@ -162,3 +162,10 @@ public enum HelpEnum
     Line6,
 
 }//тип сглаженного перемещения
+
+public enum SoundsEnum
+{
+    CreateElement,
+    DestroyElemen,
+
+}//тип сглаженного перемещения

@@ -41,7 +41,8 @@ public static class HelpToPlayer
 
     public static void LoadShowHintsStatus()
     {
-        showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;
+        //showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;
+        showHints = SettingsController.ShowHints;
     }
 
     //здесь указываем enum для подсказок

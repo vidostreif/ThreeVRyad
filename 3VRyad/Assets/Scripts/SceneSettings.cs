@@ -14,7 +14,7 @@ public class SceneSettings : MonoBehaviour
 
     void Awake()
     {
-        buttonSound = transform.Find("ButtonSound");
+        buttonSound = transform.Find("ButtonSound");        
         buttonExit = transform.Find("ButtonExit");
         buttonRestart = transform.Find("ButtonRestart");
         buttonSetings = transform.Find("ButtonSetings");
@@ -33,8 +33,19 @@ public class SceneSettings : MonoBehaviour
 
     public void SoundSwitch()
     {
-        //!!!включение-выключение звука
+        //включение-выключение звука
+        if (!SettingsController.SoundOn)
+        {
+            //!!!убераем закрывающую картинку
 
+            SettingsController.SoundOn = true;
+        }
+        else
+        {
+            //!!!показываем закрывающую картинку
+
+            SettingsController.SoundOn = false;
+        }
     }
 
     //показываем или скрываем кнопки
@@ -58,11 +69,18 @@ public class SceneSettings : MonoBehaviour
         {
             offset = 1;
             setingsHidden = false;
+            //узнаем включен ли звук
+            if (!SettingsController.SoundOn)
+            {
+                //!!!показываем закрывающую картинку
+            }
         }
         else
         {
             offset = 0;
             setingsHidden = true;
+
+            //!!!прячем закрывающую картинку для звука
         }
 
         RectTransform rectButtonExit = buttonExit.GetComponent<RectTransform>();

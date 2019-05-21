@@ -79,6 +79,7 @@ public class BaseElement : MonoBehaviour
                 ElementsList.DellElement(shape);
             }
             shape = value;
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
             ElementsList.AddElement(shape);
             spriteRenderer.sprite = SpriteBank.SetShape(value);
         }
@@ -173,8 +174,7 @@ public class BaseElement : MonoBehaviour
 
     protected virtual void DestroyElement()
     {
-
-
+        
         destroyed = true;
         ElementsList.DellElement(shape);
         Score.Instance.CreateScoreElement(transform.position, score);
@@ -196,6 +196,9 @@ public class BaseElement : MonoBehaviour
         //проверяем по заданиям
         if (!Tasks.Instance.Collect(shape, transform))
         {
+            //!!!звук уничтожения
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElemen);
+
             AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
             animatorElement.PlayDestroyAnimation();
         }
