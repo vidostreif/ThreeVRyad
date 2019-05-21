@@ -513,6 +513,7 @@ public class LevelMenu : MonoBehaviour
         Transform returnButtonTransform = panelLevels.transform.Find("ReturnButton");
         //добавляем действие к кнопке
         Button returnButton = returnButtonTransform.GetComponent(typeof(Button)) as Button;
+        returnButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         returnButton.onClick.AddListener(delegate { CreateRegionMenu(); });
 
         //список уровней
@@ -656,6 +657,7 @@ public class LevelMenu : MonoBehaviour
         //добавляем действие к кнопке открытия настроек
         Transform buttonSettingsTransform = panelRegions.transform.Find("ButtonSettings");
         Button buttonSettings = buttonSettingsTransform.GetComponent(typeof(Button)) as Button;
+        buttonSettings.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         buttonSettings.onClick.AddListener(delegate { CreateSettingsMenu(); });
     }
 

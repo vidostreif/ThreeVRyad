@@ -13,8 +13,24 @@ public static class SoundBank
         if (soundsList == null)
         {
             soundsList = new List<SoundResurse>();
-            soundsList.Add( new SoundResurse(SoundsEnum.CreateElement, soundFolder, "Click"));
-            soundsList.Add(new SoundResurse(SoundsEnum.DestroyElemen, soundFolder, "Socapex3"));
+            soundsList.Add( new SoundResurse(SoundsEnum.CreateElement, soundFolder, "klick_quiet"));
+            soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_1, soundFolder, "Socapex"));
+            soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_2, soundFolder, "Socapex1"));
+            soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_3, soundFolder, "Socapex2"));
+            soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_4, soundFolder, "Socapex3"));
+            soundsList.Add(new SoundResurse(SoundsEnum.LeafRustling, soundFolder, "leafRustling"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Boom, soundFolder, "boom"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Boom_big, soundFolder, "boom_big"));
+            soundsList.Add(new SoundResurse(SoundsEnum.SuperBonusRocket, soundFolder, "rocket"));
+            soundsList.Add(new SoundResurse(SoundsEnum.CollectElement, soundFolder, "magic"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Star, soundFolder, "Rise02"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Applause, soundFolder, "Applause"));
+            soundsList.Add(new SoundResurse(SoundsEnum.ClickButton, soundFolder, "Click"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Victory, soundFolder, "glassbell"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Defeat, soundFolder, "crush"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Coin, soundFolder, "coin"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Ring, soundFolder, "ring"));
+
         }
     }
 

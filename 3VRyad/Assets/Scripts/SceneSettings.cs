@@ -21,18 +21,21 @@ public class SceneSettings : MonoBehaviour
     }
 
     public void RestartScene() {
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
         HideOrShowSetings(false);
         MainGameSceneScript.Instance.RestartLevel();
     }
 
     public void ExitScene()
     {
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
         HideOrShowSetings(false);
         MainGameSceneScript.Instance.ExitToMenu();
     }
 
     public void SoundSwitch()
     {
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
         //включение-выключение звука
         if (!SettingsController.SoundOn)
         {
@@ -50,7 +53,8 @@ public class SceneSettings : MonoBehaviour
 
     //показываем или скрываем кнопки
     public void SetingsSwitch()
-    {          
+    {
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
         if (setingsHidden)
         {
             HideOrShowSetings(true);

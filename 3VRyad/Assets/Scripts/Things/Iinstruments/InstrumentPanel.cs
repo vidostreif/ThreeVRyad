@@ -446,6 +446,7 @@ public class InstrumentOnGame {
     {
         if (InstrumentOnManager.Quantity > 0)
         {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
             InstrumentPanel.Instance.PreparInstrument(this);
         }
     }
@@ -455,6 +456,7 @@ public class InstrumentOnGame {
         //добавляем действие к кнопке
         InstrumentButton.Button = InstrumentButton.GameObject.GetComponent(typeof(Button)) as Button;
         InstrumentButton.Button.onClick.RemoveAllListeners();
+        InstrumentButton.Button.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         InstrumentButton.Button.onClick.AddListener(delegate { action(); });
     }
 

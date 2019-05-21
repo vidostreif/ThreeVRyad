@@ -107,6 +107,11 @@ public class Thing
         }
         quantity += addCount;
         addQuantity -= addCount;
+        if (addCount > 0)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring);
+        }       
+
         UpdateText();
     }
 

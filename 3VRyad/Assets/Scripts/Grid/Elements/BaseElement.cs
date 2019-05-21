@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ public class BaseElement : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected AllShapeEnum shape;//форма элемента
+    [SerializeField] protected SoundsEnum soundDestroy;//звук уничтожения
     [SerializeField] protected HitTypeEnum[] vulnerabilityTypeEnum;//уязвимость к типам удара
     [SerializeField] protected bool destroyed = false;//признак что элемент был уничтожен
     [SerializeField] protected int life;
@@ -179,7 +181,16 @@ public class BaseElement : MonoBehaviour
         ElementsList.DellElement(shape);
         Score.Instance.CreateScoreElement(transform.position, score);
         SuperBonus.Instance.CreatePowerSuperBonus(transform.position, score);
-        
+
+        //звук уничтожения
+        //int randomNumber = UnityEngine.Random.Range(1, 4);
+        //Debug.Log(randomNumber);
+        //(SoundsEnum)Enum.Parse(typeof(SoundsEnum), "DestroyElement_" + randomNumber.ToString())
+        if (soundDestroy != SoundsEnum.EmptySound)
+        {
+            SoundManager.Instance.PlaySoundInternal(soundDestroy);
+        }        
+
         //определяем есть ли вокруг элементы коллекционирующие наш вид элемента
         Block[] blocksAround = GridBlocks.Instance.GetAroundBlocks(this.PositionInGrid);
         foreach (Block item in blocksAround)
@@ -196,9 +207,6 @@ public class BaseElement : MonoBehaviour
         //проверяем по заданиям
         if (!Tasks.Instance.Collect(shape, transform))
         {
-            //!!!звук уничтожения
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElemen);
-
             AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
             animatorElement.PlayDestroyAnimation();
         }

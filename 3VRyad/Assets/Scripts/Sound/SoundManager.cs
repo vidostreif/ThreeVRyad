@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [ExecuteInEditMode]
 public class SoundManager : MonoBehaviour
@@ -8,6 +9,9 @@ public class SoundManager : MonoBehaviour
     private static SoundManager _instance;
     private List<AudioSource> soundsList;
     private List<SoundResurse> loadSoundList;
+    private AudioMixer audioMixer;
+    private AudioMixerGroup audMixThisCompressor;
+    private AudioMixerGroup audMixThisoutCompressor;
 
     public static SoundManager Instance
     {
@@ -68,11 +72,20 @@ public class SoundManager : MonoBehaviour
         if (soundsList == null)
         {
             soundsList = new List<AudioSource>();
-            
+
         }
         if (loadSoundList == null)
         {
             loadSoundList = new List<SoundResurse>();
+        }
+        if (audioMixer == null)
+        {
+            audioMixer = Resources.Load<AudioMixer>("Sound/AudioMixer");
+
+            AudioMixerGroup[] audioMixerGroups = audioMixer.FindMatchingGroups("ThisCompress");
+            audMixThisCompressor = audioMixer.FindMatchingGroups("ThisCompress")[0];
+
+            audMixThisoutCompressor = audioMixer.FindMatchingGroups("NoCompress")[0];
         }
     }
 
@@ -84,7 +97,7 @@ public class SoundManager : MonoBehaviour
         return true;
     }
 
-    public void PlaySoundInternal(SoundsEnum soundName)
+    public void PlaySoundInternal(SoundsEnum soundName, bool thisOutCompress = false)
     {
         SoundResurse soundResurse = SoundBank.GetSoundResurse(soundName);
         if (soundResurse == null)
@@ -105,21 +118,21 @@ public class SoundManager : MonoBehaviour
                 sameCountGuard++;
         }
 
-        if (sameCountGuard > 8)
+        if (sameCountGuard > 10)
         {
-            Debug.Log("Слишком много звуков: " + soundName);
+            //Debug.Log("Слишком много звуков: " + soundName);
             return;
         }
 
-        if (soundsList.Count > 16)
+        if (soundsList.Count > 20)
         {
-            Debug.Log("Вообще слишком много звуков!");
+            //Debug.Log("Вообще слишком много звуков!");
             return;
         }
-        StartCoroutine(PlaySoundInternalSoon(soundResurse, sameCountGuard));
+        StartCoroutine(PlaySoundInternalSoon(soundResurse, thisOutCompress));
     }
 
-    private IEnumerator PlaySoundInternalSoon(SoundResurse soundResurse, int countSoundsAlreadyPlayed)
+    private IEnumerator PlaySoundInternalSoon(SoundResurse soundResurse, bool thisOutCompress)
     {
         ResourceRequest request = SoundBank.GetSoundAsync(soundResurse);
         loadSoundList.Add(soundResurse);
@@ -148,42 +161,52 @@ public class SoundManager : MonoBehaviour
         sound.transform.parent = transform;
         sound.transform.position = transform.position;
 
-        //определяем громкость
-        float volume = 1;
-        if (countSoundsAlreadyPlayed != 0)
-        {
-            volume = 1.0f/((float)countSoundsAlreadyPlayed + 1);
-            SetVolumeForSoundResurseType(soundResurse.SoundName, volume);
-        }
+        ////определяем громкость
+        //float volume = 1;
+        //if (countSoundsAlreadyPlayed != 0)
+        //{
+        //    volume = 1.2f/((float)countSoundsAlreadyPlayed + 1);
+        //    SetVolumeForSoundResurseType(soundResurse.SoundName, volume);
+        //}
 
         AudioSource soundSource = sound.AddComponent<AudioSource>();
         soundSource.mute = !SettingsController.SoundOn;
-        soundSource.volume = volume;//уменьшаем громкость на количество уже воспроизводимых таких звуков
+        //soundSource.volume = volume;//уменьшаем громкость на количество уже воспроизводимых таких звуков
         soundSource.clip = soundClip;
+        if (thisOutCompress)
+        {
+            Debug.Log("thisOutCompress");
+        }
+        soundSource.outputAudioMixerGroup = thisOutCompress ? audMixThisoutCompressor : audMixThisCompressor;
         soundSource.Play();
         //soundSource.ignoreListenerPause = !pausable;
 
         soundsList.Add(soundSource);
     }
 
-    public void SetVolumeForSoundResurseType(string name, float volume)
-    {
-        //изменяем громкость для всех соундов с таким названием
-        foreach (AudioSource item in soundsList)
-        {
-            if (item.clip.name == name)
-            {
-                item.volume = volume;
-                Debug.Log("Громкость " + volume);
-            }
-        }
-    }
+    //public void SetVolumeForSoundResurseType(string name, float volume)
+    //{
+    //    //изменяем громкость для всех соундов с таким названием
+    //    foreach (AudioSource item in soundsList)
+    //    {
+    //        if (item.clip.name == name)
+    //        {
+    //            item.volume = volume;
+    //            Debug.Log("Громкость " + volume);
+    //        }
+    //    }
+    //}
 
-    public void SoundMute( bool mute) {
+    public void SoundMute(bool mute) {
         //CreateSoundsList();
         foreach (AudioSource item in soundsList)
         {
             item.mute = mute;
         }
     }
+
+    public void PlayClickButtonSound(){
+        PlaySoundInternal(SoundsEnum.ClickButton);
+    }
+    
 }

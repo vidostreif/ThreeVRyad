@@ -45,7 +45,7 @@ public class BlockingElement : BaseElement
     {
         thisTransform = transform;
         destroyed = false;
-        //objectManagement = GetComponent<SpriteBank>();
+        soundDestroy = SoundsEnum.LeafRustling;
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
     }
 }

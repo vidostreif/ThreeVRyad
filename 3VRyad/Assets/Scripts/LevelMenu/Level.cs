@@ -188,6 +188,7 @@ public class Level
         button = elementGameObject.GetComponent(typeof(Button)) as Button;
         if (open)
         {
+            Button.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
             Button.onClick.AddListener(delegate { Action(); });
         }
         else

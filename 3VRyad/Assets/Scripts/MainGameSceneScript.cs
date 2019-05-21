@@ -79,16 +79,19 @@ public class MainGameSceneScript : MonoBehaviour {
         //добавляем действие к кнопкам
         Transform gORestartButton = PanelMenu.transform.Find("RestartButton");
         Button restartButton = gORestartButton.GetComponent<Button>();
+        restartButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         restartButton.onClick.AddListener(delegate { RestartLevel(); });
         restartButton.interactable = false;
 
         Transform gOExitButton = PanelMenu.transform.Find("ExitButton");
         Button exitButton = gOExitButton.GetComponent<Button>();
+        exitButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         exitButton.onClick.AddListener(delegate { ExitToMenu(); });
         exitButton.interactable = false;
 
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
         Button nextLevelButton = gONextLevelButton.GetComponent<Button>();
+        nextLevelButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
         nextLevelButton.interactable = false;
 
@@ -132,8 +135,10 @@ public class MainGameSceneScript : MonoBehaviour {
         if (Tasks.Instance.collectedAll)
         {
             //победа
-            textEndGame.text = "Победа!";            
-                        
+            textEndGame.text = "Победа!";
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Victory);
+            GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/Rocket") as GameObject, CanvasMenu.transform);
+            psGO.transform.position = new Vector3(0, -3, 0);
             //Выдаем звезды
             int stars = Score.Instance.NumberOfStarsReceived();
             LevelPassedResult levelPassedResult = LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore());
@@ -165,6 +170,7 @@ public class MainGameSceneScript : MonoBehaviour {
             
             //поражение
             textEndGame.text = "Поражение!";
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Defeat);
             Destroy(gONextLevelButton.gameObject);
             //удаляем текст количества очков и панель подарков
             Destroy(PanelMenu.transform.Find("PanelGift").gameObject);
@@ -213,11 +219,18 @@ public class MainGameSceneScript : MonoBehaviour {
             SupportFunctions.ChangeAlfa(starImage, 1);
             //создаем эффект 
             GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollectAll") as GameObject, starTransform);
+            GameObject.Destroy(psGO, 4);
             //изменяем спрайт у эффекта
             ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
             ps.textureSheetAnimation.AddSprite(starImage.sprite);
 
             //!!!Звук выдачи звезды
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
+            //если выдаем третью звезду
+            if (i == 3)
+            {
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Applause, true);
+            }
 
             //анимация выдачи монет за звезды
             if (numberStarForCoin <= i)
@@ -279,6 +292,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
                 //создаем эффект 
                 GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, imageNewScore.transform);
+                GameObject.Destroy(psGO, 4);
                 //изменяем спрайт у эффекта
                 ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
                 ps.textureSheetAnimation.AddSprite(imageNewScore.sprite);
@@ -322,6 +336,8 @@ public class MainGameSceneScript : MonoBehaviour {
                 //Находим монету в магазине
                 GameObject shopImageCoinsGO = GameObject.Find("ImageCoins");
 
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring);
+
                 //показываем монету среди подарков
                 //создаем рядом с сундуком
                 GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z), Quaternion.identity, panelGiftTransform);
@@ -349,6 +365,7 @@ public class MainGameSceneScript : MonoBehaviour {
             {
                 if (levelPassedResult.gift.bundel[i].count > 0)
                 {
+                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring);
                     GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z), Quaternion.identity, panelGiftTransform);
                     go.GetComponent<Image>().sprite = SpriteBank.SetShape(levelPassedResult.gift.bundel[i].type);
                     go.GetComponentInChildren<Text>().text = "+" + levelPassedResult.gift.bundel[i].count;

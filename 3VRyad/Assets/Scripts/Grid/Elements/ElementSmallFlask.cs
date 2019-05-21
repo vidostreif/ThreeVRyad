@@ -19,6 +19,7 @@ public class ElementSmallFlask : Element
 
     protected override void DopSettings()
     {
+        soundDestroy = SoundsEnum.Boom;
         explosionRadius = 1;
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick, HitTypeEnum.Instrument };
         //находим аниматор

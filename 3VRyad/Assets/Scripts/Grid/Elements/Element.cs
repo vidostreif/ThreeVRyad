@@ -101,6 +101,7 @@ public class Element : BaseElement
 
     protected virtual void DopSettings()
     {
+        soundDestroy = SoundsEnum.DestroyElement_3;
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
     }
 

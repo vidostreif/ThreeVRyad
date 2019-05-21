@@ -94,6 +94,10 @@ public class Shop : MonoBehaviour, IStoreListener
         coins += price;
         addCoins -= price;
         textCoins.text = "" + coins;
+        if (price > 0)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Coin);
+        }
     }
 
     private IEnumerator UpdateTextCoins()
@@ -382,6 +386,7 @@ public class Shop : MonoBehaviour, IStoreListener
             buttonTransform.GetComponentInChildren<Text>().text = str;
         }        
         ButtonE.onClick.RemoveAllListeners();
+        ButtonE.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);        
         ButtonE.onClick.AddListener(delegate { action(); });
     }
 
@@ -389,6 +394,7 @@ public class Shop : MonoBehaviour, IStoreListener
     {
         Button ButtonE = buttonTransform.GetComponent(typeof(Button)) as Button;
         ButtonE.onClick.RemoveAllListeners();
+        ButtonE.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         ButtonE.onClick.AddListener(delegate { action(); });
     }
 
@@ -626,6 +632,7 @@ public class ProductV {
         //добавляем действие к кнопке
         Button = elementGameObject.GetComponent(typeof(Button)) as Button;
         Button.onClick.RemoveAllListeners();
+        Button.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         Button.onClick.AddListener(delegate { Action(); });
     }
 

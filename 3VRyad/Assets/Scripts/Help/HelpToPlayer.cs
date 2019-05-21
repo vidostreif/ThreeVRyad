@@ -328,10 +328,12 @@ public static class HelpToPlayer
                     //добавляем действие канвасу
                     Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
                     Button button = gOPanel.GetComponent<Button>();
+                    button.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
                     button.onClick.AddListener(delegate { DeletedByClickingOnCanvas(); });
                     //добавляем действие кнопке закрыть
                     Transform buttonDellHelpGO = activeHint.canvasHelpToPlayer.transform.Find("ButtonDellHelp");
                     Button buttonDellHelp = buttonDellHelpGO.GetComponent<Button>();
+                    buttonDellHelp.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
                     buttonDellHelp.onClick.AddListener(delegate { DeletedByClickingOnButton(); });
                     ////показываем кнопку постепенно
                     //Image imageDellHelp = buttonDellHelpGO.GetComponent<Image>();

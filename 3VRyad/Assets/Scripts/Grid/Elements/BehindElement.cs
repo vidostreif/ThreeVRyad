@@ -19,6 +19,7 @@ public class BehindElement : BaseElement
     {
         thisTransform = transform;
         destroyed = false;
+        soundDestroy = SoundsEnum.LeafRustling;
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
         spriteRenderer.sortingLayerName = "BackgroundElements";
     }

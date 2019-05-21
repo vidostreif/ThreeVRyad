@@ -326,8 +326,8 @@ public class MainAnimator : MonoBehaviour {
     public void AddExplosionEffect(Vector3 epicenter, float power) {
 
         GameObject explosionEf = Instantiate(explosionEffect, epicenter, Quaternion.identity);
+        explosionEf.transform.localScale = explosionEf.transform.localScale * power;
         explosions.Add(new Explosion(epicenter, power, Time.time, explosionEf));
-
     }
     
     //эффекты взрыва

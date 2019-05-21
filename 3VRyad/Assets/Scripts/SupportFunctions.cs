@@ -73,15 +73,17 @@ public static class SupportFunctions
         TextQuestion.text = textQuestion;
 
         if (actionYesBut != null)
-        {
+        {            
             buttonYes.onClick.AddListener(delegate { actionYesBut(); });
         }
+        buttonYes.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         buttonYes.onClick.AddListener(delegate { GameObject.Destroy(yesNoPanelPrefab); });
-
+                
         if (actionNoBut != null)
-        {
+        {            
             buttonNo.onClick.AddListener(delegate { actionNoBut(); });
         }
+        buttonNo.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         buttonNo.onClick.AddListener(delegate { GameObject.Destroy(yesNoPanelPrefab); });
     }
 

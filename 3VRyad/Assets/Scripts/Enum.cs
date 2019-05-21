@@ -165,7 +165,24 @@ public enum HelpEnum
 
 public enum SoundsEnum
 {
+    EmptySound,
     CreateElement,
-    DestroyElemen,
+    DestroyElement_1,
+    DestroyElement_2,
+    DestroyElement_3,
+    DestroyElement_4,
+    LeafRustling,
+    Boom,
+    Boom_big,
+    SuperBonusRocket,
+    CollectElement,
+    Applause,
+    ClickButton,
+    Victory,
+    Defeat,
+    Star,
+    Coin,
+    Ring
+
 
 }//тип сглаженного перемещения

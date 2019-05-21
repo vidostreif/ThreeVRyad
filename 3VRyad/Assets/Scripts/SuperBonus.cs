@@ -55,6 +55,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                     {
                         if (item.Block != null)
                         {
+                            MainAnimator.Instance.AddExplosionEffect(item.Block.thisTransform.position, 0.5f);
+                            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Boom);
                             item.Block.Hit();
                             item.Block.Blocked = false;
                             strikesOnBlocks++;
@@ -291,6 +293,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private IEnumerator CreatingEffects(List<Block> blocks) {
 
         activated = true;
+        
         foreach (Block block in blocks)
         {
             //если сбросили параметры, то останавливаем работу
@@ -300,10 +303,11 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             }
             //подсветка
             //GameObject backlight = Instantiate(MainParticleSystem.Instance.pSSelect, block.transform);
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusRocket);
             GameObject backlight = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSelectTargetBlock") as GameObject, block.transform);
             backlight.transform.position = block.transform.position;
             HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(block.transform), block));//добавляем в список для последующей обработки                        
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.3f);
         }
         FilledImage();
         activated = false;

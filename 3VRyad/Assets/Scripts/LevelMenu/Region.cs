@@ -43,6 +43,7 @@ public class Region
     {
         //добавляем действие к кнопке
         Button = elementGameObject.GetComponent(typeof(Button)) as Button;
+        Button.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         Button.onClick.AddListener(delegate { Action(); });
     }
 
