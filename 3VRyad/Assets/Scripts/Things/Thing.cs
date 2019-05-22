@@ -109,7 +109,7 @@ public class Thing
         addQuantity -= addCount;
         if (addCount > 0)
         {
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring);
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Card);
         }       
 
         UpdateText();

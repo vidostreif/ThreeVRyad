@@ -265,6 +265,7 @@ public class Shop : MonoBehaviour, IStoreListener
             {
                 if (product.compositionBundle[i].count > 0)
                 {
+                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
                     GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + (i * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), Quaternion.identity, panelShoppingListTransform);
                     go.GetComponent<Image>().sprite = SpriteBank.SetShape(product.compositionBundle[i].type);
                     go.GetComponentInChildren<Text>().text = "+" + product.compositionBundle[i].count;
@@ -307,6 +308,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 Transform shopImageCoinsTransform = panelShopOnGame.transform.Find("ImageCoins");
 
                 //показываем монету среди подарков
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
                 GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + ((0 + product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), Quaternion.identity, panelShoppingListTransform);
                 giftCoinGO.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/coin") as Sprite;
                 giftCoinGO.GetComponentInChildren<Text>().text = "+" + product.coins;

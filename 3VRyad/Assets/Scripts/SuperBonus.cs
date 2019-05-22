@@ -56,7 +56,9 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                         if (item.Block != null)
                         {
                             MainAnimator.Instance.AddExplosionEffect(item.Block.thisTransform.position, 0.5f);
-                            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Boom);
+                            int randomNumber = UnityEngine.Random.Range(1, 5);
+                            //Debug.Log(randomNumber);                            
+                            SoundManager.Instance.PlaySoundInternal((SoundsEnum)Enum.Parse(typeof(SoundsEnum), "Boom_mini_" + randomNumber.ToString()));
                             item.Block.Hit();
                             item.Block.Blocked = false;
                             strikesOnBlocks++;
@@ -306,8 +308,9 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusRocket);
             GameObject backlight = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSelectTargetBlock") as GameObject, block.transform);
             backlight.transform.position = block.transform.position;
-            HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(block.transform), block));//добавляем в список для последующей обработки                        
-            yield return new WaitForSeconds(0.3f);
+            HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(block.transform), block));//добавляем в список для последующей обработки 
+            float randomNumber = UnityEngine.Random.Range(0.2f, 0.4f);
+            yield return new WaitForSeconds(randomNumber);
         }
         FilledImage();
         activated = false;

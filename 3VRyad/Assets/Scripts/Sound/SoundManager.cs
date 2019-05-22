@@ -109,13 +109,18 @@ public class SoundManager : MonoBehaviour
         foreach (AudioSource audioSource in soundsList)
         {
             if (audioSource.clip.name == soundResurse.SoundName)
+                if (audioSource.time < 0.05f) 
+                {
+                    //Debug.Log(audioSource.clip.name + " " + audioSource.time);
+                    return;
+                } 
                 sameCountGuard++;
         }
         //в загрузке
         foreach (SoundResurse inLoadSoundResurse in loadSoundList)
         {
             if (inLoadSoundResurse == soundResurse)
-                sameCountGuard++;
+                return;
         }
 
         if (sameCountGuard > 10)
@@ -173,10 +178,6 @@ public class SoundManager : MonoBehaviour
         soundSource.mute = !SettingsController.SoundOn;
         //soundSource.volume = volume;//уменьшаем громкость на количество уже воспроизводимых таких звуков
         soundSource.clip = soundClip;
-        if (thisOutCompress)
-        {
-            Debug.Log("thisOutCompress");
-        }
         soundSource.outputAudioMixerGroup = thisOutCompress ? audMixThisoutCompressor : audMixThisCompressor;
         soundSource.Play();
         //soundSource.ignoreListenerPause = !pausable;

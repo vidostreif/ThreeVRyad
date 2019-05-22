@@ -18,18 +18,27 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_2, soundFolder, "Socapex1"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_3, soundFolder, "Socapex2"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_4, soundFolder, "Socapex3"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Bite, soundFolder, "bite"));
             soundsList.Add(new SoundResurse(SoundsEnum.LeafRustling, soundFolder, "leafRustling"));
             soundsList.Add(new SoundResurse(SoundsEnum.Boom, soundFolder, "boom"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Boom_mini_1, soundFolder, "boom_mini"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Boom_mini_2, soundFolder, "boom_mini_2"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Boom_mini_3, soundFolder, "boom_mini_3"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Boom_mini_4, soundFolder, "boom_mini_4"));
             soundsList.Add(new SoundResurse(SoundsEnum.Boom_big, soundFolder, "boom_big"));
             soundsList.Add(new SoundResurse(SoundsEnum.SuperBonusRocket, soundFolder, "rocket"));
             soundsList.Add(new SoundResurse(SoundsEnum.CollectElement, soundFolder, "magic"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Magic, soundFolder, "magic_2"));
             soundsList.Add(new SoundResurse(SoundsEnum.Star, soundFolder, "Rise02"));
             soundsList.Add(new SoundResurse(SoundsEnum.Applause, soundFolder, "Applause"));
             soundsList.Add(new SoundResurse(SoundsEnum.ClickButton, soundFolder, "Click"));
             soundsList.Add(new SoundResurse(SoundsEnum.Victory, soundFolder, "glassbell"));
             soundsList.Add(new SoundResurse(SoundsEnum.Defeat, soundFolder, "crush"));
             soundsList.Add(new SoundResurse(SoundsEnum.Coin, soundFolder, "coin"));
-            soundsList.Add(new SoundResurse(SoundsEnum.Ring, soundFolder, "ring"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Ring_1, soundFolder, "ring"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Ring_2, soundFolder, "ring_2"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Laser, soundFolder, "laser"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Card, soundFolder, "wood"));
 
         }
     }

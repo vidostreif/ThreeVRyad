@@ -171,8 +171,14 @@ public enum SoundsEnum
     DestroyElement_2,
     DestroyElement_3,
     DestroyElement_4,
+    Magic,
+    Bite,
     LeafRustling,
     Boom,
+    Boom_mini_1,
+    Boom_mini_2,
+    Boom_mini_3,
+    Boom_mini_4,
     Boom_big,
     SuperBonusRocket,
     CollectElement,
@@ -182,7 +188,10 @@ public enum SoundsEnum
     Defeat,
     Star,
     Coin,
-    Ring
+    Ring_1,
+    Ring_2,
+    Laser,
+    Card
 
 
 }//тип сглаженного перемещения

@@ -322,21 +322,39 @@ public class MainGameSceneScript : MonoBehaviour {
         //если есть подарки то продолжаем
         if (giftLength > 0)
         {
-            yield return new WaitForSeconds(1.2f);
+            yield return new WaitForSeconds(0.4f);
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Magic);
+            yield return new WaitForSeconds(0.8f);
             //находим наш сундук
             Transform imageOpenGiftBoxTransform = panelGiftTransform.Find("ImageOpenGiftBox");
 
             //смещение по x
             float startingXPoint = panelGiftTransform.position.x - ((1 + 0.5f) * (giftLength-1)) * 0.5f;
 
-            int startPoint = 0;
+            //показываем подарки
+            for (int i = 0; i < levelPassedResult.gift.bundel.Length; i++)
+            {
+                if (levelPassedResult.gift.bundel[i].count > 0)
+                {
+                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
+                    GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z), Quaternion.identity, panelGiftTransform);
+                    go.GetComponent<Image>().sprite = SpriteBank.SetShape(levelPassedResult.gift.bundel[i].type);
+                    go.GetComponentInChildren<Text>().text = "+" + levelPassedResult.gift.bundel[i].count;
+                    //перемещаем на свою позицию
+                    MainAnimator.Instance.AddElementForSmoothMove(go.transform, new Vector3(startingXPoint + (i * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+
+                }
+                yield return new WaitForSeconds(0.3f);
+            }
+
+            //int startPoint = 0;
             if (levelPassedResult.gift.coins > 0)
             {
-                startPoint = 1;
+                //startPoint = 1;
                 //Находим монету в магазине
                 GameObject shopImageCoinsGO = GameObject.Find("ImageCoins");
 
-                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring);
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
 
                 //показываем монету среди подарков
                 //создаем рядом с сундуком
@@ -345,14 +363,14 @@ public class MainGameSceneScript : MonoBehaviour {
                 giftCoinGO.GetComponentInChildren<Text>().text = "+" + levelPassedResult.gift.coins;
 
                 //перемещаем на свою позицию
-                MainAnimator.Instance.AddElementForSmoothMove(giftCoinGO.transform, new Vector3(startingXPoint, panelGiftTransform.position.y, panelGiftTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+                MainAnimator.Instance.AddElementForSmoothMove(giftCoinGO.transform, new Vector3(startingXPoint + (levelPassedResult.gift.bundel.Length * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
 
                 //создаем монеты рядом с монетой подарком
                 for (int j = 0; j < levelPassedResult.gift.coins; j++)
                 {
                     GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftCoinGO.transform.position, Quaternion.identity, shopImageCoinsGO.transform);
 
-                    //перемещаем к монеты в магазин
+                    //перемещаем к монете в магазин
                     MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, shopImageCoinsGO.transform.position, 1, SmoothEnum.InLineWithOneSpeed, 1.05f, true, true, delegate { Shop.Instance.CoinFlew(1); });
 
                     yield return new WaitForEndOfFrame();
@@ -360,21 +378,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 yield return new WaitForSeconds(0.2f);
             }
 
-            //показываем подарки
-            for (int i = 0; i < levelPassedResult.gift.bundel.Length; i++)
-            {
-                if (levelPassedResult.gift.bundel[i].count > 0)
-                {
-                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring);
-                    GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z), Quaternion.identity, panelGiftTransform);
-                    go.GetComponent<Image>().sprite = SpriteBank.SetShape(levelPassedResult.gift.bundel[i].type);
-                    go.GetComponentInChildren<Text>().text = "+" + levelPassedResult.gift.bundel[i].count;
-                    //перемещаем на свою позицию
-                    MainAnimator.Instance.AddElementForSmoothMove(go.transform, new Vector3(startingXPoint + ((i + startPoint) * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
-
-                }
-                yield return new WaitForSeconds(0.3f);
-            }
+            
         }
         else
         {

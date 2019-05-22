@@ -2,9 +2,11 @@
   <GiftScript>
     <bundles>
       <bundleShopV type="Shovel" count="3" />
+      <bundleShopV type="Shovel" count="3" />
+      <bundleShopV type="Shovel" count="3" />
     </bundles>
-    <bundelCount>1</bundelCount>
-    <coins>0</coins>
+    <bundelCount>3</bundelCount>
+    <coins>20</coins>
   </GiftScript>
   <Bonuses>
     <bonusesList>
@@ -104,15 +106,15 @@
     <scoreForThirdStar>48000</scoreForThirdStar>
   </Score>
   <SuperBonus>
-    <maxBonusPower>10000</maxBonusPower>
+    <maxBonusPower>5000</maxBonusPower>
     <beats>7</beats>
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>17</moves>
+    <moves>5</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Strawberry" goal="50" collectEverything="false" />
+      <shapeAndGoal shape="Strawberry" goal="10" collectEverything="false" />
     </targets>
   </Tasks>
   <InstrumentPanel>
