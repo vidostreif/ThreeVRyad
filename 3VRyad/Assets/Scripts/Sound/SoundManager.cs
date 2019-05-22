@@ -64,7 +64,15 @@ public class SoundManager : MonoBehaviour
         if (soundToDelete != null)
         {
             soundsList.Remove(soundToDelete);
-            Destroy(soundToDelete.gameObject);
+            if (Application.isPlaying)
+            {
+                Destroy(soundToDelete.gameObject);
+            }
+            else
+            {
+                DestroyImmediate(soundToDelete.gameObject);
+            }
+            
         }
     }
 

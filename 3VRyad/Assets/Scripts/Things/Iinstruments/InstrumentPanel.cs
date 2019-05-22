@@ -95,6 +95,21 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         }
     }
 
+    public ThingsButton GetThingButton(InstrumentsEnum type)
+    {
+        if (instrumentsOnGame != null)
+        {
+            foreach (InstrumentOnGame item in instrumentsOnGame)
+            {
+                if (item.Type == type)
+                {
+                    return item.GameInstrumentButton;
+                }
+            }
+        }
+        return null;
+    }
+
     //взаимодействие игрока с инструментами
     public bool InstrumentPrepared
     {

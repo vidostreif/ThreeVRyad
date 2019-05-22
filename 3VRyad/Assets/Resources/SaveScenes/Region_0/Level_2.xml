@@ -101,9 +101,9 @@
     <helpEnum>SuperBonus</helpEnum>
   </HelpFromGnome>
   <Score>
-    <scoreForFirstStar>32000</scoreForFirstStar>
-    <scoreForSecondStar>40000</scoreForSecondStar>
-    <scoreForThirdStar>48000</scoreForThirdStar>
+    <scoreForFirstStar>1000</scoreForFirstStar>
+    <scoreForSecondStar>1500</scoreForSecondStar>
+    <scoreForThirdStar>2000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>5000</maxBonusPower>

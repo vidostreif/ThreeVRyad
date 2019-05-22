@@ -81,7 +81,7 @@ public class Thing
     //отнимаем количество
     public void SubQuantity(int count = 1)
     {
-        if (count <= quantity)
+        if (count <= Quantity)
         {
             quantity -= count;            
         }

@@ -470,7 +470,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: -620265105
-  m_SortingOrder: 1000
+  m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &6577434973905200750
 MonoBehaviour:
@@ -1286,11 +1286,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3891740959537583584}
     m_Modifications:
-    - target: {fileID: 4203139318359531567, guid: 63f30c2c83191fa468cbad173768c26c,
-        type: 3}
-      propertyPath: m_Name
-      value: PSOpenGiftBox
-      objectReference: {fileID: 0}
     - target: {fileID: 2624325071231889477, guid: 63f30c2c83191fa468cbad173768c26c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1395,6 +1390,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4203139318359531567, guid: 63f30c2c83191fa468cbad173768c26c,
+        type: 3}
+      propertyPath: m_Name
+      value: PSOpenGiftBox
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63f30c2c83191fa468cbad173768c26c, type: 3}

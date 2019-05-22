@@ -265,83 +265,124 @@ public class Shop : MonoBehaviour, IStoreListener
             {
                 if (product.compositionBundle[i].count > 0)
                 {
-                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
-                    GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + (i * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), Quaternion.identity, panelShoppingListTransform);
-                    go.GetComponent<Image>().sprite = SpriteBank.SetShape(product.compositionBundle[i].type);
-                    go.GetComponentInChildren<Text>().text = "+" + product.compositionBundle[i].count;
-
-                    //находим нашу вещ в менеджере вещей
-                    Thing thing = ThingsManager.Instance.GetThing(product.compositionBundle[i].type);
-
-                    if (thing != null)
-                    {
-                        //создаем новые покупки рядом с основной
-                        int count = product.compositionBundle[i].count;
-                        do
-                        {
-                            count -= 1;
-                            //добавим рандома в месте создания монет
-                            float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
-                            float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
-
-                            //берем монетку и меняем у нее вид
-                            GameObject mminiThingGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, go.transform.position, Quaternion.identity, panelShoppingListTransform);
-                            mminiThingGO.GetComponent<Image>().sprite = SpriteBank.SetShape(product.compositionBundle[i].type);
-
-                            //перемещаем на рандомную позицию
-                            MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, new Vector3(go.transform.position.x + randomNumberX, go.transform.position.y + randomNumberY, go.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
-
-                            //перемещаем к панеле вещей в магазине
-                            MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, thing.Go.transform.position, 1, SmoothEnum.InLineWithOneSpeed, 0.85f, true, true, delegate { thing.ThingFlew(1); });
-
-                            yield return new WaitForEndOfFrame();
-                        } while (count > 0);
-                    }                    
+                    yield return StartCoroutine(CreateThingAnimation(new Vector3(startingXPoint + (i * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.compositionBundle[i].type, product.compositionBundle[i].count));              
                 }
                 yield return new WaitForSeconds(0.3f);
             }
 
             if (product.coins > 0)
             {
-                //показываем монету
-                //Находим монету в магазине
-                Transform shopImageCoinsTransform = panelShopOnGame.transform.Find("ImageCoins");
-
-                //показываем монету среди подарков
-                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
-                GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + ((0 + product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), Quaternion.identity, panelShoppingListTransform);
-                giftCoinGO.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/coin") as Sprite;
-                giftCoinGO.GetComponentInChildren<Text>().text = "+" + product.coins;
-
-                int coins = product.coins;
-                int exchangeRate = 5;
-                //создаем монеты рядом с монетой
-                do
-                {
-                    //определяем какое количество будет передано в монете
-                    if (coins < exchangeRate)
-                    {
-                        exchangeRate = coins;
-                    }
-                    coins -= exchangeRate;
-
-                    //добавим рандома в месте создания монет
-                    float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
-                    float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
-
-                    GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftCoinGO.transform.position, Quaternion.identity, panelShoppingListTransform);
-
-                    //перемещаем на рандомную позицию
-                    MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, new Vector3(giftCoinGO.transform.position.x + randomNumberX, giftCoinGO.transform.position.y + randomNumberY, giftCoinGO.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
-
-                    //перемещаем к монете в магазине
-                    MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, shopImageCoinsTransform.position, 1, SmoothEnum.InLineWithOneSpeed, 0.85f, true, true, delegate { Shop.Instance.CoinFlew(exchangeRate); });
-
-                    yield return new WaitForEndOfFrame();
-                } while (coins > 0);
+                yield return StartCoroutine(CreateCoinAnimation(new Vector3(startingXPoint + ((0 + product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.coins));
+                 
             }            
         }
         yield return new WaitForSeconds(1.0f);
+    }
+
+    //анимация получения вещи
+    public IEnumerator CreateThingAnimation(Vector3 startPosition, Transform transformParent, InstrumentsEnum instrumentsEnum, int getCount, Vector3 newPosition = new Vector3())
+    {
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
+        GameObject go = Instantiate(PrefabBank.PrefabButtonThing, startPosition, Quaternion.identity, transformParent);
+        go.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum);
+        go.GetComponentInChildren<Text>().text = "+" + getCount;
+
+        //если требуется перемещаем на новую позицию
+        if (newPosition != Vector3.zero)
+        {
+            MainAnimator.Instance.AddElementForSmoothMove(go.transform, newPosition, 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        //находим нашу вещ в менеджере вещей
+        Thing thing = ThingsManager.Instance.GetThing(instrumentsEnum);
+
+        if (thing != null)
+        {
+            //создаем новые покупки рядом с основной
+            int count = getCount;
+            do
+            {
+                count -= 1;
+                //добавим рандома в месте создания монет
+                float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
+                float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
+
+                //берем монетку и меняем у нее вид
+                GameObject mminiThingGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, go.transform.position, Quaternion.identity, transformParent);
+                mminiThingGO.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum);
+
+                //перемещаем на рандомную позицию
+                MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, new Vector3(go.transform.position.x + randomNumberX, go.transform.position.y + randomNumberY, go.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+
+                //перемещаем к панеле вещей в магазине или на игровую панель
+                Vector3 positoinThingtoGo = new Vector3(0,0,0);
+                if (thing.Go != null)
+                {
+                    positoinThingtoGo = thing.Go.transform.position;
+                }
+                else if (InstrumentPanel.Instance != null)
+                {
+                    ThingsButton thingButtonOnGame = InstrumentPanel.Instance.GetThingButton(instrumentsEnum);
+                    if (thingButtonOnGame != null)
+                    {
+                        positoinThingtoGo = thingButtonOnGame.Button.transform.position;
+                    }
+                }
+
+                MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, positoinThingtoGo, 1, SmoothEnum.InLineWithOneSpeed, 0.85f, true, true, delegate { thing.ThingFlew(1); });
+
+                yield return new WaitForEndOfFrame();
+            } while (count > 0);
+        }
+    }
+
+    //анимация получения монет
+    public IEnumerator CreateCoinAnimation(Vector3 position, Transform transformParent, int getCoins, Vector3 newPosition = new Vector3()) {
+      
+        //показываем монету
+        //Находим монету в магазине
+        Transform shopImageCoinsTransform = panelShopOnGame.transform.Find("ImageCoins");
+
+        //показываем монету среди подарков
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
+        GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, position, Quaternion.identity, transformParent);
+        giftCoinGO.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/coin") as Sprite;
+        giftCoinGO.GetComponentInChildren<Text>().text = "+" + getCoins;
+
+        //если требуется перемещаем на новую позицию
+        if (newPosition != Vector3.zero)
+        {
+            MainAnimator.Instance.AddElementForSmoothMove(giftCoinGO.transform, newPosition, 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        int coins = getCoins;
+        int exchangeRate = 5;
+        //создаем монеты рядом с монетой
+        do
+        {
+            //определяем какое количество будет передано в монете
+            if (coins < exchangeRate)
+            {
+                exchangeRate = coins;
+            }
+            coins -= exchangeRate;
+
+            //добавим рандома в месте создания монет
+            float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
+            float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
+
+            GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftCoinGO.transform.position, Quaternion.identity, transformParent);
+
+            //перемещаем на рандомную позицию
+            MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, new Vector3(giftCoinGO.transform.position.x + randomNumberX, giftCoinGO.transform.position.y + randomNumberY, giftCoinGO.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+
+            //перемещаем к монете в магазине
+            MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, shopImageCoinsTransform.position, 1, SmoothEnum.InLineWithOneSpeed, 0.85f, true, true, delegate { Shop.Instance.CoinFlew(exchangeRate); });
+
+            yield return new WaitForEndOfFrame();
+        } while (coins > 0);
     }
 
     //создаем панель инфформации
