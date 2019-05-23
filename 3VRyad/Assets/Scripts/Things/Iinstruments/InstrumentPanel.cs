@@ -17,6 +17,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     private bool instrumentPrepared;
     private InstrumentOnGame preparedInstrument;
     private bool successfulActivation;
+    private bool activatedAtTheMoment;//активируется в данны момент
+    private GameObject[] psGOs; //массив эффектов подсвечивания
 
     void Awake()
     {
@@ -152,11 +154,15 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     public void DeactivateInstrument()
     {
         instrumentPrepared = false;
-        if (preparedInstrument != null && preparedInstrument.PSSelect != null)
+        //если не активируется в текущий момент
+        if (!activatedAtTheMoment)
         {
-            Destroy(preparedInstrument.PSSelect);
+            if (preparedInstrument != null && preparedInstrument.PSSelect != null)
+            {
+                Destroy(preparedInstrument.PSSelect);
+            }        
+            preparedInstrument = null;
         }
-        preparedInstrument = null;
     }
 
     public void ActivateInstrument(Block block)
@@ -168,6 +174,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     {
         if (instrumentPrepared)
         {
+            activatedAtTheMoment = true;
             //в зависимости от типа
             switch (preparedInstrument.Type)
             {
@@ -195,7 +202,6 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                     successfulActivation = false;
                     break;
             }
-            //instrumentPrepared = false;
 
             if (successfulActivation)
             {
@@ -205,6 +211,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                 GridBlocks.Instance.Move();
                 successfulActivation = false;
             }
+            activatedAtTheMoment = false;
             DeactivateInstrument();
         }
     }
@@ -215,8 +222,16 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     {
         if (BlockCheck.ThisBlockWithMortalElement(block))
         {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Shovel);
+            //высвечиваем блок
+            Block[] blocks = new Block[1];
+            blocks[0] = block;
+            StartCoroutine(HighlightBlocks(blocks));
+            yield return new WaitForSeconds(0.1f);            
+
             block.Hit(HitTypeEnum.Instrument);
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.5f);
+            DestroyHighlightBlocks();
             successfulActivation = true;
             yield break;
         }
@@ -236,6 +251,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             SpriteRenderer spriteRenderer = instrumentGO.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = SpriteBank.SetShape(preparedInstrument.Type);
             spriteRenderer.sortingLayerName = "Magic";
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.LawnMowerStart);
 
             //находим первый существующий блок, для первичной установки инструмента
             int iteration = 0;
@@ -249,7 +265,17 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                 iteration++;
             } while (iteration < blocks.Length);
 
+            //подсвечиваем все блоки
+            Block[] highlight = new Block[blocks.Length + 1];
+            highlight[0] = block;
+            for (int i = 0; i < blocks.Length; i++)
+            {
+                highlight[i+1] = blocks[i];
+            }
+            yield return StartCoroutine(HighlightBlocks(highlight));
+
             //если сетка выполняет действия, то ожидаем
+            yield return new WaitForSeconds(0.3f);
             do
             {
                 yield return new WaitForSeconds(0.01f);
@@ -257,24 +283,30 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                 if (instrumentPrepared == false)
                 {
                     successfulActivation = false;
+                    DestroyHighlightBlocks();
                     yield break;
                 }
             } while (GridBlocks.Instance.blockedForMove);
 
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.LawnMowerWork);
             block.Hit(HitTypeEnum.Instrument);
+            DestroyHighlightBlock(block);
             foreach (Block curBlock in blocks)
             {
                 if (curBlock != null)
                 {
-                    MainAnimator.Instance.AddElementForSmoothMove(instrumentGO.transform, curBlock.transform.position, 1, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.3f, addToQueue: false);
+                    MainAnimator.Instance.AddElementForSmoothMove(instrumentGO.transform, curBlock.transform.position, 1, SmoothEnum.InLineWithOneSpeed, smoothTime: 0.25f, addToQueue: false);
                     //ожидаем передвижения эффекта к текущему блоку
                     do
                     {
                         yield return new WaitForSeconds(0.01f);
                     } while (instrumentGO.transform.position != curBlock.transform.position);
+
+                    DestroyHighlightBlock(curBlock);
                     curBlock.Hit(HitTypeEnum.Instrument);
                 }
             }
+            DestroyHighlightBlocks();
             spriteRenderer.sprite = null;
             Destroy(instrumentGO, 3);
             successfulActivation = true;
@@ -286,7 +318,12 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     //активация вихря
     //перемешивает стандартные незаблокированные элементы
     private IEnumerator ActivateVortex(Block block)
-    {   //если сетка выполняет действия, то ожидаем
+    {   
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind);
+        Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
+        yield return StartCoroutine(HighlightBlocks(blocks));
+
+        //если сетка выполняет действия, то ожидаем
         do
         {
             yield return new WaitForSeconds(0.01f);
@@ -294,18 +331,20 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             if (instrumentPrepared == false)
             {
                 successfulActivation = false;
+                DestroyHighlightBlocks();
                 yield break;
             }
         } while (GridBlocks.Instance.blockedForMove);
-
-        Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
+        
         if (blocks.Length > 1)
         {
             GridBlocks.Instance.MixStandartElements();
             yield return new WaitForSeconds(0.3f);
+            DestroyHighlightBlocks();
             successfulActivation = true;
             yield break;
         }
+        DestroyHighlightBlocks();
         successfulActivation = false;
     }
 
@@ -320,32 +359,19 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             int repainted = 0;
             if (blocks.Length > 1)
             {
-                //если сетка выполняет действия, то ожидаем
-                do
-                {
-                    yield return new WaitForSeconds(0.01f);
-                    //если инструмент был деактивирован
-                    if (instrumentPrepared == false)
-                    {
-                        successfulActivation = false;
-                        yield break;
-                    }
-                } while (GridBlocks.Instance.blockedForMove);
-
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Repainting);
+                //перемешиваем
                 SupportFunctions.MixArray(blocks);
+                Block[] blocksForWork = new Block[quantity + 1];
+                blocksForWork[0] = block;
+                //подбераем блоки для обработки
                 foreach (Block curBlock in blocks)
                 {
-                    if (curBlock.Element.Shape != block.Element.Shape)
+                    if (curBlock.Element.Shape != block.Element.Shape && !curBlock.Blocked)
                     {
-                        //создаем новый элемент
-                        curBlock.CreatElement(GridBlocks.Instance.prefabElement, block.Element.Shape, block.Element.Type);
-                        curBlock.Element.transform.position = block.transform.position;
-                        //добавляем эффект
-                        GameObject effect = Instantiate(MainParticleSystem.Instance.pSMagicalTail, curBlock.Element.transform);
-                        Destroy(effect, 4);
-
                         repainted++;
-                        yield return new WaitForSeconds(0.15f);
+                        blocksForWork[repainted] = curBlock;
+                        curBlock.Blocked = true;//блокируем                        
                     }
 
                     if (quantity <= repainted)
@@ -353,15 +379,106 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                         break;
                     }
                 }
-                //если перекрасили хоть один элемент
+
+                //если нашли хоть один блок для обработки
                 if (repainted != 0)
-                {
+                {                
+                    yield return StartCoroutine(HighlightBlocks(blocksForWork));
+                    yield return new WaitForSeconds(0.2f);
+
+                    //если сетка выполняет действия, то ожидаем
+                    do
+                    {
+                        yield return new WaitForSeconds(0.01f);
+                        //если инструмент был деактивирован
+                        if (instrumentPrepared == false)
+                        {
+                            successfulActivation = false;
+                            DestroyHighlightBlocks();
+                            yield break;
+                        }
+                    } while (GridBlocks.Instance.blockedForMove);
+
+                    //создаем и перемещаем новые элементы
+                    foreach (Block curBlock in blocksForWork)
+                    {
+                        if (curBlock != null)
+                        {
+                            //создаем новый элемент
+                            curBlock.CreatElement(GridBlocks.Instance.prefabElement, block.Element.Shape, block.Element.Type);
+                            curBlock.Element.transform.position = block.transform.position;
+                            //добавляем эффект для перемещяемого эллемента
+                            GameObject effect = Instantiate(MainParticleSystem.Instance.pSMagicalTail, curBlock.Element.transform);
+                            Destroy(effect, 4);
+
+                            yield return new WaitForSeconds(0.25f);
+                            DestroyHighlightBlock(curBlock);
+                            curBlock.Blocked = false;//разблокируем
+                        }                            
+                    }
                     successfulActivation = true;
                     yield break;
                 }
             }
         }
         successfulActivation = false;
+    }
+
+    //дополнительные функции
+    //подсветить блоки
+    private IEnumerator HighlightBlocks(Block[] blocks) {
+        //если массив существует, то предварительно удаляем все эффекты в нем
+        DestroyHighlightBlocks();
+        //создаем новый массив
+        psGOs = new GameObject[blocks.Length];
+        //создаем эффекты
+        for (int i = 0; i < blocks.Length; i++)
+        {
+            if (blocks[i] != null && blocks[i].thisTransform != null)
+            {
+                //yield return new WaitForEndOfFrame();
+                yield return new WaitForSeconds(0.03f);
+                psGOs[i] = CreateHighlightEffect(blocks[i].thisTransform);
+            }            
+        }
+    }
+
+    private GameObject CreateHighlightEffect(Transform parentBlock, float lifeTime = 0) {
+        GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSelectTargetBlockBlue") as GameObject, parentBlock);
+        if (lifeTime != 0)
+        {
+            Destroy(psGO, lifeTime);
+        }
+        return psGO;
+    }
+
+    private void DestroyHighlightBlocks()
+    {
+        //если массив существует, то предварительно удаляем все эффекты в нем
+        if (psGOs != null)
+        {
+            for (int i = 0; i < psGOs.Length; i++)
+            {
+                Destroy(psGOs[i]);
+            }
+        }
+
+        psGOs = null;
+    }
+
+    private void DestroyHighlightBlock(Block block)
+    {
+        //удаляем указанный спецэффект
+        if (psGOs != null)
+        {
+            for (int i = 0; i < psGOs.Length; i++)
+            {
+                if (psGOs[i] != null && psGOs[i].transform.parent == block.transform)
+                {
+                    Destroy(psGOs[i]);
+                }                
+            }
+        }
     }
 
     //сохранение и заргрузка

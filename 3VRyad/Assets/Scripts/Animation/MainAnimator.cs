@@ -467,7 +467,7 @@ public class MainAnimator : MonoBehaviour {
         ChangeColorElement curItem = null;
         foreach (ChangeColorElement item in changeColorElements)
         {
-            if (item.spriteRenderer == spriteRenderer)
+            if (item.spriteRenderer != null && item.spriteRenderer == spriteRenderer)
             {
                 curItem = item;
                 //возвращаем стандартный цвет

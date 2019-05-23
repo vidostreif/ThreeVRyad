@@ -191,7 +191,12 @@ public enum SoundsEnum
     Ring_1,
     Ring_2,
     Laser,
-    Card
+    Card,
+    Wind,
+    Shovel,
+    LawnMowerStart,
+    LawnMowerWork,
+    Repainting
 
 
 }//тип сглаженного перемещения

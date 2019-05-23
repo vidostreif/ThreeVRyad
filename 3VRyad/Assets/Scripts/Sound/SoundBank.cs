@@ -39,7 +39,11 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Ring_2, soundFolder, "ring_2"));
             soundsList.Add(new SoundResurse(SoundsEnum.Laser, soundFolder, "laser"));
             soundsList.Add(new SoundResurse(SoundsEnum.Card, soundFolder, "wood"));
-
+            soundsList.Add(new SoundResurse(SoundsEnum.Wind, soundFolder, "wind"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Shovel, soundFolder, "shovel"));
+            soundsList.Add(new SoundResurse(SoundsEnum.LawnMowerStart, soundFolder, "lawnMowerStart"));
+            soundsList.Add(new SoundResurse(SoundsEnum.LawnMowerWork, soundFolder, "lawnMowerWork"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Repainting, soundFolder, "repainting"));
         }
     }
 

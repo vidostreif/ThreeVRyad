@@ -348,6 +348,7 @@ public static class HelpToPlayer
                     hintForDell.Add(hint);
 
                     MasterController.Instance.ForcedDropElement();//если игрок перетаскивает элемент, то бросаем его с возвратом на позицию
+                    InstrumentPanel.Instance.DeactivateInstrument();
                     break;
                 }
                 else
