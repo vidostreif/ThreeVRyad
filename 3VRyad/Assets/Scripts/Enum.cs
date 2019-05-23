@@ -181,6 +181,7 @@ public enum SoundsEnum
     Boom_mini_4,
     Boom_big,
     SuperBonusRocket,
+    SuperBonusActiveted,
     CollectElement,
     Applause,
     ClickButton,
@@ -193,10 +194,12 @@ public enum SoundsEnum
     Laser,
     Card,
     Wind,
+    Wind_active,
     Shovel,
     LawnMowerStart,
     LawnMowerWork,
-    Repainting
+    Repainting,
+    Repainting_ring
 
 
 }//тип сглаженного перемещения

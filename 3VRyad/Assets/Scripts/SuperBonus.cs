@@ -17,8 +17,11 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private int charges = 0; //заряды супербонуса
     private bool activated;//активируется в текущий момент
     private bool activateSuperBonusOnEnd;
-    ParticleSystem pSSuperBonus;
-    //private Image tankImage;
+    private ParticleSystem.MainModule mmSuperBonus;
+    private float psSuperBonusMaxSpeed;//максимальная скорость частиц в эффекте
+    private ParticleSystem.EmissionModule eMSuperBonus;
+    private float eMSuperBonusMaxRateOverTime;//максимальное количество частиц создаваемое эффектом в единицу времени
+    private Image superBonusPowerImage;
 
     private List<HitSuperBonus> HitSuperBonusList;
     private List<HitSuperBonus> HitSuperBonusListForDelete;
@@ -36,8 +39,12 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         activateSuperBonusOnEnd = false;
         HitSuperBonusList = new List<HitSuperBonus>();
         HitSuperBonusListForDelete = new List<HitSuperBonus>();
-        //tankImage = transform.GetComponent(typeof(Image)) as Image;
-        pSSuperBonus = transform.GetComponentInChildren<ParticleSystem>();
+        superBonusPowerImage = transform.Find("SuperBonusPowerImage").GetComponent(typeof(Image)) as Image;
+        ParticleSystem psSuperBonus = transform.GetComponentInChildren<ParticleSystem>();
+        mmSuperBonus = psSuperBonus.main;
+        psSuperBonusMaxSpeed = mmSuperBonus.startSpeed.constant;
+        eMSuperBonus = psSuperBonus.emission;
+        eMSuperBonusMaxRateOverTime = eMSuperBonus.rateOverTime.constant;
         FilledImage();
     }
 
@@ -141,16 +148,20 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     //заполнение картинки, в соответсвии с заполнением бонуса
     private void FilledImage() {
         
-        if (maxBonusPower != 0 && pSSuperBonus != null && allow)
+        if (maxBonusPower != 0 && allow && eMSuperBonus.enabled)
         {
-            var emission = pSSuperBonus.emission;
             if (charges > 0 || activated)
             {
-                emission.rateOverTime = 1000;
+                eMSuperBonus.rateOverTime = eMSuperBonusMaxRateOverTime;
+                mmSuperBonus.startSpeed = psSuperBonusMaxSpeed;
+                superBonusPowerImage.fillAmount = 1;
             }
             else
             {
-                emission.rateOverTime = (float)bonusPower / (float)maxBonusPower * 1000;
+                float fill = (float)bonusPower / (float)maxBonusPower;
+                eMSuperBonus.rateOverTime = fill * eMSuperBonusMaxRateOverTime;
+                mmSuperBonus.startSpeed = fill * psSuperBonusMaxSpeed;
+                superBonusPowerImage.fillAmount = fill;
             }            
         }        
     }
@@ -158,19 +169,24 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private IEnumerator CurActivateSuperBonusOnEnd()
     {
         activateSuperBonusOnEnd = true;
-
+        GameObject movesText = GameObject.Find("movesText");
             //запускаем супер бонус пока есть ходы
             while (Tasks.Instance.SubMoves())
             {
-                charges++;
-                //если супер бонус выполняет действие, то ожидаем
-                do
-                {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Repainting_ring);
+            GameObject psAddSuperBonusFromLevels = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSAddSuperBonusFromLevels") as GameObject, movesText.transform);
+            MainAnimator.Instance.AddElementForSmoothMove(psAddSuperBonusFromLevels.transform, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), 1, SmoothEnum.InArc, smoothTime: 0.1f, destroyAfterMoving: false);
+            Destroy(psAddSuperBonusFromLevels, 5);
+            charges++;
+            //если супер бонус выполняет действие, то ожидаем
+            yield return new WaitForSeconds(0.4f);
+            while (activated)
+            {
                     yield return new WaitForSeconds(0.2f);
-                } while (activated);
-
-                ActivateSuperBonus();
             }
+
+            ActivateSuperBonus();
+        }
 
             ////если еще остались заряды, то и их используем
             //while (charges > 0)
@@ -229,9 +245,9 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         if (allow && charges > 0 && !activated)
         {
             charges--;
-            var emission = pSSuperBonus.emission;
-            emission.rateOverTime = 1000;
-            //tankImage.fillAmount = 1;
+            
+            //eMSuperBonus.rateOverTime = 1000;
+            //superBonusPowerImage.fillAmount = 1;
             Block[] blocks = GridBlocks.Instance.GetAllBlocksWithStandartElements();
             //получаем все возможные блоки для следующего хода
             List<ElementsForNextMove> elementsForNextMove = GridBlocks.Instance.CheckElementsForNextMove();
@@ -295,7 +311,13 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private IEnumerator CreatingEffects(List<Block> blocks) {
 
         activated = true;
-        
+        FilledImage();
+
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusActiveted);
+        GameObject psSuperBonusActiveted = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSuperBonusActiveted") as GameObject, transform);
+        Destroy(psSuperBonusActiveted, 5);
+        yield return new WaitForSeconds(0.2f);
+
         foreach (Block block in blocks)
         {
             //если сбросили параметры, то останавливаем работу
@@ -312,8 +334,9 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             float randomNumber = UnityEngine.Random.Range(0.2f, 0.4f);
             yield return new WaitForSeconds(randomNumber);
         }
-        FilledImage();
+        
         activated = false;
+        FilledImage();
     }
 
     //сохранение и заргрузка

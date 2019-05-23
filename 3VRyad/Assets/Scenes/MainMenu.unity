@@ -465,6 +465,15 @@ PrefabInstance:
       propertyPath: debugMod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 713935765, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
+      propertyPath: pSAddPowerSuperBonus
+      value: 
+      objectReference: {fileID: 39, guid: 5fdae8ba271d78348b7ecb3f88f2dafe, type: 3}
+    - target: {fileID: 713935765, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
+      propertyPath: pSBeatsSuperBonus
+      value: 
+      objectReference: {fileID: 6830303307173130844, guid: 3ec902af5f1386149969ca8223b45636,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
 --- !u!1001 &3411421770805389032

@@ -137,7 +137,7 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        if (soundsList.Count > 20)
+        if (soundsList.Count > 25)
         {
             //Debug.Log("Вообще слишком много звуков!");
             return;

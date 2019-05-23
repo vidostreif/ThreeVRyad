@@ -27,6 +27,7 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Boom_mini_4, soundFolder, "boom_mini_4"));
             soundsList.Add(new SoundResurse(SoundsEnum.Boom_big, soundFolder, "boom_big"));
             soundsList.Add(new SoundResurse(SoundsEnum.SuperBonusRocket, soundFolder, "rocket"));
+            soundsList.Add(new SoundResurse(SoundsEnum.SuperBonusActiveted, soundFolder, "SuperBonusActiveted"));
             soundsList.Add(new SoundResurse(SoundsEnum.CollectElement, soundFolder, "magic"));
             soundsList.Add(new SoundResurse(SoundsEnum.Magic, soundFolder, "magic_2"));
             soundsList.Add(new SoundResurse(SoundsEnum.Star, soundFolder, "Rise02"));
@@ -40,10 +41,12 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Laser, soundFolder, "laser"));
             soundsList.Add(new SoundResurse(SoundsEnum.Card, soundFolder, "wood"));
             soundsList.Add(new SoundResurse(SoundsEnum.Wind, soundFolder, "wind"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Wind_active, soundFolder, "wind_active"));
             soundsList.Add(new SoundResurse(SoundsEnum.Shovel, soundFolder, "shovel"));
             soundsList.Add(new SoundResurse(SoundsEnum.LawnMowerStart, soundFolder, "lawnMowerStart"));
             soundsList.Add(new SoundResurse(SoundsEnum.LawnMowerWork, soundFolder, "lawnMowerWork"));
             soundsList.Add(new SoundResurse(SoundsEnum.Repainting, soundFolder, "repainting"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Repainting_ring, soundFolder, "repainting_ring"));
         }
     }
 
