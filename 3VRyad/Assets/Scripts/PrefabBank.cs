@@ -27,7 +27,6 @@ public static class PrefabBank
     private static GameObject panelShopConfirmation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopConfirmation") as GameObject;
     private static GameObject panelShopInformation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopConfirmation") as GameObject;
     
-
     private static GameObject scoreElementPrefab = Resources.Load(prefabFolder + "Canvas/GameCanvas/ScoreElement") as GameObject;
 
     private static GameObject canvasHelpToPlayer = Resources.Load(prefabFolder + "Canvas/GameCanvas/CanHelpToPlayer") as GameObject;

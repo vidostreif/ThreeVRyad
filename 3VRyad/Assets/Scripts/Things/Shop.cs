@@ -163,6 +163,11 @@ public class Shop : MonoBehaviour, IStoreListener
     //создание меню магазина
     public void CreateShop()
     {
+        StartCoroutine(CurCreateShop());
+    }
+
+    private IEnumerator CurCreateShop() {
+
         HelpToPlayer.DellGameHelp();
         if (panelShop != null)
         {
@@ -171,13 +176,22 @@ public class Shop : MonoBehaviour, IStoreListener
         panelShop = Instantiate(PrefabBank.ShopPanelPrefab, transform);
         Transform contentTransform = panelShop.transform.Find("Viewport/Content");
 
+        yield return new WaitForEndOfFrame();
+
         //принудительно пересчитываем количество вещей и монет
         ThingsManager.Instance.CountAllNumber();
         CountCoins();
 
+        //увеличиваем панель в верхнем углу
+        panelShopOnGame.localScale = panelShopOnGame.localScale * 2.0f;
+
+        //Показать инструменты в верху экрана
+        ThingsManager.Instance.CreateInstrumentsOnShop(panelShop.transform.Find("PanelShopInstruments"));
+
         //витрина
         foreach (ProductV product in PRODUCTS)
         {
+            yield return new WaitForEndOfFrame();
             GameObject bottonGO = Instantiate(PrefabBank.ShopButtonPrefab, contentTransform);
             Transform textNameTransform = bottonGO.transform.Find("TextName");
             textNameTransform.GetComponentInChildren<Text>().text = product.name;
@@ -196,8 +210,8 @@ public class Shop : MonoBehaviour, IStoreListener
                 textPriceReMoneyTransform.GetComponentInChildren<Text>().text = m_StoreController.products.WithID(product.id).metadata.localizedPriceString;
                 //скрываем другой текст
                 Destroy(textPriceCoinTransform.gameObject);
-            }                         
-            
+            }
+
             Transform imageTransform = bottonGO.transform.Find("Image");
             imageTransform.GetComponentInChildren<Image>().sprite = product.image;
 
@@ -207,11 +221,7 @@ public class Shop : MonoBehaviour, IStoreListener
         //Заменяем кнопке действие на Закрыть
         ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");
 
-        //увеличиваем панель в верхнем углу
-        panelShopOnGame.localScale = panelShopOnGame.localScale * 2.0f;
-
-        //Показать инструменты в верху экрана
-        ThingsManager.Instance.CreateInstrumentsOnShop(panelShop.transform.Find("PanelShopInstruments"));
+        
     }
 
     //создаем панель подтверждения покупки
@@ -310,7 +320,7 @@ public class Shop : MonoBehaviour, IStoreListener
 
                 //берем монетку и меняем у нее вид
                 GameObject mminiThingGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, go.transform.position, Quaternion.identity, transformParent);
-                mminiThingGO.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum);
+                mminiThingGO.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum, true);
 
                 //перемещаем на рандомную позицию
                 MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, new Vector3(go.transform.position.x + randomNumberX, go.transform.position.y + randomNumberY, go.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);

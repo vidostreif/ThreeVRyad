@@ -135,7 +135,7 @@ public class SpriteBank : MonoBehaviour
         return Resources.Load<Sprite>("Sprites/BlockingElement/" + shape.ToString()) as Sprite;
     }
 
-    public static Sprite SetShape(InstrumentsEnum shape)
+    public static Sprite SetShape(InstrumentsEnum shape, bool mini = false)
     {
         ////в зависимости от типа
         //switch (shape)
@@ -158,7 +158,7 @@ public class SpriteBank : MonoBehaviour
 
         //}
 
-        return Resources.Load<Sprite>("Sprites/Instruments/" + shape.ToString()) as Sprite;
+        return Resources.Load<Sprite>("Sprites/Instruments/" + shape.ToString() + (mini ? "_mini" : "")) as Sprite;
     }
 
     public static Sprite SetShape(BorderEnum shape)

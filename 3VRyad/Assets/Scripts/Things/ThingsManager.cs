@@ -111,8 +111,12 @@ public class ThingsManager : MonoBehaviour
 
                 for (int i = 0; i < instruments.Length; i++)
                 {
+                if (instruments[i].Type != InstrumentsEnum.Empty)
+                {
                     GameObject go = Instantiate(PrefabBank.PrefabButtonThing, new Vector3(startingXPoint + (i * (1 + distanceBetweenInstruments)), panelTransform.position.y, panelTransform.position.z), Quaternion.identity, panelTransform);
                     instruments[i].CreateShopThingButton(go);
+                }
+                    
                 }
             }
             else
