@@ -46,6 +46,7 @@ public class BlockController : MonoBehaviour
     {
         if (InstrumentPanel.Instance.InstrumentPrepared)
         {
+            SceneSettings.Instance.HideSetings();
             //SpriteRenderer spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
             //spriteRenderer.color = new Color(spriteRenderer.color.r + 0.5f, spriteRenderer.color.g + 0.5f, spriteRenderer.color.b + 0.5f, spriteRenderer.color.a);
         }
@@ -55,6 +56,7 @@ public class BlockController : MonoBehaviour
     {
         if (handleСlick)
         {
+            SceneSettings.Instance.HideSetings();
             //если есть активный инструмент
             if (InstrumentPanel.Instance.InstrumentPrepared)
             {
@@ -76,14 +78,14 @@ public class BlockController : MonoBehaviour
                     }
                 }
             }
-        }
-        
+        }        
     }
 
     public void Drag(PointerEventData data)//начало перетаскивания
     {
         if (handleDragging)
         {
+            SceneSettings.Instance.HideSetings();
             if (!InstrumentPanel.Instance.InstrumentPrepared)
             {
                 if (thisBlock.Element != null && !thisBlock.Element.LockedForMove && !thisBlock.Element.Destroyed)

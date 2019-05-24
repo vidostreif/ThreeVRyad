@@ -18,6 +18,7 @@ public class LevelMenu : MonoBehaviour
     public bool levelSaved = false;//левел в начале загрузки сохранен
     private GameObject panelRegions = null;
     private GameObject panelLevels = null;
+    private GameObject panelStartScreen = null;
     private GameObject panelSettings = null;
     //private AsyncOperation async;
 
@@ -108,7 +109,8 @@ public class LevelMenu : MonoBehaviour
         //если запустились на сцене меню
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            LoadMainMenu();
+            CreateStartScreen();
+            //LoadMainMenu();
         }
 
         Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLogin);
@@ -503,6 +505,10 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelLevels);
         }
+        if (panelStartScreen != null)
+        {
+            Destroy(panelStartScreen);
+        }
         if (panelSettings != null)
         {
             Destroy(panelSettings);
@@ -626,6 +632,10 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelLevels);
         }
+        if (panelStartScreen != null)
+        {
+            Destroy(panelStartScreen);
+        }
         if (panelSettings != null)
         {
             Destroy(panelSettings);
@@ -659,6 +669,51 @@ public class LevelMenu : MonoBehaviour
         Button buttonSettings = buttonSettingsTransform.GetComponent(typeof(Button)) as Button;
         buttonSettings.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         buttonSettings.onClick.AddListener(delegate { CreateSettingsMenu(); });
+    }
+
+    public void CreateStartScreen()
+    {
+        if (panelRegions != null)
+        {
+            Destroy(panelRegions);
+        }
+        if (panelLevels != null)
+        {
+            Destroy(panelLevels);
+        }
+        if (panelStartScreen != null)
+        {
+            Destroy(panelStartScreen);
+        }
+        if (panelSettings != null)
+        {
+            Destroy(panelSettings);
+        }
+        panelStartScreen = Instantiate(PrefabBank.StartScreenPrefab, transform);
+        //Transform contentTransform = panelStartScreen.transform.Find("Viewport/Content");
+
+        //добавляем действие к кнопке старт
+        Transform buttonStartTransform = panelStartScreen.transform.Find("ButtonStart");
+        Button buttonStart = buttonStartTransform.GetComponent(typeof(Button)) as Button;
+        buttonStart.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
+        buttonStart.onClick.AddListener(delegate { LoadMainMenu(); });
+
+        //добавляем действие к кнопке открытия настроек
+        Transform buttonSettingsTransform = panelStartScreen.transform.Find("ButtonSettings");
+        Button buttonSettings = buttonSettingsTransform.GetComponent(typeof(Button)) as Button;
+        buttonSettings.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
+        buttonSettings.onClick.AddListener(delegate { CreateSettingsMenu(); });
+
+        //добавляем действие к кнопке открытия сайта
+        Transform buttonLinkTransform = panelStartScreen.transform.Find("ButtonLinkToWebsite");
+        Button buttonLink = buttonLinkTransform.GetComponent(typeof(Button)) as Button;
+        buttonLink.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
+        buttonLink.onClick.AddListener(delegate { OpenLinkToWebsite(); });
+    }
+
+    //переход по ссылке на сайт
+    public void OpenLinkToWebsite() {
+        Application.OpenURL("https://vidostreif.github.io/");
     }
 
     //создание меню настроек

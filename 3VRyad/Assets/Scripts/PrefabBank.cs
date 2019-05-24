@@ -13,7 +13,8 @@ public static class PrefabBank
     //интерфейс
     private static GameObject levelsCanvasPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/Levels") as GameObject;
     private static GameObject regionsCanvasPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/Regions") as GameObject;
-    private static GameObject settingsPanelPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/PanelSettings") as GameObject;
+    private static GameObject startScreenPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/StartScreen") as GameObject;
+    private static GameObject settingsPanelPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/PanelSettingsMain") as GameObject;
     private static GameObject yesNoPanelPrefab = Resources.Load(prefabFolder + "Canvas/PanelYesNo") as GameObject;
     private static GameObject levelButtonPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/LevelButton") as GameObject;
     private static GameObject regionButtonPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/RegionButton") as GameObject;
@@ -36,6 +37,7 @@ public static class PrefabBank
 
     public static GameObject LevelsCanvasPrefab { get => levelsCanvasPrefab;}
     public static GameObject RegionsCanvasPrefab { get => regionsCanvasPrefab;}
+    public static GameObject StartScreenPrefab { get => startScreenPrefab; }
     public static GameObject SettingsPanelPrefab { get => settingsPanelPrefab;}
     public static GameObject YesNoPanelPrefab { get => yesNoPanelPrefab;}
     public static GameObject LevelButtonPrefab { get => levelButtonPrefab;}

@@ -8,6 +8,9 @@ using UnityEngine.UI;
 //панель настроек
 public class SettingsPanel : MonoBehaviour
 {
+
+    Image banHintsImage; //картинка запрета подсказок
+    Image banSoundImage; //картинка запрета звука
     //SettingsSave settingsSave;
     // Start is called before the first frame update
     void Start()
@@ -17,16 +20,23 @@ public class SettingsPanel : MonoBehaviour
 
     private void LoadSettingSaves() {
 
+        Transform panelSetings = transform.Find("PanelSetings");
         //отображаем значения
-        Toggle showHintsToggle = transform.Find("ToggleShowHints").GetComponent<Toggle>();
+        Toggle showHintsToggle = panelSetings.Find("ToggleShowHints").GetComponent<Toggle>();
         showHintsToggle.onValueChanged.RemoveAllListeners();
         showHintsToggle.isOn = SettingsController.ShowHints;        
         showHintsToggle.onValueChanged.AddListener(delegate { ChangeShowHints(showHintsToggle.isOn); });
+        
+        banHintsImage = showHintsToggle.transform.Find("BanImage").GetComponent<Image>();
+        HideImage(SettingsController.ShowHints, banHintsImage);
 
-        Toggle soundToggle = transform.Find("ToggleSound").GetComponent<Toggle>();
+        Toggle soundToggle = panelSetings.Find("ToggleSound").GetComponent<Toggle>();
         soundToggle.onValueChanged.RemoveAllListeners();
         soundToggle.isOn = SettingsController.SoundOn;
         soundToggle.onValueChanged.AddListener(delegate { ChangeSound(soundToggle.isOn); });
+
+        banSoundImage = soundToggle.transform.Find("BanImage").GetComponent<Image>();
+        HideImage(SettingsController.SoundOn, banSoundImage);
     }
 
     //закрытие панели настроек
@@ -37,6 +47,7 @@ public class SettingsPanel : MonoBehaviour
     //удаление сохранений
     public void CreateQuestionDeleteSaves()
     {
+        SoundManager.Instance.PlayClickButtonSound();
         //создаем запрос на удаление сохранений
         string text = "Вы действительно хотите удалить все сохранения?";
         Action actionYes = delegate
@@ -78,6 +89,7 @@ public class SettingsPanel : MonoBehaviour
     //удаляем сохранения
     public static void DeleteSaves()
     {
+        SoundManager.Instance.PlayClickButtonSound();
         //удаляем сохранения
         JsonSaveAndLoad.DeleteSave();
 
@@ -89,13 +101,28 @@ public class SettingsPanel : MonoBehaviour
     //переключение значения показывать подсказки
     public void ChangeShowHints(bool isOn)
     {
-        LoadSettingSaves();
+        //LoadSettingSaves();
+        SoundManager.Instance.PlayClickButtonSound();
         SettingsController.ShowHints = isOn;
+        HideImage(isOn, banHintsImage);
     }
 
     //переключение значения звука
     public void ChangeSound(bool isOn)
     {
+        SoundManager.Instance.PlayClickButtonSound();
         SettingsController.SoundOn = isOn;
+        HideImage(isOn, banSoundImage);
+    }
+
+    //скрыть отобразить картинку
+    private void HideImage(bool show, Image image) {
+
+        int i = 1;
+        if (show)
+        {
+            i = 0;
+        }
+        SupportFunctions.ChangeAlfa(image, i);
     }
 }

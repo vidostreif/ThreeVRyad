@@ -5,25 +5,36 @@ using UnityEngine.UI;
 
 public class SceneSettings : MonoBehaviour
 {
+    public static SceneSettings Instance; // Синглтон
     private bool setingsHidden = true;
 
     private Transform buttonExit;
     private Transform buttonSound;
     private Transform buttonRestart;
     private Transform buttonSetings;
+    Image banSoundImage; //картинка запрета звука
 
     void Awake()
     {
+        // регистрация синглтона
+        if (Instance != null)
+        {
+            Debug.LogError("Несколько экземпляров SceneSettings!");
+        }
+        Instance = this;
+
         buttonSound = transform.Find("ButtonSound");        
         buttonExit = transform.Find("ButtonExit");
         buttonRestart = transform.Find("ButtonRestart");
         buttonSetings = transform.Find("ButtonSetings");
+        banSoundImage = buttonSound.Find("BanImage").GetComponent<Image>();
     }
 
     public void RestartScene() {
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
         HideOrShowSetings(false);
         MainGameSceneScript.Instance.RestartLevel();
+        HideSetings();
     }
 
     public void ExitScene()
@@ -38,17 +49,16 @@ public class SceneSettings : MonoBehaviour
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
         //включение-выключение звука
         if (!SettingsController.SoundOn)
-        {
-            //!!!убераем закрывающую картинку
-
+        {          
             SettingsController.SoundOn = true;
         }
         else
         {
-            //!!!показываем закрывающую картинку
-
             SettingsController.SoundOn = false;
         }
+
+        //показываем или скрываем закрывающую картинку
+        HideImage(SettingsController.SoundOn, banSoundImage);
     }
 
     //показываем или скрываем кнопки
@@ -65,6 +75,13 @@ public class SceneSettings : MonoBehaviour
         }                  
     }
 
+    public void HideSetings() {
+        if (!setingsHidden)
+        {
+            HideOrShowSetings(false);
+        }
+    }
+
     private void HideOrShowSetings(bool show) {
 
         Vector2 startAnchordPosition = buttonSetings.GetComponent<RectTransform>().anchoredPosition;
@@ -73,18 +90,11 @@ public class SceneSettings : MonoBehaviour
         {
             offset = 1;
             setingsHidden = false;
-            //узнаем включен ли звук
-            if (!SettingsController.SoundOn)
-            {
-                //!!!показываем закрывающую картинку
-            }
         }
         else
         {
             offset = 0;
             setingsHidden = true;
-
-            //!!!прячем закрывающую картинку для звука
         }
 
         RectTransform rectButtonExit = buttonExit.GetComponent<RectTransform>();
@@ -97,9 +107,30 @@ public class SceneSettings : MonoBehaviour
         SupportFunctions.ChangeAlfa(buttonSound.GetComponent<Image>(), offset);
         buttonSound.GetComponent<Button>().interactable = !setingsHidden;
 
+        //отображаем картинку выключения звука        
+        if (!setingsHidden)
+        {
+            HideImage(SettingsController.SoundOn, banSoundImage);
+        }
+        else
+        {
+            HideImage(true, banSoundImage);
+        }        
+
         RectTransform rectbuttonRestart = buttonRestart.GetComponent<RectTransform>();
         rectbuttonRestart.anchoredPosition = new Vector2(startAnchordPosition.x - offset * rectbuttonRestart.rect.width * 0.95f, startAnchordPosition.y + offset * rectbuttonRestart.rect.height * 0.95f);
         SupportFunctions.ChangeAlfa(buttonRestart.GetComponent<Image>(), offset);
         buttonRestart.GetComponent<Button>().interactable = !setingsHidden;
+    }
+
+    //скрыть отобразить картинку
+    private void HideImage(bool show, Image image)
+    {
+        int i = 1;
+        if (show)
+        {
+            i = 0;
+        }
+        SupportFunctions.ChangeAlfa(image, i);
     }
 }

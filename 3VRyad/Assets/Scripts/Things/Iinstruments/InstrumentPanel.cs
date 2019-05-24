@@ -136,6 +136,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         
     public void PreparInstrument(InstrumentOnGame instrument)
     {
+        SceneSettings.Instance.HideSetings();
         if (!activatedAtTheMoment)
         {
             //удаляем подсказку если она есть
@@ -184,6 +185,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     {
         if (instrumentPrepared)
         {
+            SceneSettings.Instance.HideSetings();
             instrumentPrepared = false;
             StartCoroutine(Activate(block));            
         }
