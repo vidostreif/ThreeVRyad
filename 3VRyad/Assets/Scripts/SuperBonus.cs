@@ -171,34 +171,34 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         activateSuperBonusOnEnd = true;
         GameObject movesText = GameObject.Find("movesText");
             //запускаем супер бонус пока есть ходы
-            while (Tasks.Instance.SubMoves())
+        while (Tasks.Instance.SubMoves())
+        {
+            while (activated)
             {
+                yield return new WaitForSeconds(0.05f);
+            }
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Repainting_ring);
             GameObject psAddSuperBonusFromLevels = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSAddSuperBonusFromLevels") as GameObject, movesText.transform);
-            MainAnimator.Instance.AddElementForSmoothMove(psAddSuperBonusFromLevels.transform, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), 1, SmoothEnum.InArc, smoothTime: 0.1f, destroyAfterMoving: false);
+            MainAnimator.Instance.AddElementForSmoothMove(psAddSuperBonusFromLevels.transform, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), 1, SmoothEnum.InArc, smoothTime: 0.15f, destroyAfterMoving: false);
             Destroy(psAddSuperBonusFromLevels, 5);
             charges++;
             //если супер бонус выполняет действие, то ожидаем
-            yield return new WaitForSeconds(0.4f);
-            while (activated)
-            {
-                    yield return new WaitForSeconds(0.2f);
-            }
+            yield return new WaitForSeconds(0.4f);            
 
             ActivateSuperBonus();
         }
 
-            ////если еще остались заряды, то и их используем
-            //while (charges > 0)
-            //{
-            //    //если супер бонус выполняет действие, то ожидаем
-            //    do
-            //    {
-            //        yield return new WaitForSeconds(0.2f);
-            //    } while (activated);
+        ////если еще остались заряды, то и их используем
+        //while (charges > 0)
+        //{
+        //    //если супер бонус выполняет действие, то ожидаем
+        //    do
+        //    {
+        //        yield return new WaitForSeconds(0.2f);
+        //    } while (activated);
 
-            //    ActivateSuperBonus();
-            //}
+        //    ActivateSuperBonus();
+        //}
 
         //ожидаем, пока все ракеты не долетят до своих целей
         do
@@ -331,7 +331,15 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             GameObject backlight = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSelectTargetBlock") as GameObject, block.transform);
             backlight.transform.position = block.transform.position;
             HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(block.transform), block));//добавляем в список для последующей обработки 
-            float randomNumber = UnityEngine.Random.Range(0.2f, 0.4f);
+
+            //уменьшаем время, если закончили игру
+            float factor = 1;
+            if (Tasks.Instance.endGame)
+            {
+                factor = 0.5f;
+            }
+
+            float randomNumber = UnityEngine.Random.Range(0.2f * factor, 0.5f * factor);
             yield return new WaitForSeconds(randomNumber);
         }
         
