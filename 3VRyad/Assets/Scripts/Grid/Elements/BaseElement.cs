@@ -149,6 +149,14 @@ public class BaseElement : MonoBehaviour
         {
             //перемещаем элемент к себе
             MainAnimator.Instance.AddElementForSmoothMove(elementTransform, this.transform.position, 10, SmoothEnum.InLineWithAcceleration, 0.1f, true);
+            //уменьшаем в два раза
+            elementTransform.localScale = elementTransform.localScale * 0.5f;
+            //создаем эффект
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_1);
+            GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
+            GameObject.Destroy(psGO, 3);
+            ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
+            ps.textureSheetAnimation.AddSprite(SpriteBank.SetShape(collectShape));
 
             numberOfElementCollected--;
             //если собрали колецию

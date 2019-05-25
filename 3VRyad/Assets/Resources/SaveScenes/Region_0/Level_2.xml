@@ -1,12 +1,8 @@
 <root>
   <GiftScript>
-    <bundles>
-      <bundleShopV type="Shovel" count="3" />
-      <bundleShopV type="Shovel" count="3" />
-      <bundleShopV type="Shovel" count="3" />
-    </bundles>
-    <bundelCount>3</bundelCount>
-    <coins>20</coins>
+    <bundles />
+    <bundelCount>0</bundelCount>
+    <coins>0</coins>
   </GiftScript>
   <Bonuses>
     <bonusesList>
@@ -101,20 +97,20 @@
     <helpEnum>SuperBonus</helpEnum>
   </HelpFromGnome>
   <Score>
-    <scoreForFirstStar>1000</scoreForFirstStar>
-    <scoreForSecondStar>1500</scoreForSecondStar>
-    <scoreForThirdStar>2000</scoreForThirdStar>
+    <scoreForFirstStar>24000</scoreForFirstStar>
+    <scoreForSecondStar>36000</scoreForSecondStar>
+    <scoreForThirdStar>48000</scoreForThirdStar>
   </Score>
   <SuperBonus>
-    <maxBonusPower>5000</maxBonusPower>
+    <maxBonusPower>10000</maxBonusPower>
     <beats>7</beats>
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>10</moves>
+    <moves>17</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Strawberry" goal="10" collectEverything="false" />
+      <shapeAndGoal shape="Strawberry" goal="50" collectEverything="false" />
     </targets>
   </Tasks>
   <InstrumentPanel>

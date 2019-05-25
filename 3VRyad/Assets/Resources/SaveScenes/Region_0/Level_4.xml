@@ -122,8 +122,8 @@
     <helpEnum>Score</helpEnum>
   </HelpFromGnome>
   <Score>
-    <scoreForFirstStar>40000</scoreForFirstStar>
-    <scoreForSecondStar>50000</scoreForSecondStar>
+    <scoreForFirstStar>30000</scoreForFirstStar>
+    <scoreForSecondStar>40000</scoreForSecondStar>
     <scoreForThirdStar>60000</scoreForThirdStar>
   </Score>
   <SuperBonus>

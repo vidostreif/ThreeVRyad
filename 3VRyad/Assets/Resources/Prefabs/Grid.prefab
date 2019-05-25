@@ -48,25 +48,35 @@ MonoBehaviour:
   thisTransform: {fileID: 5605447330356066441}
   elementsPriorityList:
   - elementsType: 1
-    elementsShape: 13
+    elementsShape: 3
     priority: 10
-    maxAmountOnField: 999
-    limitOnAmountCreated: 9999
+    maxAmountOnField: 2147483647
+    limitOnAmountCreated: 2147483647
+  - elementsType: 1
+    elementsShape: 8
+    priority: 10
+    maxAmountOnField: 2147483647
+    limitOnAmountCreated: 2147483647
   - elementsType: 1
     elementsShape: 11
     priority: 10
-    maxAmountOnField: 999
-    limitOnAmountCreated: 9999
+    maxAmountOnField: 2147483647
+    limitOnAmountCreated: 2147483647
+  - elementsType: 1
+    elementsShape: 13
+    priority: 10
+    maxAmountOnField: 2147483647
+    limitOnAmountCreated: 2147483647
   - elementsType: 1
     elementsShape: 9
-    priority: 30
-    maxAmountOnField: 999
-    limitOnAmountCreated: 9999
-  - elementsType: 1
-    elementsShape: 3
     priority: 10
-    maxAmountOnField: 999
-    limitOnAmountCreated: 9999
+    maxAmountOnField: 2147483647
+    limitOnAmountCreated: 2147483647
+  - elementsType: 1
+    elementsShape: 10
+    priority: 10
+    maxAmountOnField: 2147483647
+    limitOnAmountCreated: 2147483647
   containers:
   - block:
     - {fileID: 0}
@@ -191,9 +201,9 @@ MonoBehaviour:
   prefabBlock: {fileID: 1432295883623472, guid: ba35badb2c19b764aadcf4bee37930f4,
     type: 3}
   prefabElement: {fileID: 30, guid: f925ff8db482b684d84e1e8ebc0b80c4, type: 3}
-  prefabBlockingWall: {fileID: 1697969287702766, guid: e9fdac4dcd7fb434193fc8257c0b5b7e,
+  textCollectElement: {fileID: 65871097000595485, guid: 85778ee1169068f40930b48b542da2c9,
     type: 3}
-  ImageElementAndParameters: {fileID: 1061130453393650, guid: 46452d394409f544f95248e98192e064,
+  prefabBlockingWall: {fileID: 1697969287702766, guid: e9fdac4dcd7fb434193fc8257c0b5b7e,
     type: 3}
 --- !u!114 &796646571376334108
 MonoBehaviour:
@@ -208,12 +218,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bonusesList:
-  - type: 5
-    shape: 6
-    cost: 20
   - type: 6
     shape: 7
-    cost: 20
+    cost: 4
+  - type: 5
+    shape: 6
+    cost: 5
   - type: 7
     shape: 13
-    cost: 20
+    cost: 6

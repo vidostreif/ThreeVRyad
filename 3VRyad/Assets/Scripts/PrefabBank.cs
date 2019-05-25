@@ -33,6 +33,9 @@ public static class PrefabBank
     private static GameObject canvasStartGame = Resources.Load(prefabFolder + "Canvas/GameCanvas/CanStartGame") as GameObject;
     private static GameObject canvasEndGameMenu = Resources.Load(prefabFolder + "Canvas/GameCanvas/CanEndGame") as GameObject;
 
+    ////элементы
+    private static GameObject textCollectElement = Resources.Load(prefabFolder + "TextCollectElement") as GameObject;
+    private static GameObject collectElement = Resources.Load(prefabFolder + "CollectElement") as GameObject;
 
     public static GameObject LevelsCanvasPrefab { get => levelsCanvasPrefab;}
     public static GameObject RegionsCanvasPrefab { get => regionsCanvasPrefab;}
@@ -51,6 +54,8 @@ public static class PrefabBank
     public static GameObject CanvasHelpToPlayer { get => canvasHelpToPlayer;}
     public static GameObject CanvasStartGame { get => canvasStartGame;}
     public static GameObject CanvasEndGameMenu { get => canvasEndGameMenu;}
+    public static GameObject TextCollectElement { get => textCollectElement;}
+    public static GameObject CollectElement { get => collectElement; }
 
     //private void LoadAllPrefab() {
     //    levelsCanvasPrefab = Resources.Load(prefabFolder + "Arrow") as GameObject;

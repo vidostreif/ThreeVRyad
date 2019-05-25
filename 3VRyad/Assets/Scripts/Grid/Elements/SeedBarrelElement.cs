@@ -18,15 +18,21 @@ public class SeedBarrelElement : Element
             DestroyImmediate(collectTransform.gameObject);
         }
         //создаем рисунок в центре нашего объекта
-        GameObject collectObg = new GameObject();
+        GameObject collectObg = Instantiate(PrefabBank.CollectElement);
         collectObg.name = collectName;
         collectObg.transform.SetParent(transform, false);
 
-        SpriteRenderer collectSpRender = collectObg.AddComponent<SpriteRenderer>();
+        SpriteRenderer collectSpRender = collectObg.GetComponent<SpriteRenderer>();
         collectSpRender.sprite = SpriteBank.SetShape(collectShape);
-        collectSpRender.sortingLayerName = "Elements";
-        collectSpRender.sortingOrder = 100;
-        collectObg.transform.localScale = new Vector3(0.7f, 0.7f);
+        SpriteRenderer[] collectSpRenders = collectObg.GetComponentsInChildren<SpriteRenderer>();
+        foreach (SpriteRenderer item in collectSpRenders)
+        {
+            item.sprite = SpriteBank.SetShape(collectShape);
+        }
+        //collectSpRender.sortingLayerName = "Elements";
+        //collectSpRender.sortingOrder = 100;
+        //collectObg.transform.localScale = new Vector3(0.60f, 0.60f);
+        //collectObg.transform.localPosition = new Vector3(collectObg.transform.localPosition.x, -0.23f , collectObg.transform.localPosition.z);
 
         //создаем текст
         string TextCollectName = "TextCollectElement";
@@ -35,19 +41,21 @@ public class SeedBarrelElement : Element
         {
             DestroyImmediate(TextCollectTransform.gameObject);
         }
-        GameObject TextCollectObg = new GameObject();
+        GameObject TextCollectObg = Instantiate(PrefabBank.TextCollectElement);
+        //GameObject TextCollectObg = new GameObject();
         TextCollectObg.name = TextCollectName;
         TextCollectObg.transform.SetParent(transform, false);
 
-        MeshRenderer collectMeshRenderer = TextCollectObg.AddComponent<MeshRenderer>();
-        collectMeshRenderer.sortingLayerName = "Elements";
-        collectMeshRenderer.sortingOrder = 101;
+        //MeshRenderer collectMeshRenderer = TextCollectObg.AddComponent<MeshRenderer>();
+        //collectMeshRenderer.sortingLayerName = "Elements";
+        //collectMeshRenderer.sortingOrder = 101;
 
-        collectText = TextCollectObg.AddComponent<TextMesh>();
-        collectText.text = numberOfElementCollected.ToString();
-        collectText.fontSize = 50;
-        collectText.anchor = TextAnchor.MiddleCenter;
-        TextCollectObg.transform.localScale = new Vector3(0.08f, 0.08f);
+        collectText = TextCollectObg.GetComponent<TextMesh>();
+        //collectText.text = numberOfElementCollected.ToString();
+        //collectText.fontSize = 50;
+        //collectText.anchor = TextAnchor.UpperCenter;
+        ////collectText.font = new Font("HFF Pure Vain");
+        //TextCollectObg.transform.localScale = new Vector3(0.08f, 0.08f);
     }
 
     //добавляем в коллекцию элемент

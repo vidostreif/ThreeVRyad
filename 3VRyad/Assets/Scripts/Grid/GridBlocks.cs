@@ -23,6 +23,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public Blocks[] containers;
     public GameObject prefabBlock;
     public GameObject prefabElement;
+    //public GameObject textCollectElement;
     public GameObject prefabBlockingWall;
     
 
