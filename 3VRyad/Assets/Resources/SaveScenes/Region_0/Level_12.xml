@@ -16,7 +16,7 @@
     <XSize>12</XSize>
     <YSize>9</YSize>
     <elementsShape>
-      <shapeAndPriority shape="Apple" type="StandardElement" priority="20" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Apple" type="StandardElement" priority="12" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Strawberry" type="StandardElement" priority="10" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Plum" type="StandardElement" priority="10" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Mushroom" type="StandardElement" priority="10" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
