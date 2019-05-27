@@ -126,6 +126,12 @@ public class MessageArray : MonoBehaviour
         }
        
     }
+
+    void OnGUI()
+    {
+        float fps = 1.0f / Time.deltaTime;
+        GUILayout.Label("FPS = " + (int)fps);
+    }
 }
 
 public class DebugMessage {

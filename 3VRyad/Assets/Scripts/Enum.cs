@@ -34,6 +34,7 @@ public enum ElementsShapeEnum
     Mushroom,//гриб
     SeedBarrel,//бочка
     Bush,//куст
+    Brick,//кирпич
 }//Внешние виды элементов
 
 public enum BehindElementsTypeEnum
@@ -85,6 +86,7 @@ public enum AllShapeEnum
     Mushroom,//гриб
     SeedBarrel,//бочка
     Bush,//куст
+    Brick,//кирпич
 }//Внешние виды элементов
 
 public enum BlockTypeEnum

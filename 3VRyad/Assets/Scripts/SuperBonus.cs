@@ -335,7 +335,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusActiveted);
         GameObject psSuperBonusActiveted = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSuperBonusActiveted") as GameObject, transform);
         Destroy(psSuperBonusActiveted, 5);
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.15f);
 
         newHitSuperBonusList = new List<HitSuperBonus>();
 
@@ -384,7 +384,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                 factor = 0.5f;
             }
 
-            float randomNumber = UnityEngine.Random.Range(0.15f * factor, 0.35f * factor);
+            float randomNumber = UnityEngine.Random.Range(0.25f * factor, 0.35f * factor);
             yield return new WaitForSeconds(randomNumber);
 
             iteration++;
