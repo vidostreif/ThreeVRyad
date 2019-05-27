@@ -245,6 +245,10 @@ public static class HelpToPlayer
                 {
                     created = CreateDropElementHelp();
                 }
+                else if (activeHint.help == ElementsTypeEnum.SeedBarrel.ToString())
+                {
+                    created = CreateSeedBarelHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
+                }
                 else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
                 {
                     created = CreateLianaHelp((BlockingElementsTypeEnum)Enum.Parse(typeof(BlockingElementsTypeEnum), activeHint.help));
@@ -896,6 +900,67 @@ public static class HelpToPlayer
         return false;
     }
 
+    private static bool CreateSeedBarelHelp(ElementsTypeEnum elementsTypeEnum)
+    {
+        //получаем возможные ходы
+        List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
+        //Если нет доступных ходов, то выходим
+        if (elementsForNextMoveList.Count == 0)
+        {
+            return false;
+        }
+
+        //получаем все бочки
+        SeedBarrelElement[] findeObjects = UnityEngine.Object.FindObjectsOfType(typeof(SeedBarrelElement)) as SeedBarrelElement[];
+
+        //если нашли хоть один элемент
+        foreach (SeedBarrelElement item in findeObjects)
+        {
+            //берем блок с нашим элементом
+            Block curBlock = GridBlocks.Instance.GetBlock(item.PositionInGrid);
+
+            if (item.Type == elementsTypeEnum && BlockCheck.ThisBlockWithElementWithoutBlockingElement(curBlock))
+            {
+                //получаем соседние блоки
+                NeighboringBlocks blocks = GridBlocks.Instance.GetNeighboringBlocks(curBlock.PositionInGrid);
+                //пытаемся найти ход где есть соседний блок в следующем ходе
+                foreach (ElementsForNextMove curElementsForNextMove in elementsForNextMoveList)
+                {
+                    //если в следующем ходе не та внешность элэмента, то ищем дальше
+                    if (curElementsForNextMove.elementForMove.Shape != item.CollectShape)
+                    {
+                        continue;
+                    }
+                    foreach (Element element in curElementsForNextMove.elementsList)
+                    {
+                        //если элемент не для передвижения и не заблокирвоан
+                        if (element != curElementsForNextMove.elementForMove && element.BlockingElement == null)
+                        {
+                            foreach (Block NeighboringBlock in blocks.allBlockField)
+                            {
+                                if (NeighboringBlock == GridBlocks.Instance.GetBlock(element.PositionInGrid))
+                                {
+                                    //высвечиваем блок
+                                    ChangeSorting(curBlock.gameObject, activeHint);
+
+                                    //добавляем эффект мерцания
+                                    AddToFlashing(item.gameObject, activeHint);
+
+                                    //высвечиваем нужный ход
+                                    return HighlightSpecifiedMove(curElementsForNextMove);
+                                }
+                            }
+                        }
+                    }
+                }
+                ////если не нашли соседний блок
+                //return false;
+            }
+        }
+        Debug.Log("Не нашли подходящую бочку для подсказки!");
+        return false;
+    }
+
     private static bool CreateLianaHelp(BlockingElementsTypeEnum elementsTypeEnum)
     {
         //получаем возможные ходы
@@ -1111,8 +1176,9 @@ public static class HelpToPlayer
             {
                 hint.spriteRendersSetingList.Add(new SpriteRenderSettings(childrenSpriteRenderer, childrenSpriteRenderer.sortingLayerName, childrenSpriteRenderer.sortingOrder));
 
-                childrenSpriteRenderer.sortingOrder = childrenSpriteRenderer.sortingLayerID;
+                childrenSpriteRenderer.sortingOrder = childrenSpriteRenderer.sortingLayerID + childrenSpriteRenderer.sortingOrder;
                 childrenSpriteRenderer.sortingLayerName = "Help";
+                Debug.Log(childrenSpriteRenderer.sortingOrder);
             }
         }
     }

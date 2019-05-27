@@ -192,6 +192,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             //запускаем супер бонус пока есть ходы
         while (Tasks.Instance.SubMoves())
         {
+            //если супер бонус выполняет действие, то ожидаем
             while (activated)
             {
                 yield return new WaitForSeconds(0.05f);
@@ -200,8 +201,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             GameObject psAddSuperBonusFromLevels = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSAddSuperBonusFromLevels") as GameObject, movesText.transform);
             MainAnimator.Instance.AddElementForSmoothMove(psAddSuperBonusFromLevels.transform, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), 1, SmoothEnum.InArc, smoothTime: 0.15f, destroyAfterMoving: false);
             Destroy(psAddSuperBonusFromLevels, 5);
-            charges++;
-            //если супер бонус выполняет действие, то ожидаем
+            charges++;            
             yield return new WaitForSeconds(0.4f);            
 
             ActivateSuperBonus();
@@ -335,7 +335,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusActiveted);
         GameObject psSuperBonusActiveted = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSuperBonusActiveted") as GameObject, transform);
         Destroy(psSuperBonusActiveted, 5);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.1f);
 
         newHitSuperBonusList = new List<HitSuperBonus>();
 

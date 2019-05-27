@@ -148,6 +148,7 @@ public class BaseElement : MonoBehaviour
         if (!this.destroyed && this.collector && elementShape == this.collectShape && this.numberOfElementCollected > 0)
         {
             //перемещаем элемент к себе
+            //elementTransform.parent = thisTransform;
             MainAnimator.Instance.AddElementForSmoothMove(elementTransform, this.transform.position, 10, SmoothEnum.InLineWithAcceleration, 0.1f, true);
             //уменьшаем в два раза
             elementTransform.localScale = elementTransform.localScale * 0.5f;
