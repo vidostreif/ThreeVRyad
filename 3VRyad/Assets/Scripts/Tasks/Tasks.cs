@@ -189,7 +189,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
                 //GameObject go = new GameObject();
                 //go.transform.position = transformElement.position;
                 //go.transform.parent = this.thisTransform;
-                transformElement.parent = this.thisTransform;
+                //transformElement.parent = this.thisTransform;
+                transformElement.SetParent(this.thisTransform, true);
                 transformElement.GetComponent<SpriteRenderer>().sortingLayerName = "Magic";
                 //transformElement.GetComponent<AnimatorElement>().PlayIdleAnimation();
                 //перемещаем элемент к нашему объекту

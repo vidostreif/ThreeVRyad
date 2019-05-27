@@ -30,7 +30,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6567990481107247956}
+  - {fileID: 9173068504908616469}
   m_Father: {fileID: 5143023421354139124}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -345.0117}
@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7921569}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -395,14 +395,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 141705717e71b09488a2345ae5e3f3d6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5d5c8f0fcc9b7094483fd36a10e31c10, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -695,14 +695,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 141705717e71b09488a2345ae5e3f3d6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5d5c8f0fcc9b7094483fd36a10e31c10, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1286,6 +1286,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3891740959537583584}
     m_Modifications:
+    - target: {fileID: 4203139318359531567, guid: 63f30c2c83191fa468cbad173768c26c,
+        type: 3}
+      propertyPath: m_Name
+      value: PSOpenGiftBox
+      objectReference: {fileID: 0}
     - target: {fileID: 2624325071231889477, guid: 63f30c2c83191fa468cbad173768c26c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1391,14 +1396,9 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 4203139318359531567, guid: 63f30c2c83191fa468cbad173768c26c,
-        type: 3}
-      propertyPath: m_Name
-      value: PSOpenGiftBox
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63f30c2c83191fa468cbad173768c26c, type: 3}
---- !u!224 &6567990481107247956 stripped
+--- !u!224 &9173068504908616469 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2624325071231889477, guid: 63f30c2c83191fa468cbad173768c26c,
     type: 3}
