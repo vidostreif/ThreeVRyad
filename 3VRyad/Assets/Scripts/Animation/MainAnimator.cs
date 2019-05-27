@@ -294,7 +294,7 @@ public class MainAnimator : MonoBehaviour {
                     
                     //удаляем если требуется
                     if (item.destroyAfterMoving)
-                        Destroy(item.thisTransform.gameObject, 0.3f);
+                        Destroy(item.thisTransform.gameObject, 0.1f);
                     moveElementsForRemove.Add(item);
                 }
             }

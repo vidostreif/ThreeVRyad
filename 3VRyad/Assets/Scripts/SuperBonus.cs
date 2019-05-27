@@ -25,6 +25,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
 
     private List<HitSuperBonus> HitSuperBonusList;
     private List<HitSuperBonus> HitSuperBonusListForDelete;
+    private List<HitSuperBonus> newHitSuperBonusList;//объекты которые будут добалены в основной массив
 
     void Awake()
     {
@@ -100,6 +101,24 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         strikesOnBlocks = 0;
         bonusPower = 0;
         charges = 0;
+        //на всякий случай уничтожаем все объекты
+        if (HitSuperBonusList != null)
+        {
+            foreach (HitSuperBonus item in HitSuperBonusList)
+            {
+                Destroy(item.backlight);
+                Destroy(item.gameObjectBeat);
+            }
+        }
+        if (newHitSuperBonusList != null)
+        {
+            foreach (HitSuperBonus item in newHitSuperBonusList)
+            {
+                Destroy(item.backlight);
+                Destroy(item.gameObjectBeat);
+            }
+        }
+
         HitSuperBonusList = new List<HitSuperBonus>();
         HitSuperBonusListForDelete = new List<HitSuperBonus>();
         FilledImage();        
@@ -318,19 +337,45 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         Destroy(psSuperBonusActiveted, 5);
         yield return new WaitForSeconds(0.2f);
 
+        newHitSuperBonusList = new List<HitSuperBonus>();
+
         foreach (Block block in blocks)
         {
-            //если сбросили параметры, то останавливаем работу
-            if (!activated)
-            {
-                break;
-            }
+            ////если сбросили параметры, то останавливаем работу
+            //if (!activated)
+            //{                
+            //    foreach (HitSuperBonus item in newHitSuperBonusList)
+            //    {
+            //        Destroy(item.backlight);
+            //    }
+
+            //    yield return null;
+            //}
             //подсветка
-            //GameObject backlight = Instantiate(MainParticleSystem.Instance.pSSelect, block.transform);
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusRocket);
             GameObject backlight = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSelectTargetBlock") as GameObject, block.transform);
             backlight.transform.position = block.transform.position;
-            HitSuperBonusList.Add(new HitSuperBonus(backlight, CreateBeatsSuperBonus(block.transform), block));//добавляем в список для последующей обработки 
+            newHitSuperBonusList.Add(new HitSuperBonus(backlight, block));//добавляем в список для последующей обработки 
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        int iteration = 0;
+        foreach (Block block in blocks)
+        {
+            ////если сбросили параметры, то останавливаем работу
+            //if (!activated)
+            //{
+            //    foreach (HitSuperBonus item in newHitSuperBonusList)
+            //    {
+            //        Destroy(item.backlight);
+            //        Destroy(item.gameObjectBeat);
+            //    }
+            //    yield return null;
+            //}
+
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusRocket);
+            newHitSuperBonusList[iteration].gameObjectBeat = CreateBeatsSuperBonus(block.transform);
+            HitSuperBonusList.Add(newHitSuperBonusList[iteration]);
 
             //уменьшаем время, если закончили игру
             float factor = 1;
@@ -339,10 +384,25 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                 factor = 0.5f;
             }
 
-            float randomNumber = UnityEngine.Random.Range(0.2f * factor, 0.5f * factor);
+            float randomNumber = UnityEngine.Random.Range(0.15f * factor, 0.35f * factor);
             yield return new WaitForSeconds(randomNumber);
+
+            iteration++;
         }
-        
+
+        ////если сбросили параметры, то останавливаем работу
+        //if (!activated)
+        //{
+        //    foreach (HitSuperBonus item in newHitSuperBonusList)
+        //    {
+        //        Destroy(item.backlight);
+        //        Destroy(item.gameObjectBeat);
+        //    }
+        //}
+
+        ////добавляем в список для последующей обработки 
+        //HitSuperBonusList.AddRange(newHitSuperBonusList);
+        newHitSuperBonusList = null;
         activated = false;
         FilledImage();
     }
@@ -377,10 +437,10 @@ public class HitSuperBonus {
     public GameObject backlight;
     public Block Block;
 
-    public HitSuperBonus(GameObject backlight, GameObject gameObjectBeat, Block block)
+    public HitSuperBonus(GameObject backlight, Block block)
     {
         this.backlight = backlight;
-        this.gameObjectBeat = gameObjectBeat;
+        //this.gameObjectBeat = gameObjectBeat;
         Block = block;
     }
 }

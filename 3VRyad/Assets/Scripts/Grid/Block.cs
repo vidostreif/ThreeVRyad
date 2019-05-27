@@ -256,7 +256,7 @@ public class Block : MonoBehaviour {
             {
                 curElement = elementGameObject.AddComponent<SeedBarrelElement>();
                 curElement.InitialSettings(typeElementsEnum, true, true, false, false, HitTypeEnum.Empty, 1200);
-                curElement.MakeCollector(dopShape, 9);
+                curElement.MakeCollector(dopShape, 8);
             }
             else if (typeElementsEnum == ElementsTypeEnum.Drop)
             {

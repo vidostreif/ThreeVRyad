@@ -51,6 +51,7 @@ public class SeedBarrelElement : Element
         //collectMeshRenderer.sortingOrder = 101;
 
         collectText = TextCollectObg.GetComponent<TextMesh>();
+        collectText.text = numberOfElementCollected.ToString();
         //collectText.text = numberOfElementCollected.ToString();
         //collectText.fontSize = 50;
         //collectText.anchor = TextAnchor.UpperCenter;
