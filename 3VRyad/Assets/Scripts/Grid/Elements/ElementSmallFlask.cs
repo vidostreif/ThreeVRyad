@@ -24,6 +24,8 @@ public class ElementSmallFlask : Element
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick, HitTypeEnum.Instrument };
         //находим аниматор
         transform.GetComponent<AnimatorElement>().playIdleAnimationRandomTime = true;
+        //добавляем эфект
+        GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSmallFlask") as GameObject, thisTransform);
     }
 
     //действие после удара

@@ -173,6 +173,8 @@ public enum SoundsEnum
     DestroyElement_2,
     DestroyElement_3,
     DestroyElement_4,
+    DestroyElement_5,
+    CreateBonus,
     Magic,
     Bite,
     LeafRustling,

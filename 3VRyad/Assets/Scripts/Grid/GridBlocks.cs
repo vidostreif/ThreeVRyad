@@ -1082,6 +1082,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     {
         MasterController.Instance.ForcedDropElement();
         List<ElementsPriority> listPriority = new List<ElementsPriority>();
+        List<Block> blockList = new List<Block>();//лист блоков в которых будут заменены элементы
         elementsForMixList.Clear();
 
         //задать приоритеты
@@ -1104,21 +1105,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         listPriority[index].limitOnAmountCreated++;
                     }
                     elementsForMixList.Add(containers[x].block[y].Element);
-                    //containers[x].block[y].Element = null;
+                    blockList.Add(containers[x].block[y]);
+                    containers[x].block[y].Element = null;
                 }
             }
         }
-
-        ////проверить весь массив, если нет элементов вхождений которого более 3, то искуственно увеличиваем приоритет у одного из элементов в два раза
-        //bool increasePriority = true;
-        //foreach (ElementsPriority item in listPriority)
-        //{
-        //    if (item.priority > 4)
-        //    {
-        //        increasePriority = false;
-        //        break;
-        //    }
-        //}
 
         var sortedlistPriority = listPriority.OrderByDescending(u => u.priority);
 
@@ -1126,18 +1117,20 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //{
         //    //мешаем массив
         //    SupportFunctions.MixArray(listPriority);
+
+        //ищем максимальное вхождение элемента
         foreach (ElementsPriority item in sortedlistPriority)
         {            
-            bool found = false;
-            foreach (ElementsPriority listPriorityItem in listPriority)
-            {
-                if (listPriorityItem == item)
-                {
+            //bool found = false;
+            //foreach (ElementsPriority listPriorityItem in listPriority)
+            //{
+            //    if (listPriorityItem == item)
+            //    {
                     //ищем нет ли такого элемента в заданиях
                     bool foundOnTarget = false;
                     foreach (Target targetItem in Tasks.Instance.targets)
                     {
-                        if (targetItem.elementsShape == listPriorityItem.ElementsShape)
+                        if (targetItem.elementsShape == item.ElementsShape)
                         {
                             foundOnTarget = true;
                             break;
@@ -1146,27 +1139,39 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     //если не нашли
                     if (!foundOnTarget)
                     {
-                        listPriorityItem.priority++;
-                        listPriorityItem.limitOnAmountCreated++;
-                        found = true;
+                        foreach (Element elementItem in elementsForMixList)
+                        {
+                            //заменяем вид элемента, для увеличения его количества
+                            if (elementItem.Shape != item.ElementsShape)
+                            {
+                                elementItem.Shape = item.ElementsShape;
+                                break;
+                            }
+                        }
+                        //listPriorityItem.priority++;
+                        //listPriorityItem.limitOnAmountCreated++;
+                        //found = true;
                         break;
                     }
-                }                
-            }
+            //    }                
+            //}
 
-            if (found)
-            {
-                break;
-            }
-        }
-            //for (int i = 0; i < sortedlistPriority.Count; i++)
+            //if (found)
             //{
-                            
-            //}            
-        //}
+            //    break;
+            //}
+        }
+        //перемешиваем
+        SupportFunctions.MixArray(elementsForMixList);
 
-        //перезаполняем новыми элементами
-        StartFilling(listPriority, true);
+        //даем блокам новые элементы
+        for (int i = 0; i < elementsForMixList.Count; i++)
+        {
+            blockList[i].Element = elementsForMixList[i];
+        }
+
+        ////перезаполняем новыми элементами
+        //StartFilling(listPriority, true);
     }
 
     //элементы совпадают
