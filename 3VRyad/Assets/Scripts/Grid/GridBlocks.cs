@@ -109,7 +109,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                 //определяем нужно ли обрабатывать блок
                 bool process;
-                if (replaceExisting && BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]))//если обрабатываем только блоки со стандартными элементами
+                if (replaceExisting && BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]) && !containers[x].block[y].Blocked)//если обрабатываем только блоки со стандартными элементами
                 {
                     process = true;
                     containers[x].block[y].Element = null;
@@ -490,8 +490,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                        
 
             //если не конец игры, создаем подсказку
-            if (!Tasks.Instance.endGame)
+            if (!Tasks.Instance.endGame && !SuperBonus.Instance.InWork())
             {
+                
                 //проверка, что остались доступные ходы
                 FoundNextMove foundNextMove = FoundNextMove();
 
@@ -502,7 +503,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
 
                 //если не конец игры, но ходов не осталось  и супер бонус не активен то рисуем проигрыш
-                if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove.found && !SuperBonus.Instance.InWork())
+                if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove.found)
                 {
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove.found));
                     //blockedForMove = false;
@@ -1089,7 +1090,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             for (int y = 0; y < containers[x].block.GetLength(0); y++)
             {
                 //берем только элементы стандартные и не заблокированные
-                if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]))
+                if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]) && !containers[x].block[y].Blocked)
                 {
                     ElementsPriority elementsSAndP = listPriority.Find(item => item.ElementsShape == containers[x].block[y].Element.Shape);
                     if (elementsSAndP == null)
