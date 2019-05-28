@@ -30,7 +30,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 9173068504908616469}
+  - {fileID: 6567990481107247956}
   m_Father: {fileID: 5143023421354139124}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -345.0117}
@@ -781,7 +781,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 6ff4d2675e98dbe49ad5e2f512268666, type: 3}
     m_FontSize: 55
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 0
     m_MaxSize: 60
     m_Alignment: 4
@@ -1398,7 +1398,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63f30c2c83191fa468cbad173768c26c, type: 3}
---- !u!224 &9173068504908616469 stripped
+--- !u!224 &6567990481107247956 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2624325071231889477, guid: 63f30c2c83191fa468cbad173768c26c,
     type: 3}

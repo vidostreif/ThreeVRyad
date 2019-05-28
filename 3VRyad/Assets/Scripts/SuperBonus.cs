@@ -121,7 +121,19 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
 
         HitSuperBonusList = new List<HitSuperBonus>();
         HitSuperBonusListForDelete = new List<HitSuperBonus>();
-        FilledImage();        
+        FilledImage();
+    }
+
+    //в работе
+    public bool InWork() {
+        if (activated || HitSuperBonusList.Count > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     //эффек добавления в чан
     public void CreatePowerSuperBonus(Vector3 position, int power)
