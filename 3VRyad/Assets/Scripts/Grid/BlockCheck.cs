@@ -82,6 +82,19 @@ public static class BlockCheck
         }
     }
 
+    public static bool ThisBlockWithActivatedElementAndNoBlockingElement(Block block)
+    {
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.Activated
+            && (block.Element.BlockingElement == null || (block.Element.BlockingElement != null && block.Element.BlockingElement.Destroyed)))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static bool ThisBlockWithDestroyElement(Block block)
     {
 

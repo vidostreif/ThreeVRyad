@@ -34,6 +34,7 @@ public static class SupportFunctions
             }
         }
 
+
     public static void ChangeAlfa(SpriteRenderer spriteRenderer, float alfa) {
         //изменяем альфу спрайта
         //Color color = new Color();

@@ -51,7 +51,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Time.timeScale = 1;        
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
-        GridBlocks.Instance.FoundNextMove();//поиск хода
+        //yield return StartCoroutine(GridBlocks.Instance.FoundNextMove());//поиск хода
 
         if (HelpFromGnome.Instance.helpEnum != HelpEnum.Empty)
         {
@@ -64,7 +64,7 @@ public class MainGameSceneScript : MonoBehaviour {
         }              
     }
 
-    public IEnumerator CompleteGame()
+    public IEnumerator CompleteGame(bool victory, bool nextMoveExists)
     {
         Time.timeScale = 1;
         HelpToPlayer.ClearHintList();//очищаем список подсказок
@@ -97,7 +97,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
         //передача аналитики
         string nameEvent;
-        if (Tasks.Instance.collectedAll)
+        if (victory)
         {
             nameEvent = "Level_passed";
         }
@@ -117,7 +117,7 @@ public class MainGameSceneScript : MonoBehaviour {
           }
         );
 
-        if (Tasks.Instance.collectedAll)
+        if (victory)
         {
             int stars = Score.Instance.NumberOfStarsReceived();
 
@@ -132,7 +132,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
         //запускаем куротину для постепенного отображения элементов
         //если выполнили все задания
-        if (Tasks.Instance.collectedAll)
+        if (victory)
         {
             //победа
             textEndGame.text = "Победа!";
@@ -166,12 +166,16 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
-            //animationStarsComplete = true;
-            //animationScoreComplete = true;
-            //animationGiftComplete = true;
-            
             //поражение
-            textEndGame.text = "Поражение!";
+            if (!nextMoveExists)//если не смогли найти следующий ход
+            {
+                textEndGame.text = "Это тупик!";
+            }
+            else
+            {
+                textEndGame.text = "Попробуй еще раз!";
+            }
+            
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Defeat);
             Destroy(gONextLevelButton.gameObject);
             //удаляем текст количества очков и панель подарков
@@ -183,11 +187,11 @@ public class MainGameSceneScript : MonoBehaviour {
         do
         {
             //если все анимации закончили свои действия активируем кнопки
-            if ((animationStarsComplete && animationScoreComplete && animationGiftComplete) || !Tasks.Instance.collectedAll)
+            if ((animationStarsComplete && animationScoreComplete && animationGiftComplete) || !victory)
             {
                 restartButton.interactable = true;
                 exitButton.interactable = true;
-                if (Tasks.Instance.collectedAll && LevelMenu.Instance.NextLevelIsOpen())
+                if (victory && LevelMenu.Instance.NextLevelIsOpen())
                 {
                     nextLevelButton.interactable = true;
                 }

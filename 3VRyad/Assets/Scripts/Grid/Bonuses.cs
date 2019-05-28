@@ -143,16 +143,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         //если на поле остались бонусы то находим их и активируем
         if (!activateBonusOnEnd)
         {
-            List<Block> blocks = new List<Block>();
-            Block[] curBlocks;
-            foreach (Bonus bonus in bonusesList)
-            {
-                curBlocks = GridBlocks.Instance.GetAllBlocksWithCurElements(bonus.Type);
-                foreach (Block curBlock in curBlocks)
-                {
-                    blocks.Add(curBlock);
-                }                
-            }
+            List<Block> blocks = GetAllBlockWithBonus();
 
             if (blocks.Count > 0)
             {
@@ -169,6 +160,22 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         {
             return true;
         }
+    }
+
+    //получаем все блоки с бонусами
+    public List<Block> GetAllBlockWithBonus() {
+
+        List<Block> blocks = new List<Block>();
+        Block[] curBlocks;
+        foreach (Bonus bonus in bonusesList)
+        {
+            curBlocks = GridBlocks.Instance.GetAllBlocksWithCurElements(bonus.Type);
+            foreach (Block curBlock in curBlocks)
+            {
+                blocks.Add(curBlock);
+            }
+        }
+        return blocks;
     }
 
     //сохранение и заргрузка
