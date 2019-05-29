@@ -4,33 +4,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class SpriteBank : MonoBehaviour
+public static class SpriteBank 
 {
-    public static SpriteBank Instance; // Синглтон
+    //public static SpriteBank Instance; // Синглтон
 
-    void Awake()
-    {
-        //// регистрация синглтона
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("Несколько экземпляров SpriteBank!");
-        //}
-        //Instance = this;
+    //void Awake()
+    //{
+    //    //// регистрация синглтона
+    //    //if (Instance != null)
+    //    //{
+    //    //    Debug.LogError("Несколько экземпляров SpriteBank!");
+    //    //}
+    //    //Instance = this;
 
-        if (Instance)
-        {
-            Destroy(this.gameObject); //Delete duplicate
-            return;
-        }
-        else
-        {
-            Instance = this; //Make this object the only instance            
-        }
-        if (Application.isPlaying)
-        {
-            DontDestroyOnLoad(gameObject); //Set as do not destroy
-        }
-    }
+    //    if (Instance)
+    //    {
+    //        Destroy(this.gameObject); //Delete duplicate
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        Instance = this; //Make this object the only instance            
+    //    }
+    //    if (Application.isPlaying)
+    //    {
+    //        DontDestroyOnLoad(gameObject); //Set as do not destroy
+    //    }
+    //}
 
     public static Sprite SetShape(ElementsShapeEnum shape)
     {

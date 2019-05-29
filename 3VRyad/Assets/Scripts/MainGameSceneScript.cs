@@ -224,14 +224,10 @@ public class MainGameSceneScript : MonoBehaviour {
             Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
             SupportFunctions.ChangeAlfa(starImage, 1);
             //создаем эффект 
-            GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollectAll") as GameObject, starTransform);
-            GameObject.Destroy(psGO, 4);
-            //изменяем спрайт у эффекта
-            ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-            ps.textureSheetAnimation.AddSprite(starImage.sprite);
-
-            //!!!Звук выдачи звезды
+            MainParticleSystem.CreateCollectAllEffect(starTransform, starImage);
+            //Звук выдачи звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
+
             //если выдаем третью звезду
             if (i == 3)
             {
@@ -295,13 +291,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 createdNewScore = true;
                 //показываем надпись new
                 SupportFunctions.ChangeAlfa(imageNewScore, 1);
-
-                //создаем эффект 
-                GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, imageNewScore.transform);
-                GameObject.Destroy(psGO, 4);
-                //изменяем спрайт у эффекта
-                ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-                ps.textureSheetAnimation.AddSprite(imageNewScore.sprite);
+                MainParticleSystem.CreateCollectEffect(imageNewScore.transform, imageNewScore);
             }
 
             yield return new WaitForEndOfFrame();

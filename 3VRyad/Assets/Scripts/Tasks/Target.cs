@@ -161,11 +161,7 @@ public class Target
                 {
                     //создаем эффект 
                     SoundManager.Instance.PlaySoundInternal(SoundsEnum.CollectElement);
-                    GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollectAll") as GameObject, gameObject.transform);
-                    GameObject.Destroy(psGO, 4);
-                    //изменяем цвет
-                    ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-                    ps.textureSheetAnimation.AddSprite(image.sprite);
+                    MainParticleSystem.CreateCollectAllEffect(gameObject.transform, image);
                 }
             }
             else
@@ -174,10 +170,7 @@ public class Target
                 {
                     //создаем эффект 
                     SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_1);
-                    GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
-                    GameObject.Destroy(psGO, 3);
-                    ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-                    ps.textureSheetAnimation.AddSprite(image.sprite);
+                    MainParticleSystem.CreateCollectEffect(gameObject.transform, image);
                 }
                 
             }

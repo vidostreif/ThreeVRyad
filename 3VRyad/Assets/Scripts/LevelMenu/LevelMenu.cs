@@ -42,6 +42,8 @@ public class LevelMenu : MonoBehaviour
         ////заполнение regionsList из существующих файлов
         CreateRegionsListFromFiles();
 
+        //прогрев всех PS
+        MainParticleSystem.WarmingUp();
         ////инициализируем гугл сервис
         //GPGSManager.Initialize(false);
         //JsonSaveAndLoad.LoadSaveFromFile();
@@ -691,6 +693,8 @@ public class LevelMenu : MonoBehaviour
         }
         panelStartScreen = Instantiate(PrefabBank.StartScreenPrefab, transform);
         //Transform contentTransform = panelStartScreen.transform.Find("Viewport/Content");
+        //звук
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.StartGame);
 
         //добавляем действие к кнопке старт
         Transform buttonStartTransform = panelStartScreen.transform.Find("ButtonStart");

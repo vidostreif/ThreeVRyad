@@ -143,7 +143,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         {
             GameObject powerSuperBonus = new GameObject();
             powerSuperBonus.transform.parent = transform;
-            GameObject element = Instantiate(MainParticleSystem.Instance.pSAddPowerSuperBonus, powerSuperBonus.transform);
+            //GameObject element = Instantiate(MainParticleSystem.Instance.pSAddPowerSuperBonus, powerSuperBonus.transform);
+            MainParticleSystem.CreatePSAsync(powerSuperBonus.transform, PSEnum.PSAddPowerSuperBonus);
             powerSuperBonus.transform.position = position;
             MainAnimator.Instance.AddElementForSmoothMove(powerSuperBonus.transform, transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 0.7f, destroyAfterMoving: true);
             AddBonusPower(power);
@@ -155,7 +156,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     {
         GameObject beatsSuperBonus = new GameObject();
         beatsSuperBonus.transform.parent = targetTransform;        
-        GameObject element = Instantiate(MainParticleSystem.Instance.pSBeatsSuperBonus, beatsSuperBonus.transform);
+        //GameObject element = Instantiate(MainParticleSystem.Instance.pSBeatsSuperBonus, beatsSuperBonus.transform);
+        MainParticleSystem.CreatePSAsync(beatsSuperBonus.transform, PSEnum.PSBeatsSuperBonus);
         beatsSuperBonus.transform.position = transform.position;
         MainAnimator.Instance.AddElementForSmoothMove(beatsSuperBonus.transform, targetTransform.position, 1, SmoothEnum.InArc, smoothTime: 0.1f, destroyAfterMoving: true);
         return beatsSuperBonus;

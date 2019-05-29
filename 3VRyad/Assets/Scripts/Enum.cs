@@ -203,7 +203,19 @@ public enum SoundsEnum
     LawnMowerStart,
     LawnMowerWork,
     Repainting,
-    Repainting_ring
+    Repainting_ring,
+    StartGame
+}//тип звуков
+
+public enum PSEnum
+{
+    EmptyPS,
+    PSCollectAll,
+    PSCollect,
+    PSMagicalTail,
+    PSSelect,
+    PSAddPowerSuperBonus,
+    PSBeatsSuperBonus,
 
 
-}//тип сглаженного перемещения
+}//тип звуков

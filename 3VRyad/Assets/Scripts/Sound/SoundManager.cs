@@ -6,45 +6,61 @@ using UnityEngine.Audio;
 [ExecuteInEditMode]
 public class SoundManager : MonoBehaviour
 {
-    private static SoundManager _instance;
+    public static SoundManager Instance;
     private List<AudioSource> soundsList;
     private List<SoundResurse> loadSoundList;
     private AudioMixer audioMixer;
     private AudioMixerGroup audMixThisCompressor;
     private AudioMixerGroup audMixThisoutCompressor;
 
-    public static SoundManager Instance
-    {
-        get
-        {
-            if (_instance != null)
-            {
-                return _instance;
-            }
+    //public static SoundManager Instance
+    //{
+    //    get
+    //    {
+    //        if (_instance != null)
+    //        {
+    //            return _instance;
+    //        }
 
-            // Do not modify _instance here. It will be assigned in awake
-            GameObject go = new GameObject("(singleton) SoundManager");
-            SoundManager soundManager = go.AddComponent<SoundManager>();
-            soundManager.CreateSoundsList();
-            return soundManager;
-        }
-    }
+    //        // Do not modify _instance here. It will be assigned in awake
+    //        GameObject go = new GameObject("(singleton) SoundManager");
+    //        SoundManager soundManager = go.AddComponent<SoundManager>();
+    //        soundManager.CreateSoundsList();
+    //        return soundManager;
+    //    }
+    //}
 
     void Awake()
     {
-        // Only one instance of SoundManager at a time!
-        if (_instance != null)
+        //// Only one instance of SoundManager at a time!
+        //if (_instance != null)
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
+        //_instance = this;
+        //if (Application.isPlaying)
+        //{
+        //    DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy
+        //}
+        
+        ////_sounds = new List<AudioSource>();
+
+        if (Instance)
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject); //Delete duplicate
             return;
         }
-        _instance = this;
+        else
+        {
+            Instance = this; //Make this object the only instance            
+        }
+
         if (Application.isPlaying)
         {
             DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy
         }
         CreateSoundsList();
-        //_sounds = new List<AudioSource>();
     }
 
     void Update()

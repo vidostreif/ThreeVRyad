@@ -157,7 +157,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             instrumentPrepared = true;
             preparedInstrument = instrument;
             //создаем эффект подсветки
-            instrument.PSSelect = Instantiate(MainParticleSystem.Instance.pSSelect, preparedInstrument.GameInstrumentButton.GameObject.transform);
+            //instrument.PSSelect = Instantiate(MainParticleSystem.Instance.pSSelect, preparedInstrument.GameInstrumentButton.GameObject.transform);
+            instrument.PSSelect = MainParticleSystem.CreatePS(preparedInstrument.GameInstrumentButton.GameObject.transform, PSEnum.PSSelect);
         }        
     }
 
@@ -271,7 +272,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         {
             GameObject instrumentGO = new GameObject();
             //добавляем эффект
-            Instantiate(MainParticleSystem.Instance.pSMagicalTail, instrumentGO.transform);
+            //Instantiate(MainParticleSystem.Instance.pSMagicalTail, instrumentGO.transform);
+            MainParticleSystem.CreatePSAsync(instrumentGO.transform, PSEnum.PSMagicalTail);
             SpriteRenderer spriteRenderer = instrumentGO.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = SpriteBank.SetShape(preparedInstrument.Type);
             spriteRenderer.sortingLayerName = "Magic";
@@ -450,8 +452,9 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                             curBlock.CreatElement(GridBlocks.Instance.prefabElement, block.Element.Shape, block.Element.Type);
                             curBlock.Element.transform.position = block.transform.position;
                             //добавляем эффект для перемещяемого эллемента
-                            GameObject effect = Instantiate(MainParticleSystem.Instance.pSMagicalTail, curBlock.Element.transform);
-                            Destroy(effect, 4);
+                            //GameObject effect = Instantiate(MainParticleSystem.Instance.pSMagicalTail, curBlock.Element.transform);
+                            MainParticleSystem.CreatePSAsync(curBlock.Element.transform, PSEnum.PSMagicalTail, 4);
+                            //Destroy(effect, 4);
 
                             yield return new WaitForSeconds(0.25f);
                             DestroyHighlightBlock(curBlock);
