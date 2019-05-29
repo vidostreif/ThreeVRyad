@@ -132,7 +132,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
         {
             //создать эффект взрыва отображения звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
-            MainParticleSystem.CreateCollectAllEffect(imageStar1.transform, imageStar1);
+            ParticleSystemManager.Instance.CreateCollectAllEffect(imageStar1.transform, imageStar1);
 
             SupportFunctions.ChangeAlfa(imageStar1, 1);
             imageStar1shown = true;
@@ -142,7 +142,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
         {
             //создать эффект взрыва отображения звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
-            MainParticleSystem.CreateCollectAllEffect(imageStar2.transform, imageStar2);
+            ParticleSystemManager.Instance.CreateCollectAllEffect(imageStar2.transform, imageStar2);
 
             SupportFunctions.ChangeAlfa(imageStar2, 1);
             imageStar2shown = true;
@@ -152,7 +152,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
         {
             //создать эффект взрыва отображения звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
-            MainParticleSystem.CreateCollectAllEffect(imageStar3.transform, imageStar3);
+            ParticleSystemManager.Instance.CreateCollectAllEffect(imageStar3.transform, imageStar3);
 
             SupportFunctions.ChangeAlfa(imageStar3, 1);
             imageStar3shown = true;

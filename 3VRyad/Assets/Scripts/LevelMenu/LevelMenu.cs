@@ -36,14 +36,12 @@ public class LevelMenu : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy
+            DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy            
         }
 
         ////заполнение regionsList из существующих файлов
         CreateRegionsListFromFiles();
-
-        //прогрев всех PS
-        MainParticleSystem.WarmingUp();
+                
         ////инициализируем гугл сервис
         //GPGSManager.Initialize(false);
         //JsonSaveAndLoad.LoadSaveFromFile();
@@ -87,7 +85,7 @@ public class LevelMenu : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            Prepare(); 
+            Prepare();            
         }
     }
 

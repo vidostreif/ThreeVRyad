@@ -67,12 +67,14 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             Instance = this; //Make this object the only instance            
         }
-        DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject);
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy            
+        }
         InitializePurchasing();
 
         panelShopOnGame = transform.Find("PanelShopOnGame");
-        buttonShopTransform = panelShopOnGame.Find("ButtonOpenShop");
-        ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
+        buttonShopTransform = panelShopOnGame.Find("ButtonOpenShop");        
         Transform gOTextCoins = panelShopOnGame.Find("TextCoins");
         textCoins = gOTextCoins.GetComponent(typeof(Text)) as Text;        
     }
@@ -80,6 +82,7 @@ public class Shop : MonoBehaviour, IStoreListener
     // Start is called before the first frame update
     void Start()
     {
+        ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
         Save save = JsonSaveAndLoad.LoadSave();
         coins = save.shopSave.coins;
         textCoins.text = "" + coins;

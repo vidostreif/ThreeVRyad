@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 222831252065997530}
   - component: {fileID: 8716653638444527371}
   - component: {fileID: 7295260872422668445}
-  - component: {fileID: 114988500668735914}
   - component: {fileID: 114191125961773848}
   - component: {fileID: 713935765}
   - component: {fileID: 754313913625643757}
@@ -96,18 +95,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &114988500668735914
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1234334804531704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3fdf47d9616bd04c91f0f8e4e6fe995, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114191125961773848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,13 +119,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0ba9119ac108c4785a28b9d9525e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pSMagicalTail: {fileID: 3255581534497179977, guid: ef7b6435c945fca4cbc2a2b98bf820b5,
-    type: 3}
-  pSSelect: {fileID: 8611567648739745067, guid: caa5fc562caea1d4fa52f355ff2a180c,
-    type: 3}
-  pSAddPowerSuperBonus: {fileID: 39, guid: 5fdae8ba271d78348b7ecb3f88f2dafe, type: 3}
-  pSBeatsSuperBonus: {fileID: 6830303307173130844, guid: 3ec902af5f1386149969ca8223b45636,
-    type: 3}
 --- !u!114 &754313913625643757
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -448,6 +448,20 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 7457034389743375135}
+    - target: {fileID: 713935765, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
+      propertyPath: pSAddPowerSuperBonus
+      value: 
+      objectReference: {fileID: 39, guid: 5fdae8ba271d78348b7ecb3f88f2dafe, type: 3}
+    - target: {fileID: 713935765, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
+      propertyPath: pSBeatsSuperBonus
+      value: 
+      objectReference: {fileID: 6830303307173130844, guid: 3ec902af5f1386149969ca8223b45636,
+        type: 3}
+    - target: {fileID: 754313913625643757, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
+        type: 3}
+      propertyPath: debugMod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4383766326852242122, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
         type: 3}
       propertyPath: yesNoPanelPrefab
@@ -460,21 +474,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7607646752762789720, guid: 0a1090b72c3620446a1ea9a28d1e7da2,
         type: 3}
-    - target: {fileID: 754313913625643757, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
-        type: 3}
-      propertyPath: debugMod
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 713935765, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
-      propertyPath: pSAddPowerSuperBonus
-      value: 
-      objectReference: {fileID: 39, guid: 5fdae8ba271d78348b7ecb3f88f2dafe, type: 3}
-    - target: {fileID: 713935765, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
-      propertyPath: pSBeatsSuperBonus
-      value: 
-      objectReference: {fileID: 6830303307173130844, guid: 3ec902af5f1386149969ca8223b45636,
-        type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114988500668735914, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
 --- !u!1001 &3411421770805389032
 PrefabInstance:
@@ -684,6 +685,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7457034389743375329, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1368275443, guid: c5fa6683a9f5e704a9133c3b1a2bcb88, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}

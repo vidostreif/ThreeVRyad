@@ -206,6 +206,11 @@ public class MainAnimator : MonoBehaviour {
         //список элементов которые уже двигали, что бы не двигать повторно
         List<Transform> moveIitems = new List<Transform>();
 
+        if (moveElements == null)
+        {
+            ClearAllMassive();
+        }
+
         //перемещаем все элементы которые попали в коллекцию
         foreach (MoveElement item in moveElements)
         {

@@ -224,7 +224,7 @@ public class MainGameSceneScript : MonoBehaviour {
             Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
             SupportFunctions.ChangeAlfa(starImage, 1);
             //создаем эффект 
-            MainParticleSystem.CreateCollectAllEffect(starTransform, starImage);
+            ParticleSystemManager.Instance.CreateCollectAllEffect(starTransform, starImage);
             //Звук выдачи звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
 
@@ -291,7 +291,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 createdNewScore = true;
                 //показываем надпись new
                 SupportFunctions.ChangeAlfa(imageNewScore, 1);
-                MainParticleSystem.CreateCollectEffect(imageNewScore.transform, imageNewScore);
+                ParticleSystemManager.Instance.CreateCollectEffect(imageNewScore.transform, imageNewScore);
             }
 
             yield return new WaitForEndOfFrame();

@@ -54,6 +54,10 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         //обрабатываем только если супер бонус разрешен и не показывается подсказка в текущий момент
         if (allow && !HelpToPlayer.HelpActive())
         {
+            if (HitSuperBonusList == null)
+            {
+                ResetParameters();
+            }
             //обрабатываем ракеты которые долетели до нужного элемента
             if (HitSuperBonusList.Count > 0)
             {
@@ -142,9 +146,10 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         if (allow && !Tasks.Instance.endGame)
         {
             GameObject powerSuperBonus = new GameObject();
+            powerSuperBonus.name = "powerSuperBonus";
             powerSuperBonus.transform.parent = transform;
             //GameObject element = Instantiate(MainParticleSystem.Instance.pSAddPowerSuperBonus, powerSuperBonus.transform);
-            MainParticleSystem.CreatePSAsync(powerSuperBonus.transform, PSEnum.PSAddPowerSuperBonus);
+            ParticleSystemManager.Instance.CreatePSAsync(powerSuperBonus.transform, PSEnum.PSAddPowerSuperBonus);
             powerSuperBonus.transform.position = position;
             MainAnimator.Instance.AddElementForSmoothMove(powerSuperBonus.transform, transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 0.7f, destroyAfterMoving: true);
             AddBonusPower(power);
@@ -155,9 +160,10 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     private GameObject CreateBeatsSuperBonus(Transform targetTransform)
     {
         GameObject beatsSuperBonus = new GameObject();
+        beatsSuperBonus.name = "beatsSuperBonus";
         beatsSuperBonus.transform.parent = targetTransform;        
         //GameObject element = Instantiate(MainParticleSystem.Instance.pSBeatsSuperBonus, beatsSuperBonus.transform);
-        MainParticleSystem.CreatePSAsync(beatsSuperBonus.transform, PSEnum.PSBeatsSuperBonus);
+        ParticleSystemManager.Instance.CreatePSAsync(beatsSuperBonus.transform, PSEnum.PSBeatsSuperBonus);
         beatsSuperBonus.transform.position = transform.position;
         MainAnimator.Instance.AddElementForSmoothMove(beatsSuperBonus.transform, targetTransform.position, 1, SmoothEnum.InArc, smoothTime: 0.1f, destroyAfterMoving: true);
         return beatsSuperBonus;

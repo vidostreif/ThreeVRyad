@@ -123,6 +123,10 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySoundInternal(SoundsEnum soundName, bool thisOutCompress = false)
     {
+        if (!Application.isPlaying)
+        {
+            return;
+        }
         SoundResurse soundResurse = SoundBank.GetSoundResurse(soundName);
         if (soundResurse == null)
         {
