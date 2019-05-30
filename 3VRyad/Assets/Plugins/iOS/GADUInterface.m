@@ -11,6 +11,7 @@
 #import "GADURewardBasedVideoAd.h"
 #import "GADURewardedAd.h"
 
+
 #import "GADUTypes.h"
 
 /// Returns an NSString copying the characters from |bytes|, a C array of UTF8-encoded bytes.
@@ -51,6 +52,8 @@ struct AdTypes {
 void GADUInitialize(const char *appId) {
   [GADMobileAds configureWithApplicationID:GADUStringFromUTF8String(appId)];
 }
+
+
 
 // The application’s audio volume. Affects audio volumes of all ads relative to
 // other audio output. Valid ad volume values range from 0.0 (silent) to 1.0
@@ -391,30 +394,6 @@ void GADUTagForChildDirectedTreatment(GADUTypeRequestRef request, BOOL childDire
   internalRequest.tagForChildDirectedTreatment = childDirectedTreatment;
 }
 
-/// Creates an empty GADServerSideVerificationOptions and returns its reference.
-GADUTypeServerSideVerificationOptionsRef GADUCreateServerSideVerificationOptions() {
-  GADServerSideVerificationOptions *options = [[GADServerSideVerificationOptions alloc] init];
-  GADUObjectCache *cache = [GADUObjectCache sharedInstance];
-  [cache.references setObject:options forKey:[options gadu_referenceKey]];
-  return (__bridge GADUTypeServerSideVerificationOptionsRef)(options);
-}
-
-/// Sets the user id on the GADServerSideVerificationOptions
-void GADUServerSideVerificationOptionsSetUserId(GADUTypeServerSideVerificationOptionsRef options,
-                                                const char *userId) {
-  GADServerSideVerificationOptions *internalOptions =
-      (__bridge GADServerSideVerificationOptions *)options;
-  internalOptions.userIdentifier = GADUStringFromUTF8String(userId);
-}
-
-/// Sets the custom reward string on the GADServerSideVerificationOptions
-void GADUServerSideVerificationOptionsSetCustomRewardString(
-    GADUTypeServerSideVerificationOptionsRef options, const char *customRewardString) {
-  GADServerSideVerificationOptions *internalOptions =
-      (__bridge GADServerSideVerificationOptions *)options;
-  internalOptions.customRewardString = GADUStringFromUTF8String(customRewardString);
-}
-
 /// Creates an empty NSMutableableDictionary returns its reference.
 GADUTypeMutableDictionaryRef GADUCreateMutableDictionary() {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
@@ -508,15 +487,6 @@ void GADURequestNativeAd(GADUTypeAdLoaderRef adLoader, GADUTypeRequestRef reques
   [internalAdLoader loadRequest:[internalRequest request]];
 }
 
-/// Sets the GADServerSideVerificationOptions on GADURewardedAd
-void GADURewardedAdSetServerSideVerificationOptions(
-    GADUTypeRewardedAdRef rewardedAd, GADUTypeServerSideVerificationOptionsRef options) {
-  GADURewardedAd *internalRewardedAd = (__bridge GADURewardedAd *)rewardedAd;
-  GADServerSideVerificationOptions *internalOptions =
-      (__bridge GADServerSideVerificationOptions *)options;
-  [internalRewardedAd setServerSideVerificationOptions:internalOptions];
-}
-
 #pragma mark - Native Custom Template Ad methods
 /// Return the template ID of the native custom template ad.
 const char *GADUNativeCustomTemplateAdTemplateID(
@@ -598,6 +568,7 @@ void GADUSetNativeCustomTemplateAdCallbacks(
       (__bridge GADUNativeCustomTemplateAd *)nativeCustomTemplateAd;
   internalNativeCustomTemplateAd.didReceiveClickCallback = adClickedCallback;
 }
+
 
 #pragma mark - Other methods
 /// Removes an object from the cache.

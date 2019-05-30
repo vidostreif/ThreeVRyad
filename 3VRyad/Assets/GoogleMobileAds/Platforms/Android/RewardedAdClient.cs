@@ -68,11 +68,6 @@ namespace GoogleMobileAds.Android
             androidRewardedAd.Call("show");
         }
 
-        public void SetServerSideVerificationOptions(ServerSideVerificationOptions serverSideVerificationOptions)
-        {
-            androidRewardedAd.Call("setServerSideVerificationOptions", Utils.GetServerSideVerificationOptionsJavaObject(serverSideVerificationOptions));
-        }
-
         public void DestroyRewardBasedVideoAd()
         {
             androidRewardedAd.Call("destroy");

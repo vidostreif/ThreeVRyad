@@ -19,6 +19,8 @@ typedef const void *GADUTypeRef;
 
 typedef const void *GADUTypeMobileAdsClientRef;
 
+
+
 /// Type representing a Unity banner client.
 typedef const void *GADUTypeBannerClientRef;
 
@@ -63,9 +65,6 @@ typedef const void *GADUTypeMutableDictionaryRef;
 
 /// Type representing a GADUAdNetworkExtras.
 typedef const void *GADUTypeAdNetworkExtrasRef;
-
-/// Type representing a GADUServerSideVerificationOptions.
-typedef const void *GADUTypeServerSideVerificationOptionsRef;
 
 /// Callback for when a banner ad request was successfully loaded.
 typedef void (*GADUAdViewDidReceiveAdCallback)(GADUTypeBannerClientRef *bannerClient);

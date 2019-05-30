@@ -22,10 +22,10 @@ using GoogleMobileAds.Common;
 
 namespace GoogleMobileAds.Android
 {
-    public class MobileAdsClient :
-    IMobileAdsClient
+    public class MobileAdsClient : IMobileAdsClient
     {
         private static MobileAdsClient instance = new MobileAdsClient();
+
 
         public static MobileAdsClient Instance
         {
@@ -43,6 +43,7 @@ namespace GoogleMobileAds.Android
             AndroidJavaClass mobileAdsClass = new AndroidJavaClass(Utils.MobileAdsClassName);
             mobileAdsClass.CallStatic("initialize", activity, appId);
         }
+
         public void SetApplicationVolume(float volume)
         {
             AndroidJavaClass mobileAdsClass = new AndroidJavaClass(Utils.MobileAdsClassName);
@@ -59,6 +60,7 @@ namespace GoogleMobileAds.Android
         {
             // Do nothing on Android. Default behavior is to pause when app is backgrounded.
         }
+
     }
 }
 

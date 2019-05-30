@@ -107,6 +107,7 @@ namespace GoogleMobileAds.Api
                 get; private set;
             }
 
+
             public Builder ForCustomNativeAd(string templateId)
             {
                 this.TemplateIds.Add(templateId);
