@@ -36,13 +36,13 @@ public class AdMobManager : MonoBehaviour
 
     public void Start()
     {
-        #if UNITY_ANDROID
-                string appId = "ca-app-pub-6280237892174167~8971322173";
-        #elif UNITY_IPHONE
+#if UNITY_ANDROID
+        string appId = "ca-app-pub-6280237892174167~8971322173";
+#elif UNITY_IPHONE
                     string appId = "ca-app-pub-3940256099942544~1458002511";
-        #else
+#else
                     string appId = "unexpected_platform";
-        #endif
+#endif
 
         // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize(appId);
@@ -118,13 +118,13 @@ public class AdMobManager : MonoBehaviour
 
     public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleRewardBasedVideoLoaded event received");
+        Debug.Log("HandleRewardBasedVideoLoaded event received");
     }
 
     //неудалось загрузить видео
     public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
-        MonoBehaviour.print(
+        Debug.Log(
             "HandleRewardBasedVideoFailedToLoad event received with message: "
                              + args.Message);
         this.RequestRewardBasedVideo();
@@ -132,17 +132,17 @@ public class AdMobManager : MonoBehaviour
 
     public void HandleRewardBasedVideoOpened(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleRewardBasedVideoOpened event received");
+        Debug.Log("HandleRewardBasedVideoOpened event received");
     }
 
     public void HandleRewardBasedVideoStarted(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleRewardBasedVideoStarted event received");
+        Debug.Log("HandleRewardBasedVideoStarted event received");
     }
 
     public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleRewardBasedVideoClosed event received");
+        Debug.Log("HandleRewardBasedVideoClosed event received");
         this.RequestRewardBasedVideo();
     }
 
@@ -151,29 +151,30 @@ public class AdMobManager : MonoBehaviour
     {
         string type = args.Type;
         double amount = args.Amount;
-        MonoBehaviour.print(
+        Debug.Log(
             "HandleRewardBasedVideoRewarded event received for "
                         + amount.ToString() + " " + type);
 
         //если вознаграждение монеты
-        if (type == "Coin")
-        {
+        //if (type == "Coin")
+        //{
             Shop.Instance.AddCoinsForViewingAds(args);
-        }
+        //}
 
         LastViewVideo = Time.time;
     }
 
     public void HandleRewardBasedVideoLeftApplication(object sender, EventArgs args)
     {
-        MonoBehaviour.print("HandleRewardBasedVideoLeftApplication event received");
+        Debug.Log("HandleRewardBasedVideoLeftApplication event received");
     }
 
     //предварительная загрузка видео
     private void RequestRewardBasedVideo()
     {
         #if UNITY_ANDROID
-                string adUnitId = "ca-app-pub-6280237892174167/9330414827";
+            //string adUnitId = "ca-app-pub-6280237892174167/9330414827";
+        string adUnitId = "ca-app-pub-3940256099942544/5224354917";
         #elif UNITY_IPHONE
                     string adUnitId = "ca-app-pub-3940256099942544/1712485313";
         #else

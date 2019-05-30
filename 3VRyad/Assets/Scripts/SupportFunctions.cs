@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public static class SupportFunctions
 {
     //static GameObject yesNoPanelPrefab;
+    private static GameObject panelInfirmation;
 
     public static void MixArray(Array arr) {
         for (int i = (arr.Length - 1); i >= 1; i--)
@@ -91,13 +92,14 @@ public static class SupportFunctions
     //создание панели информации
     public static GameObject CreateInformationPanel(string str, Transform transformParent)
     {
-        GameObject panelInfirmation = GameObject.Instantiate(PrefabBank.PanelInformation, transformParent);
+        DestroyPanelInfirmation();
+        panelInfirmation = GameObject.Instantiate(PrefabBank.PanelInformation, transformParent);
         panelInfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
-        Action action = delegate
-        {
-            GameObject.Destroy(panelInfirmation);
-        };
-        ChangeButtonAction(panelInfirmation.transform.Find("ButtonOk"), action);
+        //Action action = delegate
+        //{
+        //    DestroyPanelInfirmation();
+        //};
+        ChangeButtonAction(panelInfirmation.transform.Find("ButtonOk"), DestroyPanelInfirmation);
         return panelInfirmation;
     }
 
@@ -112,5 +114,9 @@ public static class SupportFunctions
         ButtonE.onClick.RemoveAllListeners();
         ButtonE.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         ButtonE.onClick.AddListener(delegate { action(); });
+    }
+
+    public static void DestroyPanelInfirmation() {
+        GameObject.Destroy(panelInfirmation);
     }
 }

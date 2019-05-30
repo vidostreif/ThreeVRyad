@@ -42,8 +42,7 @@ PlayerSettings:
   m_SplashScreenLogos:
   - logo: {fileID: 21300000, guid: 4d7b3b59a23e1be4b84f657f01a49b98, type: 3}
     duration: 2
-  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 4d7b3b59a23e1be4b84f657f01a49b98,
-    type: 3}
+  m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
@@ -116,7 +115,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.85
+  bundleVersion: 0.89
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -154,7 +153,7 @@ PlayerSettings:
     Android: ru.VIDOCompany
     Standalone: com.Company.ProductName
   buildNumber: {}
-  AndroidBundleVersionCode: 85
+  AndroidBundleVersionCode: 89
   AndroidMinSdkVersion: 16
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
@@ -241,7 +240,7 @@ PlayerSettings:
   templateDefaultScene: Assets/Scenes/SampleScene.unity
   AndroidTargetArchitectures: 7
   AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 2800000, guid: 4d7b3b59a23e1be4b84f657f01a49b98, type: 3}
+  androidSplashScreen: {fileID: 0}
   AndroidKeystoreName: C:/GameDave/Unity project/ThreeVRyad/3VRyad/user.keystore
   AndroidKeyaliasName: 3vradkey
   AndroidBuildApkPerCpuArchitecture: 0

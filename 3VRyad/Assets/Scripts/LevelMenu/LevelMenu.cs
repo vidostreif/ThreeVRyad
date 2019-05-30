@@ -85,7 +85,7 @@ public class LevelMenu : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            Prepare();            
+            Prepare();
         }
     }
 

@@ -10,6 +10,10 @@ required for displaying ads.
     android:versionCode="1">
   <uses-sdk android:minSdkVersion="14"
       android:targetSdkVersion="19" />
+	    <!-- Google Mobile Ads Permissions -->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.INTERNET" />  
+  <!-- Uncomment to add billing for in-app purchase ads -->
   <application>
     <uses-library android:required="false" android:name="org.apache.http.legacy"/>
     <!-- Your AdMob App ID will look similar to this sample ID: ca-app-pub-3940256099942544~3347511713 -->

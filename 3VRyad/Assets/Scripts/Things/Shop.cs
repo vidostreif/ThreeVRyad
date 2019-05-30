@@ -36,6 +36,7 @@ public class Shop : MonoBehaviour, IStoreListener
         }
     }
 
+    //монеты из подарка
     public bool AddGiftCoins(Level level, int coins) {
         if (!level.GiftIssued)
         {
@@ -51,12 +52,12 @@ public class Shop : MonoBehaviour, IStoreListener
 
     //вознаграждение за просмотр рекламы
     public void AddCoinsForViewingAds(Reward args) {
-        if (args.Type == "Coin")
-        {
+        //if (args.Type == "Coin")
+        //{
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Coin);
             coins += (int)args.Amount;
             CountCoins();
-        }
+        //}
     }
 
     //принудительно пересчитываем количество
@@ -225,7 +226,15 @@ public class Shop : MonoBehaviour, IStoreListener
             }
             else
             {
-                textPriceReMoneyTransform.GetComponentInChildren<Text>().text = m_StoreController.products.WithID(product.id).metadata.localizedPriceString;
+                if (m_StoreController != null)
+                {
+                    textPriceReMoneyTransform.GetComponentInChildren<Text>().text = m_StoreController.products.WithID(product.id).metadata.localizedPriceString;
+                }
+                else
+                {
+                    textPriceReMoneyTransform.GetComponentInChildren<Text>().text = "";
+                }
+                
                 //скрываем другой текст
                 Destroy(textPriceCoinTransform.gameObject);
             }
@@ -480,7 +489,15 @@ public class Shop : MonoBehaviour, IStoreListener
                 }
                 else
                 {
-                    textBut = m_StoreController.products.WithID(newProductV.id).metadata.localizedPriceString;
+                    if (m_StoreController != null)
+                    {
+                        textBut = m_StoreController.products.WithID(newProductV.id).metadata.localizedPriceString;
+                    }
+                    else
+                    {
+                        textBut = "";
+                    }
+                    
                 }
 
                 SupportFunctions.ChangeButtonAction(buttonBuyCoinTransform, DestroyPanelShopConfirmation, "Купить " + newProductV.coins + " монет за " + textBut);
