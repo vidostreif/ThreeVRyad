@@ -85,6 +85,7 @@ public class LevelMenu : MonoBehaviour
 
         if (Application.isPlaying)
         {
+            //SupportFunctions.CreateInformationPanel("Не удалось загрузить рекламное видео!", this.transform);
             Prepare();
         }
     }

@@ -172,14 +172,14 @@ public class AdMobManager : MonoBehaviour
     //предварительная загрузка видео
     private void RequestRewardBasedVideo()
     {
-        #if UNITY_ANDROID
-            //string adUnitId = "ca-app-pub-6280237892174167/9330414827";
+        //string adUnitId = "ca-app-pub-6280237892174167/9330414827";
+#if UNITY_ANDROID
         string adUnitId = "ca-app-pub-3940256099942544/5224354917";
-        #elif UNITY_IPHONE
+#elif UNITY_IPHONE
                     string adUnitId = "ca-app-pub-3940256099942544/1712485313";
-        #else
+#else
                     string adUnitId = "unexpected_platform";
-        #endif
+#endif
 
         // Create an empty ad request.
         AdRequest request = new AdRequest.Builder().Build();
