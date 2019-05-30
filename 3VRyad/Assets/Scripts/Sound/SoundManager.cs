@@ -6,29 +6,39 @@ using UnityEngine.Audio;
 [ExecuteInEditMode]
 public class SoundManager : MonoBehaviour
 {
-    public static SoundManager Instance;
+    public static SoundManager _instance;
     private List<AudioSource> soundsList;
     private List<SoundResurse> loadSoundList;
     private AudioMixer audioMixer;
     private AudioMixerGroup audMixThisCompressor;
     private AudioMixerGroup audMixThisoutCompressor;
 
-    //public static SoundManager Instance
-    //{
-    //    get
-    //    {
-    //        if (_instance != null)
-    //        {
-    //            return _instance;
-    //        }
-
-    //        // Do not modify _instance here. It will be assigned in awake
-    //        GameObject go = new GameObject("(singleton) SoundManager");
-    //        SoundManager soundManager = go.AddComponent<SoundManager>();
-    //        soundManager.CreateSoundsList();
-    //        return soundManager;
-    //    }
-    //}
+    public static SoundManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                // Do not modify _instance here. It will be assigned in awake
+                //GameObject go = new GameObject("(singleton) SoundManager");
+                GameObject go = GameObject.Find("GameHelper");
+                //SoundManager soundManager = go.AddComponent<SoundManager>();
+                SoundManager soundManager = go.GetComponent<SoundManager>();
+                if (soundManager == null)
+                {
+                    Debug.Log("Добавляемтся новый SoundManager");
+                    soundManager = go.AddComponent<SoundManager>();
+                }
+                else
+                {
+                    Debug.Log("Берется существующий SoundManager");
+                }
+                soundManager.CreateSoundsList();
+                _instance = soundManager;
+            }            
+            return _instance;
+        }
+    }
 
     void Awake()
     {
@@ -46,14 +56,14 @@ public class SoundManager : MonoBehaviour
         
         ////_sounds = new List<AudioSource>();
 
-        if (Instance)
+        if (_instance)
         {
-            Destroy(this.gameObject); //Delete duplicate
+            Destroy(this); //Delete duplicate
             return;
         }
         else
         {
-            Instance = this; //Make this object the only instance            
+            _instance = this; //Make this object the only instance            
         }
 
         if (Application.isPlaying)

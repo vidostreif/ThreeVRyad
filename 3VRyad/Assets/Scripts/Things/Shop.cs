@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoogleMobileAds.Api;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class Shop : MonoBehaviour, IStoreListener
     private static IStoreController m_StoreController;
     private static IExtensionProvider m_StoreExtensionProvider;
     private ProductV currentProduct;
-    bool stateOfPurchase = false;
+    bool stateOfPurchase = false;    
 
     [Tooltip("Список товаров для доступные для покупки")]
     public ProductV[] PRODUCTS;
@@ -45,6 +46,16 @@ public class Shop : MonoBehaviour, IStoreListener
         else
         {
             return false;
+        }
+    }
+
+    //вознаграждение за просмотр рекламы
+    public void AddCoinsForViewingAds(Reward args) {
+        if (args.Type == "Coin")
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Coin);
+            coins += (int)args.Amount;
+            CountCoins();
         }
     }
 
@@ -82,7 +93,7 @@ public class Shop : MonoBehaviour, IStoreListener
     // Start is called before the first frame update
     void Start()
     {
-        ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
+        SupportFunctions.ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
         Save save = JsonSaveAndLoad.LoadSave();
         coins = save.shopSave.coins;
         textCoins.text = "" + coins;
@@ -178,8 +189,12 @@ public class Shop : MonoBehaviour, IStoreListener
         }
         panelShop = Instantiate(PrefabBank.ShopPanelPrefab, transform);
         Transform contentTransform = panelShop.transform.Find("Viewport/Content");
-
+              
         yield return new WaitForEndOfFrame();
+
+        Transform panelShopInstruments = panelShop.transform.Find("PanelShopInstruments");
+        //получаем кнопку просмотра видео за вознаграждение
+        AdMobManager.Instance.GetVideoBrowseButton(panelShopInstruments.Find("PanelVideoBrowseButton"));
 
         //принудительно пересчитываем количество вещей и монет
         ThingsManager.Instance.CountAllNumber();
@@ -189,7 +204,7 @@ public class Shop : MonoBehaviour, IStoreListener
         panelShopOnGame.localScale = panelShopOnGame.localScale * 2.0f;
 
         //Показать инструменты в верху экрана
-        ThingsManager.Instance.CreateInstrumentsOnShop(panelShop.transform.Find("PanelShopInstruments"));
+        ThingsManager.Instance.CreateInstrumentsOnShop(panelShopInstruments);
 
         //витрина
         foreach (ProductV product in PRODUCTS)
@@ -222,7 +237,7 @@ public class Shop : MonoBehaviour, IStoreListener
         }
 
         //Заменяем кнопке действие на Закрыть
-        ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");
+        SupportFunctions.ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");
 
         
     }
@@ -239,7 +254,7 @@ public class Shop : MonoBehaviour, IStoreListener
             panelShopConfirmation = Instantiate(PrefabBank.PanelShopConfirmation, panelShop.transform);
             panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = "Вы успешно преобрели " + product.name;
             Transform buttonOkTransform = panelShopConfirmation.transform.Find("ButtonOk");
-            ChangeButtonAction(buttonOkTransform, DestroyPanelShopConfirmation);
+            SupportFunctions.ChangeButtonAction(buttonOkTransform, DestroyPanelShopConfirmation);
             Button buttonOk = buttonOkTransform.GetComponent<Button>();
             buttonOk.interactable = false;//отключаем кнопку до конца проигрования анимации
             
@@ -409,7 +424,72 @@ public class Shop : MonoBehaviour, IStoreListener
             }
             panelShopConfirmation = Instantiate(PrefabBank.PanelShopInformation, panelShop.transform);
             panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
-            ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation);
+            SupportFunctions.ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation);
+        }
+    }
+
+    //создаем панель инфформации с кнопкой показа видео за вознаграждение и кнопкой поккупки дополнительных монет
+    public void CreateShopReceivingCoinsPanel(ProductV product)
+    {
+        if (panelShop != null)
+        {
+            if (panelShopConfirmation != null)
+            {
+                Destroy(panelShopConfirmation);
+            }
+            panelShopConfirmation = Instantiate(PrefabBank.PanelShopReceivingCoins, panelShop.transform);
+            panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = "У вас недостаточно монет для покупки " + product.name 
+                + ". Вы можете докупить еще монет или посмотреть видео за вознаграждение!" ;
+            SupportFunctions.ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation);
+            //получаем кнопку просмотра видео за вознаграждение
+            VideoBrowseButton videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(panelShopConfirmation.transform.Find("PanelVideoBrowseButton"));
+            videoBrowseButton.button.onClick.AddListener(delegate { DestroyPanelShopConfirmation(); });
+
+            //находим подходящую покупку монет
+            int needCoins = product.priceCoins - Coins; //требуемое количество монет
+            ProductV newProductV = null; //выбранная покупка
+            foreach (ProductV ProductVItem in PRODUCTS)
+            {
+                //if (ProductVItem.priceCoins == 0)
+                //{
+                    if (ProductVItem.coins >= needCoins)
+                    {
+                        //если нашли более дешевый вариант или вариант который полностью удовлетваряет наши потребности в монетах
+                        if ((newProductV != null && newProductV.coins > ProductVItem.coins) || (newProductV != null && newProductV.coins < needCoins) || (newProductV == null))
+                        {
+                            newProductV = ProductVItem;
+                        }
+                    }
+                    else if(ProductVItem.coins != 0 && newProductV == null)//если до этого не выбрали ни одного элемента, и покупка дает хоть сколько то монет
+                    {
+                        newProductV = ProductVItem;
+                    }
+                //}
+            }
+
+            //вставляем в кнопку покупки монет новые данные
+            Transform buttonBuyCoinTransform = panelShopConfirmation.transform.Find("ButtonBuyCoin");
+            Button buttonBuyCoin = buttonBuyCoinTransform.GetComponent<Button>();
+            if (newProductV != null)
+            {
+                //определяем цену товара
+                string textBut;
+                if (newProductV.priceCoins != 0)
+                {
+                    textBut = newProductV.priceCoins.ToString() + " монет";
+                }
+                else
+                {
+                    textBut = m_StoreController.products.WithID(newProductV.id).metadata.localizedPriceString;
+                }
+
+                SupportFunctions.ChangeButtonAction(buttonBuyCoinTransform, DestroyPanelShopConfirmation, "Купить " + newProductV.coins + " монет за " + textBut);
+                buttonBuyCoin.onClick.AddListener(delegate { Shop.Instance.Buy(newProductV); });
+            }
+            else
+            {
+                buttonBuyCoin.interactable = false;
+            }
         }
     }
 
@@ -422,7 +502,7 @@ public class Shop : MonoBehaviour, IStoreListener
             panelShopOnGame.localScale = panelShopOnGame.localScale / 2.0f;
 
             Destroy(panelShop);
-            ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
+            SupportFunctions.ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
 
             //принудительно пересчитываем количество вещей и монет
             ThingsManager.Instance.CountAllNumber();
@@ -433,25 +513,6 @@ public class Shop : MonoBehaviour, IStoreListener
     public void DestroyPanelShopConfirmation()
     {
         Destroy(panelShopConfirmation);
-    }
-
-    private void ChangeButtonAction(Transform buttonTransform, Action action, string str) {
-        Button ButtonE = buttonTransform.GetComponent(typeof(Button)) as Button;
-        if (buttonTransform.GetComponentInChildren<Text>())
-        {
-            buttonTransform.GetComponentInChildren<Text>().text = str;
-        }        
-        ButtonE.onClick.RemoveAllListeners();
-        ButtonE.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);        
-        ButtonE.onClick.AddListener(delegate { action(); });
-    }
-
-    private void ChangeButtonAction(Transform buttonTransform, Action action)
-    {
-        Button ButtonE = buttonTransform.GetComponent(typeof(Button)) as Button;
-        ButtonE.onClick.RemoveAllListeners();
-        ButtonE.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
-        ButtonE.onClick.AddListener(delegate { action(); });
     }
 
     //магазин за реальные деньги
@@ -513,8 +574,8 @@ public class Shop : MonoBehaviour, IStoreListener
             else if (product.priceCoins != 0)
             {
                 //если недостаточно монет 
-                //!!!предолжить купить монет
-                CreateShopInformation("У вас недостаточно монет для покупки!");
+                //предолжить купить монет
+                CreateShopReceivingCoinsPanel(product);
                 stateOfPurchase = false;
             }
             else if (product.priceCoins == 0)
@@ -605,6 +666,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 StartCoroutine(CreateShopConfirmation(product));
                 addCoins -= product.priceCoins;
                 StartCoroutine(UpdateTextCoins());
+                JsonSaveAndLoad.RecordSave(this);
                 JsonSaveAndLoad.SetSaveToFile();
             }
             else

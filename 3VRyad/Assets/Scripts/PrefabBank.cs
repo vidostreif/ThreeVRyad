@@ -19,14 +19,19 @@ public static class PrefabBank
     private static GameObject levelButtonPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/LevelButton") as GameObject;
     private static GameObject regionButtonPrefab = Resources.Load(prefabFolder + "Canvas/Main menu/RegionButton") as GameObject;
     private static GameObject imageMainLoad = Resources.Load(prefabFolder + "Canvas/Main menu/ImageMainLoad") as GameObject;
+    private static GameObject panelInformation = Resources.Load(prefabFolder + "Canvas/Main menu/PanelInformation") as GameObject;
 
     //магазин
     private static GameObject shopPanelPrefab = Resources.Load(prefabFolder + "Canvas/Shop/PanelShop") as GameObject;
     private static GameObject shopButtonPrefab = Resources.Load(prefabFolder + "Canvas/Shop/ShopButton") as GameObject;
     private static GameObject prefabButtonThing = Resources.Load(prefabFolder + "Canvas/GameCanvas/ButtonThing") as GameObject;
     private static GameObject panelShopConfirmation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopConfirmation") as GameObject;
-    private static GameObject panelShopInformation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopConfirmation") as GameObject;
+    private static GameObject panelShopInformation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopInformation") as GameObject;
+    private static GameObject prefabVideoBrowseButton = Resources.Load(prefabFolder + "Canvas/Shop/VideoBrowseButton") as GameObject;
+    private static GameObject panelShopReceivingCoins = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopReceivingCoins") as GameObject;
     
+
+
     private static GameObject scoreElementPrefab = Resources.Load(prefabFolder + "Canvas/GameCanvas/ScoreElement") as GameObject;
 
     private static GameObject canvasHelpToPlayer = Resources.Load(prefabFolder + "Canvas/GameCanvas/CanHelpToPlayer") as GameObject;
@@ -50,12 +55,15 @@ public static class PrefabBank
     public static GameObject PrefabButtonThing { get => prefabButtonThing;}
     public static GameObject PanelShopConfirmation { get => panelShopConfirmation;}
     public static GameObject PanelShopInformation { get => panelShopInformation; }
+    public static GameObject PanelInformation { get => panelInformation; }
     public static GameObject ScoreElementPrefab { get => scoreElementPrefab;}
     public static GameObject CanvasHelpToPlayer { get => canvasHelpToPlayer;}
     public static GameObject CanvasStartGame { get => canvasStartGame;}
     public static GameObject CanvasEndGameMenu { get => canvasEndGameMenu;}
     public static GameObject TextCollectElement { get => textCollectElement;}
     public static GameObject CollectElement { get => collectElement; }
+    public static GameObject PrefabVideoBrowseButton { get => prefabVideoBrowseButton; }
+    public static GameObject PanelShopReceivingCoins { get => panelShopReceivingCoins; }
 
     //private void LoadAllPrefab() {
     //    levelsCanvasPrefab = Resources.Load(prefabFolder + "Arrow") as GameObject;

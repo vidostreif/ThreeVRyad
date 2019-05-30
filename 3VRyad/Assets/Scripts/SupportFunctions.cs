@@ -88,8 +88,29 @@ public static class SupportFunctions
         buttonNo.onClick.AddListener(delegate { GameObject.Destroy(yesNoPanelPrefab); });
     }
 
-    //public static void DestroyYesNoPanel(GameObject yesNoPanelPrefab)
-    //{
-    //    GameObject.Destroy(yesNoPanelPrefab);
-    //}
+    //создание панели информации
+    public static GameObject CreateInformationPanel(string str, Transform transformParent)
+    {
+        GameObject panelInfirmation = GameObject.Instantiate(PrefabBank.PanelInformation, transformParent);
+        panelInfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
+        Action action = delegate
+        {
+            GameObject.Destroy(panelInfirmation);
+        };
+        ChangeButtonAction(panelInfirmation.transform.Find("ButtonOk"), action);
+        return panelInfirmation;
+    }
+
+    //изменения делегата в кнопке
+    public static void ChangeButtonAction(Transform buttonTransform, Action action, string str = "")
+    {
+        Button ButtonE = buttonTransform.GetComponent(typeof(Button)) as Button;
+        if (buttonTransform.GetComponentInChildren<Text>() && str != "")
+        {
+            buttonTransform.GetComponentInChildren<Text>().text = str;
+        }
+        ButtonE.onClick.RemoveAllListeners();
+        ButtonE.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
+        ButtonE.onClick.AddListener(delegate { action(); });
+    }
 }
