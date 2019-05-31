@@ -50,6 +50,7 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Repainting, soundFolder, "repainting"));
             soundsList.Add(new SoundResurse(SoundsEnum.Repainting_ring, soundFolder, "repainting_ring"));
             soundsList.Add(new SoundResurse(SoundsEnum.StartGame, soundFolder, "bird"));
+            soundsList.Add(new SoundResurse(SoundsEnum.AddMove, soundFolder, "Rise"));
         }
     }
 

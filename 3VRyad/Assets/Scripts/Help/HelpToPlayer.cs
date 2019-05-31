@@ -206,6 +206,7 @@ public static class HelpToPlayer
                 {
                     //добавляем для удаления
                     hintForDell.Add(hint);
+                    continue;
                 }
 
                 activeHint = hint;
@@ -629,7 +630,11 @@ public static class HelpToPlayer
             {
                 if (createNextGameHelpByClicking)
                 {
-                    CreateNextGameHelp();
+                    if (!CreateNextGameHelp())
+                    {
+                        //выполняем ход
+                        GridBlocks.Instance.Move();
+                    }                    
                 }
                 else
                 {
@@ -1178,7 +1183,7 @@ public static class HelpToPlayer
 
                 childrenSpriteRenderer.sortingOrder = childrenSpriteRenderer.sortingLayerID + childrenSpriteRenderer.sortingOrder;
                 childrenSpriteRenderer.sortingLayerName = "Help";
-                Debug.Log(childrenSpriteRenderer.sortingOrder);
+                //Debug.Log(childrenSpriteRenderer.sortingOrder);
             }
         }
     }

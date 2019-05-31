@@ -56,7 +56,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Time.timeScale = 1;        
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
-        //yield return StartCoroutine(GridBlocks.Instance.FoundNextMove());//поиск хода
+        GridBlocks.Instance.FoundNextMove();//поиск хода
 
         if (HelpFromGnome.Instance.helpEnum != HelpEnum.Empty)
         {
@@ -200,15 +200,18 @@ public class MainGameSceneScript : MonoBehaviour {
             }
             else
             {
-                textEndGame.text = "Попробуй еще раз или добавь ходов!";
-
                 //если еще не добавляли ходов
                 if (!Tasks.Instance.addMovesOnEndGAme)
                 {
+                    textEndGame.text = "У вас закончились ходы! Добавим за просмотр видео?";
                     //создаем кнопку видео на месте загрузки следующего уровня    
                     SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0);
-                    AdMobManager.Instance.GetVideoBrowseButton(gONextLevelButton, VideoForFeeEnum.ForMove);                    
-                }                
+                    AdMobManager.Instance.GetVideoBrowseButton(gONextLevelButton, VideoForFeeEnum.ForMove);
+                }
+                else
+                {
+                    textEndGame.text = "У вас закончились ходы!";
+                }              
             }
             
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Defeat);

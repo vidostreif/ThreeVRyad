@@ -14,6 +14,8 @@ public class AdMobManager : MonoBehaviour
     private RewardVideo rewardVideoForCoin; //просмотр рекламы за монеты
     private RewardVideo rewardVideoForMove; //просмотр рекламы за ходы
 
+    //public Action<Reward> actionSuccess;
+
     public void Awake()
     {
         if (Instance)
@@ -48,9 +50,11 @@ public class AdMobManager : MonoBehaviour
         //actionForCoin = Shop.Instance.AddCoinsForViewingAds;
         //string adUnitId = "ca-app-pub-6280237892174167/9330414827";
 
+        //actionSuccess = AddMovesOnEndGAme;
+
         rewardVideoForCoin = new RewardVideo(Shop.Instance.AddCoinsForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 60);
 
-        rewardVideoForMove = new RewardVideo(Tasks.Instance.AddMovesOnEndGAme, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300);
+        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300);
     }
 
     public void Update()
@@ -75,6 +79,13 @@ public class AdMobManager : MonoBehaviour
             return rewardVideoForMove.GetVideoBrowseButton(transformParent);
         }
         return null;
+    }
+
+    public void AddMovesOnEndGAme(Reward args) {
+        if (Tasks.Instance != null)
+        {
+            Tasks.Instance.AddMovesOnEndGAme(args);
+        }
     }
 }
 

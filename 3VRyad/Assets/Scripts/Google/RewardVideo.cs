@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class RewardVideo
 {
-    private RewardBasedVideoAd rewardBasedVideoAd;//параметры видео
+    private RewardedAd rewardedAd;//параметры видео
     private float lastViewVideo = 0; //момент последнего просмотра видео
     private float pauseBetweenViews; //пауза между просмотрами
     private List<VideoBrowseButton> videoBrowseButtonList;
@@ -25,23 +25,47 @@ public class RewardVideo
         this.prefabButton = prefabButton;
         this.pauseBetweenViews = pauseBetweenViews;
 
-        // Get singleton reward based video ad reference.
-        this.rewardBasedVideoAd = RewardBasedVideoAd.Instance;
+#if UNITY_ANDROID
+        string adUnitId = this.adAndroidId;
+#elif UNITY_IPHONE
+                            string adUnitId = adIOSId;
+#else
+                            string adUnitId = "unexpected_platform";
+#endif
+
+
+    this.rewardedAd = new RewardedAd(adUnitId);
+
+        //// Get singleton reward based video ad reference.
+        //this.rewardBasedVideoAd = RewardBasedVideoAd.Instance;
+
+        //// Called when an ad request has successfully loaded.
+        //rewardBasedVideoAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
+        //// Called when an ad request failed to load.
+        //rewardBasedVideoAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+        //// Called when an ad is shown.
+        //rewardBasedVideoAd.OnAdOpening += HandleRewardBasedVideoOpened;
+        //// Called when the ad starts to play.
+        //rewardBasedVideoAd.OnAdStarted += HandleRewardBasedVideoStarted;
+        //// Called when the user should be rewarded for watching a video.
+        //rewardBasedVideoAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
+        //// Called when the ad is closed.
+        //rewardBasedVideoAd.OnAdClosed += HandleRewardBasedVideoClosed;
+        //// Called when the ad click caused the user to leave the application.
+        //rewardBasedVideoAd.OnAdLeavingApplication += HandleRewardBasedVideoLeftApplication;
 
         // Called when an ad request has successfully loaded.
-        rewardBasedVideoAd.OnAdLoaded += HandleRewardBasedVideoLoaded;
+        this.rewardedAd.OnAdLoaded += HandleRewardedAdLoaded;
         // Called when an ad request failed to load.
-        rewardBasedVideoAd.OnAdFailedToLoad += HandleRewardBasedVideoFailedToLoad;
+        this.rewardedAd.OnAdFailedToLoad += HandleRewardedAdFailedToLoad;
         // Called when an ad is shown.
-        rewardBasedVideoAd.OnAdOpening += HandleRewardBasedVideoOpened;
-        // Called when the ad starts to play.
-        rewardBasedVideoAd.OnAdStarted += HandleRewardBasedVideoStarted;
-        // Called when the user should be rewarded for watching a video.
-        rewardBasedVideoAd.OnAdRewarded += HandleRewardBasedVideoRewarded;
+        this.rewardedAd.OnAdOpening += HandleRewardedAdOpening;
+        // Called when an ad request failed to show.
+        this.rewardedAd.OnAdFailedToShow += HandleRewardedAdFailedToShow;
+        // Called when the user should be rewarded for interacting with the ad.
+        this.rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
         // Called when the ad is closed.
-        rewardBasedVideoAd.OnAdClosed += HandleRewardBasedVideoClosed;
-        // Called when the ad click caused the user to leave the application.
-        rewardBasedVideoAd.OnAdLeavingApplication += HandleRewardBasedVideoLeftApplication;
+        this.rewardedAd.OnAdClosed += HandleRewardedAdClosed;
 
         this.RequestRewardBasedVideoForCoin();
 
@@ -61,45 +85,103 @@ public class RewardVideo
         return videoBrowseButton;
     }
 
-    public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
-    {
-        Debug.Log("HandleRewardBasedVideoLoaded event received");
-    }
+    //public void HandleRewardBasedVideoLoaded(object sender, EventArgs args)
+    //{
+    //    Debug.Log("HandleRewardBasedVideoLoaded event received");
+    //}
 
+    ////неудалось загрузить видео
+    //public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+    //{
+    //    Debug.Log(
+    //        "HandleRewardBasedVideoFailedToLoad event received with message: "
+    //                         + args.Message);
+    //    this.RequestRewardBasedVideoForCoin();
+    //}
+
+    //public void HandleRewardBasedVideoOpened(object sender, EventArgs args)
+    //{
+    //    Debug.Log("HandleRewardBasedVideoOpened event received");
+    //}
+
+    //public void HandleRewardBasedVideoStarted(object sender, EventArgs args)
+    //{
+    //    Debug.Log("HandleRewardBasedVideoStarted event received");
+    //}
+
+    ////закрытие видео
+    //public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
+    //{
+    //    Debug.Log("HandleRewardBasedVideoClosed event received");
+    //    this.RequestRewardBasedVideoForCoin();
+    //}
+
+    ////если пользователь успешно посмотрел видео
+    //public void HandleRewardBasedVideoRewarded(object sender, Reward args)
+    //{
+    //    string type = args.Type;
+    //    double amount = args.Amount;
+    //    Debug.Log(
+    //        "HandleRewardBasedVideoRewarded event received for "
+    //                    + amount.ToString() + " " + type);
+
+    //    //выполняем прописанный делегат
+    //    if (actionSuccess != null)
+    //    {
+    //        if (actionSuccess.Method != null && actionSuccess.Target != null)
+    //        {
+    //            actionSuccess(args);
+    //        }
+    //    }
+    //    lastViewVideo = Time.time;
+    //}
+
+    //public void HandleRewardBasedVideoLeftApplication(object sender, EventArgs args)
+    //{
+    //    Debug.Log("HandleRewardBasedVideoLeftApplication event received");
+    //}
+
+
+    public void HandleRewardedAdLoaded(object sender, EventArgs args)
+    {
+        Debug.Log("HandleRewardedAdLoaded event received");
+    }
     //неудалось загрузить видео
-    public void HandleRewardBasedVideoFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+    public void HandleRewardedAdFailedToLoad(object sender, AdErrorEventArgs args)
     {
         Debug.Log(
-            "HandleRewardBasedVideoFailedToLoad event received with message: "
+            "HandleRewardedAdFailedToLoad event received with message: "
                              + args.Message);
         this.RequestRewardBasedVideoForCoin();
     }
 
-    public void HandleRewardBasedVideoOpened(object sender, EventArgs args)
+    public void HandleRewardedAdOpening(object sender, EventArgs args)
     {
-        Debug.Log("HandleRewardBasedVideoOpened event received");
+        Debug.Log("HandleRewardedAdOpening event received");
     }
-
-    public void HandleRewardBasedVideoStarted(object sender, EventArgs args)
+    //ошибка показа
+    public void HandleRewardedAdFailedToShow(object sender, AdErrorEventArgs args)
     {
-        Debug.Log("HandleRewardBasedVideoStarted event received");
-    }
-
-    //закрытие видео
-    public void HandleRewardBasedVideoClosed(object sender, EventArgs args)
-    {
-        Debug.Log("HandleRewardBasedVideoClosed event received");
+        Debug.Log(
+            "HandleRewardedAdFailedToShow event received with message: "
+                             + args.Message);
         this.RequestRewardBasedVideoForCoin();
     }
 
+    public void HandleRewardedAdClosed(object sender, EventArgs args)
+    {
+        Debug.Log("HandleRewardedAdClosed event received");
+    }
+
     //если пользователь успешно посмотрел видео
-    public void HandleRewardBasedVideoRewarded(object sender, Reward args)
+    public void HandleUserEarnedReward(object sender, Reward args)
     {
         string type = args.Type;
         double amount = args.Amount;
         Debug.Log(
-            "HandleRewardBasedVideoRewarded event received for "
+            "HandleRewardedAdRewarded event received for "
                         + amount.ToString() + " " + type);
+
 
         //выполняем прописанный делегат
         if (actionSuccess != null)
@@ -111,35 +193,36 @@ public class RewardVideo
         }
         lastViewVideo = Time.time;
     }
-
-    public void HandleRewardBasedVideoLeftApplication(object sender, EventArgs args)
-    {
-        Debug.Log("HandleRewardBasedVideoLeftApplication event received");
-    }
+       
 
     //предварительная загрузка видео для получения вознаграждения
     private void RequestRewardBasedVideoForCoin()
     {
-#if UNITY_ANDROID
-        string adUnitId = adAndroidId;
-#elif UNITY_IPHONE
-                            string adUnitId = adIOSId;
-#else
-                            string adUnitId = "unexpected_platform";
-#endif
+//#if UNITY_ANDROID
+//        string adUnitId = adAndroidId;
+//#elif UNITY_IPHONE
+//                            string adUnitId = adIOSId;
+//#else
+//                            string adUnitId = "unexpected_platform";
+//#endif
+
+        //// Create an empty ad request.
+        //AdRequest request = new AdRequest.Builder().Build();
+        //// Load the rewarded video ad with the request.
+        //this.rewardBasedVideoAd.LoadAd(request, adUnitId);
 
         // Create an empty ad request.
         AdRequest request = new AdRequest.Builder().Build();
-        // Load the rewarded video ad with the request.
-        this.rewardBasedVideoAd.LoadAd(request, adUnitId);
+        // Load the rewarded ad with the request.
+        this.rewardedAd.LoadAd(request);
     }
 
     //создание рекламы за вознаграждение
     public void CreateBanerForFee()
     {
-        if (rewardBasedVideoAd.IsLoaded())
+        if (rewardedAd.IsLoaded())
         {
-            rewardBasedVideoAd.Show();
+            rewardedAd.Show();
         }
         else
         {

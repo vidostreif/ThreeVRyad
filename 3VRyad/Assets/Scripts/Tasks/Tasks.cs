@@ -25,6 +25,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     private GameObject targetsParent;
     private GameObject canvasStartGame;
     [SerializeField] private int moves; //количество ходов
+    private int addMoves;
     public bool endGame { get; protected set; } //признак что можно выполнить ход   
     public bool addMovesOnEndGAme { get; protected set; } //признак что добавляли ходы
 
@@ -32,23 +33,58 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     {
         get
         {
-            return moves;
+            return moves + addMoves;
+        }
+        private set
+        {
+            moves = value;
         }
     }
 
     //добавление ходов в конце игры за просмотр рекламы
     public void AddMovesOnEndGAme(Reward args)
     {
+        //Debug.Log("AddMovesOnEndGAme start");
+        StartCoroutine(CurAddMovesOnEndGAme(args));
+    }
+
+    private IEnumerator CurAddMovesOnEndGAme(Reward args)
+    {
         //если не собрали коллекцию, конец игры, и нет ходов
-        if (!addMovesOnEndGAme && !collectedAll && endGame && moves == 0)
+        if (!addMovesOnEndGAme && !collectedAll && endGame && Moves == 0)
         {
-            //добавляем ходов
-            moves += (int)args.Amount;
-            //отменяем конец игры
-            endGame = false;
-            //уничтожаем канвас окончания игры
-            MainGameSceneScript.Instance.DestroyCanvasMenu();
+        //Debug.Log("CurAddMovesOnEndGAme start");
+        addMovesOnEndGAme = true;
+        //отменяем конец игры
+        endGame = false;
+        //уничтожаем канвас окончания игры
+        //Debug.Log("DestroyCanvasMenu start");
+        MainGameSceneScript.Instance.DestroyCanvasMenu();
+        addMoves += (int)args.Amount;
+            if (movesText == null)
+            {
+                movesText = GetComponentInChildren<Text>();
+            }
+
+            Transform moveImageTransform = movesText.transform.Find("MoveImage");
+            Image moveImage = moveImageTransform.GetComponent<Image>();
+
+            while (addMoves > 0)
+            {
+            //    //добавляем ходов
+            //    //звук добавления
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);
+
+                //    //эффект
+                
+        ParticleSystemManager.Instance.CreateCollectAllEffect(moveImageTransform, moveImage);
+                moves++;
+                addMoves--;
+                UpdateMovesText();
+                yield return new WaitForSeconds(0.3f);
+            }
         }
+        //Debug.Log("CurAddMovesOnEndGAme finish");
     }
 
     void Awake()
@@ -58,8 +94,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             Debug.LogError("Несколько экземпляров Tasks!");
         }
-
         Instance = this;
+        addMoves = 0;
         thisTransform = transform;
         movesText = GetComponentInChildren<Text>();
         endGame = false;
@@ -267,20 +303,21 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     {
         if (movesText == null)
         {
+            Debug.Log("потеряли movesText");
             movesText = GetComponentInChildren<Text>();
         }
-        movesText.text = "Ходы:" + Moves;
+        movesText.text = "" + moves;
     }
 
     //ход
     //возвращяет удалось ли уменьшить количество ходов
     public bool SubMoves()
     {
-        if (moves > 0)
+        if (Moves > 0)
         {
-            moves--;
+            Moves--;
             UpdateMovesText();
-            if (moves == 0)
+            if (Moves == 0)
             {
                 endGame = true;
             }
@@ -323,7 +360,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     public void RecoverFromXElement(XElement tasksXElement)
     {
         //восстанавливаем значения
-        this.moves = int.Parse(tasksXElement.Element("moves").Value);
+        this.Moves = int.Parse(tasksXElement.Element("moves").Value);
         int sizeTargets = int.Parse(tasksXElement.Element("sizeTargets").Value);
         targets = new Target[sizeTargets];
 

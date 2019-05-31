@@ -204,7 +204,8 @@ public enum SoundsEnum
     LawnMowerWork,
     Repainting,
     Repainting_ring,
-    StartGame
+    StartGame,
+    AddMove,
 }//тип звуков
 
 public enum PSEnum

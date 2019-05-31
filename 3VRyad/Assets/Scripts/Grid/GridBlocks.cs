@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System;
 using System.Linq;
 using UnityEngine.UI;
+using GoogleMobileAds.Api;
 
 //#if UNITY_EDITOR
 //[InitializeOnLoad]
@@ -220,6 +221,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             if ((!Tasks.Instance.endGame && !InstrumentPanel.Instance.InstrumentPrepared && (Tasks.Instance.Moves - elementsForMoveList.Count) > 0 && (touchingBlock != null || destinationBlock != null))
             || (touchingBlock == null && destinationBlock == null && (elementsForMoveList.Count == 0 || (blockedForMove && elementsForMoveList.Count < 2))))
             {
+                //Reward reward = new Reward();
+                //reward.Amount = 2;
+                //AdMobManager.Instance.actionSuccess(reward);
+                //AdMobManager.Instance.AddMovesOnEndGAme(reward);
+                //Tasks.Instance.AddMovesOnEndGAme(reward);
                 Blocks blocks = new Blocks();
                 blocks.block = new Block[2];
                 blocks.block[0] = touchingBlock;
@@ -471,13 +477,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //если собрали все задачи и активируем все бонусы
                 if (Tasks.Instance.collectedAll && Bonuses.Instance.ActivateBonusOnEnd())
                 {
-                    blockedForMove = false;
+                    //blockedForMove = false;
                     Debug.Log("Активируем все бонусы на поле!");
                 }
                 //если собрали все задачи и активируем супер бонус в конце уровня
                 else if(Tasks.Instance.collectedAll && SuperBonus.Instance.ActivateSuperBonusOnEnd())
                 {
-                    blockedForMove = false;
+                    //blockedForMove = false;
                     Debug.Log("Активируем супер бонус!");
                 }
                 else
@@ -485,6 +491,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     Time.timeScale = 1;
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, true));
                 }
+                blockedForMove = false;
                 yield break;
             }                       
 
@@ -504,7 +511,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove.found)
                 {
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove.found));
-                    //blockedForMove = false;
+                    blockedForMove = false;
                     yield break;
                 }
 

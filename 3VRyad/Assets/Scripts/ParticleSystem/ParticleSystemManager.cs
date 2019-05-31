@@ -119,5 +119,23 @@ public class ParticleSystemManager : MonoBehaviour
         ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
         ps.textureSheetAnimation.AddSprite(image.sprite);
     }
+
+    public void CreateCollectAllEffect(Transform parentTransform, Sprite sprite)
+    {
+        //создаем эффект 
+        GameObject psGO = CreatePS(parentTransform, PSEnum.PSCollectAll, 4);
+        //изменяем цвет
+        ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
+        ps.textureSheetAnimation.AddSprite(sprite);
+    }
+
+    public void CreateCollectEffect(Transform parentTransform, Sprite sprite)
+    {
+        //создаем эффект 
+        GameObject psGO = CreatePS(parentTransform, PSEnum.PSCollect, 4);
+        //изменяем цвет
+        ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
+        ps.textureSheetAnimation.AddSprite(sprite);
+    }
 }
 

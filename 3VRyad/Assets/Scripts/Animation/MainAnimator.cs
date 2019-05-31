@@ -289,7 +289,10 @@ public class MainAnimator : MonoBehaviour {
                     {
                         //вектор для смещения
                         Vector3 offset = direction * factor;
-                        item.thisTransform.Translate(offset);
+                        Vector3 newPosition = item.thisTransform.position + offset;
+                        item.thisTransform.position = newPosition;
+                        //item.thisTransform.Translate(offset);
+
                     }
                     else
                     {

@@ -55,7 +55,7 @@ public class Shop : MonoBehaviour, IStoreListener
         if (args.Amount > 0)
         {
             this.addCoins += (int)args.Amount;
-            CreateCoinAnimation(new Vector3(0, 0, 0), transform, (int)args.Amount, destroyMainCoin: true);
+            StartCoroutine(CreateCoinAnimation(new Vector3(0, 0, 0), transform, (int)args.Amount, destroyMainCoin: true));
         }
     }
 
@@ -423,19 +423,14 @@ public class Shop : MonoBehaviour, IStoreListener
         } while (coins > 0);
 
         //если требуется уничтожить главную монету, то делаем её полупрозрачной, далее ожидаем пока не долетят все монеты
-        float alfa = 0.95f;
         if (destroyMainCoin)
         {
-            bool allDestroy = true;
+            yield return new WaitForSeconds(0.5f);
+            MainAnimator.Instance.AddElementForSmoothChangeColor(giftCoinImage, new Color(giftCoinImage.color.r, giftCoinImage.color.g, giftCoinImage.color.b, 0), 1.7f);
+            bool allDestroy;
             do
             {
-                if (alfa > 0)
-                {
-                    SupportFunctions.ChangeAlfa(giftCoinImage, alfa);
-                    alfa -= 0.05f;
-                }
-
-                
+                allDestroy = true;
                 foreach (GameObject GameObjectItem in coinGOList)
                 {
                     if (GameObjectItem != null)
