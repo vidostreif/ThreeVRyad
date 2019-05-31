@@ -193,9 +193,8 @@ public class RewardVideo
             }
         }
         lastViewVideo = Time.time;
-        
-    }
-       
+        RequestRewardBasedVideoForCoin();
+    }       
 
     //предварительная загрузка видео для получения вознаграждения
     private void RequestRewardBasedVideoForCoin()
@@ -223,11 +222,17 @@ public class RewardVideo
     public void CreateBanerForFee()
     {
         if (rewardedAd.IsLoaded())
-        {
+        {            
             rewardedAd.Show();
         }
         else
         {
+            //если очень давно просматривали полседнее видео, повторим загрузку
+            //if (lastViewVideo + 60 < Time.time)
+            //{
+            //    RequestRewardBasedVideoForCoin();
+            //}
+
             SupportFunctions.CreateInformationPanel("Видео еще не загрузилось!");
         }
     }

@@ -58,9 +58,10 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         //отменяем конец игры
         endGame = false;
         //уничтожаем канвас окончания игры
-        //Debug.Log("DestroyCanvasMenu start");
+        
         MainGameSceneScript.Instance.DestroyCanvasMenu();
         addMoves = (int)args.Amount;
+            Debug.Log("addMoves: " + addMoves);
             if (movesText == null)
             {
                 movesText = GetComponentInChildren<Text>();
@@ -71,13 +72,11 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
             while (addMoves > 0)
             {
-            //    //добавляем ходов
-            //    //звук добавления
+                //добавляем ходов
+                //звук добавления
                 SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);
-
-                //    //эффект
-                
-        ParticleSystemManager.Instance.CreateCollectAllEffect(moveImageTransform, moveImage);
+                //эффект                
+                ParticleSystemManager.Instance.CreateCollectAllEffect(moveImageTransform, moveImage);
                 moves++;
                 addMoves--;
                 UpdateMovesText();
