@@ -90,9 +90,13 @@ public static class SupportFunctions
     }
 
     //создание панели информации
-    public static GameObject CreateInformationPanel(string str, Transform transformParent)
+    public static GameObject CreateInformationPanel(string str, Transform transformParent = null)
     {
         DestroyPanelInfirmation();
+        if (transformParent == null)
+        {
+            transformParent = GameObject.Find("GameHelper").transform;
+        }
         panelInfirmation = GameObject.Instantiate(PrefabBank.PanelInformation, transformParent);
         panelInfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
         //Action action = delegate

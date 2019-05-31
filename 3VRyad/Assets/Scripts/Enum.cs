@@ -219,3 +219,9 @@ public enum PSEnum
 
 
 }//тип звуков
+
+public enum VideoForFeeEnum
+{
+    ForCoin,
+    ForMove,
+}//тип видео за вознаграждение

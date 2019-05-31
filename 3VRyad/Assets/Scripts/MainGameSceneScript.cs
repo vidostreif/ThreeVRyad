@@ -10,9 +10,14 @@ public class MainGameSceneScript : MonoBehaviour {
     public static MainGameSceneScript Instance; // Синглтон
     private GameObject CanvasMenu;
 
-    bool animationStarsComplete = false;
-    bool animationScoreComplete = false;
-    bool animationGiftComplete = false;
+    private bool animationStarsIdle = false;
+    private bool animationScoreIdle = false;
+    private bool animationGiftIdle = false;
+    private bool completeGameIdle = false;    
+
+    //private IEnumerator animationStarsCompleteCur;
+    //private IEnumerator animationScoreCompleteCur;
+    //private IEnumerator animationGiftCompleteCur;
 
     void Awake()
     {
@@ -64,8 +69,33 @@ public class MainGameSceneScript : MonoBehaviour {
         }              
     }
 
+    public void DestroyCanvasMenu() {
+
+        StartCoroutine(CurDestroyCanvasMenu());
+    }
+
+    private IEnumerator CurDestroyCanvasMenu()
+    {
+        //ожидание завершения всех куротин
+        do
+        {
+            if (animationStarsIdle || animationScoreIdle || animationGiftIdle || completeGameIdle)
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+            else
+            {
+                break;
+            }
+        } while (true);
+
+        
+        Destroy(CanvasMenu);
+    }
+
     public IEnumerator CompleteGame(bool victory, bool nextMoveExists)
     {
+        completeGameIdle = true;
         Time.timeScale = 1;
         HelpToPlayer.ClearHintList();//очищаем список подсказок
         InstrumentPanel.Instance.DeactivateInstrument();//деактивируем инструмент
@@ -146,15 +176,12 @@ public class MainGameSceneScript : MonoBehaviour {
             LevelPassedResult levelPassedResult = LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore());
 
             //показываем звезды
-            animationStarsComplete = false;
             StartCoroutine(EndGameAnimationStars(PanelMenu, levelPassedResult));
 
             //показываем количество очков
-            animationScoreComplete = false;
             StartCoroutine(EndGameAnimationScore(PanelMenu, levelPassedResult));
 
             //показываем подарки
-            animationGiftComplete = false;
             StartCoroutine(EndGameAnimationGift(PanelMenu, levelPassedResult));
 
             if (!LevelMenu.Instance.NextLevelIsOpen())
@@ -173,11 +200,19 @@ public class MainGameSceneScript : MonoBehaviour {
             }
             else
             {
-                textEndGame.text = "Попробуй еще раз!";
+                textEndGame.text = "Попробуй еще раз или добавь ходов!";
+
+                //если еще не добавляли ходов
+                if (!Tasks.Instance.addMovesOnEndGAme)
+                {
+                    //создаем кнопку видео на месте загрузки следующего уровня    
+                    SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0);
+                    AdMobManager.Instance.GetVideoBrowseButton(gONextLevelButton, VideoForFeeEnum.ForMove);                    
+                }                
             }
             
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Defeat);
-            Destroy(gONextLevelButton.gameObject);
+            //Destroy(gONextLevelButton.gameObject);
             //удаляем текст количества очков и панель подарков
             Destroy(PanelMenu.transform.Find("PanelGift").gameObject);
             Destroy(PanelMenu.transform.Find("TextScore").gameObject);
@@ -186,9 +221,15 @@ public class MainGameSceneScript : MonoBehaviour {
         //ждем до тех пор
         do
         {
-            //если все анимации закончили свои действия активируем кнопки
-            if ((animationStarsComplete && animationScoreComplete && animationGiftComplete) || !victory)
+            //если уничтожили канвас
+            if (CanvasMenu == null)
             {
+                break;
+            }
+            //если все анимации закончили свои действия активируем кнопки
+            if (!animationStarsIdle && !animationScoreIdle && !animationGiftIdle)
+            {
+
                 restartButton.interactable = true;
                 exitButton.interactable = true;
                 if (victory && LevelMenu.Instance.NextLevelIsOpen())
@@ -199,11 +240,14 @@ public class MainGameSceneScript : MonoBehaviour {
             }
             yield return new WaitForSeconds(0.2f);
         } while (true);
+
+        completeGameIdle = false;
     }
 
     //анимация выдачи звезд в конце уровня
     private IEnumerator EndGameAnimationStars(Transform panelMenu, LevelPassedResult levelPassedResult)
     {
+        animationStarsIdle = true;
         yield return new WaitForSeconds(0.4f);
         //номер звезды с которой начинаем выдавать монеты
         int numberStarForCoin = levelPassedResult.stars - levelPassedResult.plusStars + 1;
@@ -251,12 +295,13 @@ public class MainGameSceneScript : MonoBehaviour {
             yield return new WaitForSeconds(0.7f);
         }
 
-        animationStarsComplete = true;
+        animationStarsIdle = false;
     }
 
     ////анимация набора очков в конце уровня
     private IEnumerator EndGameAnimationScore(Transform panelMenu, LevelPassedResult levelPassedResult)
     {
+        animationScoreIdle = true;
         Transform textScoreTransform = panelMenu.transform.Find("TextScore");
         Text textScore = textScoreTransform.GetComponent(typeof(Text)) as Text;
         Image imageNewScore = textScoreTransform.transform.Find("ImageNewScore").GetComponent<Image>();
@@ -297,12 +342,13 @@ public class MainGameSceneScript : MonoBehaviour {
             yield return new WaitForEndOfFrame();
         } while (score > 0);
 
-        animationScoreComplete = true;
+        animationScoreIdle = false;
     }
 
     //анимация выдачи подарков в конце уровня
     private IEnumerator EndGameAnimationGift(Transform panelMenu, LevelPassedResult levelPassedResult)
     {
+        animationGiftIdle = true;
         int giftLength = 0;
         if (levelPassedResult.gift.coins > 0)
         {
@@ -356,7 +402,7 @@ public class MainGameSceneScript : MonoBehaviour {
             Destroy(panelGiftTransform.gameObject);
         }
 
-        animationGiftComplete = true;
+        animationGiftIdle = false;
     }
 
     private void ResetScene()

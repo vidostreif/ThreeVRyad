@@ -52,12 +52,11 @@ public class Shop : MonoBehaviour, IStoreListener
 
     //вознаграждение за просмотр рекламы
     public void AddCoinsForViewingAds(Reward args) {
-        //if (args.Type == "Coin")
-        //{
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Coin);
-            coins += (int)args.Amount;
-            CountCoins();
-        //}
+        if (args.Amount > 0)
+        {
+            this.addCoins += (int)args.Amount;
+            CreateCoinAnimation(new Vector3(0, 0, 0), transform, (int)args.Amount, destroyMainCoin: true);
+        }
     }
 
     //принудительно пересчитываем количество
@@ -195,7 +194,7 @@ public class Shop : MonoBehaviour, IStoreListener
 
         Transform panelShopInstruments = panelShop.transform.Find("PanelShopInstruments");
         //получаем кнопку просмотра видео за вознаграждение
-        AdMobManager.Instance.GetVideoBrowseButton(panelShopInstruments.Find("PanelVideoBrowseButton"));
+        AdMobManager.Instance.GetVideoBrowseButton(panelShopInstruments.Find("PanelVideoBrowseButton"), VideoForFeeEnum.ForCoin);
 
         //принудительно пересчитываем количество вещей и монет
         ThingsManager.Instance.CountAllNumber();
@@ -375,7 +374,7 @@ public class Shop : MonoBehaviour, IStoreListener
     }
 
     //анимация получения монет
-    public IEnumerator CreateCoinAnimation(Vector3 position, Transform transformParent, int getCoins, Vector3 newPosition = new Vector3()) {
+    public IEnumerator CreateCoinAnimation(Vector3 position, Transform transformParent, int getCoins, Vector3 newPosition = new Vector3(), bool destroyMainCoin = false) {
       
         //показываем монету
         //Находим монету в магазине
@@ -384,7 +383,8 @@ public class Shop : MonoBehaviour, IStoreListener
         //показываем монету среди подарков
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
         GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, position, Quaternion.identity, transformParent);
-        giftCoinGO.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/coin") as Sprite;
+        Image giftCoinImage = giftCoinGO.GetComponent<Image>();
+        giftCoinImage.sprite = Resources.Load<Sprite>("Sprites/coin") as Sprite;
         giftCoinGO.GetComponentInChildren<Text>().text = "+" + getCoins;
 
         //если требуется перемещаем на новую позицию
@@ -396,6 +396,7 @@ public class Shop : MonoBehaviour, IStoreListener
 
         int coins = getCoins;
         int exchangeRate = 5;
+        List<GameObject> coinGOList = new List<GameObject>();
         //создаем монеты рядом с монетой
         do
         {
@@ -411,7 +412,7 @@ public class Shop : MonoBehaviour, IStoreListener
             float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
             GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftCoinGO.transform.position, Quaternion.identity, transformParent);
-
+            coinGOList.Add(coinGO);
             //перемещаем на рандомную позицию
             MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, new Vector3(giftCoinGO.transform.position.x + randomNumberX, giftCoinGO.transform.position.y + randomNumberY, giftCoinGO.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
 
@@ -420,6 +421,34 @@ public class Shop : MonoBehaviour, IStoreListener
 
             yield return new WaitForEndOfFrame();
         } while (coins > 0);
+
+        //если требуется уничтожить главную монету, то делаем её полупрозрачной, далее ожидаем пока не долетят все монеты
+        float alfa = 0.95f;
+        if (destroyMainCoin)
+        {
+            bool allDestroy = true;
+            do
+            {
+                if (alfa > 0)
+                {
+                    SupportFunctions.ChangeAlfa(giftCoinImage, alfa);
+                    alfa -= 0.05f;
+                }
+
+                
+                foreach (GameObject GameObjectItem in coinGOList)
+                {
+                    if (GameObjectItem != null)
+                    {
+                        allDestroy = false;
+                        break;
+                    }
+                }
+                yield return new WaitForEndOfFrame();
+            } while (!allDestroy);
+
+            Destroy(giftCoinGO);
+        }
     }
 
     //создаем панель инфформации
@@ -451,7 +480,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 + ". Вы можете докупить еще монет или посмотреть видео за вознаграждение!" ;
             SupportFunctions.ChangeButtonAction(panelShopConfirmation.transform.Find("ButtonOk"), DestroyPanelShopConfirmation);
             //получаем кнопку просмотра видео за вознаграждение
-            VideoBrowseButton videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(panelShopConfirmation.transform.Find("PanelVideoBrowseButton"));
+            VideoBrowseButton videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(panelShopConfirmation.transform.Find("PanelVideoBrowseButton"), VideoForFeeEnum.ForCoin);
             videoBrowseButton.button.onClick.AddListener(delegate { DestroyPanelShopConfirmation(); });
 
             //находим подходящую покупку монет

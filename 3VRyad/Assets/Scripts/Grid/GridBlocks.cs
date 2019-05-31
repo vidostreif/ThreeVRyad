@@ -486,13 +486,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, true));
                 }
                 yield break;
-            }
-                       
+            }                       
 
             //если не конец игры, создаем подсказку
             if (!Tasks.Instance.endGame && !SuperBonus.Instance.InWork())
-            {
-                
+            {                
                 //проверка, что остались доступные ходы
                 FoundNextMove foundNextMove = FoundNextMove();
 

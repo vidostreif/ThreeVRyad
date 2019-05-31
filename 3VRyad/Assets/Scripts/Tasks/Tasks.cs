@@ -5,6 +5,7 @@ using UnityEditor;
 using System;
 using UnityEngine.UI;
 using System.Xml.Linq;
+using GoogleMobileAds.Api;
 
 #if UNITY_EDITOR
 //[InitializeOnLoad]
@@ -24,13 +25,29 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     private GameObject targetsParent;
     private GameObject canvasStartGame;
     [SerializeField] private int moves; //количество ходов
-    public bool endGame { get; protected set; } //признак что можно выполнить ход    
+    public bool endGame { get; protected set; } //признак что можно выполнить ход   
+    public bool addMovesOnEndGAme { get; protected set; } //признак что добавляли ходы
 
     public int Moves
     {
         get
         {
             return moves;
+        }
+    }
+
+    //добавление ходов в конце игры за просмотр рекламы
+    public void AddMovesOnEndGAme(Reward args)
+    {
+        //если не собрали коллекцию, конец игры, и нет ходов
+        if (!addMovesOnEndGAme && !collectedAll && endGame && moves == 0)
+        {
+            //добавляем ходов
+            moves += (int)args.Amount;
+            //отменяем конец игры
+            endGame = false;
+            //уничтожаем канвас окончания игры
+            MainGameSceneScript.Instance.DestroyCanvasMenu();
         }
     }
 
@@ -47,13 +64,15 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         movesText = GetComponentInChildren<Text>();
         endGame = false;
         collectedAll = false;
+        addMovesOnEndGAme = false;
     }
 
     public void ResetParameters()
     {
         //Сбрасываем значения
         endGame = false;
-        collectedAll = false;        
+        collectedAll = false;
+        addMovesOnEndGAme = false;
         UpdateMovesText();
         CreateCollectedElements();
     }
