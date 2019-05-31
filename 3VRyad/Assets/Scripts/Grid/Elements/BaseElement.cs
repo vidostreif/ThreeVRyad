@@ -8,6 +8,7 @@ public class BaseElement : MonoBehaviour
     public Transform thisTransform;
     //protected SpriteBank objectManagement;
     protected SpriteRenderer spriteRenderer;
+    protected AnimatorElement animatorElement;
     [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected AllShapeEnum shape;//форма элемента
     [SerializeField] protected SoundsEnum soundDestroy;//звук уничтожения
@@ -27,6 +28,19 @@ public class BaseElement : MonoBehaviour
 
     [SerializeField] protected bool drop = false;//сбрасываемый элемент
 
+    
+
+    public AnimatorElement AnimatElement
+    {
+        get
+        {
+            if (animatorElement == null)
+            {
+                animatorElement = transform.GetComponent<AnimatorElement>();
+            }
+            return animatorElement;
+        }
+    }
     public virtual Position PositionInGrid
     {
         get
@@ -190,6 +204,8 @@ public class BaseElement : MonoBehaviour
         ElementsList.DellElement(shape);
         Score.Instance.CreateScoreElement(transform.position, score);
         SuperBonus.Instance.CreatePowerSuperBonus(transform.position, score);
+        AnimatElement.StopAllAnimation();
+
 
         //звук уничтожения
         //int randomNumber = UnityEngine.Random.Range(1, 4);
@@ -216,8 +232,8 @@ public class BaseElement : MonoBehaviour
         //проверяем по заданиям
         if (!Tasks.Instance.Collect(shape, transform))
         {
-            AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-            animatorElement.PlayDestroyAnimation();
+            //AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+            AnimatElement.PlayDestroyAnimation();
         }
         else
         {

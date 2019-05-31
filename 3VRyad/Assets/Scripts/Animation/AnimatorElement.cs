@@ -40,6 +40,11 @@ public class AnimatorElement : MonoBehaviour
         idleAnimationTime = Time.time + random;
     }
 
+    public void StopAllAnimation()
+    {
+        thisAnimation.Stop();
+    }
+
     //Если закончилась анимация смерти, то удаляем этот элемент
     public void DestroyObject() {
         Destroy(this.gameObject);

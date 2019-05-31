@@ -272,21 +272,24 @@ public class MainAnimator : MonoBehaviour {
                     {
                         item.thisTransform.position = item.targetPosition;
                     }
-
                 }
                 else if (item.smoothEnum == SmoothEnum.InLineWithOneSpeed)
                 {
-                    //перемещаем с ускорением по прямой
+                    //перемещаем с одной скоростью по прямой
                     //расчитываем вектор смещения
                     Vector3 translation = item.targetPosition - item.thisTransform.position;
-                    //вычисляем расстояние на которое смещаем объект
-                    float offsetDistance = translation.magnitude;
+                    //вычисляем расстояние на которое нужно сместить объект
+                    float requiredOffsetDistance = translation.magnitude;
                     //нормализируем вектор для упрощения вычисления направления
-                    Vector3 direction = translation / offsetDistance;
-                    item.yVelocity = 1f;
-                    if (offsetDistance > (Time.deltaTime * 100 * item.smoothTime * item.yVelocity))
+                    Vector3 direction = translation / requiredOffsetDistance;
+                    //расстояние
+                    float factor = Time.deltaTime * 100 * item.smoothTime;                                 
+
+                    if (factor < requiredOffsetDistance)
                     {
-                        item.thisTransform.Translate(direction * Time.deltaTime * 100 * item.smoothTime * item.yVelocity);
+                        //вектор для смещения
+                        Vector3 offset = direction * factor;
+                        item.thisTransform.Translate(offset);
                     }
                     else
                     {
@@ -363,9 +366,9 @@ public class MainAnimator : MonoBehaviour {
                                 //нормализируем вектор для упрощения вычисления направления
                                 Vector3 direction = translation / offsetDistance;
                                 AddElementForSmoothMove(objectToMove.transform, objectToMove.transform.position + direction * item.power * 0.2f, 5, SmoothEnum.InArcWithSlowdown, 0.01f);
-                                //AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);
-                                AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
-                                animatorElement.PlayIdleAnimation();
+                            //AddElementForCompressAndRecover(objectToMove.transform, direction, item.power);                            
+                                //AnimatorElement animatorElement = objectToMove.GetComponent<AnimatorElement>();
+                            element.AnimatElement.PlayIdleAnimation();
                             }                            
                         }
                     }
