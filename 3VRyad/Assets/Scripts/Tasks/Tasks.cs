@@ -60,7 +60,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         //уничтожаем канвас окончания игры
         //Debug.Log("DestroyCanvasMenu start");
         MainGameSceneScript.Instance.DestroyCanvasMenu();
-        addMoves += (int)args.Amount;
+        addMoves = (int)args.Amount;
             if (movesText == null)
             {
                 movesText = GetComponentInChildren<Text>();
@@ -109,6 +109,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         endGame = false;
         collectedAll = false;
         addMovesOnEndGAme = false;
+        addMoves = 0;
         UpdateMovesText();
         CreateCollectedElements();
     }

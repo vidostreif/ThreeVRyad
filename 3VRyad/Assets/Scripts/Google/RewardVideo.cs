@@ -171,6 +171,7 @@ public class RewardVideo
     public void HandleRewardedAdClosed(object sender, EventArgs args)
     {
         Debug.Log("HandleRewardedAdClosed event received");
+        this.RequestRewardBasedVideoForCoin();
     }
 
     //если пользователь успешно посмотрел видео
@@ -192,6 +193,7 @@ public class RewardVideo
             }
         }
         lastViewVideo = Time.time;
+        
     }
        
 
