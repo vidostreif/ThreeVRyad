@@ -35,10 +35,10 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             return moves + addMoves;
         }
-        private set
-        {
-            moves = value;
-        }
+        //private set
+        //{
+        //    moves = value;
+        //}
     }
 
     //добавление ходов в конце игры за просмотр рекламы
@@ -233,8 +233,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             targetTransform.SetParent(targetsParent.transform, true);
         }        
     }
-
-
+    
     public bool Collect(AllShapeEnum allShape, Transform transformElement)
     {
         foreach (Target target in targets)
@@ -315,7 +314,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     {
         if (Moves > 0)
         {
-            Moves--;
+            moves--;
             UpdateMovesText();
             if (Moves == 0)
             {
@@ -360,7 +359,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     public void RecoverFromXElement(XElement tasksXElement)
     {
         //восстанавливаем значения
-        this.Moves = int.Parse(tasksXElement.Element("moves").Value);
+        this.moves = int.Parse(tasksXElement.Element("moves").Value);
         int sizeTargets = int.Parse(tasksXElement.Element("sizeTargets").Value);
         targets = new Target[sizeTargets];
 

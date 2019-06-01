@@ -41,6 +41,7 @@ public class Shop : MonoBehaviour, IStoreListener
         if (!level.GiftIssued)
         {
             this.addCoins += coins;
+            JsonSaveAndLoad.RecordSave(this);
             //StartCoroutine(UpdateTextCoins(3));
             return true;
         }
@@ -56,6 +57,8 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             this.addCoins += (int)args.Amount;
             StartCoroutine(CreateCoinAnimation(new Vector3(0, 0, 0), transform, (int)args.Amount, destroyMainCoin: true));
+            JsonSaveAndLoad.RecordSave(this);
+            JsonSaveAndLoad.SetSaveToFile();
         }
     }
 

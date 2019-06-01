@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class AdMobManager : MonoBehaviour
 {
     public static AdMobManager Instance; // Синглтон
-    public float LastArrayProcessingTime = 0;
+    public float LastArrayProcessingTime = 5;
 
     private RewardVideo rewardVideoForCoin; //просмотр рекламы за монеты
     private RewardVideo rewardVideoForMove; //просмотр рекламы за ходы
@@ -52,9 +52,9 @@ public class AdMobManager : MonoBehaviour
 
         //actionSuccess = AddMovesOnEndGAme;
 
-        rewardVideoForCoin = new RewardVideo(Shop.Instance.AddCoinsForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 60);
+        rewardVideoForCoin = new RewardVideo(Shop.Instance.AddCoinsForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 60, 0);
 
-        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300);
+        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300, 30);
     }
 
     public void Update()

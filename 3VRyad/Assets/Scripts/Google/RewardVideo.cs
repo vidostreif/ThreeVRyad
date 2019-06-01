@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class RewardVideo
 {
     private RewardedAd rewardedAd;//параметры видео
+    private bool newAdPrepared;//новый экземпляр класса рекламы подготовлен
+    private float lastTryLoadVideo; //момент последнеЙ попытки загрузить видео
+    int firstLoadDelay;
     private float lastViewVideo = 0; //момент последнего просмотра видео
     private float pauseBetweenViews; //пауза между просмотрами
     private List<VideoBrowseButton> videoBrowseButtonList;
@@ -17,13 +20,15 @@ public class RewardVideo
     private string adIOSId; //идентификатор рекламы за просмотр которой выдается вознаграждение
     private GameObject prefabButton;
 
-    public RewardVideo(Action<Reward> actionSuccess, string adAndroidId, string adIOSId, GameObject prefabButton, float pauseBetweenViews = 0)
+    public RewardVideo(Action<Reward> actionSuccess, string adAndroidId, string adIOSId, GameObject prefabButton, float pauseBetweenViews = 0, int firstLoadDelay = 0)
     {
         this.actionSuccess = actionSuccess;
         this.adAndroidId = adAndroidId;
         this.adIOSId = adIOSId;
         this.prefabButton = prefabButton;
         this.pauseBetweenViews = pauseBetweenViews;
+        this.firstLoadDelay = firstLoadDelay;
+        this.lastTryLoadVideo = 0;
 
         PrepareNewAd();
 
@@ -76,13 +81,13 @@ public class RewardVideo
     }
 
     private void PrepareNewAd() {
-#if UNITY_ANDROID
-        string adUnitId = this.adAndroidId;
-#elif UNITY_IPHONE
-                            string adUnitId = adIOSId;
-#else
-                            string adUnitId = "unexpected_platform";
-#endif
+        #if UNITY_ANDROID
+                string adUnitId = this.adAndroidId;
+        #elif UNITY_IPHONE
+                                    string adUnitId = adIOSId;
+        #else
+                                    string adUnitId = "unexpected_platform";
+        #endif
 
         this.rewardedAd = new RewardedAd(adUnitId);
 
@@ -97,9 +102,11 @@ public class RewardVideo
         // Called when the user should be rewarded for interacting with the ad.
         this.rewardedAd.OnUserEarnedReward += HandleUserEarnedReward;
         // Called when the ad is closed.
-        this.rewardedAd.OnAdClosed += HandleRewardedAdClosed;
+        this.rewardedAd.OnAdClosed += HandleRewardedAdClosed;        
 
         this.RequestRewardBasedVideoForCoin();
+
+        newAdPrepared = true;
     }
 
     //если пользователь успешно посмотрел видео
@@ -120,48 +127,43 @@ public class RewardVideo
                 actionSuccess(args);
             }
         }
-        lastViewVideo = Time.time;
+        lastViewVideo = Time.realtimeSinceStartup;
         //RequestRewardBasedVideoForCoin();
-    }       
+    }
 
     //предварительная загрузка видео для получения вознаграждения
     private void RequestRewardBasedVideoForCoin()
-    {
-        //#if UNITY_ANDROID
-        //        string adUnitId = adAndroidId;
-        //#elif UNITY_IPHONE
-        //                            string adUnitId = adIOSId;
-        //#else
-        //                            string adUnitId = "unexpected_platform";
-        //#endif
-
-        //// Create an empty ad request.
-        //AdRequest request = new AdRequest.Builder().Build();
-        //// Load the rewarded video ad with the request.
-        //this.rewardBasedVideoAd.LoadAd(request, adUnitId);
-        Debug.Log("Запуск загрузки видео");
-        // Create an empty ad request.
-        AdRequest request = new AdRequest.Builder().Build();
-        // Load the rewarded ad with the request.
-        this.rewardedAd.LoadAd(request);
+    {        
+        //если первая загрузка и нет задержки, то загружаем немедленно. Если первая загрузка и есть задержка, то ждем пока не наступит время
+        //иначе пытаемся загрузить видео не чаще одного раза в минуту
+        if ((lastTryLoadVideo == 0 && (firstLoadDelay == 0 || firstLoadDelay < Time.time)) || lastTryLoadVideo + 60 < Time.time)
+        {
+            lastTryLoadVideo = Time.time;
+            //// Create an empty ad request.
+            //AdRequest request = new AdRequest.Builder().Build();
+            //// Load the rewarded video ad with the request.
+            //this.rewardBasedVideoAd.LoadAd(request, adUnitId);
+            Debug.Log("Запуск загрузки видео");
+            // Create an empty ad request.
+            AdRequest request = new AdRequest.Builder().Build();
+            // Load the rewarded ad with the request.
+            this.rewardedAd.LoadAd(request);
+        }        
     }
 
     //создание рекламы за вознаграждение
     public void CreateBanerForFee()
     {
         if (rewardedAd.IsLoaded())
-        {            
-            rewardedAd.Show();
+        {
+            newAdPrepared = false;
+            rewardedAd.Show();            
         }
         else
         {
-            //если очень давно просматривали полседнее видео, повторим загрузку
-            //if (lastViewVideo + 60 < Time.time)
-            //{
-            //    RequestRewardBasedVideoForCoin();
-            //}
-
             SupportFunctions.CreateInformationPanel("Видео еще не загрузилось!");
+            //збрасываем, для немедленной попытки загрузить видео.
+            lastTryLoadVideo = 0;
         }
     }
 
@@ -182,10 +184,10 @@ public class RewardVideo
                 {
                     if (itemVideoBrowseButton.button != null && itemVideoBrowseButton.textTimer != null)
                     {
-                        if (lastViewVideo != 0 && lastViewVideo + pauseBetweenViews > Time.time)
+                        if (lastViewVideo != 0 && lastViewVideo + pauseBetweenViews > Time.realtimeSinceStartup)
                         {
                             itemVideoBrowseButton.button.interactable = false;
-                            itemVideoBrowseButton.textTimer.text = "" + ((int)lastViewVideo + pauseBetweenViews - (int)Time.time);
+                            itemVideoBrowseButton.textTimer.text = "" + ((int)lastViewVideo + pauseBetweenViews - (int)Time.realtimeSinceStartup);
                         }
                         else
                         {
@@ -209,14 +211,15 @@ public class RewardVideo
             videoBrowseButtonListForDelete.Clear();
         }
 
+        ////если новая реклама не подготовлена, подготавливаем
+        //if (!newAdPrepared)
+        //{
+        //    PrepareNewAd();
+        //}
         //проверяем загрузку видео
-        if (!rewardedAd.IsLoaded())
+        if (newAdPrepared && !rewardedAd.IsLoaded())
         {
-            //если очень давно просматривали полседнее видео, повторим загрузку
-            if (lastViewVideo + 60 < Time.time)
-            {
-                PrepareNewAd();
-            }
+            RequestRewardBasedVideoForCoin();
         }
     }
 }
