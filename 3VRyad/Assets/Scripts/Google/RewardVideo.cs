@@ -210,12 +210,7 @@ public class RewardVideo
             }
             videoBrowseButtonListForDelete.Clear();
         }
-
-        ////если новая реклама не подготовлена, подготавливаем
-        //if (!newAdPrepared)
-        //{
-        //    PrepareNewAd();
-        //}
+        
         //проверяем загрузку видео
         if (newAdPrepared && !rewardedAd.IsLoaded())
         {

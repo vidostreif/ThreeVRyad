@@ -1,9 +1,7 @@
 <root>
   <GiftScript>
-    <bundles>
-      <bundleShopV type="Hoe" count="3" />
-    </bundles>
-    <bundelCount>1</bundelCount>
+    <bundles />
+    <bundelCount>0</bundelCount>
     <coins>0</coins>
   </GiftScript>
   <Bonuses>
@@ -119,7 +117,7 @@
     </blocks>
   </GridBlocks>
   <HelpFromGnome>
-    <helpEnum>Score</helpEnum>
+    <helpEnum>Instruments</helpEnum>
   </HelpFromGnome>
   <Score>
     <scoreForFirstStar>30000</scoreForFirstStar>

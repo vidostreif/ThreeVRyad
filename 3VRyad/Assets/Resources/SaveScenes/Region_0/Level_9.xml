@@ -1,13 +1,10 @@
 <root>
   <GiftScript>
     <bundles>
-      <bundleShopV type="Shovel" count="1" />
-      <bundleShopV type="Shovel" count="1" />
-      <bundleShopV type="Vortex" count="1" />
-      <bundleShopV type="Repainting" count="3" />
+      <bundleShopV type="Repainting" count="2" />
     </bundles>
-    <bundelCount>4</bundelCount>
-    <coins>10</coins>
+    <bundelCount>1</bundelCount>
+    <coins>0</coins>
   </GiftScript>
   <Bonuses>
     <bonusesList>

@@ -59,6 +59,7 @@ public class AdMobManager : MonoBehaviour
 
     public void Update()
     {
+#if !UNITY_EDITOR
         //обрабатываем не чаще двух раз в секунду
         if (LastArrayProcessingTime + 0.5f < Time.time)
         {
@@ -66,7 +67,8 @@ public class AdMobManager : MonoBehaviour
             rewardVideoForCoin.ProcessingOfButtonArrays();
             rewardVideoForMove.ProcessingOfButtonArrays();
         }
-    }      
+#endif
+    }
 
     //создание кнопки просмотра видео
     public VideoBrowseButton GetVideoBrowseButton(Transform transformParent, VideoForFeeEnum videoForFeeEnum) {

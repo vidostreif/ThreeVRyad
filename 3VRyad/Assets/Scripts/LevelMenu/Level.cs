@@ -125,39 +125,6 @@ public class Level
     {
         open = true;
         passed = true;
-        
-        //есть подарок и он не выдан
-        Gift gift = new Gift();
-        if (!giftIssued)
-        {
-            //выдаем подарок
-            bool result = true;
-            //если есть бандл инструментов
-            if (GiftScript.Instance.gift.bundel.Length > 0)
-            {
-                result = ThingsManager.Instance.addinstruments(GiftScript.Instance.gift.bundel);
-                if (result)
-                {
-                    gift.bundel = GiftScript.Instance.gift.bundel;
-                }
-            }
-
-            //если небыло никаких ошибок и есть монеты - добавляем монеты
-            if (result && GiftScript.Instance.gift.coins > 0)
-            {
-                result = Shop.Instance.AddGiftCoins(this, GiftScript.Instance.gift.coins);
-                if (result)
-                {
-                    gift.coins += GiftScript.Instance.gift.coins;
-                }
-            }
-
-            //если небыло никаких ошибок помечаем подарок как выданный
-            if (result)
-            {
-                giftIssued = true;
-            }            
-        }
 
         int plusStars = 0;
         int plusCoins = 0;
@@ -165,12 +132,58 @@ public class Level
         {
             if (stars > 3)
             {
-            stars = 3;
+                stars = 3;
             }
             plusStars = stars - this.stars;
             plusCoins = Shop.Instance.ExchangeStarsForCoins(this, stars);
             this.stars = stars;
         }
+
+        //есть получили три звезды, есть подарок и он не выдан
+        //Gift gift = new Gift();
+        bool displayBox = false;
+        bool boxOpen = false;
+        if (!giftIssued && this.stars == 3)
+        {
+            //выдаем подарок
+            bool result = true;
+
+            //если есть бандл инструментов
+            if (GiftScript.Instance.Gift.Bundel.Length > 0)
+            {
+                result = ThingsManager.Instance.addinstruments(GiftScript.Instance.Gift.Bundel);
+                //if (result)
+                //{
+                //    gift.Bundel = GiftScript.Instance.Gift.Bundel;
+                //}
+            }
+
+            //если небыло никаких ошибок и есть монеты - добавляем монеты
+            if (result && GiftScript.Instance.Gift.Coins > 0)
+            {
+                result = Shop.Instance.AddGiftCoins(this, GiftScript.Instance.Gift.Coins);
+                //if (result)
+                //{
+                //    gift.Coins += GiftScript.Instance.Gift.Coins;
+                //}
+            }
+
+            //если небыло никаких ошибок помечаем подарок как выданный
+            if (result)
+            {
+                giftIssued = true;
+                displayBox = true;
+                boxOpen = true;
+            }
+        }
+        else if (!giftIssued)
+        {
+            //если подарок не выдан, но есть что выдать
+            if (GiftScript.Instance.Gift.Bundel.Length > 0 || GiftScript.Instance.Gift.Coins > 0)
+            {
+                displayBox = true;
+            }
+        }        
 
         int plusScore = 0;
         if (this.score < score)
@@ -179,7 +192,7 @@ public class Level
             this.score = score;
         }
 
-        return new LevelPassedResult(score, plusScore, stars, plusStars, plusCoins, gift);
+        return new LevelPassedResult(score, plusScore, stars, plusStars, plusCoins, new GiftOptions(GiftScript.Instance.Gift, displayBox, boxOpen));
     }
 
     public void GetButtonFrom(GameObject elementGameObject)
@@ -384,7 +397,7 @@ public class LevelPassedResult
     public int stars;
     public int plusStars;
     public int plusCoins;
-    public Gift gift;
+    public GiftOptions giftOptions;
 
     public LevelPassedResult()
     {
@@ -393,16 +406,32 @@ public class LevelPassedResult
         stars = 0;
         plusStars = 0;
         plusCoins = 0;
-        gift = new Gift();
+        giftOptions = new GiftOptions(new Gift(), false, false);
     }
 
-    public LevelPassedResult(int score, int plusScore, int stars, int plusStars, int plusCoins, Gift gift)
+    public LevelPassedResult(int score, int plusScore, int stars, int plusStars, int plusCoins, GiftOptions giftOptions)
     {
         this.score = score;
         this.plusScore = plusScore;
         this.stars = stars;
         this.plusStars = plusStars;
         this.plusCoins = plusCoins;
-        this.gift = gift;
+        this.giftOptions = giftOptions;
     }
 }
+
+//параметры выдачи бокса
+public class GiftOptions
+{
+    public Gift gift;
+    public bool displayBox;
+    public bool BoxOpen;
+
+    public GiftOptions(Gift gift, bool displayBox, bool boxOpen)
+    {
+        this.gift = gift;
+        this.displayBox = displayBox;
+        BoxOpen = boxOpen;
+    }
+}
+

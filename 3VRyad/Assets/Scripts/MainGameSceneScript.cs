@@ -352,58 +352,81 @@ public class MainGameSceneScript : MonoBehaviour {
     private IEnumerator EndGameAnimationGift(Transform panelMenu, LevelPassedResult levelPassedResult)
     {
         animationGiftIdle = true;
-        int giftLength = 0;
-        if (levelPassedResult.gift.coins > 0)
-        {
-            giftLength++;
-        }
-        if (levelPassedResult.gift.bundel.Length > 0)
-        {
-            giftLength += levelPassedResult.gift.bundel.Length;
-        }
-
+        //находим панель для выдачи подарков
         Transform panelGiftTransform = panelMenu.transform.Find("PanelGift");
-
-        //если есть подарки то продолжаем
-        if (giftLength > 0)
+        //находим закрытый ящик 
+        Transform CloseGiftTransform = panelMenu.transform.Find("ImageCloseGiftBox");
+        if (levelPassedResult.giftOptions.displayBox)
         {
-            yield return new WaitForSeconds(0.4f);
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Magic);
-            yield return new WaitForSeconds(0.8f);
-            //находим наш сундук
-            Transform imageOpenGiftBoxTransform = panelGiftTransform.Find("ImageOpenGiftBox");
-
-            //смещение по x
-            float startingXPoint = panelGiftTransform.position.x - ((1 + 0.5f) * (giftLength-1)) * 0.5f;
-
-            //показываем подарки
-            for (int i = 0; i < levelPassedResult.gift.bundel.Length; i++)
+            if (levelPassedResult.giftOptions.BoxOpen)
             {
-                if (levelPassedResult.gift.bundel[i].count > 0)
+                Gift gift = levelPassedResult.giftOptions.gift;
+                int giftLength = 0;
+                if (gift.Coins > 0)
                 {
-                    Vector3 startPosition = new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z);
-                    Vector3 newPosition = new Vector3(startingXPoint + (i * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z);
-
-                    yield return StartCoroutine(Shop.Instance.CreateThingAnimation(startPosition, panelGiftTransform, levelPassedResult.gift.bundel[i].type, levelPassedResult.gift.bundel[i].count, newPosition));
+                    giftLength++;
                 }
-                yield return new WaitForSeconds(0.3f);
+                if (gift.Bundel.Length > 0)
+                {
+                    giftLength += gift.Bundel.Length;
+                }
+
+                //если есть подарки то продолжаем
+                if (giftLength > 0)
+                {
+                    yield return new WaitForSeconds(0.4f);
+                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Magic);
+                    yield return new WaitForSeconds(0.8f);
+                    //находим наш сундук
+                    Transform imageOpenGiftBoxTransform = panelGiftTransform.Find("ImageOpenGiftBox");
+
+                    //смещение по x
+                    float startingXPoint = panelGiftTransform.position.x - ((1 + 0.5f) * (giftLength - 1)) * 0.5f;
+
+                    //показываем подарки
+                    for (int i = 0; i < gift.Bundel.Length; i++)
+                    {
+                        if (gift.Bundel[i].count > 0)
+                        {
+                            Vector3 startPosition = new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z);
+                            Vector3 newPosition = new Vector3(startingXPoint + (i * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z);
+
+                            yield return StartCoroutine(Shop.Instance.CreateThingAnimation(startPosition, panelGiftTransform, gift.Bundel[i].type, gift.Bundel[i].count, newPosition));
+                        }
+                        yield return new WaitForSeconds(0.3f);
+                    }
+
+                    //показываем монеты
+                    if (gift.Coins > 0)
+                    {
+                        Vector3 startPosition = new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z);
+                        Vector3 newPosition = new Vector3(startingXPoint + (gift.Bundel.Length * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z);
+
+                        yield return StartCoroutine(Shop.Instance.CreateCoinAnimation(startPosition, panelGiftTransform, gift.Coins, newPosition));
+
+                        yield return new WaitForSeconds(0.3f);
+                    }
+                }
+                else
+                {
+                    Destroy(panelGiftTransform.gameObject);
+                    Destroy(CloseGiftTransform.gameObject);
+                }
             }
-
-            //показываем монеты
-            if (levelPassedResult.gift.coins > 0)
+            else
             {
-                Vector3 startPosition = new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z);
-                Vector3 newPosition = new Vector3(startingXPoint + (levelPassedResult.gift.bundel.Length * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z);
-
-                yield return StartCoroutine(Shop.Instance.CreateCoinAnimation(startPosition, panelGiftTransform, levelPassedResult.gift.coins, newPosition));
-
-                yield return new WaitForSeconds(0.3f);
-            }            
+                //находим закрытый ящик и показываем его
+                CloseGiftTransform.GetComponent<Animation>().Play();               
+                Destroy(panelGiftTransform.gameObject);
+                yield return new WaitForSeconds(1.3f);
+            }
+            
         }
         else
         {
             Destroy(panelGiftTransform.gameObject);
-        }
+            Destroy(CloseGiftTransform.gameObject);
+        }      
 
         animationGiftIdle = false;
     }

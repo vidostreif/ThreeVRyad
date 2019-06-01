@@ -1,7 +1,7 @@
 <root>
   <GiftScript>
     <bundles>
-      <bundleShopV type="Vortex" count="3" />
+      <bundleShopV type="Vortex" count="2" />
     </bundles>
     <bundelCount>1</bundelCount>
     <coins>0</coins>
@@ -99,7 +99,7 @@
     </blocks>
   </GridBlocks>
   <HelpFromGnome>
-    <helpEnum>Empty</helpEnum>
+    <helpEnum>Shop</helpEnum>
   </HelpFromGnome>
   <Score>
     <scoreForFirstStar>25000</scoreForFirstStar>

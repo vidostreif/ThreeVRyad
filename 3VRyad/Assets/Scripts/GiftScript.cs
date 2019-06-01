@@ -8,7 +8,9 @@ using UnityEngine;
 public class GiftScript : MonoBehaviour, IESaveAndLoad
 {
     public static GiftScript Instance; // Синглтон
-    public Gift gift;
+    [SerializeField] private Gift gift;
+
+    public Gift Gift { get => gift; }
 
     void Awake()
     {
@@ -21,6 +23,7 @@ public class GiftScript : MonoBehaviour, IESaveAndLoad
         {
             Instance = this; //Make this object the only instance            
         }
+        //gift = new Gift();
     }
 
     //сохранение и заргрузка
@@ -34,7 +37,7 @@ public class GiftScript : MonoBehaviour, IESaveAndLoad
         XElement XElement = new XElement(this.GetType().ToString());
         //записываем все бандлы
         XElement bundlesXElement = new XElement("bundles");
-        foreach (BundleShopV bundleShopV in gift.bundel)
+        foreach (BundleShopV bundleShopV in Gift.Bundel)
         {
             XAttribute type = new XAttribute("type", bundleShopV.type);
             XAttribute count = new XAttribute("count", bundleShopV.count);
@@ -44,19 +47,16 @@ public class GiftScript : MonoBehaviour, IESaveAndLoad
         XElement.Add(bundlesXElement);
 
         //добавляем размер массива, что бы глубоко не искать
-        XElement.Add(new XElement("bundelCount", gift.bundel.Length));
+        XElement.Add(new XElement("bundelCount", Gift.Bundel.Length));
         //добавляем количество монет
-        XElement.Add(new XElement("coins", gift.coins));
+        XElement.Add(new XElement("coins", Gift.Coins));
 
         return XElement;
     }
 
     public void RecoverFromXElement(XElement XElement)
     {
-        //восстанавливаем значения
-        gift = new Gift();
-
-        gift.coins = int.Parse(XElement.Element("coins").Value);
+        int Coins = int.Parse(XElement.Element("coins").Value);
 
         //временны массив
         List<BundleShopV> bundleShopV = new List<BundleShopV>();
@@ -69,21 +69,29 @@ public class GiftScript : MonoBehaviour, IESaveAndLoad
             bundleShopV.Add(new BundleShopV(type, count));
         }
 
-        //переносим данные
-        //bundel = new BundleShopV[bundleShopV.Count];
-        gift.bundel = bundleShopV.ToArray();
+        //восстанавливаем значения
+        gift = new Gift(bundleShopV.ToArray(), Coins);
     }
 }
 
 [Serializable]
 public class Gift {
-    public BundleShopV[] bundel;
-    public int coins;
+    [SerializeField] private BundleShopV[] bundel;
+    [SerializeField] private int coins;
+
+    public BundleShopV[] Bundel { get => bundel; }
+    public int Coins { get => coins; set => coins = value; }
+
+    public Gift(BundleShopV[] bundel, int coins)
+    {
+        this.bundel = bundel;
+        this.coins = coins;
+    }
 
     public Gift()
     {
-        bundel = new BundleShopV[0];
-        coins = 0;
+        this.bundel = new BundleShopV[0];
+        this.coins = 0;
     }
 }
 
