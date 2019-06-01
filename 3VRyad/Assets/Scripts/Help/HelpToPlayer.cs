@@ -279,6 +279,18 @@ public static class HelpToPlayer
                     List<string> flashingItemsNames = new List<string>();
                     flashingItemsNames.Add("Instrument" + InstrumentsEnum.Shovel.ToString());
                     created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+
+                    if (created && ThingsManager.Instance != null)
+                    {
+                        //дарим один инструмент, если у играка их 0
+                        Thing thing = ThingsManager.Instance.GetThing(InstrumentsEnum.Shovel);
+                        if (thing != null && thing.Quantity == 0)
+                        {
+                            BundleShopV[] bundleShopV = new BundleShopV[1];
+                            bundleShopV[0] = new BundleShopV(InstrumentsEnum.Shovel, 1);
+                            ThingsManager.Instance.addinstruments(bundleShopV);
+                        }
+                    }                    
                 }
                 else if (activeHint.help == HelpEnum.Shop.ToString())
                 {
@@ -289,18 +301,54 @@ public static class HelpToPlayer
                     List<string> flashingItemsNames = new List<string>();
                     flashingItemsNames.Add("Instrument" + InstrumentsEnum.Hoe.ToString());
                     created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+
+                    if (created && ThingsManager.Instance != null)
+                    {
+                        //дарим один инструмент, если у играка их 0
+                        Thing thing = ThingsManager.Instance.GetThing(InstrumentsEnum.Hoe);
+                        if (thing != null && thing.Quantity == 0)
+                        {
+                            BundleShopV[] bundleShopV = new BundleShopV[1];
+                            bundleShopV[0] = new BundleShopV(InstrumentsEnum.Hoe, 1);
+                            ThingsManager.Instance.addinstruments(bundleShopV);
+                        }
+                    }
                 }
                 else if (activeHint.help == HelpEnum.Vortex.ToString())
                 {
                     List<string> flashingItemsNames = new List<string>();
                     flashingItemsNames.Add("Instrument" + InstrumentsEnum.Vortex.ToString());
                     created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+
+                    if (created && ThingsManager.Instance != null)
+                    {
+                        //дарим один инструмент, если у играка их 0
+                        Thing thing = ThingsManager.Instance.GetThing(InstrumentsEnum.Vortex);
+                        if (thing != null && thing.Quantity == 0)
+                        {
+                            BundleShopV[] bundleShopV = new BundleShopV[1];
+                            bundleShopV[0] = new BundleShopV(InstrumentsEnum.Vortex, 1);
+                            ThingsManager.Instance.addinstruments(bundleShopV);
+                        }
+                    }
                 }
                 else if (activeHint.help == HelpEnum.Repainting.ToString())
                 {
                     List<string> flashingItemsNames = new List<string>();
                     flashingItemsNames.Add("Instrument" + InstrumentsEnum.Repainting.ToString());
                     created = InterfaceHelp("PanelInstruments", flashingItemsNames);
+
+                    if (created && ThingsManager.Instance != null)
+                    {
+                        //дарим один инструмент, если у играка их 0
+                        Thing thing = ThingsManager.Instance.GetThing(InstrumentsEnum.Repainting);
+                        if (thing != null && thing.Quantity == 0)
+                        {
+                            BundleShopV[] bundleShopV = new BundleShopV[1];
+                            bundleShopV[0] = new BundleShopV(InstrumentsEnum.Repainting, 1);
+                            ThingsManager.Instance.addinstruments(bundleShopV);
+                        }
+                    }
                 }
                 else if (activeHint.help == HelpEnum.Line4.ToString())
                 {
@@ -1095,8 +1143,7 @@ public static class HelpToPlayer
         Debug.Log("Не нашли ни одного сбрасываемого элемента!");
         return false;
     }
-
-
+    
     //подсказки для интерфейса
     //goName - название основного элемента
     //flashingItemsNames - элементы которые будут мигать

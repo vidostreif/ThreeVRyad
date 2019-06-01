@@ -39,6 +39,9 @@ public class ThingsManager : MonoBehaviour
         {
             int quantity = 0;
             InstrumentsEnum instrumentsEnum = (InstrumentsEnum)Enum.GetValues(typeof(InstrumentsEnum)).GetValue(i);
+
+            //если в сохранении нет ни 
+
             foreach (InstrumentsSave instrumentsSave in save.instrumentsSave)
             {
                 if (instrumentsSave.instrumenTypeEnum == instrumentsEnum.ToString())
