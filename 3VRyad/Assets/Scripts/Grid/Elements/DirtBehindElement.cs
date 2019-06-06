@@ -10,11 +10,8 @@ public class DirtBehindElement : BehindElement
         //проверяем что не активировали в этом ходу
         if (!destroyed && lastActivationMove > Tasks.Instance.Moves)
         {
-            if (actionDelay == 0)
-            {
-                actionDelay = startingActionDelay;
-                UpdateSpriteAlfa();
-
+            if (timerActionDelay == actionDelay)
+            {                
                 //распространение на соседний блок
                 NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(this.PositionInGrid);
                 SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
@@ -27,19 +24,20 @@ public class DirtBehindElement : BehindElement
                         if (block.BehindElement == null || block.BehindElement.Destroyed)
                         {
                             block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type);
+                            timerActionDelay = 0;
+                            UpdateSprite();
                             break;
                         }
                     }
                 }
 
-                //!!!находим все блоки с грязью вокруг и указываем в них, что они уже выполнили действие
-
                 lastActivationMove = Tasks.Instance.Moves;
             }
-            else
-            {   
-                actionDelay--;
-                UpdateSpriteAlfa();
+            else if (timerActionDelay < actionDelay)
+            {
+                
+                timerActionDelay++;
+                UpdateSprite();
             }
             
         }

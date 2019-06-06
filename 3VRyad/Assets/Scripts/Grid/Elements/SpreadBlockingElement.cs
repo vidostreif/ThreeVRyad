@@ -4,38 +4,38 @@ using UnityEngine;
 
 public class SpreadBlockingElement : BlockingElement
 {
-    public override void PerformActionAfterMove()
-    {
-        if (!destroyed)
-        {
-            if (actionDelay == 0)
-            {
-                actionDelay = startingActionDelay;
-                UpdateSpriteAlfa();
+    //public override void PerformActionAfterMove()
+    //{
+    //    if (!destroyed)
+    //    {
+    //        if (actionDelay == 0)
+    //        {
+    //            actionDelay = startingActionDelay;
+    //            UpdateSprite();
 
-                //распространение на соседний блок
-                NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(this.PositionInGrid);
-                SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
+    //            //распространение на соседний блок
+    //            NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(this.PositionInGrid);
+    //            SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
 
-                foreach (Block block in neighboringBlocks.allBlockField)
-                {
-                    //находим не заблокированный элемент
-                    if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(block))
-                    {
-                        if (block.Element.BlockingElement == null || block.Element.BlockingElement.Destroyed)
-                        {
-                            block.Element.CreatBlockingElement(GridBlocks.Instance.prefabElement, shape, type);
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                actionDelay--;
-                UpdateSpriteAlfa();
-            }
+    //            foreach (Block block in neighboringBlocks.allBlockField)
+    //            {
+    //                //находим не заблокированный элемент
+    //                if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(block))
+    //                {
+    //                    if (block.Element.BlockingElement == null || block.Element.BlockingElement.Destroyed)
+    //                    {
+    //                        block.Element.CreatBlockingElement(GridBlocks.Instance.prefabElement, shape, type);
+    //                        break;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        else
+    //        {
+    //            actionDelay--;
+    //            UpdateSprite();
+    //        }
 
-        }
-    }
+    //    }
+    //}
 }

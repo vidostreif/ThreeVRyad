@@ -20,7 +20,7 @@ public class BaseElement : MonoBehaviour
 
     [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода
     [SerializeField] protected int actionDelay;//задержка перед активированием
-    [SerializeField] protected int startingActionDelay;//запоминает первичную задержку для расчетов
+    [SerializeField] protected int timerActionDelay;//отсчет до активации
     [SerializeField] protected int lastActivationMove;//ход последней активации
 
     [SerializeField] protected bool collector = false;//признак что элемент коллекционирует другие элементы
@@ -96,7 +96,7 @@ public class BaseElement : MonoBehaviour
             shape = value;
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
             ElementsList.AddElement(shape);
-            spriteRenderer.sprite = SpriteBank.SetShape(value);
+            UpdateSprite();
         }
     }
     public bool Collector
@@ -137,9 +137,9 @@ public class BaseElement : MonoBehaviour
     {
         this.actionAfterMove = true;
         this.actionDelay = actionDelay;
-        this.startingActionDelay = actionDelay;
+        this.timerActionDelay = 0;
         this.lastActivationMove = int.MaxValue;
-        UpdateSpriteAlfa();
+        UpdateSprite();
     }
 
     //делаем элемент коллекционером
@@ -254,15 +254,24 @@ public class BaseElement : MonoBehaviour
         this.PositionInGrid = null;
     }
 
-    protected virtual void UpdateSpriteAlfa()
+    protected virtual void UpdateSprite()
     {
-        if (startingActionDelay != 0)
+        if (actionAfterMove)
         {
-            //изменяем альфу спрайта
-            float dActionDelay = actionDelay;
-            float dStartingActionDelay = startingActionDelay;
-            SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
+            spriteRenderer.sprite = SpriteBank.SetShape(shape, actionDelay - timerActionDelay);
         }
+        else
+        {
+            spriteRenderer.sprite = SpriteBank.SetShape(shape);
+        }
+        
+        //if (startingActionDelay != 0)
+        //{
+        //    //изменяем альфу спрайта
+        //    float dActionDelay = actionDelay;
+        //    float dStartingActionDelay = startingActionDelay;
+        //    SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
+        //}
     }
 
 }

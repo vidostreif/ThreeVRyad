@@ -32,7 +32,7 @@ public static class SpriteBank
     //    }
     //}
 
-    public static Sprite SetShape(ElementsShapeEnum shape)
+    public static Sprite SetShape(ElementsShapeEnum shape, int option = 0)
     {
         ////в зависимости от типа
         //switch (shape)
@@ -75,7 +75,7 @@ public static class SpriteBank
         //}
     }
 
-    public static Sprite SetShape(BehindElementsShapeEnum shape)
+    public static Sprite SetShape(BehindElementsShapeEnum shape, int option = 0)
     {
         ////в зависимости от типа
         //switch (shape)
@@ -94,11 +94,18 @@ public static class SpriteBank
         //        return null;
 
         //}
+        string dopString = "";
+        if (option != 0)
+        {
+            dopString = "_" + option;
+        }
 
-        return Resources.Load<Sprite>("Sprites/BehindElements/" + shape.ToString()) as Sprite;
+        Debug.Log("option: " +  option);
+
+        return Resources.Load<Sprite>("Sprites/BehindElements/" + shape.ToString() + dopString) as Sprite;
     }
 
-    public static Sprite SetShape(BlockTypeEnum shape)
+    public static Sprite SetShape(BlockTypeEnum shape, int option = 0)
     {
 
         //в зависимости от типа блока 
@@ -116,7 +123,7 @@ public static class SpriteBank
         }
     }
 
-    public static Sprite SetShape(BlockingElementsShapeEnum shape)
+    public static Sprite SetShape(BlockingElementsShapeEnum shape, int option = 0)
     {
         ////в зависимости от типа элемента 
         //switch (shape)
@@ -181,25 +188,25 @@ public static class SpriteBank
         return Resources.Load<Sprite>("Sprites/Border/" + shape.ToString()) as Sprite;
     }
 
-    public static Sprite SetShape(AllShapeEnum shape)
+    public static Sprite SetShape(AllShapeEnum shape, int option = 0)
     {
         //поиск в других коллекциях данное значение с перенаправлением к другому SetShape
 
         if (Enum.IsDefined(typeof(BlockingElementsShapeEnum), shape.ToString()))
         {
-           return SetShape((BlockingElementsShapeEnum)Enum.Parse(typeof(BlockingElementsShapeEnum), shape.ToString()));
+           return SetShape((BlockingElementsShapeEnum)Enum.Parse(typeof(BlockingElementsShapeEnum), shape.ToString()), option);
         }
         else if (Enum.IsDefined(typeof(ElementsShapeEnum), shape.ToString()))
         {
-            return SetShape((ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shape.ToString()));
+            return SetShape((ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shape.ToString()), option);
         }
         else if (Enum.IsDefined(typeof(BlockTypeEnum), shape.ToString()))
         {
-            return SetShape((BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), shape.ToString()));
+            return SetShape((BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), shape.ToString()), option);
         }
         else if (Enum.IsDefined(typeof(BehindElementsShapeEnum), shape.ToString()))
         {
-            return SetShape((BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), shape.ToString()));
+            return SetShape((BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), shape.ToString()), option);
         }
         return null;
     }
