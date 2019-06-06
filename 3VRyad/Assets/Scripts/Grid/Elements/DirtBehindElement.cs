@@ -7,7 +7,8 @@ public class DirtBehindElement : BehindElement
 {
     public override void PerformActionAfterMove()
     {
-        if (!destroyed)
+        //проверяем что не активировали в этом ходу
+        if (!destroyed && lastActivationMove > Tasks.Instance.Moves)
         {
             if (actionDelay == 0)
             {
@@ -30,6 +31,10 @@ public class DirtBehindElement : BehindElement
                         }
                     }
                 }
+
+                //!!!находим все блоки с грязью вокруг и указываем в них, что они уже выполнили действие
+
+                lastActivationMove = Tasks.Instance.Moves;
             }
             else
             {   

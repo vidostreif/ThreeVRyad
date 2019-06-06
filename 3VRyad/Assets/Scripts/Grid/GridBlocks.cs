@@ -540,12 +540,17 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     private void PerformActionElementsAfterMove() {
 
         //предварительно собераем все элементы которые выполняют действие
+
+        //!!! переделать систему поиска
         BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
         List<BaseElement> elementsForAction = new List<BaseElement>();
 
+        //!!!перемешиваем найденные элементы
+
+
         foreach (BaseElement item in findeObjects)
         {
-            if ( item.ActionAfterMove)
+            if (!item.Destroyed && item.ActionAfterMove)
             {
                 elementsForAction.Add(item);
             }
@@ -554,6 +559,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         foreach (BaseElement item in elementsForAction)
         {
             item.PerformActionAfterMove();
+
+            //сбрасываем активность
         }
     }
 

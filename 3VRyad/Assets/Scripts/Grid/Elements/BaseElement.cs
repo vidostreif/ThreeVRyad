@@ -21,14 +21,13 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода
     [SerializeField] protected int actionDelay;//задержка перед активированием
     [SerializeField] protected int startingActionDelay;//запоминает первичную задержку для расчетов
+    [SerializeField] protected int lastActivationMove;//ход последней активации
 
     [SerializeField] protected bool collector = false;//признак что элемент коллекционирует другие элементы
     [SerializeField] protected AllShapeEnum collectShape;//форма коллекционированого элемента
     [SerializeField] protected int numberOfElementCollected;//количество коллекционируемых элементов
 
-    [SerializeField] protected bool drop = false;//сбрасываемый элемент
-
-    
+    [SerializeField] protected bool drop = false;//сбрасываемый элемент    
 
     public AnimatorElement AnimatElement
     {
@@ -139,6 +138,7 @@ public class BaseElement : MonoBehaviour
         this.actionAfterMove = true;
         this.actionDelay = actionDelay;
         this.startingActionDelay = actionDelay;
+        this.lastActivationMove = int.MaxValue;
         UpdateSpriteAlfa();
     }
 

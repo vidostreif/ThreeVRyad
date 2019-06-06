@@ -131,7 +131,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         blockToCreateBonus.CreatElement(GridBlocks.Instance.prefabElement, bonus.Shape, bonus.Type);
     }
 
-    private IEnumerator CurActivateBonusOnEnd(List<Block> blocks)
+    private IEnumerator CurActivateBonusOnEnd(Block[] blocks)
     {
         activateBonusOnEnd = true;
 
@@ -149,9 +149,9 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         //если на поле остались бонусы то находим их и активируем
         if (!activateBonusOnEnd)
         {
-            List<Block> blocks = GetAllBlockWithBonus();
+            Block[] blocks = GetAllBlockWithBonusNoBlocking();
 
-            if (blocks.Count > 0)
+            if (blocks.Length > 0)
             {
                 StartCoroutine(CurActivateBonusOnEnd(blocks));
                 return true;
@@ -168,20 +168,23 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
         }
     }
 
-    //получаем все блоки с бонусами
-    public List<Block> GetAllBlockWithBonus() {
+    //получаем все блоки с бонусами не заблокированные
+    public Block[] GetAllBlockWithBonusNoBlocking() {
 
-        List<Block> blocks = new List<Block>();
+        //List<Block> blocks = new List<Block>();
         Block[] curBlocks;
-        foreach (Bonus bonus in bonusesList)
-        {
-            curBlocks = GridBlocks.Instance.GetAllBlocksWithCurElements(bonus.Type);
-            foreach (Block curBlock in curBlocks)
-            {
-                blocks.Add(curBlock);
-            }
-        }
-        return blocks;
+        //foreach (Bonus bonus in bonusesList)
+        //{
+            curBlocks = GridBlocks.Instance.GetAllBlocksWithActivatedElementsNoBlocking();//получаем все блоки с незаблокированными активируемыми элементами
+            //foreach (Block curBlock in curBlocks)
+            //{
+            //    if (curBlock)
+            //    {
+            //        blocks.Add(curBlock);
+            //    }                
+            //}
+        //}
+        return curBlocks;
     }
 
     //сохранение и заргрузка
