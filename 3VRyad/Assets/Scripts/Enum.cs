@@ -206,6 +206,10 @@ public enum SoundsEnum
     Repainting_ring,
     StartGame,
     AddMove,
+    Dirt_create,
+    Dirt_destroy,
+    Dirt_swelling,
+
 }//тип звуков
 
 public enum PSEnum
@@ -217,9 +221,9 @@ public enum PSEnum
     PSSelect,
     PSAddPowerSuperBonus,
     PSBeatsSuperBonus,
+    PSDirt,
 
-
-}//тип звуков
+}//тип эфектов
 
 public enum VideoForFeeEnum
 {

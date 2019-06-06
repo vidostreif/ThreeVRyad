@@ -7,7 +7,7 @@ public class ElementBigFlask : ElementSmallFlask
 {
     protected override void DopSettings()
     {
-        soundDestroy = SoundsEnum.Boom_big;
+        
         //base.DopSettings();
         explosionRadius = 3;
 

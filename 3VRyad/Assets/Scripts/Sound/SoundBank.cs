@@ -51,6 +51,9 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Repainting_ring, soundFolder, "repainting_ring"));
             soundsList.Add(new SoundResurse(SoundsEnum.StartGame, soundFolder, "bird"));
             soundsList.Add(new SoundResurse(SoundsEnum.AddMove, soundFolder, "Rise"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Dirt_create, soundFolder, "Dirt_create"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Dirt_destroy, soundFolder, "Dirt_destroy"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Dirt_swelling, soundFolder, "Dirt_swelling"));
         }
     }
 

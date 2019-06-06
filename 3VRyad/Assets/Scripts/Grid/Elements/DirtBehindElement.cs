@@ -22,8 +22,8 @@ public class DirtBehindElement : BehindElement
                     if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(block))
                     {
                         if (block.BehindElement == null || block.BehindElement.Destroyed)
-                        {
-                            block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type);
+                        {                            
+                            block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type, thisTransform);
                             timerActionDelay = 0;
                             UpdateSprite();
                             break;
@@ -34,12 +34,23 @@ public class DirtBehindElement : BehindElement
                 lastActivationMove = Tasks.Instance.Moves;
             }
             else if (timerActionDelay < actionDelay)
-            {
-                
+            {                
                 timerActionDelay++;
                 UpdateSprite();
             }
             
         }
     }
+
+    protected override void UpdateSprite()
+    {
+        base.UpdateSprite();
+        if (ParticleSystemManager.Instance != null)
+        {
+            //анимация
+            ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSDirt, 3);
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_swelling);
+        }        
+    }
+
 }

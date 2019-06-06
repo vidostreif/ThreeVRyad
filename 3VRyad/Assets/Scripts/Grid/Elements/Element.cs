@@ -81,11 +81,11 @@ public class Element : BaseElement
         GetComponent<ElementController>().ThisElement = this;
     }
 
-    public void Start()
-    {
-        AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-        animatorElement.PlayCreatureAnimation();
-    }
+    //public void Start()
+    //{
+    //    AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+    //    animatorElement.PlayCreatureAnimation();
+    //}
 
     //установка настроек элементов
     public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, HitTypeEnum hitTypeEnum, int score) {
@@ -101,7 +101,7 @@ public class Element : BaseElement
 
     protected virtual void DopSettings()
     {
-        soundDestroy = SoundsEnum.DestroyElement_3;
+        
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
     }
 

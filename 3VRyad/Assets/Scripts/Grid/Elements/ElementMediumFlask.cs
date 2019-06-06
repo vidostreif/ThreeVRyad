@@ -7,8 +7,7 @@ using UnityEngine;
 public class ElementMediumFlask : ElementSmallFlask
 {
     protected override void DopSettings()
-    {       
-        soundDestroy = SoundsEnum.Boom_big;
+    {               
         //base.DopSettings();
         explosionRadius = 2;
 

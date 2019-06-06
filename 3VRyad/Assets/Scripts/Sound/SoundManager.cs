@@ -247,5 +247,97 @@ public class SoundManager : MonoBehaviour
     public void PlayClickButtonSound(){
         PlaySoundInternal(SoundsEnum.ClickButton);
     }
-    
+
+    public void PlayCreateElement(AllShapeEnum allShapeEnum)
+    {
+        if (allShapeEnum == AllShapeEnum.Apple)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
+        }
+        else if (allShapeEnum == AllShapeEnum.Camomile)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
+        }
+        else if (allShapeEnum == AllShapeEnum.Mushroom)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
+        }
+        else if (allShapeEnum == AllShapeEnum.Orange)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
+        }
+        else if (allShapeEnum == AllShapeEnum.Plum)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
+        }
+        else if (allShapeEnum == AllShapeEnum.Strawberry)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
+        }
+        else if (allShapeEnum == AllShapeEnum.Dirt)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_create);
+        }
+    }
+
+    public void PlayDestroyElement(AllShapeEnum allShapeEnum)
+    {
+        if (allShapeEnum == AllShapeEnum.Apple)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_3);
+        }
+        else if (allShapeEnum == AllShapeEnum.Camomile)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_3);
+        }
+        else if (allShapeEnum == AllShapeEnum.Mushroom)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_3);
+        }
+        else if (allShapeEnum == AllShapeEnum.Orange)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_3);
+        }
+        else if (allShapeEnum == AllShapeEnum.Plum)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_3);
+        }
+        else if (allShapeEnum == AllShapeEnum.Strawberry)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_3);
+        }
+        else if (allShapeEnum == AllShapeEnum.Grass)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.LeafRustling);
+        }
+        else if (allShapeEnum == AllShapeEnum.Liana)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.LeafRustling);
+        }
+        else if (allShapeEnum == AllShapeEnum.Bush)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.LeafRustling);
+        }
+        else if (allShapeEnum == AllShapeEnum.Brick)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_4);
+        }
+        else if (allShapeEnum == AllShapeEnum.BigFlask)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Boom_big);
+        }
+        else if (allShapeEnum == AllShapeEnum.MediumFlask)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Boom_big);
+        }
+        else if (allShapeEnum == AllShapeEnum.SmallFlask)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Boom);
+        }
+        else if (allShapeEnum == AllShapeEnum.Dirt)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_destroy);
+        }
+
+    }
 }

@@ -288,14 +288,32 @@ public class Block : MonoBehaviour {
         element = null;
     }
 
-    public void CreatBehindElement(GameObject prefabElement, AllShapeEnum shape, BehindElementsTypeEnum typeElementsEnum)
+    //создает элемент на заднем плане из префаба, вида, типа элемента и на позиции указанного трансформа или позиции самого блока
+    public void CreatBehindElement(GameObject prefabElement, AllShapeEnum shape, BehindElementsTypeEnum typeElementsEnum, Transform startTransform = null)
     {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
         {
+            //определяем позицию для создания
+            Vector3 startPosition;
+            if (startTransform != null)
+            {
+                startPosition = startTransform.position;
+            }
+            else
+            {
+                startPosition = thisTransform.position;
+            }
+
             //создаем новый элемент
-            GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y, thisTransform.position.z), Quaternion.identity);
+            GameObject elementGameObject = Instantiate(prefabElement, startPosition, Quaternion.identity);
             BehindElement curElement;
+
+            //если позиция элемента не совпадает с позицией нашего элемента, то перемещаем элемент к блоку
+            if (elementGameObject.transform.position != thisTransform.position)
+            {
+                MainAnimator.Instance.AddElementForSmoothMove(elementGameObject.transform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
+            }
 
             if (typeElementsEnum == BehindElementsTypeEnum.Grass)
             {

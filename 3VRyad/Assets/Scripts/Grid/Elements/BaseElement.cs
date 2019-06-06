@@ -11,7 +11,7 @@ public class BaseElement : MonoBehaviour
     protected AnimatorElement animatorElement;
     [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected AllShapeEnum shape;//форма элемента
-    [SerializeField] protected SoundsEnum soundDestroy;//звук уничтожения
+    //[SerializeField] protected SoundsEnum soundDestroy;//звук уничтожения
     [SerializeField] protected HitTypeEnum[] vulnerabilityTypeEnum;//уязвимость к типам удара
     [SerializeField] protected bool destroyed = false;//признак что элемент был уничтожен
     [SerializeField] protected int life;
@@ -94,7 +94,7 @@ public class BaseElement : MonoBehaviour
                 ElementsList.DellElement(shape);
             }
             shape = value;
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.CreateElement);
+            SoundManager.Instance.PlayCreateElement(shape);
             ElementsList.AddElement(shape);
             UpdateSprite();
         }
@@ -130,6 +130,12 @@ public class BaseElement : MonoBehaviour
         {
             return drop;
         }
+    }
+
+    public void Start()
+    {
+        AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+        animatorElement.PlayCreatureAnimation();
     }
 
     //делаем элемент активным после хода
@@ -211,10 +217,11 @@ public class BaseElement : MonoBehaviour
         //int randomNumber = UnityEngine.Random.Range(1, 4);
         //Debug.Log(randomNumber);
         //(SoundsEnum)Enum.Parse(typeof(SoundsEnum), "DestroyElement_" + randomNumber.ToString())
-        if (soundDestroy != SoundsEnum.EmptySound)
-        {
-            SoundManager.Instance.PlaySoundInternal(soundDestroy);
-        }        
+        //if (soundDestroy != SoundsEnum.EmptySound)
+        //{
+            SoundManager.Instance.PlayDestroyElement(shape);
+            //SoundManager.Instance.PlaySoundInternal(soundDestroy);
+        //}        
 
         //определяем есть ли вокруг элементы коллекционирующие наш вид элемента
         Block[] blocksAround = GridBlocks.Instance.GetAroundBlocks(this.PositionInGrid);

@@ -6,8 +6,7 @@ using UnityEngine;
 public class DropElement : Element
 {
     protected override void DopSettings()
-    {
-        soundDestroy = SoundsEnum.DestroyElement_4;
+    {        
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Drop };
     }
 }
