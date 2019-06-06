@@ -37,7 +37,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
     //public bool NextMoveExists { get => nextMoveExists; }
 
-
     void Awake()
     {
         // регистрация синглтона
@@ -545,8 +544,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
         List<BaseElement> elementsForAction = new List<BaseElement>();
 
-        //!!!перемешиваем найденные элементы
-
+        //перемешиваем найденные элементы
+        SupportFunctions.MixArray(findeObjects);
 
         foreach (BaseElement item in findeObjects)
         {
@@ -560,7 +559,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         {
             item.PerformActionAfterMove();
 
-            //сбрасываем активность
         }
     }
 
@@ -1422,6 +1420,47 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (BlockCheck.ThisBlockWithCurElement(containers[x].block[y], elementsTypeEnum))
                 {
                     blocks.Add(containers[x].block[y]);
+                }
+            }
+        }
+        return blocks.ToArray();
+    }
+
+    //возвращает все блоки с указаным элементом на заднем плане
+    public Block[] GetAllBlocksWithCurBehindElements(BehindElementsTypeEnum behindElementsTypeEnum)
+    {
+        List<Block> blocks = new List<Block>();
+
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если блок существует по данному адресу и в нем есть нужный элемент
+                if (BlockCheck.ThisBlockWithCurBehindElement(containers[x].block[y], behindElementsTypeEnum))
+                {
+                    blocks.Add(containers[x].block[y]);
+                }
+            }
+        }
+        return blocks.ToArray();
+    }
+
+    //возвращает все блоки с указаным элементом на заднем плане
+    public Block[] GetAllBlocksWithCurBehindElements(BehindElementsTypeEnum behindElementsTypeEnum, AllShapeEnum allShapeEnum)
+    {
+        List<Block> blocks = new List<Block>();
+
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если блок существует по данному адресу и в нем есть нужный элемент
+                if (BlockCheck.ThisBlockWithCurBehindElement(containers[x].block[y], behindElementsTypeEnum))
+                {
+                    if (containers[x].block[y].BehindElement.Shape == allShapeEnum)
+                    {
+                        blocks.Add(containers[x].block[y]);
+                    }                    
                 }
             }
         }

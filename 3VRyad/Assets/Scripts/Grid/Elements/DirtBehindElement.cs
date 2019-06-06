@@ -8,10 +8,10 @@ public class DirtBehindElement : BehindElement
     public override void PerformActionAfterMove()
     {
         //проверяем что не активировали в этом ходу
-        if (!destroyed && lastActivationMove > Tasks.Instance.Moves)
+        if (!destroyed && LastActivationMove > Tasks.Instance.Moves)
         {
-            if (timerActionDelay == actionDelay)
-            {                
+            //if (timerActionDelay == actionDelay)
+            //{                
                 //распространение на соседний блок
                 NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(this.PositionInGrid);
                 SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
@@ -24,33 +24,40 @@ public class DirtBehindElement : BehindElement
                         if (block.BehindElement == null || block.BehindElement.Destroyed)
                         {                            
                             block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type, thisTransform);
-                            timerActionDelay = 0;
-                            UpdateSprite();
+                        //timerActionDelay = 0;
+                        //UpdateSprite();
+                        //находим все блоки с таким же элементом на заднем плане и помечаем их как, выполненные действие
+                        Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBehindElements(type, shape);
+
+                        foreach (Block BlockItem in blocks)
+                        {
+                            BlockItem.BehindElement.LastActivationMove = Tasks.Instance.Moves;
+                        }
                             break;
                         }
                     }
                 }
 
-                lastActivationMove = Tasks.Instance.Moves;
-            }
-            else if (timerActionDelay < actionDelay)
-            {                
-                timerActionDelay++;
-                UpdateSprite();
-            }
+                LastActivationMove = Tasks.Instance.Moves;
+            //}
+            //else if (timerActionDelay < actionDelay)
+            //{                
+            //    timerActionDelay++;
+            //    UpdateSprite();
+            //}
             
         }
     }
 
-    protected override void UpdateSprite()
-    {
-        base.UpdateSprite();
-        if (ParticleSystemManager.Instance != null)
-        {
-            //анимация
-            ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSDirt, 3);
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_swelling);
-        }        
-    }
+    //protected override void UpdateSprite()
+    //{
+    //    base.UpdateSprite();
+    //    if (ParticleSystemManager.Instance != null)
+    //    {
+    //        //анимация
+    //        ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSDirt, 3);
+    //        SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_swelling);
+    //    }        
+    //}
 
 }

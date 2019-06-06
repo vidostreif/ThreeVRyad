@@ -21,7 +21,7 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода
     [SerializeField] protected int actionDelay;//задержка перед активированием
     [SerializeField] protected int timerActionDelay;//отсчет до активации
-    [SerializeField] protected int lastActivationMove;//ход последней активации
+    [SerializeField] private int lastActivationMove;//ход последней активации
 
     [SerializeField] protected bool collector = false;//признак что элемент коллекционирует другие элементы
     [SerializeField] protected AllShapeEnum collectShape;//форма коллекционированого элемента
@@ -131,6 +131,7 @@ public class BaseElement : MonoBehaviour
             return drop;
         }
     }
+    public int LastActivationMove { get => lastActivationMove; set => lastActivationMove = value; }
 
     public void Start()
     {
@@ -144,7 +145,7 @@ public class BaseElement : MonoBehaviour
         this.actionAfterMove = true;
         this.actionDelay = actionDelay;
         this.timerActionDelay = 0;
-        this.lastActivationMove = int.MaxValue;
+        this.LastActivationMove = int.MaxValue;
         UpdateSprite();
     }
 
@@ -263,14 +264,14 @@ public class BaseElement : MonoBehaviour
 
     protected virtual void UpdateSprite()
     {
-        if (actionAfterMove)
-        {
-            spriteRenderer.sprite = SpriteBank.SetShape(shape, actionDelay - timerActionDelay);
-        }
-        else
-        {
+        //if (actionAfterMove)
+        //{
+        //    spriteRenderer.sprite = SpriteBank.SetShape(shape, actionDelay - timerActionDelay);
+        //}
+        //else
+        //{
             spriteRenderer.sprite = SpriteBank.SetShape(shape);
-        }
+        //}
         
         //if (startingActionDelay != 0)
         //{
