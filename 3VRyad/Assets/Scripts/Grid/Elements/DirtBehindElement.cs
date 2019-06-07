@@ -11,12 +11,7 @@ public class DirtBehindElement : BehindElement
     {
         //если нужно активировать этот элемент в этом ходу
         if (!destroyed && ActivationMove == Tasks.Instance.Moves)
-        {
-            if (PSNextMove != null)
-            {
-                Destroy(PSNextMove);
-            }
-            
+        {  
             Block block = FoundBlockForSpread();
 
             if (block != null)
@@ -31,27 +26,39 @@ public class DirtBehindElement : BehindElement
                 if (!FoundNextActionAfterMove())
                 {
                     ActivationMove = int.MaxValue;
+                    if (PSNextMove != null)
+                    {
+                        Destroy(PSNextMove);
+                        //Debug.Log("Уничтожение PSNextMove");
+                        UpdateSprite();
+                    }
                 }
             }
             else
             {
                 ActivationMove = int.MaxValue;
+                if (PSNextMove != null)
+                {
+                    Destroy(PSNextMove);
+                    //Debug.Log("Уничтожение PSNextMove");
+                    UpdateSprite();
+                }
             }            
         }
-        else
-        {
-            //если активируется только один элемент из всех, то только для него ищем следующий ход
-            if (singleItemActivated)
-            {
-                //ищем следующий элемент для распространения грязи
-                FoundNextActionAfterMove();
-            }
-        }             
+        //else
+        //{
+        //    //если активируется только один элемент из всех, то только для него ищем следующий ход
+        //    if (singleItemActivated)
+        //    {
+        //        //ищем следующий элемент для распространения грязи
+        //        FoundNextActionAfterMove();
+        //    }
+        //}             
     }
 
     public override bool FoundNextActionAfterMove()
     {
-        if (nextProcessedMoveForAction >= Tasks.Instance.Moves)
+        if (nextProcessedMoveForAction >= Tasks.Instance.Moves || ActivationMove == Tasks.Instance.Moves)
         {
             Block block = FoundBlockForSpread();
 
@@ -60,20 +67,22 @@ public class DirtBehindElement : BehindElement
                 //находим все блоки с таким же элементом на заднем плане и указываем у них, что элемент для следующего хода найден
                 Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBehindElements(type, shape);
 
-                //обрабатываем все блоки, если натыкаемся на блок в котором найденное время активации такое, же или больше, тогда прерываем
-                foreach (Block BlockItem in blocks)
-                {
-                    if (Tasks.Instance.Moves - 1 - actionDelay >= BlockItem.BehindElement.NextProcessedMoveForAction)
-                    {
-                        nextProcessedMoveForAction = BlockItem.BehindElement.NextProcessedMoveForAction;
-                        return false;
-                    }
-                }
+                ////обрабатываем все блоки, если натыкаемся на блок в котором найденное время активации такое, же или больше, тогда прерываем
+                //foreach (Block BlockItem in blocks)
+                //{
+                //    if (Tasks.Instance.Moves - 1 - actionDelay >= BlockItem.BehindElement.NextProcessedMoveForAction)
+                //    {
+                //        nextProcessedMoveForAction = BlockItem.BehindElement.NextProcessedMoveForAction;
+                //        return false;
+                //    }
+                //}
                 nextProcessedMoveForAction = Tasks.Instance.Moves - 1 - actionDelay;
                 ActivationMove = nextProcessedMoveForAction;
 
+                UpdateSprite(1);
+
                 //создаем эффект что элемент будет активирован
-                if (ParticleSystemManager.Instance != null)
+                if (ParticleSystemManager.Instance != null && PSNextMove == null)
                 {
                     PSNextMove = ParticleSystemManager.Instance.CreatePS(thisTransform, PSEnum.PSDirtNextAction);
                 }

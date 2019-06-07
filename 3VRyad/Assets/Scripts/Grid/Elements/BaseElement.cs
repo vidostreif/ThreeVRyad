@@ -144,10 +144,10 @@ public class BaseElement : MonoBehaviour
     {
         AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
         animatorElement.PlayCreatureAnimation();
-        if (actionAfterMove && singleItemActivated)
-        {
-            FoundNextActionAfterMove();
-        }
+        //if (actionAfterMove && singleItemActivated)
+        //{
+        //    FoundNextActionAfterMove();
+        //}
     }
 
     //делаем элемент активным после хода
@@ -224,8 +224,7 @@ public class BaseElement : MonoBehaviour
     }
 
     protected virtual void DestroyElement()
-    {
-        
+    {        
         destroyed = true;
         ElementsList.DellElement(shape);
         Score.Instance.CreateScoreElement(transform.position, score);
@@ -281,7 +280,7 @@ public class BaseElement : MonoBehaviour
         this.PositionInGrid = null;
     }
 
-    protected virtual void UpdateSprite()
+    protected virtual void UpdateSprite(int option = 0)
     {
         //if (actionAfterMove)
         //{
@@ -289,7 +288,15 @@ public class BaseElement : MonoBehaviour
         //}
         //else
         //{
-            spriteRenderer.sprite = SpriteBank.SetShape(shape);
+        //if (option == 0)
+        //{
+        //    spriteRenderer.sprite = SpriteBank.SetShape(shape);
+        //}
+        //else
+        //{
+            spriteRenderer.sprite = SpriteBank.SetShape(shape, option);
+        //}
+            
         //}
         
         //if (startingActionDelay != 0)

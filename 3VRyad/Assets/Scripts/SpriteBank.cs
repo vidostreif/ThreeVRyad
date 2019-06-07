@@ -100,7 +100,7 @@ public static class SpriteBank
             dopString = "_" + option;
         }
 
-        Debug.Log("option: " +  option);
+        //Debug.Log("option: " +  option);
 
         return Resources.Load<Sprite>("Sprites/BehindElements/" + shape.ToString() + dopString) as Sprite;
     }

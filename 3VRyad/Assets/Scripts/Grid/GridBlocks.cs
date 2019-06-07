@@ -560,43 +560,29 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             item.PerformActionAfterMove();
         }
 
-        //NextActionElementsAfterMove();
+        NextActionElementsAfterMove(findeObjects);
     }
 
-    ////поиск следующего хода для активации элементов
-    //private void NextActionElementsAfterMove()
-    //{
-    //    //!!! переделать систему поиска
-    //    BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
-    //    List<Block> processedBlocks = new List<Block>();
+    //поиск следующего хода для активации элементов
+    public void NextActionElementsAfterMove(BaseElement[] findeObjects = null)
+    {
+        if (findeObjects == null)
+        {
+            findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
+            //перемешиваем найденные элементы
+            SupportFunctions.MixArray(findeObjects);
+        }        
 
-    //    //перемешиваем найденные элементы
-    //    SupportFunctions.MixArray(findeObjects);
+        foreach (BaseElement item in findeObjects)
+        {
+            //если объект не уничтожен и активируется в конце хода и требуются дополнительные действия для определения когда активировать
+            if (!item.Destroyed && item.ActionAfterMove && item.SingleItemActivated)
+            {
+                item.FoundNextActionAfterMove();
+            }
+        }
 
-    //    foreach (BaseElement item in findeObjects)
-    //    {
-    //        //если объект не уничтожен и активируется в конце хода
-    //        if (!item.Destroyed && item.ActionAfterMove && item.PreliminarySearchToActivate && item.SingleItemActivated)
-    //        {
-    //            //если предварительно нужно найти ход и ход выполняет только один элемент и такой элемент еще небыл найден
-    //            if (item.PreliminarySearchToActivate && item.SingleItemActivated && !processedBlocks.Contains(GetBlock(item.PositionInGrid)))
-    //            {
-    //                if (item.FoundNextActionAfterMove())
-    //                {
-    //                    //находим все блоки с таким же элементом на заднем плане и помечаем их как, выполненные действие
-    //                    Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBehindElements(item.Type, item.Shape);
-    //                    processedBlocks.AddRange(blocks);
-    //                }
-    //            }
-    //        }
-    //    }
-    //    //выполняем действия
-    //    foreach (BaseElement item in elementsForAction)
-    //    {
-    //        item.PerformActionAfterMove();
-
-    //    }
-    //}
+    }
 
     //проверяет нахождение блока в массивах для обработки
     public bool BlockInProcessing(Block inBlock) {
