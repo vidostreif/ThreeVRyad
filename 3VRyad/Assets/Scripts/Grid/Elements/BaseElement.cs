@@ -18,10 +18,13 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected int score;//количество очков за уничтожение элемента
     [SerializeField] protected bool immortal;//признак бессмертия
 
-    [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода
-    [SerializeField] protected int actionDelay;//задержка перед активированием
-    [SerializeField] protected int timerActionDelay;//отсчет до активации
-    [SerializeField] private int lastActivationMove;//ход последней активации
+    [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода    
+    //[SerializeField] private bool preliminarySearchToActivate = false;//предварительный поиск хода для активации
+    [SerializeField] protected int actionDelay;//задержка перед активированием    
+    //[SerializeField] protected int timerActionDelay;//отсчет до активации
+    [SerializeField] protected int activationMove;//следующий ход для активации
+    [SerializeField] protected bool singleItemActivated = false;//признак что активируется только один элемент из всех с таким типом и внешностью
+    [SerializeField] protected int nextProcessedMoveForAction;//следующий обработанный ход для этой группы элементов    
 
     [SerializeField] protected bool collector = false;//признак что элемент коллекционирует другие элементы
     [SerializeField] protected AllShapeEnum collectShape;//форма коллекционированого элемента
@@ -131,22 +134,32 @@ public class BaseElement : MonoBehaviour
             return drop;
         }
     }
-    public int LastActivationMove { get => lastActivationMove; set => lastActivationMove = value; }
+    public int ActivationMove { get => activationMove; set => activationMove = value; }
+    public bool SingleItemActivated { get => singleItemActivated; }
+    public int NextProcessedMoveForAction { get => nextProcessedMoveForAction; set => nextProcessedMoveForAction = value; }
+
+    //public bool PreliminarySearchToActivate { get => preliminarySearchToActivate; }
 
     public void Start()
     {
         AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
         animatorElement.PlayCreatureAnimation();
+        if (actionAfterMove && singleItemActivated)
+        {
+            FoundNextActionAfterMove();
+        }
     }
 
     //делаем элемент активным после хода
-    public virtual void MakeActionAfterMove(int actionDelay)
+    public virtual void MakeActionAfterMove(int actionDelay, bool singleItemActivated)
     {
         this.actionAfterMove = true;
+        this.singleItemActivated = singleItemActivated;
+        //this.preliminarySearchToActivate = preliminarySearchToActivate;
         this.actionDelay = actionDelay;
-        this.timerActionDelay = 0;
-        this.LastActivationMove = int.MaxValue;
-        UpdateSprite();
+        this.nextProcessedMoveForAction = int.MaxValue;
+        this.ActivationMove = int.MaxValue;
+        UpdateSprite();        
     }
 
     //делаем элемент коллекционером
@@ -202,6 +215,12 @@ public class BaseElement : MonoBehaviour
     //действие после хода
     public virtual void PerformActionAfterMove()
     {
+    }
+
+    //поиск следующего хода
+    public virtual bool FoundNextActionAfterMove()
+    {
+        return false;
     }
 
     protected virtual void DestroyElement()

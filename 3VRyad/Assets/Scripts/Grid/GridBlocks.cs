@@ -558,9 +558,45 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         foreach (BaseElement item in elementsForAction)
         {
             item.PerformActionAfterMove();
-
         }
+
+        //NextActionElementsAfterMove();
     }
+
+    ////поиск следующего хода для активации элементов
+    //private void NextActionElementsAfterMove()
+    //{
+    //    //!!! переделать систему поиска
+    //    BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
+    //    List<Block> processedBlocks = new List<Block>();
+
+    //    //перемешиваем найденные элементы
+    //    SupportFunctions.MixArray(findeObjects);
+
+    //    foreach (BaseElement item in findeObjects)
+    //    {
+    //        //если объект не уничтожен и активируется в конце хода
+    //        if (!item.Destroyed && item.ActionAfterMove && item.PreliminarySearchToActivate && item.SingleItemActivated)
+    //        {
+    //            //если предварительно нужно найти ход и ход выполняет только один элемент и такой элемент еще небыл найден
+    //            if (item.PreliminarySearchToActivate && item.SingleItemActivated && !processedBlocks.Contains(GetBlock(item.PositionInGrid)))
+    //            {
+    //                if (item.FoundNextActionAfterMove())
+    //                {
+    //                    //находим все блоки с таким же элементом на заднем плане и помечаем их как, выполненные действие
+    //                    Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBehindElements(item.Type, item.Shape);
+    //                    processedBlocks.AddRange(blocks);
+    //                }
+    //            }
+    //        }
+    //    }
+    //    //выполняем действия
+    //    foreach (BaseElement item in elementsForAction)
+    //    {
+    //        item.PerformActionAfterMove();
+
+    //    }
+    //}
 
     //проверяет нахождение блока в массивах для обработки
     public bool BlockInProcessing(Block inBlock) {
@@ -2107,6 +2143,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 }
 
 public struct FoundNextMove
+{
+    public bool found;
+    public bool mix;
+}
+
+public struct ElementForNextMove
 {
     public bool found;
     public bool mix;

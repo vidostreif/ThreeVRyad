@@ -205,7 +205,7 @@ public class Element : BaseElement
             {
                 curElement = blockingElementGameObject.AddComponent<SpreadBlockingElement>();
                 curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 300);
-                curElement.MakeActionAfterMove(2);
+                curElement.MakeActionAfterMove(2, false);
                 lockedForMove = true;
             }
             else

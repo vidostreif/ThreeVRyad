@@ -5,59 +5,109 @@ using UnityEngine;
 //Загрязнение - за элементом, собираются при уничтожении элемента. Загрязнение размножается каждый ход на соседние клетки.
 public class DirtBehindElement : BehindElement
 {
+    private GameObject PSNextMove;
+
     public override void PerformActionAfterMove()
     {
-        //проверяем что не активировали в этом ходу
-        if (!destroyed && LastActivationMove > Tasks.Instance.Moves)
+        //если нужно активировать этот элемент в этом ходу
+        if (!destroyed && ActivationMove == Tasks.Instance.Moves)
         {
-            //if (timerActionDelay == actionDelay)
-            //{                
-                //распространение на соседний блок
-                NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(this.PositionInGrid);
-                SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
-
-                foreach (Block block in neighboringBlocks.allBlockField)
-                {
-                    //находим не заблокированный элемент
-                    if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(block))
-                    {
-                        if (block.BehindElement == null || block.BehindElement.Destroyed)
-                        {                            
-                            block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type, thisTransform);
-                        //timerActionDelay = 0;
-                        //UpdateSprite();
-                        //находим все блоки с таким же элементом на заднем плане и помечаем их как, выполненные действие
-                        Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBehindElements(type, shape);
-
-                        foreach (Block BlockItem in blocks)
-                        {
-                            BlockItem.BehindElement.LastActivationMove = Tasks.Instance.Moves;
-                        }
-                            break;
-                        }
-                    }
-                }
-
-                LastActivationMove = Tasks.Instance.Moves;
-            //}
-            //else if (timerActionDelay < actionDelay)
-            //{                
-            //    timerActionDelay++;
-            //    UpdateSprite();
-            //}
+            if (PSNextMove != null)
+            {
+                Destroy(PSNextMove);
+            }
             
+            Block block = FoundBlockForSpread();
+
+            if (block != null)
+            {
+                block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type, thisTransform);
+            }
+
+            //если активируется только один элемент из всех, то только для него ищем следующий ход
+            if (singleItemActivated)
+            {
+                //ищем следующий элемент для распространения грязи
+                if (!FoundNextActionAfterMove())
+                {
+                    ActivationMove = int.MaxValue;
+                }
+            }
+            else
+            {
+                ActivationMove = int.MaxValue;
+            }            
         }
+        else
+        {
+            //если активируется только один элемент из всех, то только для него ищем следующий ход
+            if (singleItemActivated)
+            {
+                //ищем следующий элемент для распространения грязи
+                FoundNextActionAfterMove();
+            }
+        }             
     }
 
-    //protected override void UpdateSprite()
-    //{
-    //    base.UpdateSprite();
-    //    if (ParticleSystemManager.Instance != null)
-    //    {
-    //        //анимация
-    //        ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSDirt, 3);
-    //        SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_swelling);
-    //    }        
-    //}
+    public override bool FoundNextActionAfterMove()
+    {
+        if (nextProcessedMoveForAction >= Tasks.Instance.Moves)
+        {
+            Block block = FoundBlockForSpread();
+
+            if (block != null)
+            {                
+                //находим все блоки с таким же элементом на заднем плане и указываем у них, что элемент для следующего хода найден
+                Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBehindElements(type, shape);
+
+                //обрабатываем все блоки, если натыкаемся на блок в котором найденное время активации такое, же или больше, тогда прерываем
+                foreach (Block BlockItem in blocks)
+                {
+                    if (Tasks.Instance.Moves - 1 - actionDelay >= BlockItem.BehindElement.NextProcessedMoveForAction)
+                    {
+                        nextProcessedMoveForAction = BlockItem.BehindElement.NextProcessedMoveForAction;
+                        return false;
+                    }
+                }
+                nextProcessedMoveForAction = Tasks.Instance.Moves - 1 - actionDelay;
+                ActivationMove = nextProcessedMoveForAction;
+
+                //создаем эффект что элемент будет активирован
+                if (ParticleSystemManager.Instance != null)
+                {
+                    PSNextMove = ParticleSystemManager.Instance.CreatePS(thisTransform, PSEnum.PSDirtNextAction);
+                }
+
+                //обрабатываем все блоки, если натыкаемся на блок в котором найденное время активации такое, же или больше, тогда прерываем
+                foreach (Block BlockItem in blocks)
+                {
+                    BlockItem.BehindElement.NextProcessedMoveForAction = nextProcessedMoveForAction;
+                }
+                return true;
+            }            
+        }
+        return false;
+    }
+
+    //поиск блока для распространения грязи
+    private Block FoundBlockForSpread() {
+
+        //распространение на соседний блок
+        NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(this.PositionInGrid);
+        SupportFunctions.MixArray(neighboringBlocks.allBlockField);//перемешаем соседние блоки
+
+        foreach (Block block in neighboringBlocks.allBlockField)
+        {
+            //находим не заблокированный элемент
+            if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(block))
+            {
+                if (block.BehindElement == null || block.BehindElement.Destroyed)
+                {
+                    return block;
+                }
+            }
+        }
+        return null;
+    }
 
 }

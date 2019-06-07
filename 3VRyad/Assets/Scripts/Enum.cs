@@ -222,6 +222,7 @@ public enum PSEnum
     PSAddPowerSuperBonus,
     PSBeatsSuperBonus,
     PSDirt,
+    PSDirtNextAction,//эффект подсветки грязи которая будет ходит в следующем ходу
 
 }//тип эфектов
 

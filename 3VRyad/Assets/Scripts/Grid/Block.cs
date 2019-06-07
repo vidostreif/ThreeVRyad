@@ -324,7 +324,7 @@ public class Block : MonoBehaviour {
             {
                 curElement = elementGameObject.AddComponent<DirtBehindElement>();
                 curElement.InitialSettings(typeElementsEnum, false, 1, 100);
-                curElement.MakeActionAfterMove(2);
+                curElement.MakeActionAfterMove(0, true);
                 if (ParticleSystemManager.Instance != null)
                 {
                     ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSDirt, 3);
