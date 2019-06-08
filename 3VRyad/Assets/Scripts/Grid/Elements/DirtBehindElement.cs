@@ -13,47 +13,44 @@ public class DirtBehindElement : BehindElement
         if (!destroyed && ActivationMove == Tasks.Instance.Moves)
         {  
             Block block = FoundBlockForSpread();
-
+            BehindElement newBehindElement = null;
             if (block != null)
             {
-                block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type, thisTransform);
+                newBehindElement = block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type, thisTransform);
             }
 
             //если активируется только один элемент из всех, то только для него ищем следующий ход
+            bool deactivate = true;
             if (singleItemActivated)
             {
-                //ищем следующий элемент для распространения грязи
-                if (!FoundNextActionAfterMove())
+                //пробуем определить у вновь созданного следующий ход
+                bool result = false;
+                if (newBehindElement != null)
                 {
-                    ActivationMove = int.MaxValue;
-                    if (PSNextMove != null)
+                    result = newBehindElement.FoundNextActionAfterMove();
+                }
+
+                if (!result)
+                {
+                    //пытаемся определить этот элемент для распространения грязи
+                    if (FoundNextActionAfterMove())
                     {
-                        Destroy(PSNextMove);
-                        //Debug.Log("Уничтожение PSNextMove");
-                        UpdateSprite();
+                        deactivate = false;
                     }
                 }
             }
-            else
+
+            if (deactivate)
             {
                 ActivationMove = int.MaxValue;
                 if (PSNextMove != null)
                 {
                     Destroy(PSNextMove);
-                    //Debug.Log("Уничтожение PSNextMove");
                     UpdateSprite();
                 }
-            }            
+            }
         }
-        //else
-        //{
-        //    //если активируется только один элемент из всех, то только для него ищем следующий ход
-        //    if (singleItemActivated)
-        //    {
-        //        //ищем следующий элемент для распространения грязи
-        //        FoundNextActionAfterMove();
-        //    }
-        //}             
+            
     }
 
     public override bool FoundNextActionAfterMove()
@@ -80,6 +77,7 @@ public class DirtBehindElement : BehindElement
                 ActivationMove = nextProcessedMoveForAction;
 
                 UpdateSprite(1);
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_swelling);
 
                 //создаем эффект что элемент будет активирован
                 if (ParticleSystemManager.Instance != null && PSNextMove == null)

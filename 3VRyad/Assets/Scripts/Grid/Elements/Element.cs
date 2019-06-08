@@ -100,8 +100,7 @@ public class Element : BaseElement
     }
 
     protected virtual void DopSettings()
-    {
-        
+    {        
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
     }
 
@@ -110,30 +109,52 @@ public class Element : BaseElement
     {
         if (!destroyed)
         {
-            //если прямой удар или взрыв
-            if (vulnerabilityTypeEnum.Contains(hitType))
+            //если есть блокирующий элемент
+            if (BlockingElementExists())
             {
-                //если стоит блокировка на элементе, то пытаемся ее снять
-                if (BlockingElementExists())
-                {
-                    blockingElement.Hit();
+                //если типы удара которые убивают блокирующий элемент
+                blockingElement.Hit(hitType);
 
-                    //если уничтожили блокирующий элемент
-                    if (blockingElement.Destroyed)
-                    {
-                        lockedForMove = false;
-                    }
-                }
-                //если элемент не заблокирован, то уничтожаем элемент        
-                else
+                //если уничтожили блокирующий элемент
+                if (blockingElement.Destroyed)
                 {
-                    //если элемент не бессмертный
-                    if (!Immortal)
-                    {
-                        ActionAfterHitting(hitType);
-                    }
+                    lockedForMove = false;
                 }
             }
+            else if (vulnerabilityTypeEnum.Contains(hitType))
+            {
+                //если элемент не бессмертный
+                if (!Immortal)
+                {
+                    ActionAfterHitting(hitType);
+                }
+            }
+            
+
+            ////если прямой удар или взрыв
+            //if (vulnerabilityTypeEnum.Contains(hitType))
+            //{
+            //    //если стоит блокировка на элементе, то пытаемся ее снять
+            //    if (BlockingElementExists())
+            //    {
+            //        blockingElement.Hit();
+
+            //        //если уничтожили блокирующий элемент
+            //        if (blockingElement.Destroyed)
+            //        {
+            //            lockedForMove = false;
+            //        }
+            //    }
+            //    //если элемент не заблокирован, то уничтожаем элемент        
+            //    else
+            //    {
+            //        //если элемент не бессмертный
+            //        if (!Immortal)
+            //        {
+            //            ActionAfterHitting(hitType);
+            //        }
+            //    }
+            //}
         }
     }
 

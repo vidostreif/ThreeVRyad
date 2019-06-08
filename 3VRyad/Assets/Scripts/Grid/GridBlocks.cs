@@ -560,18 +560,17 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             item.PerformActionAfterMove();
         }
 
-        NextActionElementsAfterMove(findeObjects);
+        NextActionElementsAfterMove();
     }
 
     //поиск следующего хода для активации элементов
-    public void NextActionElementsAfterMove(BaseElement[] findeObjects = null)
+    public void NextActionElementsAfterMove()
     {
-        if (findeObjects == null)
-        {
-            findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
+
+        BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
             //перемешиваем найденные элементы
             SupportFunctions.MixArray(findeObjects);
-        }        
+                
 
         foreach (BaseElement item in findeObjects)
         {

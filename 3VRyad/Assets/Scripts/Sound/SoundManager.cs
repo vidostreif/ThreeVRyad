@@ -336,7 +336,7 @@ public class SoundManager : MonoBehaviour
         }
         else if (allShapeEnum == AllShapeEnum.Dirt)
         {
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_swelling);
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_destroy);
         }
 
     }

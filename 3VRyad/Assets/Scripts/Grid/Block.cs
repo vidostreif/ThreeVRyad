@@ -199,7 +199,7 @@ public class Block : MonoBehaviour {
         }
     }
 
-    public void CreatElement(GameObject prefabElement, AllShapeEnum shape, ElementsTypeEnum typeElementsEnum, AllShapeEnum dopShape = AllShapeEnum.Empty)
+    public Element CreatElement(GameObject prefabElement, AllShapeEnum shape, ElementsTypeEnum typeElementsEnum, AllShapeEnum dopShape = AllShapeEnum.Empty)
     {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
@@ -268,15 +268,17 @@ public class Block : MonoBehaviour {
             {
                 Debug.LogError("У блока " + this.name + " не удалось определить тип создаваемого элемента");
                 DestroyImmediate(elementGameObject);
-                return;
+                return null;
             }
 
             curElement.Shape = shape;
             HelpToPlayer.AddHint(typeElementsEnum);
             //Добавляем в блок
             this.Element = curElement;
-
+            return this.Element;
         }
+
+        return null;
     }
 
     private void DellElement() {
@@ -289,7 +291,7 @@ public class Block : MonoBehaviour {
     }
 
     //создает элемент на заднем плане из префаба, вида, типа элемента и на позиции указанного трансформа или позиции самого блока
-    public void CreatBehindElement(GameObject prefabElement, AllShapeEnum shape, BehindElementsTypeEnum typeElementsEnum, Transform startTransform = null)
+    public BehindElement CreatBehindElement(GameObject prefabElement, AllShapeEnum shape, BehindElementsTypeEnum typeElementsEnum, Transform startTransform = null)
     {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
@@ -334,14 +336,17 @@ public class Block : MonoBehaviour {
             {
                 Debug.LogError("У блока " + this.name + " не удалось определить тип создаваемого элемента на заднем плане");
                 DestroyImmediate(elementGameObject);
-                return;
+                return null;
             }
 
             curElement.Shape = shape;
             HelpToPlayer.AddHint(typeElementsEnum);
             //Добавляем в блок
             this.BehindElement = curElement;
+            return this.BehindElement;
         }
+
+        return null;
     }
     
     //удар по блоку
