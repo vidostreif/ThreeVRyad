@@ -18,7 +18,7 @@
     <elementsShape>
       <shapeAndPriority shape="Apple" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Strawberry" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
-      <shapeAndPriority shape="Plum" type="StandardElement" priority="20" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Plum" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Mushroom" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Orange" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
     </elementsShape>
@@ -147,7 +147,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>22</moves>
+    <moves>21</moves>
     <sizeTargets>3</sizeTargets>
     <targets>
       <shapeAndGoal shape="Apple" goal="30" collectEverything="false" />
