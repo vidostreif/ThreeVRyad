@@ -158,6 +158,20 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         canvasStartGame = Instantiate(PrefabBank.CanvasStartGame);
         canvasStartGame.GetComponent<Canvas>().worldCamera = Camera.main;
         Transform canvasStartGamePanel = canvasStartGame.transform.Find("Panel");
+
+        //находим закрытый ящик 
+        Transform CloseGiftTransform = canvasStartGame.transform.Find("ImageCloseGiftBox");
+        if (LevelMenu.Instance.LastLoadLevel.HasNotIssuedGift())
+        {
+            //показываем его
+            CloseGiftTransform.GetComponent<Animation>().Play();
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Closed_chest);
+        }
+        else
+        {
+            Destroy(CloseGiftTransform.gameObject);
+        }        
+
         //смещение по x
         RectTransform rectTransformTarget = targets[0].GameObject.transform.GetComponent<RectTransform>();
         float scale = rectTransformTarget.rect.width / rectTransformTarget.rect.size.x * 2.5f * 1.5f;

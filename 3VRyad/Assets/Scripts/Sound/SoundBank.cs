@@ -54,6 +54,7 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Dirt_create, soundFolder, "Dirt_create"));
             soundsList.Add(new SoundResurse(SoundsEnum.Dirt_destroy, soundFolder, "Dirt_destroy"));
             soundsList.Add(new SoundResurse(SoundsEnum.Dirt_swelling, soundFolder, "Dirt_swelling"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Closed_chest, soundFolder, "closed_chest"));
         }
     }
 

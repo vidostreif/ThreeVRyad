@@ -195,6 +195,31 @@ public class Level
         return new LevelPassedResult(score, plusScore, stars, plusStars, plusCoins, new GiftOptions(GiftScript.Instance.Gift, displayBox, boxOpen));
     }
 
+    //есть невыданный подарок
+    public bool HasNotIssuedGift() {
+
+        if (!giftIssued)
+        {
+            //если есть бандл инструментов
+            if (GiftScript.Instance.Gift.Bundel.Length > 0)
+            {
+                return true;
+            }
+            else if (GiftScript.Instance.Gift.Coins > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void GetButtonFrom(GameObject elementGameObject)
     {
         //добавляем действие к кнопке

@@ -209,6 +209,7 @@ public enum SoundsEnum
     Dirt_create,
     Dirt_destroy,
     Dirt_swelling,
+    Closed_chest,
 
 }//тип звуков
 
