@@ -50,13 +50,20 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
     // Update is called once per frame
     void FixedUpdate()
-    { 
+    {
         if (addScore > 50)
         {
             int i = addScore / 15;
             //double add = Math.Round((double)i / 5, MidpointRounding.AwayFromZero) * 5;
             score += i;
             addScore -= i;
+            UpdateText();
+            UpdateLineAndStars();
+        }
+        else if (addScore > 10)
+        {
+            score += 3;
+            addScore -= 3;
             UpdateText();
             UpdateLineAndStars();
         }
@@ -128,7 +135,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
     {
         imagePanelImage.fillAmount = (float)score / (float)scoreFor3Star;
         //показываем звезды
-        if (score > scoreFor1Star && !imageStar1shown)
+        if (score >= scoreFor1Star && !imageStar1shown)
         {
             //создать эффект взрыва отображения звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
@@ -138,7 +145,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
             imageStar1shown = true;
         }
 
-        if (score > scoreFor2Star && !imageStar2shown)
+        if (score >= scoreFor2Star && !imageStar2shown)
         {
             //создать эффект взрыва отображения звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
@@ -148,7 +155,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
             imageStar2shown = true;
         }
 
-        if (score > scoreFor3Star && !imageStar3shown)
+        if (score >= scoreFor3Star && !imageStar3shown)
         {
             //создать эффект взрыва отображения звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);

@@ -87,7 +87,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //проверяем что наш массив элементов инициорван
         if (elementsPriorityList == null || elementsPriorityList.Count == 0)
         {
-            Debug.LogError("Не указано какие элементы будем создавать на поле!");
+            Debug.Log("Не указано какие элементы будем создавать на поле!");
             return;
         }
         //если не заданы приоритеты, то берем стандартные
@@ -487,6 +487,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
                 else
                 {
+                    yield return new WaitForSeconds(1.2f);
                     Time.timeScale = 1;
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, true));
                 }
@@ -509,6 +510,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //если не конец игры, но ходов не осталось  и супер бонус не активен то рисуем проигрыш
                 if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove.found)
                 {
+                    yield return new WaitForSeconds(1f);
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove.found));
                     blockedForMove = false;
                     yield break;
