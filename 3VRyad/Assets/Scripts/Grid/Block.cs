@@ -361,6 +361,10 @@ public class Block : MonoBehaviour {
                 behindElement.Hit();
             }
         }
+        else if (behindElement != null && !behindElement.Destroyed)
+        {
+            behindElement.Hit();
+        }
     }
 
 }
