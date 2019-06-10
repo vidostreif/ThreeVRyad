@@ -144,7 +144,7 @@ public class MainGameSceneScript : MonoBehaviour {
             new Firebase.Analytics.Parameter(
               Firebase.Analytics.FirebaseAnalytics.ParameterLevel, LevelMenu.Instance.lastLoadFolder + "" + LevelMenu.Instance.LastLoadLevel.xmlDocument.name),
             new Firebase.Analytics.Parameter(
-              Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore())
+              Firebase.Analytics.FirebaseAnalytics.ParameterScore, Score.Instance.getScore)
           }
         );
 
@@ -174,7 +174,7 @@ public class MainGameSceneScript : MonoBehaviour {
             psGO2.transform.position = new Vector3(4, -5, 0);
             //Выдаем звезды
             int stars = Score.Instance.NumberOfStarsReceived();
-            LevelPassedResult levelPassedResult = LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore());
+            LevelPassedResult levelPassedResult = LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore);
 
             //показываем звезды
             StartCoroutine(EndGameAnimationStars(PanelMenu, levelPassedResult));

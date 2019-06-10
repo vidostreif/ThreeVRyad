@@ -77,9 +77,9 @@
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
   <Score>
-    <scoreForFirstStar>3500</scoreForFirstStar>
+    <scoreForFirstStar>4000</scoreForFirstStar>
     <scoreForSecondStar>4500</scoreForSecondStar>
-    <scoreForThirdStar>5400</scoreForThirdStar>
+    <scoreForThirdStar>5300</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>12000</maxBonusPower>

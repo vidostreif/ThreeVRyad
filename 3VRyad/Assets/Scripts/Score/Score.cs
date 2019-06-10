@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class Score : MonoBehaviour, IESaveAndLoad
 {
     public static Score Instance; // Синглтон
-    
+
     private int score;
     private int addScore;
     private Text text;
@@ -26,11 +26,9 @@ public class Score : MonoBehaviour, IESaveAndLoad
     private Image imageStar3;
     private bool imageStar3shown;
 
+    public int getScore { get => score + addScore; }
 
-    public int getScore()
-    {
-            return score + addScore;
-    }
+
 
     void Awake()
     {
@@ -174,15 +172,15 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
     //количество полученных звезд
     public int NumberOfStarsReceived() {
-        if (score + addScore >= scoreFor3Star)
+        if (getScore >= scoreFor3Star)
         {
             return 3;
         }
-        else if (score + addScore >= scoreFor2Star)
+        else if (getScore >= scoreFor2Star)
         {
             return 2;
         }
-        else if (score + addScore >= scoreFor1Star)
+        else if (getScore >= scoreFor1Star)
         {
             return 1;
         }
