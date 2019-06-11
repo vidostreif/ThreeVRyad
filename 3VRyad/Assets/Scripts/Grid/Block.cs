@@ -240,17 +240,17 @@ public class Block : MonoBehaviour {
             else if (typeElementsEnum == ElementsTypeEnum.BigFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementBigFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 1200);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 1500);
             }
             else if (typeElementsEnum == ElementsTypeEnum.MediumFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementMediumFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 600);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 1000);
             }
             else if (typeElementsEnum == ElementsTypeEnum.SmallFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementSmallFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 300);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 500);
             }
             else if (typeElementsEnum == ElementsTypeEnum.SeedBarrel)
             {
@@ -261,7 +261,7 @@ public class Block : MonoBehaviour {
             else if (typeElementsEnum == ElementsTypeEnum.Drop)
             {
                 curElement = elementGameObject.AddComponent<Element>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, false, HitTypeEnum.Empty, 1200);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, false, HitTypeEnum.Empty, 600);
                 curElement.MakeDrop();
             }
             else
@@ -320,12 +320,12 @@ public class Block : MonoBehaviour {
             if (typeElementsEnum == BehindElementsTypeEnum.Grass)
             {
                 curElement = elementGameObject.AddComponent<BehindElement>();
-                curElement.InitialSettings(typeElementsEnum, false, 1, 100);
+                curElement.InitialSettings(typeElementsEnum, false, 1, 200);
             }
             else if(typeElementsEnum == BehindElementsTypeEnum.Dirt)
             {
                 curElement = elementGameObject.AddComponent<DirtBehindElement>();
-                curElement.InitialSettings(typeElementsEnum, false, 1, 100);
+                curElement.InitialSettings(typeElementsEnum, false, 1, 300);
                 curElement.MakeActionAfterMove(0, true);
                 if (ParticleSystemManager.Instance != null)
                 {

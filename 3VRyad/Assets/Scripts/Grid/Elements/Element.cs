@@ -219,7 +219,7 @@ public class Element : BaseElement
             if (typeBlockingElementsEnum == BlockingElementsTypeEnum.Liana)
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
-                curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 100);
+                curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 200);
                 lockedForMove = true;                
             }
             else if(typeBlockingElementsEnum == BlockingElementsTypeEnum.Spread)

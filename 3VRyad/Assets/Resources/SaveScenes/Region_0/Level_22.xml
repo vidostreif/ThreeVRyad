@@ -133,7 +133,7 @@
     <moves>30</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Grass" goal="76" collectEverything="true" />
+      <shapeAndGoal shape="Grass" goal="72" collectEverything="true" />
     </targets>
   </Tasks>
   <InstrumentPanel>

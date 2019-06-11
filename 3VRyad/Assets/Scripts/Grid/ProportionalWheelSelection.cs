@@ -39,4 +39,36 @@ public class ProportionalWheelSelection
         }
         return null; 
     }
+
+    public static ElementsPriority SelectStandartElement(List<ElementsPriority> elementsShapeAndPriority)
+    {
+        // Суммируем все приоритеты
+        int poolSize = 0;
+        for (int i = 0; i < elementsShapeAndPriority.Count; i++)
+        {
+            //берем только те элементы, которые можно создавать
+            if (elementsShapeAndPriority[i].elementsType == ElementsTypeEnum.StandardElement && elementsShapeAndPriority[i].limitOnAmountCreated > 0 && elementsShapeAndPriority[i].maxAmountOnField > ElementsList.GetAmountOfThisShapeElemets(elementsShapeAndPriority[i].ElementsShape))
+            {
+                //складываем все приоритеты
+                poolSize += elementsShapeAndPriority[i].priority;
+            }
+        }
+
+        // Get a random integer from 0 to PoolSize.
+        int randomNumber = UnityEngine.Random.Range(0, poolSize) + 1;
+
+        // Определяем элемент
+        int accumulatedProbability = 0;
+        for (int i = 0; i < elementsShapeAndPriority.Count; i++)
+        {
+            //берем только те элементы, которые можно создавать
+            if (elementsShapeAndPriority[i].elementsType == ElementsTypeEnum.StandardElement && elementsShapeAndPriority[i].limitOnAmountCreated > 0 && elementsShapeAndPriority[i].maxAmountOnField > ElementsList.GetAmountOfThisShapeElemets(elementsShapeAndPriority[i].ElementsShape))
+            {
+                accumulatedProbability += elementsShapeAndPriority[i].priority;
+                if (randomNumber <= accumulatedProbability)
+                    return elementsShapeAndPriority[i];
+            }
+        }
+        return null;
+    }
 }

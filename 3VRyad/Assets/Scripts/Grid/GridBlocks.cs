@@ -18,7 +18,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public static GridBlocks Instance; // Синглтон
     public float blockSize = 1;
     public Transform thisTransform;
-      
+
     public List<ElementsPriority> elementsPriorityList;
 
     public Blocks[] containers;
@@ -33,7 +33,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     private List<Block> droppingBlockList = new List<Block>();// список сбрасывающих блоков
     private bool needFilling;
     //private bool nextMoveExists;//проверка, что остались доступные ходы
-    
+
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
     //public bool NextMoveExists { get => nextMoveExists; }
 
@@ -58,7 +58,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (containers[x].block[y] != null)
                 {
                     containers[x].block[y].PositionInGrid = new Position(x, y);
-                }                
+                }
             }
         }
     }
@@ -75,7 +75,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //стартовое заполнение сетки и параметров
-    public void StartFilling(List<ElementsPriority> elementsSAndP = null, bool replaceExisting = false)
+    public void StartFilling(List<ElementsPriority> elementsSAndP = null)
     {
         //ElementsList.ClearElementsOnField();
         //проверяем что заполнены все GameObject
@@ -90,11 +90,34 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             Debug.Log("Не указано какие элементы будем создавать на поле!");
             return;
         }
-        //если не заданы приоритеты, то берем стандартные
+        //если не заданы приоритеты, то берем стандартные, но только стандартные элементы
         if (elementsSAndP == null)
         {
             elementsSAndP = elementsPriorityList;
+            //elementsSAndP = new List<ElementsPriority>();
+            //foreach (ElementsPriority elementsPriorityItem in elementsPriorityList)
+            //{
+            //    if (elementsPriorityItem.elementsType == ElementsTypeEnum.StandardElement)
+            //    {
+            //        elementsSAndP.Add(elementsPriorityItem);
+            //    }
+            //}
         }
+
+        ////предварительно удаляем из массива приоритетов все не стандартные элементы
+        //List<ElementsPriority> ElementsPriorityDeleteList = new List<ElementsPriority>();
+        //foreach (ElementsPriority elementsPriorityItem in elementsSAndP)
+        //{
+        //    if (elementsPriorityItem.elementsType != ElementsTypeEnum.StandardElement)
+        //    {
+        //        ElementsPriorityDeleteList.Add(elementsPriorityItem);
+        //    }
+        //}
+        ////удаляем
+        //foreach (ElementsPriority elementsPriorityItem in ElementsPriorityDeleteList)
+        //{
+        //    elementsSAndP.Remove(elementsPriorityItem);
+        //}
 
         //заполнение сетки блоками и элементами [X, Y] [столбец, строка]
         for (int x = 0; x < containers.GetLength(0); x++)
@@ -107,26 +130,27 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     droppingBlockList.Add(containers[x].block[y]);
                 }
 
-                //определяем нужно ли обрабатывать блок
-                bool process;
-                if (replaceExisting && BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]) && !containers[x].block[y].Blocked)//если обрабатываем только блоки со стандартными элементами
-                {
-                    process = true;
-                    containers[x].block[y].Element = null;
-                }
-                else if (!replaceExisting && BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y]))//если обрабатываем все блоки и этот блок без элемента
-                {
-                    process = true;
-                }
-                else
-                {
-                    process = false;
-                }
+                ////определяем нужно ли обрабатывать блок
+                //bool process;
+                //if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]) && !containers[x].block[y].Blocked)//если обрабатываем только блоки со стандартными элементами
+                //{
+                //    process = true;
+                //    containers[x].block[y].Element = null;
+                //}
+                //else if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y]))//если обрабатываем все блоки и этот блок без элемента
+                //{
+                //    process = true;
+                //}
+                //else
+                //{
+                //    process = false;
+                //}
 
-                if (process)
-                {                
+                if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y]))
+                {
                     bool elementfound = false;
                     ElementsPriority elementsPriority = null;
+
                     //повторяем цикл пока не найдем нужный элемент но не более 10 раз
                     int iteration = 10;
                     do
@@ -134,48 +158,95 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         iteration--;
                         //выбираем случайное число для выбора типа элемента из списка
                         //int random = UnityEngine.Random.Range(0, elementsShapeAndPriority.Count);
-                        elementsPriority = ProportionalWheelSelection.SelectElement(elementsSAndP);
+                        elementsPriority = ProportionalWheelSelection.SelectStandartElement(elementsSAndP);
 
                         if (elementsPriority == null)
                         {
                             Debug.Log("Не нашли элемент для заполнения!");
                             return;
                         }
-                        //если требуется, проверяем соседние элементы
-                        if (!replaceExisting)
+
+                        //проверяем элементы слева и снизу, что бы небыло 3 одинаковых элемента подряд                        
+                        //по горизонтали проверяем со второго элемента
+                        if (x > 0)
                         {
-                            //проверяем элементы слева и снизу, что бы небыло 3 одинаковых элемента подряд
-                            //по горизонтали проверяем со второго элемента
-                            if (x > 0)
+                            //проверяем что блоки существуют
+                            if (containers[x - 1].block[y] != null)
                             {
-                                //проверяем что блоки существуют
-                                if (containers[x - 1].block[y] != null)
+                                //проверяем что в блоках есть элементы
+                                if (containers[x - 1].block[y].Element != null)
                                 {
-                                    //проверяем что в блоках есть элементы
-                                    if (containers[x - 1].block[y].Element != null)
-                                    {
-                                        //если текущий элемент совпадает с елементом слева повторяем цикл
-                                        if (elementsPriority != null && elementsPriority.ElementsShape == containers[x - 1].block[y].Element.Shape)
-                                            continue;
-                                    }
+                                    //если текущий элемент совпадает с елементом слева повторяем цикл
+                                    if (elementsPriority != null && elementsPriority.ElementsShape == containers[x - 1].block[y].Element.Shape)
+                                        continue;
                                 }
                             }
-                            //по вертикали проверяем со второго элемента
-                            if (y > 0)
+                        }
+                        //по вертикали проверяем со второго элемента
+                        if (y > 0)
+                        {
+                            //проверяем что блоки существуют
+                            if (containers[x].block[y - 1] != null)
                             {
-                                //проверяем что блоки существуют
-                                if (containers[x].block[y - 1] != null)
+                                //проверяем что в блоках есть элементы
+                                if (containers[x].block[y - 1].Element != null)
                                 {
-                                    //проверяем что в блоках есть элементы
-                                    if (containers[x].block[y - 1].Element != null)
-                                    {
-                                        //если текущий элемент совпадает с елементом слева повторяем цикл
-                                        if (elementsPriority != null && elementsPriority.ElementsShape == containers[x].block[y - 1].Element.Shape)
-                                            continue;
-                                    }
+                                    //если текущий элемент совпадает с елементом слева повторяем цикл
+                                    if (elementsPriority != null && elementsPriority.ElementsShape == containers[x].block[y - 1].Element.Shape)
+                                        continue;
                                 }
                             }
-                        }                        
+                        }
+
+                        ////проверяем что мы не создаем линию из 3 элементов одного вида
+                        //if (x < containers.GetLength(0) - 1 && BlockCheck.ThisBlockWithStandartElement(containers[x + 1].block[y]) && BlockCheck.ThisBlockWithStandartElement(containers[x + 2].block[y]))
+                        //{
+                        //    if (elementsPriority.ElementsShape == containers[x + 1].block[y].Element.Shape && elementsPriority.ElementsShape == containers[x + 2].block[y].Element.Shape)
+                        //    {
+                        //        continue;
+                        //    }
+                        //}
+
+                        //if (x > 1 && BlockCheck.ThisBlockWithStandartElement(containers[x - 1].block[y]) && BlockCheck.ThisBlockWithStandartElement(containers[x - 2].block[y]))
+                        //{
+                        //    if (elementsPriority.ElementsShape == containers[x - 1].block[y].Element.Shape && elementsPriority.ElementsShape == containers[x - 2].block[y].Element.Shape)
+                        //    {
+                        //        continue;
+                        //    }
+                        //}
+
+                        //if (x > 0 && x < containers.GetLength(0) - 1 && BlockCheck.ThisBlockWithStandartElement(containers[x - 1].block[y]) && BlockCheck.ThisBlockWithStandartElement(containers[x + 1].block[y]))
+                        //{
+                        //    if (elementsPriority.ElementsShape == containers[x - 1].block[y].Element.Shape && elementsPriority.ElementsShape == containers[x + 1].block[y].Element.Shape)
+                        //    {
+                        //        continue;
+                        //    }
+                        //}
+
+                        //if (y < containers[x].block.GetLength(0) - 1 && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y + 1]) && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y + 2]))
+                        //{
+                        //    if (elementsPriority.ElementsShape == containers[x].block[y + 1].Element.Shape && elementsPriority.ElementsShape == containers[x].block[y + 2].Element.Shape)
+                        //    {
+                        //        continue;
+                        //    }
+                        //}
+
+                        //if (y > 1 && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y - 1]) && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y - 2]))
+                        //{
+                        //    if (elementsPriority.ElementsShape == containers[x].block[y - 1].Element.Shape && elementsPriority.ElementsShape == containers[x].block[y - 2].Element.Shape)
+                        //    {
+                        //        continue;
+                        //    }
+                        //}
+
+                        //if (y > 0 && y < containers[x].block.GetLength(0) - 1 && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y - 1]) && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y + 1]))
+                        //{
+                        //    if (elementsPriority.ElementsShape == containers[x].block[y - 1].Element.Shape && elementsPriority.ElementsShape == containers[x].block[y + 1].Element.Shape)
+                        //    {
+                        //        continue;
+                        //    }
+                        //}
+
                         //если нашли нужный элемент, то заканчиваем цикл
                         //elementShape = elementsShapeAndPriority[random].elementsShape;
                         elementfound = true;
@@ -257,7 +328,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             {
                 //удаляем подсказку
                 bool gameHelpWasDell = HelpToPlayer.DellGameHelp();
-                
+
                 Blocks blocks = elementsForMoveList[0];
                 touchingBlock = blocks.block[0];
                 destinationBlock = blocks.block[1];
@@ -289,7 +360,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             Time.timeScale += 0.05f;
                             //Debug.Log("Time.timeScale " + Time.timeScale);
                         }
-                    }                    
+                    }
 
                     int CountElementsForMove = elementsForMoveList.Count;
                     if (blockFieldsList.Count > 0)
@@ -308,16 +379,16 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
                                 {
-                                    Debug.Log("Прерывание хода.");
+                                    //Debug.Log("Прерывание хода.");
                                     break;
                                 }
-                                    
+
                             }
 
                             //прерывание в случае вмешательства игрока
                             if (CountElementsForMove < elementsForMoveList.Count)
                             {
-                                Debug.Log("Прерывание хода.");
+                                //Debug.Log("Прерывание хода.");
                                 break;
                             }
 
@@ -331,7 +402,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
                                 {
-                                    Debug.Log("Прерывание хода.");
+                                    //Debug.Log("Прерывание хода.");
                                     break;
                                 }
                                 iteration++;
@@ -339,7 +410,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
                                 {
-                                    Debug.Log("Прерывание хода.");
+                                    //Debug.Log("Прерывание хода.");
                                     break;
                                 }
                             }
@@ -363,13 +434,14 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             blockedForMove = false;
                             yield break;
                         }
-                    }                     
+                    }
 
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFieldsList);
 
                     //ударяем по найденным блокам
-                    foreach (Block blockField in blockFieldsList) { 
+                    foreach (Block blockField in blockFieldsList)
+                    {
                         //сбрасывающий блок со сбрасываемым элементом
                         if (BlockCheck.ThisBlockDropingWithDropElement(blockField))
                         {
@@ -378,7 +450,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         else
                         {
                             blockField.Hit();
-                        }                        
+                        }
                     }
 
                     if (iteration == 1)
@@ -404,7 +476,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             ExchangeElements(touchingBlock, destinationBlock);
                         }
                     }
-                    
+
                     //создаем бонусы
                     if (iteration == 1 && matchFound && (touchingBlock != null || destinationBlock != null))
                     {
@@ -413,7 +485,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                         foreach (List<Block> item in findedBlockInLine)
                             Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
-                        yield return new WaitForSeconds(0.07f);                        
+                        yield return new WaitForSeconds(0.07f);
                     }
                     else if (matchFound)
                     {
@@ -427,16 +499,16 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         //прерывание в случае вмешательства игрока
                         if (CountElementsForMove < elementsForMoveList.Count)
                         {
-                            Debug.Log("Прерывание хода.");
+                            //Debug.Log("Прерывание хода.");
                             break;
                         }
-                        yield return new WaitForSeconds(0.1f);                        
+                        yield return new WaitForSeconds(0.1f);
                     }
 
                     blockFieldsList.Clear();
                     elementsForMoveList.Remove(blocks);
                     yield return StartCoroutine(Filling(true, iteration));
-                                                      
+
 
                     //если есть элементы в очереди на движение
                     if (elementsForMoveList.Count > 0)
@@ -472,7 +544,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //если закончились ходы игрока и ходы всей игры
             if (elementsForMoveList.Count == 0 && Tasks.Instance.endGame)
             {
-                
+
                 //если собрали все задачи и активируем все бонусы
                 if (Tasks.Instance.collectedAll && Bonuses.Instance.ActivateBonusOnEnd())
                 {
@@ -480,7 +552,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     Debug.Log("Активируем все бонусы на поле!");
                 }
                 //если собрали все задачи и активируем супер бонус в конце уровня
-                else if(Tasks.Instance.collectedAll && SuperBonus.Instance.ActivateSuperBonusOnEnd())
+                else if (Tasks.Instance.collectedAll && SuperBonus.Instance.ActivateSuperBonusOnEnd())
                 {
                     //blockedForMove = false;
                     Debug.Log("Активируем супер бонус!");
@@ -493,11 +565,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
                 blockedForMove = false;
                 yield break;
-            }                       
+            }
 
             //если не конец игры, создаем подсказку
             if (!Tasks.Instance.endGame && !SuperBonus.Instance.InWork())
-            {                
+            {
                 //проверка, что остались доступные ходы
                 FoundNextMove foundNextMove = FoundNextMove();
 
@@ -510,7 +582,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //если не конец игры, но ходов не осталось  и супер бонус не активен то рисуем проигрыш
                 if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove.found)
                 {
-                    yield return new WaitForSeconds(1f);
+                    yield return new WaitForSeconds(0.2f);
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove.found));
                     blockedForMove = false;
                     yield break;
@@ -532,13 +604,14 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 blockedForMove = false;
                 Move();
             }
-            
+
         }
         blockedForMove = false;
     }
 
     //действия элементов после хода
-    private void PerformActionElementsAfterMove() {
+    private void PerformActionElementsAfterMove()
+    {
 
         //предварительно собераем все элементы которые выполняют действие
 
@@ -570,9 +643,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     {
 
         BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
-            //перемешиваем найденные элементы
-            SupportFunctions.MixArray(findeObjects);
-                
+                                                                                              //перемешиваем найденные элементы
+        SupportFunctions.MixArray(findeObjects);
+
 
         foreach (BaseElement item in findeObjects)
         {
@@ -586,7 +659,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //проверяет нахождение блока в массивах для обработки
-    public bool BlockInProcessing(Block inBlock) {
+    public bool BlockInProcessing(Block inBlock)
+    {
         //если заблокирован
         if (inBlock != null && inBlock.Blocked)
         {
@@ -641,7 +715,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 if (neighboringBlocks.Left.Element.Shape == neighboringBlocks.Right.Element.Shape
                                 && neighboringBlocks.Right.Element.Shape == containers[x].block[y].Element.Shape)
                                 {
-                                
+
                                     //предварительно проверяем, что блоков нет в списке
                                     if (!blockFieldsToRemoveElement.Contains(neighboringBlocks.Left))
                                         blockFieldsToRemoveElement.Add(neighboringBlocks.Left);
@@ -791,7 +865,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         return listBlocksInLine;
     }
 
-    public FoundNextMove FoundNextMove() {
+    public FoundNextMove FoundNextMove()
+    {
         //проверка, что остались доступные ходы
         MainAnimator.Instance.ClearElementsForNextMove();
 
@@ -814,7 +889,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
             mix = false;
             //проверяем доступные ходы
-            elementsForNextMoveList = CheckElementsForNextMove();            
+            elementsForNextMoveList = CheckElementsForNextMove();
 
             //Если нет доступных ходов и нет бонусов на поле, то перемешиваем поле
             if (elementsForNextMoveList.Count == 0)
@@ -829,16 +904,16 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 {
                     //if (!needFilling)
                     //{
-                        //перемешиваем поле
-                        if (numberOfShuffles > 0)
-                        {
-                            numberOfShuffles--;
-                            mix = true;
+                    //перемешиваем поле
+                    if (numberOfShuffles > 0)
+                    {
+                        numberOfShuffles--;
+                        mix = true;
                         foundNextMove.mix = true;
-                            MixStandartElements();
-                            //yield return StartCoroutine(Filling(false));
-                        }
-                        
+                        MixStandartElements();
+                        //yield return StartCoroutine(Filling(false));
+                    }
+
                     //}else 
                     ////если еще требуется заполнение                    
                     //{
@@ -966,7 +1041,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 {
                                     //ищем элемент для смещения
                                     if (ElementsMatch(block, containers[x].block[y]) && block.Element != elementsForNextMove.elementsList.Last() && !block.Element.LockedForMove)
-                                    {                                       
+                                    {
                                         elementsForNextMove.elementsList.Add(block.Element);
                                         elementsForNextMove.elementForMove = block.Element;
                                         elementsForNextMove.blockElementForMove = block;
@@ -997,12 +1072,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     if (item != null)
                                     {
                                         DirectionEnum direction = neighboringBlocks.GetDirection(item);
-                                        bool elementFound = false;                                        
+                                        bool elementFound = false;
                                         int iteration = 1;
                                         Block blockOnDirection = item;
                                         //делаем по два прохода, смещаясь каждый раз на один блок
                                         do
-                                        {                                            
+                                        {
                                             if (BlockCheck.ThisBlockWithElementCreateLine(blockOnDirection) && blockOnDirection.Element.Shape == elementsForNextMove.elementForMove.Shape)
                                             {
                                                 //если этого элемента нет в массиве, то добавляем
@@ -1037,7 +1112,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                                         {
                                                             elementAndBlockForMove = true;
                                                             elementsForNextMoveFound = true;
-                                                        }                                                        
+                                                        }
                                                     }
 
                                                     //если и в первом и во втором противоположных блоках такой же элемент 
@@ -1047,7 +1122,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                                         //и позади нашего блока нет такого же элемента, то помечаем как блок и элемент для смещения
                                                         if (!ElementsMatch(Block2, elementsForNextMove.blockElementForMove))
                                                         {
-                                                            elementAndBlockForMove = true;                                                            
+                                                            elementAndBlockForMove = true;
                                                         }
                                                     }
 
@@ -1087,16 +1162,16 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     Block opBlock2 = GetNeighboringBlocks(blockForDell.PositionInGrid).GetBlock(elementsForNextMove.directionForMove);
                                     if (BlockCheck.ThisBlockWithElement(opBlock2) && opBlock2.Element.Shape == elementsForNextMove.elementForMove.Shape)
                                     {
-                                        
+
                                     }
                                     else if (blockForDell.Element != null)
                                     {
                                         elementsForNextMove.elementsList.Remove(blockForDell.Element);
                                     }
-                                }                                
+                                }
                             }
 
-                            ElementsForNextMoveList.Add(elementsForNextMove);                            
+                            ElementsForNextMoveList.Add(elementsForNextMove);
                             elementsForNextMove = new ElementsForNextMove();
                             //break;
                         }
@@ -1153,39 +1228,39 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
         //ищем максимальное вхождение элемента
         foreach (ElementsPriority item in sortedlistPriority)
-        {            
+        {
             //bool found = false;
             //foreach (ElementsPriority listPriorityItem in listPriority)
             //{
             //    if (listPriorityItem == item)
             //    {
-                    //ищем нет ли такого элемента в заданиях
-                    bool foundOnTarget = false;
-                    foreach (Target targetItem in Tasks.Instance.targets)
+            //ищем нет ли такого элемента в заданиях
+            bool foundOnTarget = false;
+            foreach (Target targetItem in Tasks.Instance.targets)
+            {
+                if (targetItem.elementsShape == item.ElementsShape)
+                {
+                    foundOnTarget = true;
+                    break;
+                }
+            }
+            //если не нашли
+            if (!foundOnTarget)
+            {
+                foreach (Element elementItem in elementsForMixList)
+                {
+                    //заменяем вид элемента, для увеличения его количества
+                    if (elementItem.Shape != item.ElementsShape)
                     {
-                        if (targetItem.elementsShape == item.ElementsShape)
-                        {
-                            foundOnTarget = true;
-                            break;
-                        }
-                    }
-                    //если не нашли
-                    if (!foundOnTarget)
-                    {
-                        foreach (Element elementItem in elementsForMixList)
-                        {
-                            //заменяем вид элемента, для увеличения его количества
-                            if (elementItem.Shape != item.ElementsShape)
-                            {
-                                elementItem.Shape = item.ElementsShape;
-                                break;
-                            }
-                        }
-                        //listPriorityItem.priority++;
-                        //listPriorityItem.limitOnAmountCreated++;
-                        //found = true;
+                        elementItem.Shape = item.ElementsShape;
                         break;
                     }
+                }
+                //listPriorityItem.priority++;
+                //listPriorityItem.limitOnAmountCreated++;
+                //found = true;
+                break;
+            }
             //    }                
             //}
 
@@ -1229,7 +1304,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         return false;
     }
-    
+
     //возвращает блок на указанной позиции
     public Block GetBlock(Position position)
     {
@@ -1292,7 +1367,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         return null;
     }
-    
+
     //определяем соседние блоки
     public NeighboringBlocks GetNeighboringBlocks(Position position)
     {
@@ -1483,7 +1558,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     if (containers[x].block[y].BehindElement.Shape == allShapeEnum)
                     {
                         blocks.Add(containers[x].block[y]);
-                    }                    
+                    }
                 }
             }
         }
@@ -1626,7 +1701,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 needIteration = true;
                                 dropBlock = containers[x].block[y];
                                 continue;
-                            }                            
+                            }
                         }
                         //иначе, проверяем правый нижний блок по диагонали, при условии, что справа нет элементов в блоках
                         if ((x < containers.GetLength(0) - 1) && BlockCheck.ThisStandardBlockWithoutElement(containers[x + 1].block[y - 1]))
@@ -1679,7 +1754,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 else
                                 {
                                     containers[x + 1].block[y - 1].Element.speed = 0;
-                                }                                
+                                }
                                 needIteration = true;
                                 continue;
                             }
@@ -1753,7 +1828,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             needFilling = true;
         }
     }
-    
+
     //передаем данные о на стройках в xml формате
     public Type GetClassName()
     {
@@ -1857,7 +1932,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         this.transform.position = new Vector3(-blockSize * XSize * 0.5f + (blockSize * 0.5f), this.transform.position.y, this.transform.position.z);
 
         //удаляем все блоки
-        string blocksName = "Blocks";        
+        string blocksName = "Blocks";
         Transform blocksTransform = transform.Find(blocksName);
         if (blocksTransform != null)
         {
@@ -1867,8 +1942,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         GameObject blocks;
         blocks = new GameObject();
         blocks.name = blocksName;
-        blocks.transform.parent = transform;        
-        
+        blocks.transform.parent = transform;
+
         //восстанавливаем приоритеты
         foreach (XElement shapeAndPriority in gridXElement.Element("elementsShape").Elements("shapeAndPriority"))
         {
@@ -1897,13 +1972,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             elementAndParameters.name = elementAndParametersName;
             GameObject canvasGame = GameObject.Find("GameHelper");
             elementAndParameters.transform.SetParent(canvasGame.transform, false);
-            elementAndParameters.transform.localPosition = new Vector3(-canvasGame.GetComponent<RectTransform>().rect.width/2, canvasGame.GetComponent<RectTransform>().rect.height / 2);
+            elementAndParameters.transform.localPosition = new Vector3(-canvasGame.GetComponent<RectTransform>().rect.width / 2, canvasGame.GetComponent<RectTransform>().rect.height / 2);
 
             int i = 0;
             foreach (ElementsPriority item in elementsPriorityList)
             {
                 GameObject imageElementAndParameters = Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageElementAndParameters") as GameObject, elementAndParameters.transform);
-                imageElementAndParameters.transform.position = new Vector3(imageElementAndParameters.transform.position.x + i*3, imageElementAndParameters.transform.position.y, 0);
+                imageElementAndParameters.transform.position = new Vector3(imageElementAndParameters.transform.position.x + i * 3, imageElementAndParameters.transform.position.y, 0);
                 Image image = imageElementAndParameters.GetComponent(typeof(Image)) as Image;
                 image.sprite = SpriteBank.SetShape(item.ElementsShape);
                 Text Text = imageElementAndParameters.GetComponentInChildren<Text>();
@@ -1927,7 +2002,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             int posY = int.Parse(block.Attribute("posY").Value);
             bool generatorElements = bool.Parse(block.Attribute("generatorElements").Value);
             bool dropping = false;
-            try{dropping = bool.Parse(block.Attribute("dropping").Value);}catch (Exception){}                        
+            try { dropping = bool.Parse(block.Attribute("dropping").Value); } catch (Exception) { }
             BlockTypeEnum blockType = (BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), block.Attribute("blockType").Value);
             BehindElementsTypeEnum behindElementsType = (BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), block.Attribute("behindElementsType").Value);
             AllShapeEnum behindElementsShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), block.Attribute("behindElementsShape").Value);
@@ -1942,7 +2017,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             catch (Exception)
             {
             }
-                        
+
             BlockingElementsTypeEnum blockingElementType = (BlockingElementsTypeEnum)Enum.Parse(typeof(BlockingElementsTypeEnum), block.Attribute("blockingElementType").Value);
             AllShapeEnum blockingElementShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), block.Attribute("blockingElementShape").Value);
 
@@ -1983,7 +2058,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
             }
         }
-    }    
+    }
 
 #if UNITY_EDITOR
     //устанавливаем блок на определенную позицию в сетке
