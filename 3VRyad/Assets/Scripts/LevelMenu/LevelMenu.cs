@@ -553,14 +553,15 @@ public class LevelMenu : MonoBehaviour
         Transform LevelsCountTransform = panelLevels.transform.Find("Viewport/Content");
         int levelNumber = 1;
         bool previousLevelOpenAndPassed = false;//предыдущий лвл открыт и пройден
-        bool previousLevelOpenAndOptional = false;//предыдущий лвл открыт и является не обязательным
+        //bool previousLevelOpenAndOptional = false;//предыдущий лвл открыт и является не обязательным
         foreach (Level level in region.levelList)
         {
             GameObject levelGameObject = Instantiate(PrefabBank.LevelButtonPrefab, LevelsCountTransform);
             Transform textLevelTransform = levelGameObject.transform.Find("TextLevel");
             textLevelTransform.GetComponent<Text>().text = levelNumber.ToString();
             Text textLevel = textLevelTransform.GetComponent(typeof(Text)) as Text;
-              
+
+            bool levelOptional = false;
             if (!level.GiftIssued)
             {
                 TextAsset txt = level.xmlDocument as TextAsset;
@@ -574,10 +575,11 @@ public class LevelMenu : MonoBehaviour
                         {
                             destroyGiftBox = false;
                         }
-                        //if (bool.Parse(ListXElement.Element("optional").Value) && level.Open)
-                        //{
+                        if (bool.Parse(ListXElement.Element("optional").Value))
+                        {
+                            levelOptional = true;
                         //    SetOpenNextLevel(level);
-                        //}
+                        }
                         break;
                     }
                 }
@@ -622,12 +624,16 @@ public class LevelMenu : MonoBehaviour
                     Text textScore = textScoreTransform.GetComponent(typeof(Text)) as Text;
                     SupportFunctions.ChangeAlfa(textScore, 1);
                 }
+                else if (levelOptional)
+                {
+                    previousLevelOpenAndPassed = true;
+                }
                 else
                 {
                     previousLevelOpenAndPassed = false;
                 }                
             }
-            else if (previousLevelOpenAndPassed || previousLevelOpenAndOptional)
+            else if (previousLevelOpenAndPassed)
             {
                 SupportFunctions.ChangeAlfa(textLevel, 1);
                 //показываем темные звезды
