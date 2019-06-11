@@ -833,6 +833,14 @@ public static class HelpToPlayer
             //если количество элементов соответствует длине линни которую мы хотим показать
             if (item.elementsList.Count == count)
             {
+                //провряем, что бы все элементы были разблокированы
+                foreach (Element elementItem in item.elementsList)
+                {
+                    if (elementItem.BlockingElement != null && !elementItem.BlockingElement.Destroyed)
+                    {
+                        continue;
+                    }
+                }
                 elementsForNextMove = item;
                 break;
             }
@@ -926,7 +934,7 @@ public static class HelpToPlayer
                     foreach (Element element in curElementsForNextMove.elementsList)
                     {
                         //если элемент не для передвижения и не заблокирвоан
-                        if (element != curElementsForNextMove.elementForMove && element.BlockingElement == null)
+                        if (element != curElementsForNextMove.elementForMove && element.BlockingElement == null || (element.BlockingElement != null && element.BlockingElement.Destroyed))
                         {
                             foreach (Block NeighboringBlock in blocks.allBlockField)
                             {
@@ -987,7 +995,7 @@ public static class HelpToPlayer
                     foreach (Element element in curElementsForNextMove.elementsList)
                     {
                         //если элемент не для передвижения и не заблокирвоан
-                        if (element != curElementsForNextMove.elementForMove && element.BlockingElement == null)
+                        if (element != curElementsForNextMove.elementForMove && element.BlockingElement == null || (element.BlockingElement != null && element.BlockingElement.Destroyed))
                         {
                             foreach (Block NeighboringBlock in blocks.allBlockField)
                             {
@@ -1059,7 +1067,7 @@ public static class HelpToPlayer
             foreach (Element element in curElementsForNextMove.elementsList)
             {
                 //если элемент не для передвижения и имеет позади нужны элемент и не заблокирован
-                if (element != curElementsForNextMove.elementForMove && element.BlockingElement == null)
+                if (element != curElementsForNextMove.elementForMove && element.BlockingElement == null || (element.BlockingElement != null && element.BlockingElement.Destroyed))
                 {
                     Block block = GridBlocks.Instance.GetBlock(element.PositionInGrid);
                     if (block != null && block.BehindElement != null && !block.BehindElement.Destroyed && block.BehindElement.Type == elementsTypeEnum)
