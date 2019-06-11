@@ -1,11 +1,4 @@
 <root>
-  <LevelSettings>
-    <bundles>
-      <bundleShopV type="Shovel" count="2" />
-    </bundles>
-    <bundelCount>1</bundelCount>
-    <coins>0</coins>
-  </LevelSettings>
   <Bonuses>
     <bonusesList>
       <bonus shape="SmallFlask" type="SmallFlask" cost="4" />
@@ -102,6 +95,14 @@
   <HelpFromGnome>
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
+  <LevelSettings>
+    <bundles>
+      <bundleShopV type="Shovel" count="2" />
+    </bundles>
+    <bundelCount>1</bundelCount>
+    <coins>0</coins>
+    <optional>false</optional>
+  </LevelSettings>
   <Score>
     <scoreForFirstStar>24000</scoreForFirstStar>
     <scoreForSecondStar>36000</scoreForSecondStar>
@@ -116,7 +117,7 @@
     <moves>22</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Bush" goal="28" collectEverything="true" />
+      <shapeAndGoal shape="Bush" goal="30" collectEverything="true" />
     </targets>
   </Tasks>
   <InstrumentPanel>

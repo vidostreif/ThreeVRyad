@@ -1,9 +1,4 @@
 <root>
-  <LevelSettings>
-    <bundles />
-    <bundelCount>0</bundelCount>
-    <coins>0</coins>
-  </LevelSettings>
   <Bonuses>
     <bonusesList>
       <bonus shape="MediumFlask" type="MediumFlask" cost="30" />
@@ -80,6 +75,12 @@
   <HelpFromGnome>
     <helpEnum>Gnome</helpEnum>
   </HelpFromGnome>
+  <LevelSettings>
+    <bundles />
+    <bundelCount>0</bundelCount>
+    <coins>0</coins>
+    <optional>false</optional>
+  </LevelSettings>
   <Score>
     <scoreForFirstStar>3000</scoreForFirstStar>
     <scoreForSecondStar>5000</scoreForSecondStar>

@@ -1,12 +1,4 @@
 <root>
-  <GiftScript>
-    <bundles>
-      <bundleShopV type="Shovel" count="1" />
-      <bundleShopV type="Hoe" count="1" />
-    </bundles>
-    <bundelCount>2</bundelCount>
-    <coins>10</coins>
-  </GiftScript>
   <Bonuses>
     <bonusesList>
       <bonus shape="MediumFlask" type="MediumFlask" cost="30" />
@@ -83,9 +75,15 @@
   <HelpFromGnome>
     <helpEnum>Gnome</helpEnum>
   </HelpFromGnome>
+  <LevelSettings>
+    <bundles />
+    <bundelCount>0</bundelCount>
+    <coins>0</coins>
+    <optional>false</optional>
+  </LevelSettings>
   <Score>
-    <scoreForFirstStar>5000</scoreForFirstStar>
-    <scoreForSecondStar>6000</scoreForSecondStar>
+    <scoreForFirstStar>3000</scoreForFirstStar>
+    <scoreForSecondStar>5000</scoreForSecondStar>
     <scoreForThirdStar>7000</scoreForThirdStar>
   </Score>
   <SuperBonus>
@@ -94,7 +92,7 @@
     <allow>false</allow>
   </SuperBonus>
   <Tasks>
-    <moves>15</moves>
+    <moves>17</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="Orange" goal="25" collectEverything="false" />

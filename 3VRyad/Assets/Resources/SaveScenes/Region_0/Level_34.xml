@@ -1,13 +1,4 @@
 <root>
-  <LevelSettings>
-    <bundles>
-      <bundleShopV type="Shovel" count="1" />
-      <bundleShopV type="Hoe" count="1" />
-      <bundleShopV type="Repainting" count="1" />
-    </bundles>
-    <bundelCount>3</bundelCount>
-    <coins>0</coins>
-  </LevelSettings>
   <Bonuses>
     <bonusesList />
   </Bonuses>
@@ -76,6 +67,16 @@
   <HelpFromGnome>
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
+  <LevelSettings>
+    <bundles>
+      <bundleShopV type="Shovel" count="1" />
+      <bundleShopV type="Hoe" count="1" />
+      <bundleShopV type="Repainting" count="1" />
+    </bundles>
+    <bundelCount>3</bundelCount>
+    <coins>0</coins>
+    <optional>true</optional>
+  </LevelSettings>
   <Score>
     <scoreForFirstStar>4000</scoreForFirstStar>
     <scoreForSecondStar>4500</scoreForSecondStar>

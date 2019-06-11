@@ -203,7 +203,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         targetsParent = new GameObject();
         targetsParent.transform.SetParent(transform, false);
         targetsParent.name = targetsName;
-        targetsParent.transform.localPosition = new Vector3(-32, -32, targetsParent.transform.localPosition.z);
+        targetsParent.transform.localPosition = new Vector3(-32, -22, targetsParent.transform.localPosition.z);
     }
 
     public void MovingTasksToMainPanel()
@@ -217,7 +217,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             //перемещаем на основную панель
             //смещение по y
             RectTransform rectTransformTarget = targets[0].GameObject.transform.GetComponent<RectTransform>();
-            float scale = rectTransformTarget.rect.height / rectTransformTarget.rect.size.y * 1.5f;
+            float scale = rectTransformTarget.rect.height / rectTransformTarget.rect.size.y * 1.3f;
             float startingYPoint = targetsParent.transform.position.y - ((scale) * (targets.Length - 1)) * 0.5f;
 
             for (int i = 0; i < targets.Length; i++)

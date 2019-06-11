@@ -54,8 +54,8 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
         }
         XElement.Add(bundlesXElement);
 
-        ////добавляем размер массива, что бы глубоко не искать
-        //XElement.Add(new XElement("bundelCount", Gift.Bundel.Length));
+        //добавляем размер массива, что бы глубоко не искать
+        XElement.Add(new XElement("bundelCount", Gift.Bundel.Length));
         //добавляем количество монет
         XElement.Add(new XElement("coins", Gift.Coins));
         XElement.Add(new XElement("optional", optional));//пометка, что уровень не обязательный
@@ -66,7 +66,7 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
     public void RecoverFromXElement(XElement XElement)
     {
         int Coins = int.Parse(XElement.Element("coins").Value);
-        try {optional = bool.Parse(XElement.Element("optional").Value);} catch (Exception){throw;}
+        try {optional = bool.Parse(XElement.Element("optional").Value);} catch (Exception){}
 
         //временны массив
         List<BundleShopV> bundleShopV = new List<BundleShopV>();

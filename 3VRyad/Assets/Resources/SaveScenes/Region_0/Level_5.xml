@@ -1,11 +1,4 @@
 <root>
-  <LevelSettings>
-    <bundles>
-      <bundleShopV type="Hoe" count="2" />
-    </bundles>
-    <bundelCount>1</bundelCount>
-    <coins>0</coins>
-  </LevelSettings>
   <Bonuses>
     <bonusesList>
       <bonus shape="SmallFlask" type="SmallFlask" cost="4" />
@@ -125,6 +118,14 @@
   <HelpFromGnome>
     <helpEnum>Score</helpEnum>
   </HelpFromGnome>
+  <LevelSettings>
+    <bundles>
+      <bundleShopV type="Hoe" count="2" />
+    </bundles>
+    <bundelCount>1</bundelCount>
+    <coins>0</coins>
+    <optional>false</optional>
+  </LevelSettings>
   <Score>
     <scoreForFirstStar>20000</scoreForFirstStar>
     <scoreForSecondStar>30000</scoreForSecondStar>
