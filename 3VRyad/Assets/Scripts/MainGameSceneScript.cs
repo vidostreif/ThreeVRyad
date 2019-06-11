@@ -213,7 +213,7 @@ public class MainGameSceneScript : MonoBehaviour {
             else
             {
                 //если еще не добавляли ходов
-                if (!Tasks.Instance.addMovesOnEndGAme)
+                if (!Tasks.Instance.addMovesOnEndGAme && !LevelSettings.Instance.Optional)
                 {
                     textEndGame.text = "У вас закончились ходы! Добавим за просмотр видео?";
                     //создаем кнопку видео на месте загрузки следующего уровня    
@@ -223,6 +223,10 @@ public class MainGameSceneScript : MonoBehaviour {
                 else
                 {
                     textEndGame.text = "У вас закончились ходы!";
+                    if (!LevelMenu.Instance.NextLevelIsOpen())
+                    {
+                        Destroy(gONextLevelButton.gameObject);
+                    }
                 }              
             }
             
