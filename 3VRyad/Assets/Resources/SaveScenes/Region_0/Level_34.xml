@@ -1,5 +1,5 @@
 <root>
-  <GiftScript>
+  <LevelSettings>
     <bundles>
       <bundleShopV type="Shovel" count="1" />
       <bundleShopV type="Hoe" count="1" />
@@ -7,7 +7,7 @@
     </bundles>
     <bundelCount>3</bundelCount>
     <coins>0</coins>
-  </GiftScript>
+  </LevelSettings>
   <Bonuses>
     <bonusesList />
   </Bonuses>

@@ -1,9 +1,9 @@
 <root>
-  <GiftScript>
+  <LevelSettings>
     <bundles />
     <bundelCount>0</bundelCount>
     <coins>0</coins>
-  </GiftScript>
+  </LevelSettings>
   <Bonuses>
     <bonusesList>
       <bonus shape="SmallFlask" type="SmallFlask" cost="4" />
@@ -17,7 +17,7 @@
     <YSize>9</YSize>
     <elementsShape>
       <shapeAndPriority shape="Apple" type="StandardElement" priority="10" maxAmountOnField="30" limitOnAmountCreated="2147483647" />
-      <shapeAndPriority shape="Strawberry" type="StandardElement" priority="8" maxAmountOnField="18" limitOnAmountCreated="14" />
+      <shapeAndPriority shape="Strawberry" type="StandardElement" priority="8" maxAmountOnField="15" limitOnAmountCreated="14" />
       <shapeAndPriority shape="Plum" type="StandardElement" priority="10" maxAmountOnField="30" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Mushroom" type="StandardElement" priority="10" maxAmountOnField="30" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Orange" type="StandardElement" priority="7" maxAmountOnField="18" limitOnAmountCreated="2147483647" />

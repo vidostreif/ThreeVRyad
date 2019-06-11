@@ -149,9 +149,9 @@ public class Level
             bool result = true;
 
             //если есть бандл инструментов
-            if (GiftScript.Instance.Gift.Bundel.Length > 0)
+            if (LevelSettings.Instance.Gift.Bundel.Length > 0)
             {
-                result = ThingsManager.Instance.addinstruments(GiftScript.Instance.Gift.Bundel);
+                result = ThingsManager.Instance.addinstruments(LevelSettings.Instance.Gift.Bundel);
                 //if (result)
                 //{
                 //    gift.Bundel = GiftScript.Instance.Gift.Bundel;
@@ -159,9 +159,9 @@ public class Level
             }
 
             //если небыло никаких ошибок и есть монеты - добавляем монеты
-            if (result && GiftScript.Instance.Gift.Coins > 0)
+            if (result && LevelSettings.Instance.Gift.Coins > 0)
             {
-                result = Shop.Instance.AddGiftCoins(this, GiftScript.Instance.Gift.Coins);
+                result = Shop.Instance.AddGiftCoins(this, LevelSettings.Instance.Gift.Coins);
                 //if (result)
                 //{
                 //    gift.Coins += GiftScript.Instance.Gift.Coins;
@@ -179,7 +179,7 @@ public class Level
         else if (!giftIssued)
         {
             //если подарок не выдан, но есть что выдать
-            if (GiftScript.Instance.Gift.Bundel.Length > 0 || GiftScript.Instance.Gift.Coins > 0)
+            if (LevelSettings.Instance.Gift.Bundel.Length > 0 || LevelSettings.Instance.Gift.Coins > 0)
             {
                 displayBox = true;
             }
@@ -192,7 +192,7 @@ public class Level
             this.score = score;
         }
 
-        return new LevelPassedResult(score, plusScore, stars, plusStars, plusCoins, new GiftOptions(GiftScript.Instance.Gift, displayBox, boxOpen));
+        return new LevelPassedResult(score, plusScore, stars, plusStars, plusCoins, new GiftOptions(LevelSettings.Instance.Gift, displayBox, boxOpen));
     }
 
     //есть невыданный подарок
@@ -201,11 +201,11 @@ public class Level
         if (!giftIssued)
         {
             //если есть бандл инструментов
-            if (GiftScript.Instance.Gift.Bundel.Length > 0)
+            if (LevelSettings.Instance.Gift.Bundel.Length > 0)
             {
                 return true;
             }
-            else if (GiftScript.Instance.Gift.Coins > 0)
+            else if (LevelSettings.Instance.Gift.Coins > 0)
             {
                 return true;
             }

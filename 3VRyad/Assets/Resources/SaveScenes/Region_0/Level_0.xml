@@ -1,9 +1,9 @@
 <root>
-  <GiftScript>
+  <LevelSettings>
     <bundles />
     <bundelCount>0</bundelCount>
     <coins>0</coins>
-  </GiftScript>
+  </LevelSettings>
   <Bonuses>
     <bonusesList>
       <bonus shape="MediumFlask" type="MediumFlask" cost="30" />

@@ -5,12 +5,14 @@ using System.Xml.Linq;
 using UnityEngine;
 
 //подарок на уровне
-public class GiftScript : MonoBehaviour, IESaveAndLoad
-{
-    public static GiftScript Instance; // Синглтон
+public class LevelSettings : MonoBehaviour, IESaveAndLoad { 
+
+    public static LevelSettings Instance; // Синглтон
     [SerializeField] private Gift gift;
+    [SerializeField] private bool optional;//пометка, что уровень не обязательный
 
     public Gift Gift { get => gift; }
+    public bool Optional { get => optional; }
 
     void Awake()
     {
@@ -46,10 +48,11 @@ public class GiftScript : MonoBehaviour, IESaveAndLoad
         }
         XElement.Add(bundlesXElement);
 
-        //добавляем размер массива, что бы глубоко не искать
-        XElement.Add(new XElement("bundelCount", Gift.Bundel.Length));
+        ////добавляем размер массива, что бы глубоко не искать
+        //XElement.Add(new XElement("bundelCount", Gift.Bundel.Length));
         //добавляем количество монет
         XElement.Add(new XElement("coins", Gift.Coins));
+        XElement.Add(new XElement("optional", optional));//пометка, что уровень не обязательный
 
         return XElement;
     }
@@ -57,6 +60,7 @@ public class GiftScript : MonoBehaviour, IESaveAndLoad
     public void RecoverFromXElement(XElement XElement)
     {
         int Coins = int.Parse(XElement.Element("coins").Value);
+        try {optional = bool.Parse(XElement.Element("optional").Value);} catch (Exception){throw;}
 
         //временны массив
         List<BundleShopV> bundleShopV = new List<BundleShopV>();
@@ -71,6 +75,7 @@ public class GiftScript : MonoBehaviour, IESaveAndLoad
 
         //восстанавливаем значения
         gift = new Gift(bundleShopV.ToArray(), Coins);
+        
     }
 }
 

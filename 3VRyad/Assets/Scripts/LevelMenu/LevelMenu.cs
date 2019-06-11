@@ -496,7 +496,11 @@ public class LevelMenu : MonoBehaviour
         //async.allowSceneActivation = true;
     }
 
-    public void CreateLevelMenu(Region region)
+    public void CreateLevelMenu(Region region) {
+        StartCoroutine(CurCreateLevelMenu(region));
+    }
+
+    public IEnumerator CurCreateLevelMenu(Region region)
     {
         if (panelRegions != null)
         {
@@ -514,14 +518,7 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelSettings);
         }
-        panelLevels = Instantiate(PrefabBank.LevelsCanvasPrefab, transform);
-
-        //настройки кнопки назад
-        Transform returnButtonTransform = panelLevels.transform.Find("ReturnButton");
-        //добавляем действие к кнопке
-        Button returnButton = returnButtonTransform.GetComponent(typeof(Button)) as Button;
-        returnButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
-        returnButton.onClick.AddListener(delegate { CreateRegionMenu(); });
+        panelLevels = Instantiate(PrefabBank.LevelsCanvasPrefab, transform);              
 
         //список уровней
         Transform LevelsCountTransform = panelLevels.transform.Find("Viewport/Content");
@@ -563,11 +560,9 @@ public class LevelMenu : MonoBehaviour
                 //удаляем сундук
                 Destroy(levelGameObject.transform.Find("ImageGiftBox").gameObject);
             }
+
+            //!!! конец теста             
             
-            //!!! конец теста 
-
-
-
             //если лвл открыт то показываем, если предыдущий лвл был открыт, а наш нет, то тоже показываем
             if (level.Open)
             {                
@@ -620,7 +615,17 @@ public class LevelMenu : MonoBehaviour
             }
             level.GetButtonFrom(levelGameObject);
             levelNumber++;
+
+            yield return new WaitForEndOfFrame();
+            
         }
+
+        //настройки кнопки назад
+        Transform returnButtonTransform = panelLevels.transform.Find("ReturnButton");
+        //добавляем действие к кнопке
+        Button returnButton = returnButtonTransform.GetComponent(typeof(Button)) as Button;
+        returnButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
+        returnButton.onClick.AddListener(delegate { CreateRegionMenu(); });
     }
 
     public void CreateRegionMenu()
