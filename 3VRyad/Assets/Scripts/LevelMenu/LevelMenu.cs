@@ -424,7 +424,7 @@ public class LevelMenu : MonoBehaviour
         return false;
     }
 
-    private void SetOpenNextLevel()
+    public void SetOpenNextLevel()
     {
         if (lastLoadLevel != null)
         {
@@ -440,6 +440,35 @@ public class LevelMenu : MonoBehaviour
                         return;
                     }
                     if (regionsList[i].levelList[j] == lastLoadLevel)
+                    {
+                        found = true;
+                        //если последний уровень в регионе
+                        if ((j + 1) == regionsList[i].levelList.Count)
+                        {
+                            JsonSaveAndLoad.RecordSave(regionsList[i].levelList, i);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void SetOpenNextLevel(Level level)
+    {
+        if (level != null)
+        {
+            bool found = false;
+            for (int i = 0; i < regionsList.Count; i++)
+            {
+                for (int j = 0; j < regionsList[i].levelList.Count; j++)
+                {
+                    if (found)
+                    {
+                        regionsList[i].levelList[j].SetLevelOpend();
+                        JsonSaveAndLoad.RecordSave(regionsList[i].levelList, i);
+                        return;
+                    }
+                    if (regionsList[i].levelList[j] == level)
                     {
                         found = true;
                         //если последний уровень в регионе
@@ -524,14 +553,14 @@ public class LevelMenu : MonoBehaviour
         Transform LevelsCountTransform = panelLevels.transform.Find("Viewport/Content");
         int levelNumber = 1;
         bool previousLevelOpenAndPassed = false;//предыдущий лвл открыт и пройден
+        bool previousLevelOpenAndOptional = false;//предыдущий лвл открыт и является не обязательным
         foreach (Level level in region.levelList)
         {
             GameObject levelGameObject = Instantiate(PrefabBank.LevelButtonPrefab, LevelsCountTransform);
             Transform textLevelTransform = levelGameObject.transform.Find("TextLevel");
             textLevelTransform.GetComponent<Text>().text = levelNumber.ToString();
             Text textLevel = textLevelTransform.GetComponent(typeof(Text)) as Text;
-            
-            //!!!Тест запихнуть в отдельную куротину, что бы данные загружались в фоне?      
+              
             if (!level.GiftIssued)
             {
                 TextAsset txt = level.xmlDocument as TextAsset;
@@ -539,12 +568,16 @@ public class LevelMenu : MonoBehaviour
                 bool destroyGiftBox = true;
                 foreach (XElement ListXElement in root.Elements())
                 {
-                    if (ListXElement.Name.ToString() == "GiftScript")
+                    if (ListXElement.Name.ToString() == "LevelSettings")
                     {
                         if (int.Parse(ListXElement.Element("coins").Value) > 0 || int.Parse(ListXElement.Element("bundelCount").Value) > 0)
                         {
                             destroyGiftBox = false;
                         }
+                        //if (bool.Parse(ListXElement.Element("optional").Value) && level.Open)
+                        //{
+                        //    SetOpenNextLevel(level);
+                        //}
                         break;
                     }
                 }
@@ -559,9 +592,7 @@ public class LevelMenu : MonoBehaviour
             {
                 //удаляем сундук
                 Destroy(levelGameObject.transform.Find("ImageGiftBox").gameObject);
-            }
-
-            //!!! конец теста             
+            }           
             
             //если лвл открыт то показываем, если предыдущий лвл был открыт, а наш нет, то тоже показываем
             if (level.Open)
@@ -596,7 +627,7 @@ public class LevelMenu : MonoBehaviour
                     previousLevelOpenAndPassed = false;
                 }                
             }
-            else if (previousLevelOpenAndPassed)
+            else if (previousLevelOpenAndPassed || previousLevelOpenAndOptional)
             {
                 SupportFunctions.ChangeAlfa(textLevel, 1);
                 //показываем темные звезды
@@ -616,8 +647,8 @@ public class LevelMenu : MonoBehaviour
             level.GetButtonFrom(levelGameObject);
             levelNumber++;
 
-            yield return new WaitForEndOfFrame();
-            
+            //ожидаем прогрузки кадра
+            yield return new WaitForEndOfFrame();            
         }
 
         //настройки кнопки назад

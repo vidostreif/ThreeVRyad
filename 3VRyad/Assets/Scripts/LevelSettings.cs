@@ -11,6 +11,7 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
     [SerializeField] private Gift gift;
     [SerializeField] private bool optional;//пометка, что уровень не обязательный
 
+
     public Gift Gift { get => gift; }
     public bool Optional { get => optional; }
 
@@ -27,6 +28,11 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
         }
         //gift = new Gift();
     }
+
+    //public void Prepare()
+    //{
+
+    //}
 
     //сохранение и заргрузка
     public Type GetClassName()
@@ -74,8 +80,7 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
         }
 
         //восстанавливаем значения
-        gift = new Gift(bundleShopV.ToArray(), Coins);
-        
+        gift = new Gift(bundleShopV.ToArray(), Coins);        
     }
 }
 

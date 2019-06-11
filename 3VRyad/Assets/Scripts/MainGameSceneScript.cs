@@ -160,6 +160,7 @@ public class MainGameSceneScript : MonoBehaviour {
             }
             );
         }
+                
 
         //запускаем куротину для постепенного отображения элементов
         //если выполнили все задания
@@ -194,10 +195,20 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
+            //если лвл опциональный, то открываем следующий лвл
+            if (LevelSettings.Instance.Optional)
+            {
+                LevelMenu.Instance.SetOpenNextLevel();
+            }
+
             //поражение
             if (!nextMoveExists)//если не смогли найти следующий ход
             {
                 textEndGame.text = "Это тупик!";
+                if (!LevelMenu.Instance.NextLevelIsOpen())
+                {
+                    Destroy(gONextLevelButton.gameObject);
+                }
             }
             else
             {
