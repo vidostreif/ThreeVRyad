@@ -41,6 +41,7 @@ public static class PrefabBank
     ////элементы
     private static GameObject textCollectElement = Resources.Load(prefabFolder + "TextCollectElement") as GameObject;
     private static GameObject collectElement = Resources.Load(prefabFolder + "CollectElement") as GameObject;
+    private static GameObject blockBacklight = Resources.Load(prefabFolder + "BlockBacklight") as GameObject;
 
     public static GameObject LevelsCanvasPrefab { get => levelsCanvasPrefab;}
     public static GameObject RegionsCanvasPrefab { get => regionsCanvasPrefab;}
@@ -64,6 +65,7 @@ public static class PrefabBank
     public static GameObject CollectElement { get => collectElement; }
     public static GameObject PrefabVideoBrowseButton { get => prefabVideoBrowseButton; }
     public static GameObject PanelShopReceivingCoins { get => panelShopReceivingCoins; }
+    public static GameObject BlockBacklight { get => blockBacklight; }
 
     //private void LoadAllPrefab() {
     //    levelsCanvasPrefab = Resources.Load(prefabFolder + "Arrow") as GameObject;

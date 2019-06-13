@@ -43,11 +43,17 @@ public class ElementSmallFlask : Element
         //Position gridPosition = this.PositionInGrid;
         //Определяем блоки вокруг
         Block[] aroundBlocks = GridBlocks.Instance.GetBlocksForHit(position, ExplosionRadius);
+        GameObject blockBacklightGo = Instantiate(PrefabBank.BlockBacklight, thisTransform.position, Quaternion.identity, thisTransform);
+        Destroy(blockBacklightGo, 1f);
 
         for (int i = 0; i < aroundBlocks.Length; i++)
         {
-            if (aroundBlocks[i] != null)
+            if (aroundBlocks[i] != null) {
+                blockBacklightGo = Instantiate(PrefabBank.BlockBacklight, aroundBlocks[i].thisTransform.position, Quaternion.identity, aroundBlocks[i].thisTransform);
+                Destroy(blockBacklightGo, 1f);
                 aroundBlocks[i].Hit(hitTypeEnum, this.shape);
+            }
+                
         }
     }    
 
