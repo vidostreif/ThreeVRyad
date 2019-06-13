@@ -142,11 +142,10 @@ public class BaseElement : MonoBehaviour
     {
         AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
         animatorElement.PlayCreatureAnimation();
-        //if (actionAfterMove && singleItemActivated)
-        //{
-        //    FoundNextActionAfterMove();
-        //}
-        UpdateSprite();
+        if (!Application.isPlaying)
+        {
+            UpdateSprite();
+        }        
     }
 
     //делаем элемент активным после хода

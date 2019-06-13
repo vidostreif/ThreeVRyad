@@ -254,7 +254,7 @@ public static class HelpToPlayer
                 {
                     created = CreateLianaHelp((BlockingElementsTypeEnum)Enum.Parse(typeof(BlockingElementsTypeEnum), activeHint.help));
                 }
-                else if (activeHint.help == BehindElementsTypeEnum.Grass.ToString())
+                else if (activeHint.help == BehindElementsTypeEnum.Grass.ToString() || activeHint.help == BehindElementsTypeEnum.Dirt.ToString())
                 {
                     created = CreateGrassHelp((BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), activeHint.help));
                 }
@@ -295,6 +295,14 @@ public static class HelpToPlayer
                 else if (activeHint.help == HelpEnum.Shop.ToString())
                 {
                     created = InterfaceHelp("ButtonOpenShop");
+                }
+                else if (activeHint.help == HelpEnum.Gift.ToString())
+                {
+                    created = InterfaceHelp("Gnome");
+                }
+                else if (activeHint.help == HelpEnum.OptionalLvl.ToString())
+                {
+                    created = InterfaceHelp("Gnome");
                 }
                 else if (activeHint.help == HelpEnum.Hoe.ToString())
                 {
@@ -589,9 +597,21 @@ public static class HelpToPlayer
             {
                 text.text = "Этот сорняк позади элемент можно уничтьжить собрав комбинацию из элементов или можно просто взорвать!";
             }
+            else if (activeHint.help == BehindElementsTypeEnum.Dirt.ToString())
+            {
+                text.text = "Уничтож эту грязь! Потемневшая грязь каждый ход распространяеется на соседнюю клетку с элементом!";
+            }
             else if (activeHint.help == HelpEnum.Gnome.ToString())
             {
                 text.text = "Привет! Я твой помошник и буду всячески тебе помогать!";
+            }
+            else if (activeHint.help == HelpEnum.Gift.ToString())
+            {
+                text.text = "Набери три звезды при прохождении этого уровня и получишь подарок!";
+            }
+            else if (activeHint.help == HelpEnum.OptionalLvl.ToString())
+            {
+                text.text = "Это необязательный для прохождения уровень! Если не знаешь как его пройти, переходи к следующему!";
             }
             else if (activeHint.help == HelpEnum.Tasks.ToString())
             {

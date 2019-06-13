@@ -164,6 +164,9 @@ public enum HelpEnum
     Line4,//линия из 4 элементов
     Line5,
     Line6,
+    Gift,
+    OptionalLvl,
+
 
 }//тип сглаженного перемещения
 
