@@ -90,7 +90,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             Debug.Log("Не указано какие элементы будем создавать на поле!");
             return;
         }
-        //если не заданы приоритеты, то берем стандартные, но только стандартные элементы
+        //если не заданы приоритеты, то берем стандартные
         if (elementsSAndP == null)
         {
             elementsSAndP = elementsPriorityList;
@@ -156,8 +156,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     do
                     {
                         iteration--;
-                        //выбираем случайное число для выбора типа элемента из списка
-                        //int random = UnityEngine.Random.Range(0, elementsShapeAndPriority.Count);
+                        //выбираем стандартный элемент из списка приоритетов
                         elementsPriority = ProportionalWheelSelection.SelectStandartElement(elementsSAndP);
 
                         if (elementsPriority == null)

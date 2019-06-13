@@ -204,10 +204,10 @@ public class BaseElement : MonoBehaviour
         return false;
     }
 
-    //удар элементу
-    public virtual void Hit()
-    {
-    }
+    ////удар элементу
+    //public virtual void Hit()
+    //{
+    //}
 
     public virtual void Hit(HitTypeEnum hitType, AllShapeEnum hitElementShape)
     { }

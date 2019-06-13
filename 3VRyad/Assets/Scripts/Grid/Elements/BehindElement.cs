@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -30,19 +31,28 @@ public class BehindElement : BaseElement
         this.immortal = immortal;
         this.life = life;
         this.score = score;
-        //UpdateSpriteAlfa();
+        DopSettings();
     }
 
-    public override void Hit()
+    protected virtual void DopSettings()
     {
-        //если не неразрушаемый
-        if (!destroyed && !this.immortal)
+        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
+    }
+
+    public override void Hit(HitTypeEnum hitType = HitTypeEnum.StandartHit, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
+    {
+        if (vulnerabilityTypeEnum.Contains(hitType))
         {
-            life--;
-        }
-        if (life <= 0)
-        {
-            base.DestroyElement();
+            //если не неразрушаемый
+            if (!this.immortal)
+            {
+                life--;
+            }
+            //если елемент убили, то возвращаем null
+            if (life <= 0)
+            {
+                base.DestroyElement();
+            }
         }
     }
 
