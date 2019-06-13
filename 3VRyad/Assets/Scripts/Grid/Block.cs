@@ -9,10 +9,12 @@ public class Block : MonoBehaviour {
     public Transform thisTransform;
     [SerializeField] protected BlockTypeEnum type;
     [SerializeField] protected Element element;// элемент
-    [SerializeField] protected GameObject arrowUp;// стрекла сверху
-    [SerializeField] protected GameObject arrowDown;// стрелка снизу
-    [SerializeField] protected BehindElement behindElement;// элемент на блоке за основным элементом
+    [SerializeField] protected GameObject arrowUpGO;// стрекла сверху
+    [SerializeField] protected GameObject arrowDownGO;// стрелка снизу
+    [SerializeField] protected BehindElement behindElement;// элемент на блоке за основным элементом    
     [SerializeField] protected bool generatorElements; //признак, что блок генерирует новые элементы
+    [SerializeField] protected bool dontFillOnStart;//не заполнять при старте игры
+    [SerializeField] protected GameObject crossBanGO;// крест запрета заполнения на старте
     [SerializeField] protected SpriteRenderer spriteRenderer;
     [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected bool dropping;//сбрасывающий блок
@@ -48,10 +50,10 @@ public class Block : MonoBehaviour {
                 if (type != BlockTypeEnum.Empty)
                 {
                     generatorElements = value;
-                    if (arrowUp == null)
+                    if (arrowUpGO == null)
                     {
-                        arrowUp = Instantiate(Resources.Load("Prefabs/Arrow") as GameObject, new Vector3(thisTransform.position.x, thisTransform.position.y + 0.6f, thisTransform.position.z), Quaternion.identity);
-                        arrowUp.transform.SetParent(thisTransform, true);
+                        arrowUpGO = Instantiate(Resources.Load("Prefabs/Arrow") as GameObject, new Vector3(thisTransform.position.x, thisTransform.position.y + 0.6f, thisTransform.position.z), Quaternion.identity);
+                        arrowUpGO.transform.SetParent(thisTransform, true);
                     }
                     
                 }
@@ -63,7 +65,7 @@ public class Block : MonoBehaviour {
             else
             {
                 generatorElements = value;
-                DestroyImmediate(arrowUp);
+                DestroyImmediate(arrowUpGO);
             }
             
         }
@@ -158,15 +160,15 @@ public class Block : MonoBehaviour {
             dropping = value;
             if (value == true)
             {
-                if (arrowDown == null)
+                if (arrowDownGO == null)
                 {
-                    arrowDown = Instantiate(Resources.Load("Prefabs/Arrow") as GameObject, new Vector3(thisTransform.position.x, thisTransform.position.y - 0.6f, thisTransform.position.z), Quaternion.identity);
-                    arrowDown.transform.SetParent(thisTransform, true);
+                    arrowDownGO = Instantiate(Resources.Load("Prefabs/Arrow") as GameObject, new Vector3(thisTransform.position.x, thisTransform.position.y - 0.6f, thisTransform.position.z), Quaternion.identity);
+                    arrowDownGO.transform.SetParent(thisTransform, true);
                 }
             }
             else
             {
-                DestroyImmediate(arrowDown);
+                DestroyImmediate(arrowDownGO);
             }
         }
     }
@@ -180,6 +182,35 @@ public class Block : MonoBehaviour {
         set
         {
             blocked = value;
+        }
+    }
+    public bool DontFillOnStart
+    {
+        get
+        {
+            return dontFillOnStart;
+        }
+
+        set
+        {
+            dontFillOnStart = value;
+            //если ставим запрет, то создаем кресст внутри блока
+            if (!Application.isPlaying)
+            {
+                if (dontFillOnStart && crossBanGO == null)
+                {
+                    crossBanGO = Instantiate(Resources.Load("Prefabs/CrossBan") as GameObject, thisTransform.position, Quaternion.identity);
+                    crossBanGO.transform.SetParent(thisTransform, true);
+                }
+                else if(!dontFillOnStart)
+                {
+                    DestroyImmediate(crossBanGO);
+                }                
+            }
+            else
+            {
+                Destroy(crossBanGO);
+            }
         }
     }
 

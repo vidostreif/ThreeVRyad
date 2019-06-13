@@ -138,8 +138,6 @@ public class BaseElement : MonoBehaviour
     public bool SingleItemActivated { get => singleItemActivated; }
     public int NextProcessedMoveForAction { get => nextProcessedMoveForAction; set => nextProcessedMoveForAction = value; }
 
-    //public bool PreliminarySearchToActivate { get => preliminarySearchToActivate; }
-
     public void Start()
     {
         AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
@@ -148,6 +146,7 @@ public class BaseElement : MonoBehaviour
         //{
         //    FoundNextActionAfterMove();
         //}
+        UpdateSprite();
     }
 
     //делаем элемент активным после хода
@@ -282,30 +281,7 @@ public class BaseElement : MonoBehaviour
 
     protected virtual void UpdateSprite(int option = 0)
     {
-        //if (actionAfterMove)
-        //{
-        //    spriteRenderer.sprite = SpriteBank.SetShape(shape, actionDelay - timerActionDelay);
-        //}
-        //else
-        //{
-        //if (option == 0)
-        //{
-        //    spriteRenderer.sprite = SpriteBank.SetShape(shape);
-        //}
-        //else
-        //{
-            spriteRenderer.sprite = SpriteBank.SetShape(shape, option);
-        //}
-            
-        //}
-        
-        //if (startingActionDelay != 0)
-        //{
-        //    //изменяем альфу спрайта
-        //    float dActionDelay = actionDelay;
-        //    float dStartingActionDelay = startingActionDelay;
-        //    SupportFunctions.ChangeAlfa(spriteRenderer, 1 - (dActionDelay / (dStartingActionDelay + 1)));
-        //}
+        spriteRenderer.sprite = SpriteBank.SetShape(shape, option);
     }
 
 }

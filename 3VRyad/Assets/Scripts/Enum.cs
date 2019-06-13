@@ -134,6 +134,7 @@ public enum DirectionEnum
 
 public enum BorderEnum
 {
+    Empty,
     Line,
     InAngle,
     OutAngle

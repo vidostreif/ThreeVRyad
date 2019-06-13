@@ -94,30 +94,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         if (elementsSAndP == null)
         {
             elementsSAndP = elementsPriorityList;
-            //elementsSAndP = new List<ElementsPriority>();
-            //foreach (ElementsPriority elementsPriorityItem in elementsPriorityList)
-            //{
-            //    if (elementsPriorityItem.elementsType == ElementsTypeEnum.StandardElement)
-            //    {
-            //        elementsSAndP.Add(elementsPriorityItem);
-            //    }
-            //}
         }
-
-        ////предварительно удаляем из массива приоритетов все не стандартные элементы
-        //List<ElementsPriority> ElementsPriorityDeleteList = new List<ElementsPriority>();
-        //foreach (ElementsPriority elementsPriorityItem in elementsSAndP)
-        //{
-        //    if (elementsPriorityItem.elementsType != ElementsTypeEnum.StandardElement)
-        //    {
-        //        ElementsPriorityDeleteList.Add(elementsPriorityItem);
-        //    }
-        //}
-        ////удаляем
-        //foreach (ElementsPriority elementsPriorityItem in ElementsPriorityDeleteList)
-        //{
-        //    elementsSAndP.Remove(elementsPriorityItem);
-        //}
 
         //заполнение сетки блоками и элементами [X, Y] [столбец, строка]
         for (int x = 0; x < containers.GetLength(0); x++)
@@ -130,23 +107,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     droppingBlockList.Add(containers[x].block[y]);
                 }
 
-                ////определяем нужно ли обрабатывать блок
-                //bool process;
-                //if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(containers[x].block[y]) && !containers[x].block[y].Blocked)//если обрабатываем только блоки со стандартными элементами
-                //{
-                //    process = true;
-                //    containers[x].block[y].Element = null;
-                //}
-                //else if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y]))//если обрабатываем все блоки и этот блок без элемента
-                //{
-                //    process = true;
-                //}
-                //else
-                //{
-                //    process = false;
-                //}
-
-                if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y]))
+                if (BlockCheck.ThisStandardBlockWithoutElement(containers[x].block[y]) && !containers[x].block[y].DontFillOnStart)
                 {
                     bool elementfound = false;
                     ElementsPriority elementsPriority = null;
@@ -1872,6 +1833,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     XAttribute posY = new XAttribute("posY", y);
                     XAttribute blockType = new XAttribute("blockType", containers[x].block[y].Type);
                     XAttribute generatorElements = new XAttribute("generatorElements", containers[x].block[y].GeneratorElements);
+                    XAttribute dontFillOnStart = new XAttribute("dontFillOnStart", containers[x].block[y].DontFillOnStart);
                     XAttribute dropping = new XAttribute("dropping", containers[x].block[y].Dropping);
                     XAttribute behindElementsType = new XAttribute("behindElementsType", BehindElementsTypeEnum.Empty);
                     XAttribute behindElementsShape = new XAttribute("behindElementsShape", BehindElementsShapeEnum.Empty);
@@ -1903,7 +1865,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                     }
 
-                    XElement blockXElement = new XElement("block", posX, posY, blockType, generatorElements, dropping, behindElementsType, behindElementsShape, elementType, elementShape, dopShape, blockingElementType, blockingElementShape);
+                    XElement blockXElement = new XElement("block", posX, posY, blockType, generatorElements, dontFillOnStart, dropping, behindElementsType, behindElementsShape, elementType, elementShape, dopShape, blockingElementType, blockingElementShape);
                     blocksXElement.Add(blockXElement);
                 }
             }
@@ -2000,6 +1962,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             int posX = int.Parse(block.Attribute("posX").Value);
             int posY = int.Parse(block.Attribute("posY").Value);
             bool generatorElements = bool.Parse(block.Attribute("generatorElements").Value);
+            bool dontFillOnStart = false;
+            try { dontFillOnStart = bool.Parse(block.Attribute("dontFillOnStart").Value); } catch (Exception) { }
             bool dropping = false;
             try { dropping = bool.Parse(block.Attribute("dropping").Value); } catch (Exception) { }
             BlockTypeEnum blockType = (BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), block.Attribute("blockType").Value);
@@ -2031,6 +1995,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                 Block blockField = blockGameObject.GetComponent<Block>();
                 blockField.GeneratorElements = generatorElements;
+                blockField.DontFillOnStart = dontFillOnStart;
                 blockField.Dropping = dropping;
                 blockField.Type = blockType;
                 blockField.PositionInGrid = new Position(posX, posY);
