@@ -13,7 +13,7 @@ public class LevelMenu : MonoBehaviour
     [SerializeField] public List<Region> regionsList;
 
     private Level lastLoadLevel;
-    //private Region lastLoadRegion;
+    private Region lastLoadRegion;
     public string lastLoadXmlDocument;
     public string lastLoadFolder;
     public bool levelSaved = false;//левел в начале загрузки сохранен
@@ -57,7 +57,7 @@ public class LevelMenu : MonoBehaviour
                 if (lastLoadLevel == null && lastLoadXmlDocument != null && lastLoadFolder != null)
                 {
                     lastLoadLevel = FoundLevel(lastLoadXmlDocument, lastLoadFolder);
-                    //lastLoadRegion = FoundLevelInRegions(lastLoadLevel);
+                    lastLoadRegion = FoundLevelInRegions(lastLoadLevel);
                 }
             }
         }
@@ -181,13 +181,8 @@ public class LevelMenu : MonoBehaviour
         //Debug.Log("Stop parse " + Time.fixedTime);
     }
 
-    public Level LastLoadLevel
-    {
-        get
-        {
-            return lastLoadLevel;
-        }
-    }
+    public Level LastLoadLevel { get => lastLoadLevel; }
+    public Region LastLoadRegion { get => lastLoadRegion; }
 
     private Region FoundLevelInRegions(Level inLevel)
     {
@@ -235,7 +230,7 @@ public class LevelMenu : MonoBehaviour
                 {
                     SaveAndLoadScene.Instance().LoadXml(inLevel.xmlDocument.name, "Region_" + i);
                     lastLoadLevel = inLevel;
-                    //lastLoadRegion = regionsList[i];
+                    lastLoadRegion = regionsList[i];
                     lastLoadXmlDocument = inLevel.xmlDocument.name;
                     lastLoadFolder = "Region_" + i;
 #if UNITY_EDITOR
@@ -547,7 +542,7 @@ public class LevelMenu : MonoBehaviour
         else
         {
             lastLoadLevel = inLevel;
-            //lastLoadRegion = FoundLevelInRegions(lastLoadLevel);
+            lastLoadRegion = FoundLevelInRegions(lastLoadLevel);
             Destroy(panelRegions);
             Destroy(panelLevels);
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("SampleScene");
