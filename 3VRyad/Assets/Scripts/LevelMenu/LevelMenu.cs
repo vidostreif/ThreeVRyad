@@ -13,6 +13,7 @@ public class LevelMenu : MonoBehaviour
     [SerializeField] public List<Region> regionsList;
 
     private Level lastLoadLevel;
+    //private Region lastLoadRegion;
     public string lastLoadXmlDocument;
     public string lastLoadFolder;
     public bool levelSaved = false;//левел в начале загрузки сохранен
@@ -56,6 +57,7 @@ public class LevelMenu : MonoBehaviour
                 if (lastLoadLevel == null && lastLoadXmlDocument != null && lastLoadFolder != null)
                 {
                     lastLoadLevel = FoundLevel(lastLoadXmlDocument, lastLoadFolder);
+                    //lastLoadRegion = FoundLevelInRegions(lastLoadLevel);
                 }
             }
         }
@@ -136,7 +138,7 @@ public class LevelMenu : MonoBehaviour
     }
 
     private void CreateRegionsListFromFiles() {
-        this.regionsList = new List<Region>();
+        //this.regionsList = new List<Region>();
         UnityEngine.Object xmlDocument = null;
         Level level = null;
 
@@ -147,15 +149,19 @@ public class LevelMenu : MonoBehaviour
         {
             int l = 0;
             if (SaveAndLoadScene.Instance().LevelFileExist("Level_" + l, "Region_" + r))
-            {                
-                regionsList.Add(new Region());
+            {
+                if (r + 1 > regionsList.Count)
+                {
+                    regionsList.Add(new Region());                    
+                }
                 regionsList[r].name = "Region_" + r;
+                regionsList[r].levelList = new List<Level>();
                 do
                 {
                     xmlDocument = SaveAndLoadScene.Instance().GetXmlDocument("Level_" + l, "Region_" + r);
                     if (xmlDocument != null)
                     {
-                        level = new Level(xmlDocument);                      
+                        level = new Level(xmlDocument);                        
                         regionsList[r].levelList.Add(level);
                     }
                     else
@@ -183,7 +189,8 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
-    private Region FoundLevelInRegions(Level inLevel) {
+    private Region FoundLevelInRegions(Level inLevel)
+    {
         for (int i = 0; i < regionsList.Count; i++)
         {
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
@@ -218,12 +225,17 @@ public class LevelMenu : MonoBehaviour
     public void LoadXml(Level inLevel) {
         for (int i = 0; i < regionsList.Count; i++)
         {
+            //if (inLevel.region != regionsList[i])
+            //{
+            //    continue;
+            //}
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
                 if (regionsList[i].levelList[j] == inLevel)
                 {
                     SaveAndLoadScene.Instance().LoadXml(inLevel.xmlDocument.name, "Region_" + i);
                     lastLoadLevel = inLevel;
+                    //lastLoadRegion = regionsList[i];
                     lastLoadXmlDocument = inLevel.xmlDocument.name;
                     lastLoadFolder = "Region_" + i;
 #if UNITY_EDITOR
@@ -240,11 +252,14 @@ public class LevelMenu : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-
     public void SaveXml(Level inLevel)
     {
         for (int i = 0; i < regionsList.Count; i++)
         {
+            //if (inLevel.region != regionsList[i])
+            //{
+            //    continue;
+            //}
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
                 if (regionsList[i].levelList[j] == inLevel)
@@ -259,6 +274,10 @@ public class LevelMenu : MonoBehaviour
     {
         for (int i = 0; i < regionsList.Count; i++)
         {
+            //if (inLevel.region != regionsList[i])
+            //{
+            //    continue;
+            //}
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
                 if (regionsList[i].levelList[j] == inLevel)
@@ -278,6 +297,10 @@ public class LevelMenu : MonoBehaviour
     {
         for (int i = 0; i < regionsList.Count; i++)
         {
+            //if (inLevel.region != regionsList[i])
+            //{
+            //    continue;
+            //}
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
                 if (regionsList[i].levelList[j] == inLevel)
@@ -293,6 +316,10 @@ public class LevelMenu : MonoBehaviour
     {
         for (int i = 0; i < regionsList.Count; i++)
         {
+            //if (inLevel.region != regionsList[i])
+            //{
+            //    continue;
+            //}
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
                 if (regionsList[i].levelList[j] == inLevel)
@@ -311,6 +338,10 @@ public class LevelMenu : MonoBehaviour
 
         for (int i = 0; i < regionsList.Count; i++)
         {
+            //if (inLevel.region != regionsList[i])
+            //{
+            //    continue;
+            //}
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
                 if (regionsList[i].levelList[j] == inLevel)
@@ -324,7 +355,7 @@ public class LevelMenu : MonoBehaviour
                     {
                         return false;
                     }
-                }                
+                }
             }
         }
         return false;
@@ -334,6 +365,10 @@ public class LevelMenu : MonoBehaviour
     {
         for (int i = 0; i < regionsList.Count; i++)
         {
+            //if (inLevel.region != regionsList[i])
+            //{
+            //    continue;
+            //}
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
                 if (regionsList[i].levelList[j] == inLevel)
@@ -348,6 +383,10 @@ public class LevelMenu : MonoBehaviour
     {
         for (int i = 0; i < regionsList.Count; i++)
         {
+            //if (inLevel.region != regionsList[i])
+            //{
+            //    continue;
+            //}
             for (int j = 0; j < regionsList[i].levelList.Count; j++)
             {
                 if (regionsList[i].levelList[j] == inLevel)
@@ -365,6 +404,7 @@ public class LevelMenu : MonoBehaviour
     public void LoadLevel(Level inLevel) {
         MainAnimator.Instance.ClearAllMassive();
         HelpToPlayer.ClearHintList();//очищаем список подсказок
+        StopAllCoroutines();
         StartCoroutine(CurLoadLevel(inLevel));
     }
 
@@ -460,6 +500,10 @@ public class LevelMenu : MonoBehaviour
             bool found = false;
             for (int i = 0; i < regionsList.Count; i++)
             {
+                //if (level.region != regionsList[i] && !found)
+                //{
+                //    continue;
+                //}
                 for (int j = 0; j < regionsList[i].levelList.Count; j++)
                 {
                     if (found)
@@ -503,6 +547,7 @@ public class LevelMenu : MonoBehaviour
         else
         {
             lastLoadLevel = inLevel;
+            //lastLoadRegion = FoundLevelInRegions(lastLoadLevel);
             Destroy(panelRegions);
             Destroy(panelLevels);
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("SampleScene");
@@ -689,11 +734,12 @@ public class LevelMenu : MonoBehaviour
         //список регионов
         foreach (Region region in regionsList)
         {
-            GameObject regionelementGameObject = Instantiate(PrefabBank.RegionButtonPrefab, contentTransform);
-            Transform textNameTransform = regionelementGameObject.transform.Find("TextName");
-            textNameTransform.GetComponentInChildren<Text>().text = region.name;
+            GameObject regionElementGameObject = Instantiate(PrefabBank.RegionButtonPrefab, contentTransform);
+            Transform textNameTransform = regionElementGameObject.transform.Find("TextName");
+            textNameTransform.GetComponentInChildren<Text>().text = region.fullName;
+            regionElementGameObject.GetComponent<Image>().sprite = region.sprite;
 
-            Transform textStarsTransform = regionelementGameObject.transform.Find("TextStars");
+            Transform textStarsTransform = regionElementGameObject.transform.Find("TextStars");
 
             int stars = 0;
             int allStars = 0;
@@ -704,7 +750,7 @@ public class LevelMenu : MonoBehaviour
             }
             textStarsTransform.GetComponentInChildren<Text>().text = stars + " / " + allStars;
 
-            region.AddAction(regionelementGameObject);
+            region.AddAction(regionElementGameObject);
         }
 
         //добавляем действие к кнопке открытия настроек

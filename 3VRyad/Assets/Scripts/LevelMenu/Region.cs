@@ -6,8 +6,9 @@ using UnityEngine.UI;
 [System.Serializable]
 public class Region
 {
-    public string name;
-    public Image image;
+    [HideInInspector]public string name;
+    public string fullName;
+    public Sprite sprite;
     [SerializeField] public List<Level> levelList = new List<Level>();    
     private Text text;
     private Button button;
