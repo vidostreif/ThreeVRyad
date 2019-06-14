@@ -11,6 +11,8 @@ using UnityEngine.UI;
 public class Level
 {
     [SerializeField] public UnityEngine.Object xmlDocument = null;
+    public int regionNumber;//номер региона
+    public int levelNumber;//номер уровня
     private bool open = false;//открыт
     private bool passed = false;//пройден
     //public bool haveGift = false;//имеет подарок
@@ -22,17 +24,21 @@ public class Level
     private Text text;
     private Button button;
 
-    public Level()
+    public Level(int regionNumber, int levelNumber)
     {
+        this.regionNumber = regionNumber;
+        this.levelNumber = levelNumber;
         if (LevelMenu.Instance != null)
         {
             LevelMenu.Instance.GetXmlDocument(this);
         }        
     }
 
-    public Level(UnityEngine.Object xmlDocument)
+    public Level(UnityEngine.Object xmlDocument, int regionNumber, int levelNumber)
     {
         this.xmlDocument = xmlDocument;
+        this.regionNumber = regionNumber;
+        this.levelNumber = levelNumber;
     }
 
     public Text Text
