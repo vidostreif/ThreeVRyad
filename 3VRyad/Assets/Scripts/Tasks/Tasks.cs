@@ -339,9 +339,20 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             UpdateMovesText();
             if (Moves == 0)
             {
-                movesText.GetComponent<Animation>().Play();
-                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Zero_moves);
+                if (!endGame)
+                {
+                    movesText.GetComponent<Animation>().Play("MoveText_0_moves");
+                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Zero_moves);
+                }                
                 endGame = true;
+            }
+            else if (Moves == 3)
+            {
+                if (!endGame)
+                {
+                    movesText.GetComponent<Animation>().Play("MoveText_2_moves");
+                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Two_moves);
+                }                
             }
             return true;
         }

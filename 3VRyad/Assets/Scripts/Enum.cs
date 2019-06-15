@@ -216,6 +216,7 @@ public enum SoundsEnum
     Dirt_swelling,
     Closed_chest,
     Zero_moves,
+    Two_moves,
 
 }//тип звуков
 

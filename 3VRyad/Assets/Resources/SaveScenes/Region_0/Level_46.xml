@@ -11,11 +11,11 @@
     <XSize>12</XSize>
     <YSize>9</YSize>
     <elementsShape>
-      <shapeAndPriority shape="Apple" type="StandardElement" priority="17" maxAmountOnField="25" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Apple" type="StandardElement" priority="15" maxAmountOnField="22" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Strawberry" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Plum" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Mushroom" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
-      <shapeAndPriority shape="Orange" type="StandardElement" priority="17" maxAmountOnField="25" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Orange" type="StandardElement" priority="15" maxAmountOnField="22" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Camomile" type="StandardElement" priority="10" maxAmountOnField="20" limitOnAmountCreated="2147483647" />
     </elementsShape>
     <blocks>
@@ -149,7 +149,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>30</moves>
+    <moves>29</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="SeedBarrel" goal="2" collectEverything="true" />
