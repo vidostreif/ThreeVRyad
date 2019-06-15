@@ -10,7 +10,7 @@ public static class HelpToPlayer
     private static List<Hint> hintsList = new List<Hint>();
     private static HintStatus[] hintsStatus = null;
     private static Hint activeHint = null;
-    private static bool showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;//показывать подсказки
+    //private static bool showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;//показывать подсказки
 
     private static bool deletedByClickingOnCanvas = false;
     private static float timeCreateHints;
@@ -35,15 +35,15 @@ public static class HelpToPlayer
         DellGameHelp();
         hintsStatus = null;
         hintsList = new List<Hint>();
-        LoadShowHintsStatus();
+        //LoadShowHintsStatus();
         CreateHintStatusList();
     }
 
-    public static void LoadShowHintsStatus()
-    {
-        //showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;
-        showHints = SettingsController.ShowHints;
-    }
+    //public static void LoadShowHintsStatus()
+    //{
+    //    //showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;
+    //    showHints = SettingsController.ShowHints;
+    //}
 
     //здесь указываем enum для подсказок
     private static void CreateHintStatusList()
@@ -97,7 +97,7 @@ public static class HelpToPlayer
 
     public static void AddHint(BlockTypeEnum typeEnum)
     {
-        if (showHints)
+        if (SettingsController.ShowHints)
         {
             AddHint(typeof(BlockTypeEnum), typeEnum.ToString(), (int)typeEnum, false);
         }
@@ -105,7 +105,7 @@ public static class HelpToPlayer
 
     public static void AddHint(BlockingElementsTypeEnum elementsTypeEnum)
     {
-        if (showHints)
+        if (SettingsController.ShowHints)
         {
             AddHint(typeof(BlockingElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum, false);
         }
@@ -113,7 +113,7 @@ public static class HelpToPlayer
 
     public static void AddHint(BehindElementsTypeEnum elementsTypeEnum)
     {
-        if (showHints)
+        if (SettingsController.ShowHints)
         {
             AddHint(typeof(BehindElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum, false);
         }
@@ -121,7 +121,7 @@ public static class HelpToPlayer
 
     public static void AddHint(ElementsTypeEnum elementsTypeEnum)
     {
-        if (showHints)
+        if (SettingsController.ShowHints)
         {
             AddHint(typeof(ElementsTypeEnum), elementsTypeEnum.ToString(), (int)elementsTypeEnum, false);
         }
@@ -129,7 +129,7 @@ public static class HelpToPlayer
 
     public static void AddHint(HelpEnum helpEnum)
     {
-        if (showHints)
+        if (SettingsController.ShowHints)
         {
             AddHint(typeof(HelpEnum), helpEnum.ToString(), (int)helpEnum, true);
         }

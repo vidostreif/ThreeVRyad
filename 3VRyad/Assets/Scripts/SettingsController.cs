@@ -11,7 +11,7 @@ public static class SettingsController
     {
         if (settingsSave == null)
         {
-            settingsSave = JsonSaveAndLoad.LoadSave().SettingsSave;
+            settingsSave = JsonSaveAndLoad.LoadSave().settingsSave;
         }        
     }
 

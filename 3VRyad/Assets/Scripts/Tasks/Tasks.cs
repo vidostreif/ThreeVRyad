@@ -319,6 +319,13 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             Debug.Log("потеряли movesText");
             movesText = GetComponentInChildren<Text>();
         }
+
+        ////если не конец игры и количество ходов 0
+        //if (!endGame && moves + addMoves == 0)
+        //{
+            
+        //}
+
         movesText.text = "" + moves;
     }
 
@@ -332,6 +339,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             UpdateMovesText();
             if (Moves == 0)
             {
+                movesText.GetComponent<Animation>().Play();
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Zero_moves);
                 endGame = true;
             }
             return true;

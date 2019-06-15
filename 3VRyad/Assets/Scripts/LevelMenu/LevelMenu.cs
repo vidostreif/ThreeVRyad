@@ -92,16 +92,6 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
-    //#if UNITY_EDITOR
-    //    public void Update()
-    //    {
-    //        if (lastLoadLevel == null && lastLoadXmlDocument != null && lastLoadFolder != null)
-    //        {
-    //            lastLoadLevel = FoundLevel(lastLoadXmlDocument, lastLoadFolder);
-    //        }
-    //    }
-    //#endif
-
     public void Prepare()
     {
         //DontDestroyOnLoad(gameObject); //Set as do not destroy
@@ -193,13 +183,13 @@ public class LevelMenu : MonoBehaviour
         //{
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             return regionsList[inLevel.regionNumber];
-        }
+        //}
         //    }
         //}
-        return null;
+        //return null;
     }
 
     private Level FoundLevel(string xmlName, string regionName)
@@ -230,8 +220,8 @@ public class LevelMenu : MonoBehaviour
         //    //}
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             SaveAndLoadScene.Instance().LoadXml(inLevel.xmlDocument.name, "Region_" + inLevel.regionNumber);
             lastLoadLevel = inLevel;
             lastLoadRegion = regionsList[inLevel.regionNumber];
@@ -244,8 +234,8 @@ public class LevelMenu : MonoBehaviour
                 EditorUtility.SetDirty(this);
             }
 #endif
-            return;
-        }
+        //    return;
+        //}
         //    }
         //}
     }
@@ -261,11 +251,11 @@ public class LevelMenu : MonoBehaviour
         //    //}
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             inLevel.xmlDocument = SaveAndLoadScene.Instance().SaveXml(inLevel.xmlDocument.name, "Region_" + inLevel.regionNumber);
-            return;
-        }
+        //    return;
+        //}
         //    }
         //}
     }
@@ -279,14 +269,14 @@ public class LevelMenu : MonoBehaviour
         //    //}
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             //сначала пробуем загрузить
             SaveAndLoadScene.Instance().LoadXml("Level_" + inLevel.levelNumber, "Region_" + inLevel.regionNumber);
 
             inLevel.xmlDocument = SaveAndLoadScene.Instance().SaveXml("Level_" + inLevel.levelNumber, "Region_" + inLevel.regionNumber);
-            return;
-        }
+        //    return;
+        //}
         //    }
         //}
     }
@@ -302,11 +292,11 @@ public class LevelMenu : MonoBehaviour
         //    //}
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             inLevel.xmlDocument = SaveAndLoadScene.Instance().GetXmlDocument("Level_" + inLevel.levelNumber, "Region_" + inLevel.regionNumber);
-            return;
-        }
+        //    return;
+        //}
         //    }
         //}
     }
@@ -321,14 +311,14 @@ public class LevelMenu : MonoBehaviour
         //    //}
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             //SaveAndLoadScene.Instance.LoadXml(inLevel.xmlDocument.name, "Region_" + i);
 
             GameMetaData.GetInstance().SetString("name_scene", inLevel.xmlDocument.name);
             GameMetaData.GetInstance().SetString("folder_scene", "Region_" + inLevel.regionNumber);
-            return;
-        }
+            //return;
+        //}
         //    }
         //}
     }
@@ -344,8 +334,8 @@ public class LevelMenu : MonoBehaviour
         //    //}
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             //если последний уровень в регионе
             if ((inLevel.levelNumber + 1) == regionsList[inLevel.regionNumber].levelList.Count)
             {
@@ -355,10 +345,10 @@ public class LevelMenu : MonoBehaviour
             {
                 return false;
             }
-        }
+        //}
         //    }
         //}
-        return false;
+        //return false;
     }
 
     public void AddLevelOnRegion(Level inLevel)
@@ -371,10 +361,10 @@ public class LevelMenu : MonoBehaviour
         //    //}
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             regionsList[inLevel.regionNumber].levelList.Add(new Level(inLevel.regionNumber, regionsList[inLevel.regionNumber].levelList.Count));
-        }
+        //}
         //    }
         //}
     }
@@ -389,13 +379,13 @@ public class LevelMenu : MonoBehaviour
         //    //}
         //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
         //    {
-        if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        {
+        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
+        //{
             regionsList[inLevel.regionNumber].levelList.Remove(inLevel);
 
             //!!!Добавить удаление файла
-            return;
-        }
+        //    return;
+        //}
         //    }
         //}
     }

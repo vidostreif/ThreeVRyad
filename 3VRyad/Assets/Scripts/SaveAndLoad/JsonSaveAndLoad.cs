@@ -117,7 +117,7 @@ public static class JsonSaveAndLoad
         //сохраняем все показанные подсказки и параметры настроек, остальное удаляем
         Save saveForSave = new Save();
         saveForSave.helpSave = save.helpSave;
-        saveForSave.SettingsSave = save.SettingsSave;
+        saveForSave.settingsSave = save.settingsSave;
         save = saveForSave;
         saveIsChanged = true;
         SetSaveToFile();
@@ -138,7 +138,7 @@ public static class JsonSaveAndLoad
     {
         Debug.Log("Сбрасываем настройки.");
         LoadSaveFromFile();
-        save.SettingsSave = GetStandartSettings();
+        save.settingsSave = GetStandartSettings();
         saveIsChanged = true;
         SetSaveToFile();
     }
@@ -214,23 +214,17 @@ public static class JsonSaveAndLoad
         saveIsChanged = true;
     }
 
-    //запись количества инструментов
+    //запись настроек
     public static void RecordSave(SettingsSave settings)
     {
         LoadSaveFromFile();
         //записываем новые данные
-        save.SettingsSave = settings;
+        save.settingsSave = settings;
         //сразу сохраняем в файл
         saveIsChanged = true;
         SetSaveToFile();
 
-        //if (ReloadSave != null)
-        //{
-        //    EventArgs eventArgs = new EventArgs();
-        //    ReloadSave(eventArgs);
-        //}
-
-        ReloadSettings();//перезагружаем настройки для классов
+        //ReloadSettings();//перезагружаем настройки для классов
     }
 
     //получить значение настроек по умолчанию
@@ -239,11 +233,11 @@ public static class JsonSaveAndLoad
         return new SettingsSave(true, true);
     }
 
-    //получить значение настроек по умолчанию
-    public static void ReloadSettings()
-    {
-        HelpToPlayer.LoadShowHintsStatus();
-    }
+    ////получить значение настроек по умолчанию
+    //public static void ReloadSettings()
+    //{
+    //    HelpToPlayer.LoadShowHintsStatus();
+    //}
 }
 
 [Serializable]
@@ -253,20 +247,20 @@ public class Save
     public ShopSave shopSave = new ShopSave();
     public List<HelpSave> helpSave = new List<HelpSave>();
     public List<InstrumentsSave> instrumentsSave = new List<InstrumentsSave>();
-    private SettingsSave settingsSave = JsonSaveAndLoad.GetStandartSettings();
-    public SettingsSave SettingsSave
-    {
-        get
-        {
-            return settingsSave;
-        }
+    public SettingsSave settingsSave = JsonSaveAndLoad.GetStandartSettings();
+    //public SettingsSave SettingsSave
+    //{
+    //    get
+    //    {
+    //        return settingsSave;
+    //    }
 
-        set
-        {
-            settingsSave = value;
-            JsonSaveAndLoad.ReloadSettings();
-        }
-    }
+    //    set
+    //    {
+    //        settingsSave = value;
+    //        //JsonSaveAndLoad.ReloadSettings();
+    //    }
+    //}
 }
 
 [Serializable]
