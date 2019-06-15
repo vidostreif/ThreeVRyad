@@ -504,7 +504,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //если закончились ходы игрока и ходы всей игры
             if (elementsForMoveList.Count == 0 && Tasks.Instance.endGame)
             {
-
                 //если собрали все задачи и активируем все бонусы
                 if (Tasks.Instance.collectedAll && Bonuses.Instance.ActivateBonusOnEnd())
                 {
@@ -542,7 +541,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //если не конец игры, но ходов не осталось  и супер бонус не активен то рисуем проигрыш
                 if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove.found)
                 {
-                    yield return new WaitForSeconds(0.2f);
+                    //yield return new WaitForSeconds(0.2f);
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove.found));
                     blockedForMove = false;
                     yield break;
