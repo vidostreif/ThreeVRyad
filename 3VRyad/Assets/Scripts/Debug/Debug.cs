@@ -5,7 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngineInternal;
 
-public static class Debug 
+public static class Debug
 {
     public static bool isDebugBuild
     {

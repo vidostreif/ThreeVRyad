@@ -56,6 +56,7 @@ public class LifeManager : MonoBehaviour
             {
                 timeToNextLife = CheckTime.Realtime().AddMinutes(timeToGetOneLife);
                 PlusLive();
+                RecordSave();
             }
             LastArrayProcessingTime = Time.realtimeSinceStartup;
             UpdateText();
@@ -68,16 +69,18 @@ public class LifeManager : MonoBehaviour
         if (life < maxLife)
         {
             DateTime timeHasHassed = CheckTime.Realtime();
-            timeHasHassed = timeHasHassed.AddMinutes(-timeToGetOneLife);
-            TimeSpan timeSpan = timeHasHassed.Subtract(timeToNextLife);
+            //timeHasHassed = timeHasHassed.AddMinutes(-timeToGetOneLife);
+            TimeSpan timeSpan = timeHasHassed.Subtract(timeToNextLife.AddMinutes(-timeToGetOneLife));
 
             double minutes = timeSpan.TotalMinutes;
             while (minutes > timeToGetOneLife && life < maxLife)
             {
                 PlusLive();
                 timeToNextLife = timeToNextLife.AddMinutes(timeToGetOneLife);
+                Debug.Log(timeToNextLife.ToString());
                 minutes -= timeToGetOneLife;
             }
+            RecordSave();
         }
     }
 
@@ -104,8 +107,7 @@ public class LifeManager : MonoBehaviour
         if (life < maxLife)
         {
             life++;                    
-            UpdateText();
-            RecordSave();
+            UpdateText();            
         }
     }
 
@@ -115,6 +117,7 @@ public class LifeManager : MonoBehaviour
         if (args.Amount > 0 && life < maxLife)
         {
             PlusLive();
+            RecordSave();
             //звук добавления
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);
             //эффект                
