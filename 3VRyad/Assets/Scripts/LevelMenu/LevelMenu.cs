@@ -393,39 +393,23 @@ public class LevelMenu : MonoBehaviour
     //работа с переходом между уровнями
     public void LoadLevel(Level inLevel)
     {
-        MainAnimator.Instance.ClearAllMassive();
-        HelpToPlayer.ClearHintList();//очищаем список подсказок
-        StopAllCoroutines();
-        StartCoroutine(CurLoadLevel(inLevel));
+        if (LifeManager.Instance.Life > 0)
+        {
+            MainAnimator.Instance.ClearAllMassive();
+            HelpToPlayer.ClearHintList();//очищаем список подсказок
+            StopAllCoroutines();
+            StartCoroutine(CurLoadLevel(inLevel));
+        }
+        else
+        {
+            Debug.Log("Нет жизней!");
+            SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы запустить уровень. Подождите немного подождите или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+        }        
     }
 
     //загрузить следующий уровень
     public void LoadNextLevel()
     {
-        //if (lastLoadLevel != null)
-        //{
-        //    bool found = false;
-        //    for (int i = 0; i < regionsList.Count; i++)
-        //    {
-        //        for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //        {
-        //            if (found)
-        //            {
-        //                //если уровень открыт
-        //                if (regionsList[i].levelList[j].Open)
-        //                {
-        //                    LoadLevel(regionsList[i].levelList[j]);
-        //                    return;
-        //                }
-        //            }
-        //            if (regionsList[i].levelList[j] == lastLoadLevel)
-        //            {
-        //                found = true;
-        //            }
-        //        }
-        //    }
-        //}
-
         if (lastLoadLevel != null)
         {
             //если последний уровень в регионе

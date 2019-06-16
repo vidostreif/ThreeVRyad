@@ -107,6 +107,22 @@ public static class SupportFunctions
         return panelInfirmation;
     }
 
+    //создание панели информации с просмотром видео
+    public static GameObject CreateInformationPanelWithVideo(string str, VideoForFeeEnum videoForFeeEnum, Transform transformParent = null)
+    {
+        DestroyPanelInfirmation();
+        if (transformParent == null)
+        {
+            transformParent = GameObject.Find("GameHelper").transform;
+        }
+        panelInfirmation = GameObject.Instantiate(PrefabBank.PanelInformationWithVideo, transformParent);
+        panelInfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
+
+        AdMobManager.Instance.GetVideoBrowseButton(panelInfirmation.transform.Find("VideoPlace"), videoForFeeEnum);
+        ChangeButtonAction(panelInfirmation.transform.Find("ButtonOk"), DestroyPanelInfirmation);
+        return panelInfirmation;
+    }
+
     //изменения делегата в кнопке
     public static void ChangeButtonAction(Transform buttonTransform, Action action, string str = "")
     {

@@ -200,6 +200,10 @@ public class MainGameSceneScript : MonoBehaviour {
             {
                 LevelMenu.Instance.SetOpenNextLevel();
             }
+            else
+            {
+                LifeManager.Instance.SubLive();
+            }
 
             //поражение
             if (!nextMoveExists)//если не смогли найти следующий ход
@@ -248,7 +252,6 @@ public class MainGameSceneScript : MonoBehaviour {
             //если все анимации закончили свои действия активируем кнопки
             if (!animationStarsIdle && !animationScoreIdle && !animationGiftIdle)
             {
-
                 restartButton.interactable = true;
                 exitButton.interactable = true;
                 if (victory && LevelMenu.Instance.NextLevelIsOpen())
@@ -463,15 +466,23 @@ public class MainGameSceneScript : MonoBehaviour {
     public void RestartLevel()
     {
         Destroy(CanvasMenu);
-        if (LevelMenu.Instance.LastLoadLevel != null)
+
+        if (LifeManager.Instance.SubLive())
         {
-            //MainAnimator.Instance.ClearAllMassive();
-            LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
+            if (LevelMenu.Instance.LastLoadLevel != null)
+            {
+                LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
+            }
+            else
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы перезапустить уровень. Подождите немного подождите или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
         }
+        
     }
 
     public void NextLevel()
