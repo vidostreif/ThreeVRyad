@@ -118,7 +118,8 @@ public static class SupportFunctions
         panelInfirmation = GameObject.Instantiate(PrefabBank.PanelInformationWithVideo, transformParent);
         panelInfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
 
-        AdMobManager.Instance.GetVideoBrowseButton(panelInfirmation.transform.Find("VideoPlace"), videoForFeeEnum);
+        VideoBrowseButton videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(panelInfirmation.transform.Find("VideoPlace"), videoForFeeEnum);
+        videoBrowseButton.button.onClick.AddListener(DestroyPanelInfirmation);
         ChangeButtonAction(panelInfirmation.transform.Find("ButtonOk"), DestroyPanelInfirmation);
         return panelInfirmation;
     }

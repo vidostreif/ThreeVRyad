@@ -33,7 +33,7 @@ public class SceneSettings : MonoBehaviour
     public void RestartScene() {
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
         HideOrShowSetings(false);
-        MainGameSceneScript.Instance.RestartLevel();
+        MainGameSceneScript.Instance.RequestRestartLevel();
         HideSetings();
     }
 
@@ -41,7 +41,7 @@ public class SceneSettings : MonoBehaviour
     {
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.ClickButton);
         HideOrShowSetings(false);
-        MainGameSceneScript.Instance.ExitToMenu();
+        MainGameSceneScript.Instance.RequestExitToMenu();
     }
 
     public void SoundSwitch()

@@ -111,7 +111,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform gORestartButton = PanelMenu.transform.Find("RestartButton");
         Button restartButton = gORestartButton.GetComponent<Button>();
         restartButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
-        restartButton.onClick.AddListener(delegate { RestartLevel(); });
+        restartButton.onClick.AddListener(delegate { RestartLevelInEndGame(); });
         restartButton.interactable = false;
 
         Transform gOExitButton = PanelMenu.transform.Find("ExitButton");
@@ -463,34 +463,94 @@ public class MainGameSceneScript : MonoBehaviour {
         MainAnimator.Instance.ClearAllMassive();
     }
 
-    public void RestartLevel()
-    {
-        Destroy(CanvasMenu);
-
-        if (LifeManager.Instance.SubLive())
+    //запрос на перезапуск сцены во время игры
+    public void RequestRestartLevel() {
+        if (LifeManager.Instance.Life > 1)
         {
-            if (LevelMenu.Instance.LastLoadLevel != null)
-            {
-                LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
-            }
-            else
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            }
+            SupportFunctions.CreateYesNoPanel(GameObject.Find("GameHelper").transform, "При перезапуске игры вы потеряете жизнь. Перезапустить?", RestartLevelInGame);
         }
         else
         {
-            SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы перезапустить уровень. Подождите немного подождите или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+            SupportFunctions.CreateInformationPanelWithVideo("Вам нужно больше одной жизни, что бы перезапустить уровень во время игры. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+        }        
+    }
+
+    //перезапуск сцены с уменьшением количества жизней
+    public void RestartLevelInGame()
+    {
+        if (LifeManager.Instance.Life > 1)
+        {
+            LifeManager.Instance.SubLive();
+            RestartLevel();            
         }
-        
+        else
+        {
+            SupportFunctions.CreateInformationPanelWithVideo("Вам нужно больше одной жизни, что бы перезапустить уровень во время игры. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+        }
+    }
+
+    //перезапуск сцены по окончанию игры
+    public void RestartLevelInEndGame()
+    {
+        if (LifeManager.Instance.Life > 0)
+        {
+            RestartLevel();
+        }
+        else
+        {
+            SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы перезапустить уровень. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+        }
+    }
+
+    //перезапуск сцены
+    public void RestartLevel()
+    {
+            Destroy(CanvasMenu);        
+
+            //if (LevelMenu.Instance.LastLoadLevel != null)
+            //{
+                LevelMenu.Instance.LoadLevel(LevelMenu.Instance.LastLoadLevel);
+            //}
+            //else
+            //{
+            //    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            //}     
     }
 
     public void NextLevel()
     {
-        Destroy(CanvasMenu);
-        LevelMenu.Instance.LoadNextLevel();
+        if (LifeManager.Instance.Life > 0)
+        {
+            Destroy(CanvasMenu);
+            LevelMenu.Instance.LoadNextLevel();
+        }
+        else
+        {
+            SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы перейти на следующий уровень. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+        }       
     }
 
+    //запрос на выход в меню в время игры
+    public void RequestExitToMenu()
+    {
+        if (LifeManager.Instance.Life > 0)
+        {
+            SupportFunctions.CreateYesNoPanel(GameObject.Find("GameHelper").transform, "При выходе в меню вы потеряете жизнь. Выйти?", ExitToMenuInGame);
+        }
+        else
+        {
+            ExitToMenu();
+        }        
+    }
+
+    //выход в меню с уменьшением количества жизней
+    public void ExitToMenuInGame()
+    {
+        LifeManager.Instance.SubLive();
+        ExitToMenu();
+    }
+
+    //выход в меню
     public void ExitToMenu()
     {        
         LevelMenu.Instance.LoadMainMenu();
