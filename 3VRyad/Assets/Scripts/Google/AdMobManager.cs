@@ -14,6 +14,7 @@ public class AdMobManager : MonoBehaviour
     private RewardVideo rewardVideoForCoin; //просмотр рекламы за монеты
     private RewardVideo rewardVideoForMove; //просмотр рекламы за ходы
     private RewardVideo rewardVideoForLife; //просмотр рекламы за жизни
+    private RewardVideo rewardVideoForDailyGift; //просмотр рекламы за ежедневный подарок
 
     //public Action<Reward> actionSuccess;
 
@@ -57,35 +58,49 @@ public class AdMobManager : MonoBehaviour
 
         rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300, 30);
 
-        rewardVideoForLife = new RewardVideo(LifeManager.Instance.AddLifeForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300, 15);
+        rewardVideoForLife = new RewardVideo(LifeManager.Instance.AddLifeForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300, 20);
+
+        //определяем время загрузки видео для ежедневного подарка
+        int timeLoadVideoForDailyGift = (int)DailyGiftManager.Instance.TimeUntilNextDailyGift().TotalSeconds - 30;
+        if (timeLoadVideoForDailyGift < 10)
+        {
+            timeLoadVideoForDailyGift = 10;
+        }
+        rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingFirstVideo, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 0, timeLoadVideoForDailyGift);
     }
 
     public void Update()
     {
 #if !UNITY_EDITOR
         //обрабатываем не чаще двух раз в секунду
-        if (LastArrayProcessingTime + 0.5f < Time.time)
+        if (LastArrayProcessingTime + 0.5f < Time.realtimeSinceStartup)
         {
-            LastArrayProcessingTime = Time.time;
+            LastArrayProcessingTime = Time.realtimeSinceStartup;
             rewardVideoForCoin.ProcessingOfButtonArrays();
             rewardVideoForMove.ProcessingOfButtonArrays();
+            rewardVideoForLife.ProcessingOfButtonArrays();
+            rewardVideoForDailyGift.ProcessingOfButtonArrays();
         }
 #endif
     }
 
     //создание кнопки просмотра видео
-    public VideoBrowseButton GetVideoBrowseButton(Transform transformParent, VideoForFeeEnum videoForFeeEnum) {
+    public VideoBrowseButton GetVideoBrowseButton(Transform transformParent, VideoForFeeEnum videoForFeeEnum, Action<Reward> newAction = null) {
         if (videoForFeeEnum == VideoForFeeEnum.ForCoin)
         {
-            return rewardVideoForCoin.GetVideoBrowseButton(transformParent);
+            return rewardVideoForCoin.GetVideoBrowseButton(transformParent, newAction);
         }
         else if (videoForFeeEnum == VideoForFeeEnum.ForMove)
         {
-            return rewardVideoForMove.GetVideoBrowseButton(transformParent);
+            return rewardVideoForMove.GetVideoBrowseButton(transformParent, newAction);
         }
         else if (videoForFeeEnum == VideoForFeeEnum.ForLive)
         {
-            return rewardVideoForLife.GetVideoBrowseButton(transformParent);
+            return rewardVideoForLife.GetVideoBrowseButton(transformParent, newAction);
+        }
+        else if (videoForFeeEnum == VideoForFeeEnum.ForDailyGift)
+        {
+            return rewardVideoForDailyGift.GetVideoBrowseButton(transformParent, newAction);
         }
         return null;
     }

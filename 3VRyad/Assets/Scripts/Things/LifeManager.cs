@@ -16,6 +16,7 @@ public class LifeManager : MonoBehaviour
     private DateTime endTimeImmortal; //время окончания бессметрия
     private int addMinutesTimeImmortal = 0;
     private Text textLive;
+    private Text textLiveTime;
     private Image imageLive;
     private float LastArrayProcessingTime = 0;
 
@@ -46,7 +47,8 @@ public class LifeManager : MonoBehaviour
         }
 
         //timeToGetOneLifeDateTime = new DateTime(0, 0, 0, 0, timeToGetOneLife, 0);
-        textLive = GetComponentInChildren<Text>();
+        textLive = transform.Find("TextLive").GetComponent<Text>();
+        textLiveTime = transform.Find("TextLiveTime").GetComponent<Text>();
         imageLive = GetComponentInChildren<Image>();
         LoadSave();
         StartCalculatingLives();
@@ -154,6 +156,13 @@ public class LifeManager : MonoBehaviour
         return true;
     }
 
+    //добавление времени бессмертия с доп параметрами
+    public void addTimeImmortal(int time, Transform curTransform, Vector3 position)
+    {
+        addTimeImmortal(time);
+        StartCoroutine(Shop.Instance.CreateLivesAnimation(position, curTransform, time));
+    }
+
     public bool Immortal()
     {
         if (EndTimeImmortal > CheckTime.Realtime())
@@ -215,20 +224,23 @@ public class LifeManager : MonoBehaviour
         if (endTimeImmortal > CheckTime.Realtime())
         {
             TimeSpan dateTime = endTimeImmortal.Subtract(CheckTime.Realtime());
-            textLive.text = (char)8734 + " (" + dateTime.Hours + "h " + dateTime.Minutes + "m " + dateTime.Seconds + "s)";
+            textLive.text = "" + (char)8734;
+            textLiveTime.text = "" + dateTime.Hours + "h " + dateTime.Minutes + "m " + dateTime.Seconds + "s";
         }
         else
         {
-            string text = "" + life;
+            textLive.text = "" + life;
             if (life < maxLife)
             {
                 TimeSpan dateTime = timeToNextLife.Subtract(CheckTime.Realtime());
                 //int minutes = (int)(timeToNextLife - Time.realtimeSinceStartup) / 60;
                 //int seconds = (int)(timeToNextLife - Time.realtimeSinceStartup - (minutes * 60));
-                text += " (" + dateTime.Minutes + "m " + dateTime.Seconds + "s)";
+                textLiveTime.text = "" + dateTime.Minutes + "m " + dateTime.Seconds + "s";
             }
-
-            textLive.text = text;
+            else
+            {
+                textLiveTime.text = "";
+            }
         }
 
         

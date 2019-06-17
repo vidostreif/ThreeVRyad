@@ -192,6 +192,15 @@ public static class JsonSaveAndLoad
         saveIsChanged = true;
     }
 
+    //запись сохранений ежедневного подарка
+    public static void RecordSave(DailyGiftManager dailyGiftManager)
+    {
+        LoadSaveFromFile();
+        save.dailyGiftSave.lastGiftTimeIssuedLong = dailyGiftManager.LastGiftTimeIssued.ToFileTimeUtc();
+        save.dailyGiftSave.numberOfGiftsIssuedToday = dailyGiftManager.NumberOfGiftsIssuedToday;     
+        saveIsChanged = true;
+    }
+
     //запись показанных подсказок
     public static void RecordSave(HintStatus[] hintsStatus)
     {
@@ -256,6 +265,7 @@ public class Save
     public List<RegionSave> regionSave = new List<RegionSave>();
     public ShopSave shopSave = new ShopSave();
     public LifeSave lifeSave = new LifeSave();
+    public DailyGiftSave dailyGiftSave = new DailyGiftSave();
     public List<HelpSave> helpSave = new List<HelpSave>();
     public List<InstrumentsSave> instrumentsSave = new List<InstrumentsSave>();
     public SettingsSave settingsSave = JsonSaveAndLoad.GetStandartSettings();
@@ -300,16 +310,13 @@ public class LifeSave
     public int life = 0;
     public long timeToNextLifeLong;
     public long endTimeImmortalLong;
+}
 
-    //public DateTime TimeToNextLife
-    //{
-    //    get{
-    //        return DateTime.FromFileTimeUtc(timeToNextLifeLong);
-    //    }
-    //    set {
-    //        timeToNextLifeLong = value.ToFileTimeUtc();
-    //    }
-    //}
+[Serializable]
+public class DailyGiftSave
+{
+    public long lastGiftTimeIssuedLong;
+    public int numberOfGiftsIssuedToday = 0;
 }
 
 [Serializable]

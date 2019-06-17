@@ -103,7 +103,37 @@ public class ThingsManager : MonoBehaviour
 
         return res;
     }
-   
+
+    //добавление количества инструментов из бандла
+    public void addinstruments(InstrumentsEnum type, int count, Transform curTransform, Vector3 position)
+    {
+        //добавляем указанное количество к инструментам
+            foreach (Thing instrument in instruments)
+            {
+                if (instrument.Type == type)
+                {
+                    instrument.AddQuantity(count);
+                    Shop.Instance.CreateThingAnimation(position, curTransform, type, count);
+                    break;
+                }
+            }
+
+        JsonSaveAndLoad.RecordSave(instruments);
+        JsonSaveAndLoad.SetSaveToFile();
+    }
+
+    //количество инструментов
+    public int InstrumentsCount() {
+        if (instruments != null)
+        {
+            return instruments.Length;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
     //создание коллекции инструментов в магазине
     public void CreateInstrumentsOnShop(Transform panelTransform)
     {        
@@ -138,6 +168,15 @@ public class ThingsManager : MonoBehaviour
                     return item;
                 }
             }
+        }
+        return null;
+    }
+
+    public Thing GetThing(int count)
+    {
+        if (instruments != null && instruments.Length >= count)
+        {
+            return instruments[count - 1];
         }
         return null;
     }

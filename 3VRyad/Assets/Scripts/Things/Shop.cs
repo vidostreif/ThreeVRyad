@@ -62,6 +62,18 @@ public class Shop : MonoBehaviour, IStoreListener
         }
     }
 
+    //другое вознаграждение
+    public void AddCoins(int coins, Transform curTransform, Vector3 position)
+    {
+        if (coins > 0)
+        {
+            this.addCoins += coins;
+            StartCoroutine(CreateCoinAnimation(position, curTransform, coins, destroyMainCoin: false));
+            JsonSaveAndLoad.RecordSave(this);
+            JsonSaveAndLoad.SetSaveToFile();
+        }
+    }
+
     //принудительно пересчитываем количество
     public void CountCoins()
     {

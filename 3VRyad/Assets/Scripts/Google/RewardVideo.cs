@@ -13,6 +13,7 @@ public class RewardVideo
     int firstLoadDelay;
     private float lastViewVideo = 0; //момент последнего просмотра видео
     private float pauseBetweenViews; //пауза между просмотрами
+    private VideoBrowseButton lastActivVideoBrowseButton; //последняя активированная кнопка видео
     private List<VideoBrowseButton> videoBrowseButtonList;
     private List<VideoBrowseButton> videoBrowseButtonListForDelete;
     private Action<Reward> actionSuccess; //действие в случае усспешного просмотра рекламы
@@ -36,15 +37,24 @@ public class RewardVideo
         videoBrowseButtonListForDelete = new List<VideoBrowseButton>();
     }
 
-    public VideoBrowseButton GetVideoBrowseButton(Transform transformParent)
+    public VideoBrowseButton GetVideoBrowseButton(Transform transformParent, Action<Reward> newAction)
     {
         VideoBrowseButton videoBrowseButton = new VideoBrowseButton();
         videoBrowseButtonList.Add(videoBrowseButton);
+        //если заранее прописанный актион иначе прописываем новый
+        if (newAction == null)
+        {
+            videoBrowseButton.actionSuccess = actionSuccess;
+        }
+        else
+        {
+            videoBrowseButton.actionSuccess = newAction;
+        }        
         videoBrowseButton.go = GameObject.Instantiate(prefabButton, transformParent);
         videoBrowseButton.button = videoBrowseButton.go.GetComponent<Button>();
         Transform textTimerTran = videoBrowseButton.go.transform.Find("TextTimer");
         videoBrowseButton.textTimer = textTimerTran.GetComponent<Text>();
-        SupportFunctions.ChangeButtonAction(videoBrowseButton.button.transform, CreateBanerForFee);
+        SupportFunctions.ChangeButtonAction(videoBrowseButton.button.transform, delegate { CreateBanerForFee(videoBrowseButton); });
         return videoBrowseButton;
     }
         
@@ -120,11 +130,11 @@ public class RewardVideo
 
 
         //выполняем прописанный делегат
-        if (actionSuccess != null)
+        if (actionSuccess != null && lastActivVideoBrowseButton != null)
         {
             if (actionSuccess.Method != null && actionSuccess.Target != null)
             {
-                actionSuccess(args);
+                lastActivVideoBrowseButton.actionSuccess(args);
             }
         }
         lastViewVideo = Time.realtimeSinceStartup;
@@ -152,11 +162,12 @@ public class RewardVideo
     }
 
     //создание рекламы за вознаграждение
-    public void CreateBanerForFee()
+    public void CreateBanerForFee(VideoBrowseButton videoBrowseButton)
     {
         if (rewardedAd.IsLoaded())
         {
             newAdPrepared = false;
+            lastActivVideoBrowseButton = videoBrowseButton;
             rewardedAd.Show();            
         }
         else
@@ -224,5 +235,6 @@ public class VideoBrowseButton
     public GameObject go;
     public Button button;
     public Text textTimer;
+    public Action<Reward> actionSuccess; //действие в случае усспешного просмотра рекламы
 }
 

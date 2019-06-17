@@ -21,6 +21,7 @@ public static class PrefabBank
     private static GameObject imageMainLoad = Resources.Load(prefabFolder + "Canvas/Main menu/ImageMainLoad") as GameObject;
     private static GameObject panelInformation = Resources.Load(prefabFolder + "Canvas/Main menu/PanelInformation") as GameObject;
     private static GameObject panelInformationWithVideo = Resources.Load(prefabFolder + "Canvas/Main menu/PanelInformationWithVideo") as GameObject;
+    private static GameObject panelDailyGift = Resources.Load(prefabFolder + "Canvas/Main menu/PanelDailyGift") as GameObject;    
 
     //магазин
     private static GameObject shopPanelPrefab = Resources.Load(prefabFolder + "Canvas/Shop/PanelShop") as GameObject;
@@ -29,8 +30,7 @@ public static class PrefabBank
     private static GameObject panelShopConfirmation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopConfirmation") as GameObject;
     private static GameObject panelShopInformation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopInformation") as GameObject;
     private static GameObject prefabVideoBrowseButton = Resources.Load(prefabFolder + "Canvas/Shop/VideoBrowseButton") as GameObject;
-    private static GameObject panelShopReceivingCoins = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopReceivingCoins") as GameObject;
-    
+    private static GameObject panelShopReceivingCoins = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopReceivingCoins") as GameObject;    
 
 
     private static GameObject scoreElementPrefab = Resources.Load(prefabFolder + "Canvas/GameCanvas/ScoreElement") as GameObject;
@@ -59,6 +59,8 @@ public static class PrefabBank
     public static GameObject PanelShopInformation { get => panelShopInformation; }
     public static GameObject PanelInformation { get => panelInformation; }
     public static GameObject PanelInformationWithVideo { get => panelInformationWithVideo; }
+    public static GameObject PanelDailyGift { get => panelDailyGift; }
+    
     public static GameObject ScoreElementPrefab { get => scoreElementPrefab;}
     public static GameObject CanvasHelpToPlayer { get => canvasHelpToPlayer;}
     public static GameObject CanvasStartGame { get => canvasStartGame;}

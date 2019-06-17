@@ -239,4 +239,5 @@ public enum VideoForFeeEnum
     ForCoin,
     ForMove,
     ForLive,
+    ForDailyGift,
 }//тип видео за вознаграждение
