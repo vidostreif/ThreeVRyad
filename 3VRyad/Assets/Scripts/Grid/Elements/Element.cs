@@ -163,7 +163,7 @@ public class Element : BaseElement
         Position position = new Position(PositionInGrid.posX, PositionInGrid.posY);
         base.DestroyElement();
 
-        //if (hitType == HitTypeEnum.StandartHit || hitType == HitTypeEnum.Instrument)
+        if (hitType == HitTypeEnum.StandartHit || hitType == HitTypeEnum.Instrument)
             HitNeighboringBlocks(thisHitTypeEnum, position);
     }
 

@@ -502,23 +502,23 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
 
             //если закончились ходы игрока и ходы всей игры
-            if (elementsForMoveList.Count == 0 && Tasks.Instance.endGame)
+            if (elementsForMoveList.Count == 0 && Tasks.Instance.endGame && !SuperBonus.Instance.InWork())
             {
                 //если собрали все задачи и активируем все бонусы
                 if (Tasks.Instance.collectedAll && Bonuses.Instance.ActivateBonusOnEnd())
                 {
                     //blockedForMove = false;
-                    Debug.Log("Активируем все бонусы на поле!");
+                    //Debug.Log("Активируем все бонусы на поле!");
                 }
                 //если собрали все задачи и активируем супер бонус в конце уровня
                 else if (Tasks.Instance.collectedAll && SuperBonus.Instance.ActivateSuperBonusOnEnd())
                 {
                     //blockedForMove = false;
-                    Debug.Log("Активируем супер бонус!");
+                    //Debug.Log("Активируем супер бонус!");
                 }
                 else
                 {
-                    yield return new WaitForSeconds(1.2f);
+                    yield return new WaitForSeconds(0.5f);
                     Time.timeScale = 1;
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, true));
                 }
@@ -541,7 +541,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //если не конец игры, но ходов не осталось  и супер бонус не активен то рисуем проигрыш
                 if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove.found)
                 {
-                    //yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(0.5f);
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove.found));
                     blockedForMove = false;
                     yield break;
