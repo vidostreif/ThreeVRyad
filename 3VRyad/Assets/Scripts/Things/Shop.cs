@@ -389,6 +389,10 @@ public class Shop : MonoBehaviour, IStoreListener
                         positoinThingtoGo = thingButtonOnGame.Button.transform.position;
                     }
                 }
+                else
+                {
+                    positoinThingtoGo = panelShopOnGame.transform.Find("ImageCoins").transform.position;
+                }
 
                 MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, positoinThingtoGo, 1, SmoothEnum.InLineWithOneSpeed, 0.85f, true, true, delegate { thing.ThingFlew(1); });
 

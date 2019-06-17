@@ -34,11 +34,11 @@ public class ThingsManager : MonoBehaviour
         //загружаем сохранение
         Save save = JsonSaveAndLoad.LoadSave();
         //создаем список инструментов и проставляем данные
-        instruments = new Thing[Enum.GetNames(typeof(InstrumentsEnum)).Length];
+        instruments = new Thing[Enum.GetNames(typeof(InstrumentsEnum)).Length - 1];
         for (int i = 0; i < instruments.Length; i++)
         {
             int quantity = 0;
-            InstrumentsEnum instrumentsEnum = (InstrumentsEnum)Enum.GetValues(typeof(InstrumentsEnum)).GetValue(i);
+            InstrumentsEnum instrumentsEnum = (InstrumentsEnum)Enum.GetValues(typeof(InstrumentsEnum)).GetValue(i + 1);
 
             //если в сохранении нет ни 
 
@@ -113,7 +113,7 @@ public class ThingsManager : MonoBehaviour
                 if (instrument.Type == type)
                 {
                     instrument.AddQuantity(count);
-                    Shop.Instance.CreateThingAnimation(position, curTransform, type, count);
+                    StartCoroutine(Shop.Instance.CreateThingAnimation(position, curTransform, type, count));
                     break;
                 }
             }

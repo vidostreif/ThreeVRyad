@@ -55,6 +55,8 @@ public class RewardVideo
         Transform textTimerTran = videoBrowseButton.go.transform.Find("TextTimer");
         videoBrowseButton.textTimer = textTimerTran.GetComponent<Text>();
         SupportFunctions.ChangeButtonAction(videoBrowseButton.button.transform, delegate { CreateBanerForFee(videoBrowseButton); });
+        firstLoadDelay = 0;
+        lastTryLoadVideo = 0;
         return videoBrowseButton;
     }
         
@@ -146,9 +148,9 @@ public class RewardVideo
     {        
         //если первая загрузка и нет задержки, то загружаем немедленно. Если первая загрузка и есть задержка, то ждем пока не наступит время
         //иначе пытаемся загрузить видео не чаще одного раза в минуту
-        if ((lastTryLoadVideo == 0 && (firstLoadDelay == 0 || firstLoadDelay < Time.time)) || lastTryLoadVideo + 60 < Time.time)
+        if ((lastTryLoadVideo == 0 && (firstLoadDelay == 0 || firstLoadDelay < Time.time)) || lastTryLoadVideo + 60 < Time.realtimeSinceStartup)
         {
-            lastTryLoadVideo = Time.time;
+            lastTryLoadVideo = Time.realtimeSinceStartup;
             //// Create an empty ad request.
             //AdRequest request = new AdRequest.Builder().Build();
             //// Load the rewarded video ad with the request.
@@ -163,7 +165,7 @@ public class RewardVideo
 
     //создание рекламы за вознаграждение
     public void CreateBanerForFee(VideoBrowseButton videoBrowseButton)
-    {
+    {        
         if (rewardedAd.IsLoaded())
         {
             newAdPrepared = false;
@@ -173,9 +175,11 @@ public class RewardVideo
         else
         {
             SupportFunctions.CreateInformationPanel("Видео еще не загрузилось!");
-            //збрасываем, для немедленной попытки загрузить видео.
-            lastTryLoadVideo = 0;
         }
+
+        //сбрасываем, для немедленной попытки загрузить видео.
+        firstLoadDelay = 0;
+        lastTryLoadVideo = 0;
     }
 
     public void ProcessingOfButtonArrays()

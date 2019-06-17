@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //выдача подарков каждый день начиная с 8 часов по гринвичу
 public class DailyGiftManager : MonoBehaviour
@@ -39,6 +40,16 @@ public class DailyGiftManager : MonoBehaviour
         }
         LoadSave();
 
+        DetermineMomentOfIssuingNextGift();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void DetermineMomentOfIssuingNextGift() {
         //определяем момен выдачи следующего подарка
         DateTime realtime = CheckTime.Realtime();
         realtime = new DateTime(realtime.Year, realtime.Month, realtime.Day).AddHours(8);//находим 8 час сегодняшнего дня
@@ -56,56 +67,54 @@ public class DailyGiftManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     //выдача рандомного подарка
     private void GivingOutRandomGift(int place)
-    {    
-        int randomNumber = UnityEngine.Random.Range(1, 3 + ThingsManager.Instance.InstrumentsCount());
+    {
+        if (numberOfGiftsIssuedToday < 3)
+        {
+            int randomNumber = UnityEngine.Random.Range(1, 3 + ThingsManager.Instance.InstrumentsCount());
 
-        int randomFactor = UnityEngine.Random.Range(1, 5); //множитель подарка
-        if (randomFactor == 1)
-        {
-            randomFactor = 2;
-        }
-        else
-        {
-            randomFactor = 1;
-        }
+            int randomFactor = UnityEngine.Random.Range(1, 5); //множитель подарка
+            if (randomFactor == 1)
+            {
+                randomFactor = 2;
+            }
+            else
+            {
+                randomFactor = 1;
+            }
 
-        Debug.Log("randomNumber " + randomNumber);
-        if (dailyGiftPanel)
-        {
-            Transform dailyGiftPanelTransform = dailyGiftPanel.transform.Find("VideoPlace_" + place);
-            //если выпала единица, то выдаем 15 монет
-            if (randomNumber == 1)
+            Debug.Log("randomNumber " + randomNumber);
+            if (dailyGiftPanel != null)
             {
-                Shop.Instance.AddCoins(15 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
-            }
-            else if (randomNumber == 2)//если выпала двойка, то дарим бесконечные жизни
-            {
-                LifeManager.Instance.addTimeImmortal(30 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
-            }
-            else {
-                randomNumber -= 2;
-                Debug.Log("randomGiftNumber " + randomNumber);
-                Thing thing = ThingsManager.Instance.GetThing(randomNumber);
-                if (thing != null)
+                Transform dailyGiftPanelTransform = dailyGiftPanel.transform.Find("VideoPlace_" + place);
+                //если выпала единица, то выдаем 15 монет
+                if (randomNumber == 1)
                 {
-                    ThingsManager.Instance.addinstruments(thing.Type, 1 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
-                }                
+                    Shop.Instance.AddCoins(15 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
+                }
+                else if (randomNumber == 2)//если выпала двойка, то дарим бесконечные жизни
+                {
+                    LifeManager.Instance.addTimeImmortal(30 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
+                }
+                else
+                {
+                    randomNumber -= 2;
+                    Debug.Log("randomGiftNumber " + randomNumber);
+                    Thing thing = ThingsManager.Instance.GetThing(randomNumber);
+                    Debug.Log("thing " + thing.Type);
+                    if (thing != null)
+                    {
+                        ThingsManager.Instance.addinstruments(thing.Type, 1 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
+                    }
+                }
+                numberOfGiftsIssuedToday++;
+
+                lastGiftTimeIssued = CheckTime.Realtime();
+                DetermineMomentOfIssuingNextGift();
+                RecordSave();
             }
-            numberOfGiftsIssuedToday++;
-
-            lastGiftTimeIssued = CheckTime.Realtime();
-            RecordSave();
         }
-
-        
     }
 
     //подтверждение просмотра первого видео
@@ -139,30 +148,57 @@ public class DailyGiftManager : MonoBehaviour
     }
 
     public void CreateDailyGiftPanel() {
-        DestroyDailyGiftPanel();
-        Transform transformParent = GameObject.Find("CanvasShop").transform;
-        dailyGiftPanel = GameObject.Instantiate(PrefabBank.PanelDailyGift, transformParent);
-        //dailyGiftPanel.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
+        DetermineMomentOfIssuingNextGift();
+        if (numberOfGiftsIssuedToday < 3) {
+            DestroyDailyGiftPanel();
+            Transform transformParent = GameObject.Find("CanvasShop").transform;
+            dailyGiftPanel = GameObject.Instantiate(PrefabBank.PanelDailyGift, transformParent);
+            //dailyGiftPanel.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
 
-        if (numberOfGiftsIssuedToday < 3)
-        {
-            firstVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_1"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingFirstVideo);
+            if (numberOfGiftsIssuedToday < 3)
+            {
+               GameObject ButtonGo = dailyGiftPanel.transform.Find("Button1").gameObject;
+#if !UNITY_EDITOR
+                firstVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_1"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingFirstVideo);   
+                //GameObject.Destroy(Button1Go);                
+#else
+                SupportFunctions.ChangeButtonAction(ButtonGo.transform, delegate { GivingOutRandomGift(1); });
+                SupportFunctions.ChangeAlfa(ButtonGo.GetComponent<Image>(), 1);
+#endif
+            }
+
+            if (numberOfGiftsIssuedToday < 2)
+            {
+                GameObject ButtonGo = dailyGiftPanel.transform.Find("Button2").gameObject;
+#if !UNITY_EDITOR
+                firstVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_2"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingSecondVideo);   
+                //GameObject.Destroy(Button1Go);                
+#else
+                SupportFunctions.ChangeButtonAction(ButtonGo.transform, delegate { GivingOutRandomGift(2); });
+                SupportFunctions.ChangeAlfa(ButtonGo.GetComponent<Image>(), 1);
+#endif
+            }
+
+            if (numberOfGiftsIssuedToday < 1)
+            {
+                GameObject ButtonGo = dailyGiftPanel.transform.Find("Button3").gameObject;
+#if !UNITY_EDITOR
+                firstVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_3"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingThirdVideo);   
+                //GameObject.Destroy(Button1Go);                
+#else
+                SupportFunctions.ChangeButtonAction(ButtonGo.transform, delegate { GivingOutRandomGift(3); });
+                SupportFunctions.ChangeAlfa(ButtonGo.GetComponent<Image>(), 1);
+#endif
+            }
+
+            SupportFunctions.ChangeButtonAction(dailyGiftPanel.transform.Find("ButtonOk"), DestroyDailyGiftPanel);
         }
-
-        if (numberOfGiftsIssuedToday < 2)
+        else
         {
-            secondVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_2"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingSecondVideo);
+            TimeSpan timeSpan = TimeUntilNextDailyGift();
+            SupportFunctions.CreateInformationPanel("До получения новых подарков осталось " + timeSpan.Hours + "h " + timeSpan.Minutes + "m");
         }
-
-        if (numberOfGiftsIssuedToday < 1)
-        {
-            thirdVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_3"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingThirdVideo);
-        }
-
-        //videoBrowseButton.button.onClick.AddListener(DestroyDailyGiftPanel);
-
-
-        SupportFunctions.ChangeButtonAction(dailyGiftPanel.transform.Find("ButtonOk"), DestroyDailyGiftPanel);
+        
     }
 
     public void DestroyDailyGiftPanel()
@@ -170,9 +206,26 @@ public class DailyGiftManager : MonoBehaviour
         GameObject.Destroy(dailyGiftPanel);
     }
 
+    //сегодня получили все подарки?
+    public bool TodayReceivedAllDailyGift()
+    {
+        DetermineMomentOfIssuingNextGift();
+        if (numberOfGiftsIssuedToday < 3)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+    }
+
     //сколко времени до следующего подарка
-    public TimeSpan TimeUntilNextDailyGift() {
-        return nextGiftTimeIssued.Subtract(CheckTime.Realtime());        
+    public TimeSpan TimeUntilNextDailyGift()
+    {
+        DetermineMomentOfIssuingNextGift();
+        return nextGiftTimeIssued.Subtract(CheckTime.Realtime());      
     }
 
     private void LoadSave()

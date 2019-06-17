@@ -61,11 +61,16 @@ public class AdMobManager : MonoBehaviour
         rewardVideoForLife = new RewardVideo(LifeManager.Instance.AddLifeForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300, 20);
 
         //определяем время загрузки видео для ежедневного подарка
-        int timeLoadVideoForDailyGift = (int)DailyGiftManager.Instance.TimeUntilNextDailyGift().TotalSeconds - 30;
-        if (timeLoadVideoForDailyGift < 10)
+        int timeLoadVideoForDailyGift = 10;
+        if (DailyGiftManager.Instance.TodayReceivedAllDailyGift())
         {
-            timeLoadVideoForDailyGift = 10;
-        }
+            timeLoadVideoForDailyGift = (int)DailyGiftManager.Instance.TimeUntilNextDailyGift().TotalSeconds - 30;
+            if (timeLoadVideoForDailyGift < 10)
+            {
+                timeLoadVideoForDailyGift = 10;
+            }
+        }     
+        
         rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingFirstVideo, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 0, timeLoadVideoForDailyGift);
     }
 
