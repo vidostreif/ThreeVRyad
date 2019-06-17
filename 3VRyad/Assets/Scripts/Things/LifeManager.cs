@@ -96,7 +96,7 @@ public class LifeManager : MonoBehaviour
         {
             price = addMinutesTimeImmortal;
         }
-        endTimeImmortal = EndTimeImmortal.AddMinutes(price);
+        endTimeImmortal = endTimeImmortal.AddMinutes(price);
         addMinutesTimeImmortal -= price;
         UpdateText();
         if (price > 0)
@@ -154,6 +154,19 @@ public class LifeManager : MonoBehaviour
         return true;
     }
 
+    public bool Immortal()
+    {
+        if (EndTimeImmortal > CheckTime.Realtime())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
     //вознаграждение за просмотр рекламы
     public void AddLifeForViewingAds(Reward args)
     {
@@ -202,7 +215,7 @@ public class LifeManager : MonoBehaviour
         if (endTimeImmortal > CheckTime.Realtime())
         {
             TimeSpan dateTime = endTimeImmortal.Subtract(CheckTime.Realtime());
-            textLive.text = (char)8734 + " (" + dateTime.Minutes + "m " + dateTime.Seconds + "s)";
+            textLive.text = (char)8734 + " (" + dateTime.Hours + "h " + dateTime.Minutes + "m " + dateTime.Seconds + "s)";
         }
         else
         {

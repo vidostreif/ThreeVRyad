@@ -465,7 +465,12 @@ public class MainGameSceneScript : MonoBehaviour {
 
     //запрос на перезапуск сцены во время игры
     public void RequestRestartLevel() {
-        if (LifeManager.Instance.Life > 1)
+
+        if (LifeManager.Instance.Immortal())
+        {
+            RestartLevel();
+        }
+        else if (LifeManager.Instance.Life > 1)
         {
             SupportFunctions.CreateYesNoPanel(GameObject.Find("GameHelper").transform, "При перезапуске игры вы потеряете жизнь. Перезапустить?", RestartLevelInGame);
         }
@@ -533,7 +538,11 @@ public class MainGameSceneScript : MonoBehaviour {
     //запрос на выход в меню в время игры
     public void RequestExitToMenu()
     {
-        if (LifeManager.Instance.Life > 0)
+        if (LifeManager.Instance.Immortal())
+        {
+            ExitToMenu();
+        }
+        else if (LifeManager.Instance.Life > 0)
         {
             SupportFunctions.CreateYesNoPanel(GameObject.Find("GameHelper").transform, "При выходе в меню вы потеряете жизнь. Выйти?", ExitToMenuInGame);
         }
