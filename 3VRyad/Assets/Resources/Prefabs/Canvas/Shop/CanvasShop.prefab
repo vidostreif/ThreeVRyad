@@ -235,7 +235,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 6ff4d2675e98dbe49ad5e2f512268666, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 3
@@ -389,6 +389,7 @@ MonoBehaviour:
     - type: 4
       count: 1
     coins: 0
+    timeImmortalLives: 0
     image: {fileID: 21300000, guid: 835bf98bc9278bb4487599a0155d803f, type: 3}
   - id: bundel_x10
     name: "\u0411\u0430\u043D\u0434\u043B \u044510"
@@ -404,6 +405,7 @@ MonoBehaviour:
     - type: 4
       count: 10
     coins: 0
+    timeImmortalLives: 0
     image: {fileID: 21300000, guid: 9d64a4c865823b447b58ca23bd6433a8, type: 3}
   - id: coins_100
     name: "100 \u043C\u043E\u043D\u0435\u0442"
@@ -411,6 +413,7 @@ MonoBehaviour:
     productType: 0
     compositionBundle: []
     coins: 100
+    timeImmortalLives: 0
     image: {fileID: 21300000, guid: 98ba1eea80ce68448b2859b015176b5a, type: 3}
   - id: coins_500_for_1
     name: "500 \u043C\u043E\u043D\u0435\u0442 \u0437\u0430 \u043E\u0434\u043D\u0443"
@@ -418,6 +421,7 @@ MonoBehaviour:
     productType: 0
     compositionBundle: []
     coins: 500
+    timeImmortalLives: 0
     image: {fileID: 21300000, guid: 98ba1eea80ce68448b2859b015176b5a, type: 3}
   - id: bundel_x20
     name: "\u0411\u0430\u043D\u0434\u043B \u044520"
@@ -433,7 +437,17 @@ MonoBehaviour:
     - type: 4
       count: 20
     coins: 0
+    timeImmortalLives: 0
     image: {fileID: 21300000, guid: 9b3faf4772e962b43b494f4db951ecc7, type: 3}
+  - id: ImortalLife_30min
+    name: "\u0411\u0435\u0441\u043A\u043E\u043D\u0435\u0447\u043D\u044B\u0435 \u0436\u0438\u0437\u043D\u0438
+      \u043D\u0430 30 \u043C\u0438\u043D\u0443\u0442"
+    priceCoins: 10
+    productType: 0
+    compositionBundle: []
+    coins: 0
+    timeImmortalLives: 30
+    image: {fileID: 21300000, guid: e583088164cd45b4e9cf9a484eb1626c, type: 3}
 --- !u!114 &1482933633661967353
 MonoBehaviour:
   m_ObjectHideFlags: 0

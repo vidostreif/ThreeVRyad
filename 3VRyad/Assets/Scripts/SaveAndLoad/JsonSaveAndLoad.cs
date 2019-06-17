@@ -188,6 +188,7 @@ public static class JsonSaveAndLoad
         LoadSaveFromFile();
         save.lifeSave.life = lifeManager.Life;
         save.lifeSave.timeToNextLifeLong = lifeManager.TimeToNextLife.ToFileTimeUtc();
+        save.lifeSave.endTimeImmortalLong = lifeManager.EndTimeImmortal.ToFileTimeUtc();
         saveIsChanged = true;
     }
 
@@ -298,6 +299,7 @@ public class LifeSave
 {
     public int life = 0;
     public long timeToNextLifeLong;
+    public long endTimeImmortalLong;
 
     //public DateTime TimeToNextLife
     //{

@@ -13,12 +13,19 @@ public class LifeManager : MonoBehaviour
     [SerializeField] private int timeToGetOneLife; //количество минут для получения одной жизни 
     //private DateTime timeToGetOneLifeDateTime; //количество минут для получения одной жизни 
     private DateTime timeToNextLife; //время получения следующей жизни
+    private DateTime endTimeImmortal; //время окончания бессметрия
+    private int addMinutesTimeImmortal = 0;
     private Text textLive;
     private Image imageLive;
     private float LastArrayProcessingTime = 0;
 
     public int Life { get => life; }
     public DateTime TimeToNextLife { get => timeToNextLife; }
+    public DateTime EndTimeImmortal {
+        get {
+            return endTimeImmortal.AddMinutes(addMinutesTimeImmortal);
+        }
+    }
 
     // Start is called before the first frame update
     void Awake()
@@ -50,9 +57,9 @@ public class LifeManager : MonoBehaviour
     void Update()
     {
         //пополняем жизни раз в указанное время
-        if (life < maxLife && LastArrayProcessingTime + 0.5f < Time.realtimeSinceStartup)
-        {
-            if (CheckTime.Realtime() >= timeToNextLife)
+        if (LastArrayProcessingTime + 0.5f < Time.realtimeSinceStartup)
+        {            
+            if (life < maxLife && CheckTime.Realtime() >= timeToNextLife)
             {
                 timeToNextLife = CheckTime.Realtime().AddMinutes(timeToGetOneLife);
                 PlusLive();
@@ -84,9 +91,29 @@ public class LifeManager : MonoBehaviour
         }
     }
 
+    public void LiveFlew(int price) {
+        if (price > addMinutesTimeImmortal)
+        {
+            price = addMinutesTimeImmortal;
+        }
+        endTimeImmortal = EndTimeImmortal.AddMinutes(price);
+        addMinutesTimeImmortal -= price;
+        UpdateText();
+        if (price > 0)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Coin);
+        }
+    }
+
     //уменьшаем количество жизней
     public bool SubLive() {
-        if (life > 0)
+
+        //если бессмертие, то не уменьшаем жизни
+        if (EndTimeImmortal > CheckTime.Realtime())
+        {
+            return true;
+        }
+        else if (life > 0)
         {
             if (life == maxLife)
             {
@@ -111,6 +138,22 @@ public class LifeManager : MonoBehaviour
         }
     }
 
+    //добавление времени бессмертия из бандла
+    public bool addTimeImmortal(int time)
+    {
+        if (EndTimeImmortal < CheckTime.Realtime())
+        {
+            endTimeImmortal = CheckTime.Realtime();
+        }
+        addMinutesTimeImmortal += time;
+        if (EndTimeImmortal > CheckTime.Realtime())
+        {
+            life = maxLife;
+        }
+        RecordSave();
+        return true;
+    }
+
     //вознаграждение за просмотр рекламы
     public void AddLifeForViewingAds(Reward args)
     {
@@ -128,16 +171,23 @@ public class LifeManager : MonoBehaviour
     private void LoadSave()
     {
         LifeSave lifeSave = JsonSaveAndLoad.LoadSave().lifeSave;
-        DateTime dateTime = DateTime.FromFileTimeUtc(lifeSave.timeToNextLifeLong);
-        if (lifeSave.life == 0 && dateTime == null)
+        DateTime dateTimeToNextLifeLong = DateTime.FromFileTimeUtc(lifeSave.timeToNextLifeLong);
+        DateTime dateTimeEndTimeImmortal = DateTime.FromFileTimeUtc(lifeSave.endTimeImmortalLong);
+        if (lifeSave.life == 0 && dateTimeToNextLifeLong == null)
         {
             life = maxLife;
             timeToNextLife = CheckTime.Realtime().AddMinutes(timeToGetOneLife);
+            endTimeImmortal = new DateTime();
         }
         else
         {
             life = lifeSave.life > maxLife ? maxLife : lifeSave.life;
-            timeToNextLife = dateTime;
+            timeToNextLife = dateTimeToNextLifeLong;
+            endTimeImmortal = dateTimeEndTimeImmortal;
+            if (endTimeImmortal > CheckTime.Realtime())
+            {
+                life = maxLife;
+            }
         }
     }
 
@@ -149,15 +199,25 @@ public class LifeManager : MonoBehaviour
 
     private void UpdateText() {
 
-        string text = "" + life;
-        if (life < maxLife)
+        if (endTimeImmortal > CheckTime.Realtime())
         {
-            TimeSpan dateTime = timeToNextLife.Subtract(CheckTime.Realtime());
-            //int minutes = (int)(timeToNextLife - Time.realtimeSinceStartup) / 60;
-            //int seconds = (int)(timeToNextLife - Time.realtimeSinceStartup - (minutes * 60));
-            text += " (" + dateTime.Minutes + "m " + dateTime.Seconds + "s)";
+            TimeSpan dateTime = endTimeImmortal.Subtract(CheckTime.Realtime());
+            textLive.text = (char)8734 + " (" + dateTime.Minutes + "m " + dateTime.Seconds + "s)";
+        }
+        else
+        {
+            string text = "" + life;
+            if (life < maxLife)
+            {
+                TimeSpan dateTime = timeToNextLife.Subtract(CheckTime.Realtime());
+                //int minutes = (int)(timeToNextLife - Time.realtimeSinceStartup) / 60;
+                //int seconds = (int)(timeToNextLife - Time.realtimeSinceStartup - (minutes * 60));
+                text += " (" + dateTime.Minutes + "m " + dateTime.Seconds + "s)";
+            }
+
+            textLive.text = text;
         }
 
-        textLive.text = text;
+        
     }
 }

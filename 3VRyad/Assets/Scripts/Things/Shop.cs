@@ -293,8 +293,12 @@ public class Shop : MonoBehaviour, IStoreListener
         {
             giftLength += product.compositionBundle.Length;
         }
+        if (product.timeImmortalLives > 0)
+        {
+            giftLength++;
+        }
 
-            //показываем наши покупки
+        //показываем наши покупки
         if (giftLength > 0)
         {
             //смещение по x
@@ -308,12 +312,17 @@ public class Shop : MonoBehaviour, IStoreListener
                 }
                 yield return new WaitForSeconds(0.3f);
             }
-
+                        
             if (product.coins > 0)
             {
                 yield return StartCoroutine(CreateCoinAnimation(new Vector3(startingXPoint + ((0 + product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.coins));
-                 
-            }            
+                yield return new WaitForSeconds(0.3f);
+            }
+
+            if (product.timeImmortalLives > 0)
+            {
+                yield return StartCoroutine(CreateLivesAnimation(new Vector3(startingXPoint + ((0 + product.compositionBundle.Length + product.coins > 0 ? 1 : 0) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.timeImmortalLives));
+            }
         }
         yield return new WaitForSeconds(1.0f);
     }
@@ -446,6 +455,80 @@ public class Shop : MonoBehaviour, IStoreListener
             } while (!allDestroy);
 
             Destroy(giftCoinGO);
+        }
+    }
+
+    //анимация получения времени бессмертия
+    public IEnumerator CreateLivesAnimation(Vector3 position, Transform transformParent, int timeImmortalLives, Vector3 newPosition = new Vector3(), bool destroyMainGift = false)
+    {
+        //показываем сердце
+        //Находим сердце на панели
+        Transform panelImageLiveTransform = GameObject.Find("ImageLive").transform;
+
+        //показываем жизнь среди подарков
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
+        GameObject giftGO = Instantiate(PrefabBank.PrefabButtonThing, position, Quaternion.identity, transformParent);
+        Image giftCoinImage = giftGO.GetComponent<Image>();
+        giftCoinImage.sprite = Resources.Load<Sprite>("Sprites/interface/Life") as Sprite;
+        giftGO.GetComponentInChildren<Text>().text = "+" + timeImmortalLives;
+
+        //если требуется перемещаем на новую позицию
+        if (newPosition != Vector3.zero)
+        {
+            MainAnimator.Instance.AddElementForSmoothMove(giftGO.transform, newPosition, 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        int timeLives = timeImmortalLives;
+        int exchangeRate = 10;
+        List<GameObject> miniGiftGOList = new List<GameObject>();
+        //создаем жизни рядом с подарком
+        do
+        {
+            //определяем какое количество будет передано в одном сердце
+            if (timeLives < exchangeRate)
+            {
+                exchangeRate = timeLives;
+            }
+            timeLives -= exchangeRate;
+
+            //добавим рандома в месте создания монет
+            float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
+            float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
+
+            GameObject miniGiftGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftGO.transform.position, Quaternion.identity, transformParent);
+            miniGiftGO.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/interface/Life") as Sprite;
+            miniGiftGOList.Add(miniGiftGO);
+            //перемещаем на рандомную позицию
+            MainAnimator.Instance.AddElementForSmoothMove(miniGiftGO.transform, new Vector3(giftGO.transform.position.x + randomNumberX, giftGO.transform.position.y + randomNumberY, giftGO.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
+
+            //перемещаем к сердцу на панели
+            MainAnimator.Instance.AddElementForSmoothMove(miniGiftGO.transform, panelImageLiveTransform.position, 1, SmoothEnum.InLineWithOneSpeed, 0.85f, true, true, delegate { LifeManager.Instance.LiveFlew(exchangeRate); });
+
+            yield return new WaitForEndOfFrame();
+        } while (timeLives > 0);
+
+        //если требуется уничтожить главный подарок, то делаем его полупрозрачным, далее ожидаем пока не долетят все мини подарки
+        if (destroyMainGift)
+        {
+            yield return new WaitForSeconds(0.5f);
+            MainAnimator.Instance.AddElementForSmoothChangeColor(giftCoinImage, new Color(giftCoinImage.color.r, giftCoinImage.color.g, giftCoinImage.color.b, 0), 1.7f);
+            bool allDestroy;
+            do
+            {
+                allDestroy = true;
+                foreach (GameObject GameObjectItem in miniGiftGOList)
+                {
+                    if (GameObjectItem != null)
+                    {
+                        allDestroy = false;
+                        break;
+                    }
+                }
+                yield return new WaitForEndOfFrame();
+            } while (!allDestroy);
+
+            Destroy(giftGO);
         }
     }
 
@@ -703,6 +786,12 @@ public class Shop : MonoBehaviour, IStoreListener
                 JsonSaveAndLoad.RecordSave(this);
             }
 
+            //если есть время бессмертия
+            if (product.timeImmortalLives > 0)
+            {
+                result = LifeManager.Instance.addTimeImmortal(product.timeImmortalLives);
+            }
+
             //если успешная покупка, то отнимаем стоимось покупки в монетах (если она есть)
             if (result)
             {
@@ -772,6 +861,7 @@ public class ProductV {
     //что получаем за покупку
     public BundleShopV[] compositionBundle;//состав бандла для покупки
     public int coins = 0;//сколько получаем монет
+    public int timeImmortalLives = 0;//сколько получаем времени бессмертия (минут)
 
     public Sprite image;
 
