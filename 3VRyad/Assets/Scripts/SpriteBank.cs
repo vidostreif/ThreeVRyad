@@ -80,9 +80,8 @@ public static class SpriteBank
         }
         else
         {
-            return Resources.Load<Sprite>("Sprites/Instruments/" + shape.ToString() + (mini ? "_mini" : "")) as Sprite;
-        }
-        
+            return Resources.Load("Sprites/Instruments/" + shape.ToString() + (mini ? "_mini" : ""), typeof(Sprite)) as Sprite;
+        }        
     }
 
     public static Sprite SetShape(BorderEnum shape)

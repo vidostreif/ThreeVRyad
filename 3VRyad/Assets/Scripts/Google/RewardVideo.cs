@@ -93,13 +93,13 @@ public class RewardVideo
     }
 
     private void PrepareNewAd() {
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
                 string adUnitId = this.adAndroidId;
-        #elif UNITY_IPHONE
+#elif UNITY_IPHONE
                                     string adUnitId = adIOSId;
-        #else
+#else
                                     string adUnitId = "unexpected_platform";
-        #endif
+#endif
 
         this.rewardedAd = new RewardedAd(adUnitId);
 
@@ -165,7 +165,8 @@ public class RewardVideo
 
     //создание рекламы за вознаграждение
     public void CreateBanerForFee(VideoBrowseButton videoBrowseButton)
-    {        
+    {
+#if !UNITY_EDITOR
         if (rewardedAd.IsLoaded())
         {
             newAdPrepared = false;
@@ -180,6 +181,13 @@ public class RewardVideo
         //сбрасываем, для немедленной попытки загрузить видео.
         firstLoadDelay = 0;
         lastTryLoadVideo = 0;
+#else
+        lastActivVideoBrowseButton = videoBrowseButton;
+        Reward args = new Reward();
+        args.Type = "Test type";
+        args.Amount = 1;
+        HandleUserEarnedReward(videoBrowseButton, args);
+#endif
     }
 
     public void ProcessingOfButtonArrays()
@@ -225,12 +233,13 @@ public class RewardVideo
             }
             videoBrowseButtonListForDelete.Clear();
         }
-        
+#if !UNITY_EDITOR
         //проверяем загрузку видео
         if (newAdPrepared && !rewardedAd.IsLoaded())
         {
             RequestRewardBasedVideoForCoin();
         }
+#endif
     }
 }
 

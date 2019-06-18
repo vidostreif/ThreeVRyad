@@ -14,9 +14,9 @@ public class DailyGiftManager : MonoBehaviour
     private int numberOfGiftsIssuedToday; //количество выданных подарков сегодня
     private GameObject dailyGiftPanel;
 
-    private VideoBrowseButton firstVideoBrowseButton;
-    private VideoBrowseButton secondVideoBrowseButton;
-    private VideoBrowseButton thirdVideoBrowseButton;
+    private VideoBrowseButton[] videoBrowseButtonList;
+    //private VideoBrowseButton secondVideoBrowseButton;
+    //private VideoBrowseButton thirdVideoBrowseButton;
 
     public DateTime LastGiftTimeIssued { get => lastGiftTimeIssued; }
     public int NumberOfGiftsIssuedToday { get => numberOfGiftsIssuedToday; }
@@ -52,18 +52,23 @@ public class DailyGiftManager : MonoBehaviour
     private void DetermineMomentOfIssuingNextGift() {
         //определяем момен выдачи следующего подарка
         DateTime realtime = CheckTime.Realtime();
-        realtime = new DateTime(realtime.Year, realtime.Month, realtime.Day).AddHours(8);//находим 8 час сегодняшнего дня
-        TimeSpan timeSpan = realtime.Subtract(lastGiftTimeIssued);
+        DateTime realtime8hours = new DateTime(realtime.Year, realtime.Month, realtime.Day).AddHours(8);//находим 8 час сегодняшнего дня
+        TimeSpan timeSpan = realtime8hours.Subtract(lastGiftTimeIssued);
+        TimeSpan differenceWith8Hours = realtime8hours.Subtract(realtime);
 
-        // если выдали предыдущий подарок раньше 8 часов сегодняшнего дня
-        if (timeSpan.TotalSeconds > 0)
+        // если выдали предыдущий подарок раньше 8 часов сегодняшнего дня, а сейчас уже больше 8 часов
+        if (timeSpan.TotalSeconds > 0 && differenceWith8Hours.TotalSeconds < 0)
         {
-            nextGiftTimeIssued = realtime;
+            nextGiftTimeIssued = realtime8hours;
             numberOfGiftsIssuedToday = 0;
         }
-        else
+        else if (timeSpan.TotalSeconds > 0 && differenceWith8Hours.TotalSeconds > 0)
         {
-            nextGiftTimeIssued = realtime.AddDays(1);
+            nextGiftTimeIssued = realtime8hours;
+        }
+        else if (timeSpan.TotalSeconds < 0 && differenceWith8Hours.TotalSeconds < 0)
+        {
+            nextGiftTimeIssued = realtime8hours.AddDays(1);
         }
     }
 
@@ -100,9 +105,9 @@ public class DailyGiftManager : MonoBehaviour
                 else
                 {
                     randomNumber -= 2;
-                    Debug.Log("randomGiftNumber " + randomNumber);
+                    //Debug.Log("randomGiftNumber " + randomNumber);
                     Thing thing = ThingsManager.Instance.GetThing(randomNumber);
-                    Debug.Log("thing " + thing.Type);
+                    //Debug.Log("thing " + thing.Type);
                     if (thing != null)
                     {
                         ThingsManager.Instance.addinstruments(thing.Type, 1 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
@@ -118,77 +123,65 @@ public class DailyGiftManager : MonoBehaviour
     }
 
     //подтверждение просмотра первого видео
-    public void ConfirmationOfViewingFirstVideo(Reward args)
+    public void ConfirmationOfViewingVideo_1(Reward args)
     {
         if (args.Amount > 0)
         {
-            Destroy(firstVideoBrowseButton.go);
+            Destroy(videoBrowseButtonList[0].go);
             GivingOutRandomGift(1);
         }
     }
 
     //подтверждение просмотра второго видео
-    public void ConfirmationOfViewingSecondVideo(Reward args)
+    public void ConfirmationOfViewingVideo_2(Reward args)
     {
         if (args.Amount > 0)
         {
-            Destroy(secondVideoBrowseButton.go);
+            Destroy(videoBrowseButtonList[1].go);
             GivingOutRandomGift(2);
         }
     }
 
     //подтверждение просмотра третьего видео
-    public void ConfirmationOfViewingThirdVideo(Reward args)
+    public void ConfirmationOfViewingVideo_3(Reward args)
     {
         if (args.Amount > 0)
         {
-            Destroy(thirdVideoBrowseButton.go);
+            Destroy(videoBrowseButtonList[2].go);
             GivingOutRandomGift(3);
         }
     }
 
     public void CreateDailyGiftPanel() {
         DetermineMomentOfIssuingNextGift();
-        if (numberOfGiftsIssuedToday < 3) {
+        int maxNumber = 3;
+        if (numberOfGiftsIssuedToday < maxNumber) {
             DestroyDailyGiftPanel();
+            ThingsManager.Instance.PreloadSprites();
+            videoBrowseButtonList = new VideoBrowseButton[maxNumber];
             Transform transformParent = GameObject.Find("CanvasShop").transform;
             dailyGiftPanel = GameObject.Instantiate(PrefabBank.PanelDailyGift, transformParent);
             //dailyGiftPanel.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
 
-            if (numberOfGiftsIssuedToday < 3)
+                if (numberOfGiftsIssuedToday < maxNumber - 0)
+                {
+                    int n = 1;
+                    VideoBrowseButton videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_" + n), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingVideo_1);
+                    videoBrowseButtonList[n - 1] = videoBrowseButton;
+                }
+
+            if (numberOfGiftsIssuedToday < maxNumber - 1)
             {
-               GameObject ButtonGo = dailyGiftPanel.transform.Find("Button1").gameObject;
-#if !UNITY_EDITOR
-                firstVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_1"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingFirstVideo);   
-                //GameObject.Destroy(Button1Go);                
-#else
-                SupportFunctions.ChangeButtonAction(ButtonGo.transform, delegate { GivingOutRandomGift(1); });
-                SupportFunctions.ChangeAlfa(ButtonGo.GetComponent<Image>(), 1);
-#endif
+                int n = 2;
+                    VideoBrowseButton videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_" + n), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingVideo_2);
+                    videoBrowseButtonList[n - 1] = videoBrowseButton; 
             }
 
-            if (numberOfGiftsIssuedToday < 2)
+            if (numberOfGiftsIssuedToday < maxNumber - 2)
             {
-                GameObject ButtonGo = dailyGiftPanel.transform.Find("Button2").gameObject;
-#if !UNITY_EDITOR
-                firstVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_2"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingSecondVideo);   
-                //GameObject.Destroy(Button1Go);                
-#else
-                SupportFunctions.ChangeButtonAction(ButtonGo.transform, delegate { GivingOutRandomGift(2); });
-                SupportFunctions.ChangeAlfa(ButtonGo.GetComponent<Image>(), 1);
-#endif
-            }
-
-            if (numberOfGiftsIssuedToday < 1)
-            {
-                GameObject ButtonGo = dailyGiftPanel.transform.Find("Button3").gameObject;
-#if !UNITY_EDITOR
-                firstVideoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_3"), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingThirdVideo);   
-                //GameObject.Destroy(Button1Go);                
-#else
-                SupportFunctions.ChangeButtonAction(ButtonGo.transform, delegate { GivingOutRandomGift(3); });
-                SupportFunctions.ChangeAlfa(ButtonGo.GetComponent<Image>(), 1);
-#endif
+                int n = 3;
+                    VideoBrowseButton videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(dailyGiftPanel.transform.Find("VideoPlace_" + n), VideoForFeeEnum.ForDailyGift, DailyGiftManager.Instance.ConfirmationOfViewingVideo_3);
+                    videoBrowseButtonList[n - 1] = videoBrowseButton;  
             }
 
             SupportFunctions.ChangeButtonAction(dailyGiftPanel.transform.Find("ButtonOk"), DestroyDailyGiftPanel);

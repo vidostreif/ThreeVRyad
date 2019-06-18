@@ -344,7 +344,10 @@ public class Shop : MonoBehaviour, IStoreListener
     {
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
         GameObject go = Instantiate(PrefabBank.PrefabButtonThing, startPosition, Quaternion.identity, transformParent);
-        go.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum);
+        //go.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum);
+        Image giftImage = go.GetComponent<Image>();
+        Sprite sprite = SpriteBank.SetShape(instrumentsEnum);
+        giftImage.sprite = sprite;
         go.GetComponentInChildren<Text>().text = "+" + getCount;
 
         //если требуется перемещаем на новую позицию
@@ -369,8 +372,10 @@ public class Shop : MonoBehaviour, IStoreListener
                 float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
                 //берем монетку и меняем у нее вид
-                GameObject mminiThingGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, go.transform.position, Quaternion.identity, transformParent);
-                mminiThingGO.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum, true);
+                GameObject mminiThingGO = GameObject.Instantiate(PrefabBank.ImageCoin, go.transform.position, Quaternion.identity, transformParent);
+                Image miniGiftImage = mminiThingGO.GetComponent<Image>();
+                miniGiftImage.sprite = SpriteBank.SetShape(instrumentsEnum, true);
+                //mminiThingGO.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum, true);
 
                 //перемещаем на рандомную позицию
                 MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, new Vector3(go.transform.position.x + randomNumberX, go.transform.position.y + randomNumberY, go.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
@@ -486,7 +491,7 @@ public class Shop : MonoBehaviour, IStoreListener
         GameObject giftGO = Instantiate(PrefabBank.PrefabButtonThing, position, Quaternion.identity, transformParent);
         Image giftCoinImage = giftGO.GetComponent<Image>();
         giftCoinImage.sprite = Resources.Load<Sprite>("Sprites/interface/Life") as Sprite;
-        giftGO.GetComponentInChildren<Text>().text = "+" + timeImmortalLives;
+        giftGO.GetComponentInChildren<Text>().text = "+" + timeImmortalLives + "m";
 
         //если требуется перемещаем на новую позицию
         if (newPosition != Vector3.zero)

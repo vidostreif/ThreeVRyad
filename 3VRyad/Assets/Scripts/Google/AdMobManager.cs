@@ -71,12 +71,12 @@ public class AdMobManager : MonoBehaviour
             }
         }     
         
-        rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingFirstVideo, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 0, timeLoadVideoForDailyGift);
+        rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 5, timeLoadVideoForDailyGift);
     }
 
     public void Update()
     {
-#if !UNITY_EDITOR
+//#if !UNITY_EDITOR
         //обрабатываем не чаще двух раз в секунду
         if (LastArrayProcessingTime + 0.5f < Time.realtimeSinceStartup)
         {
@@ -86,7 +86,7 @@ public class AdMobManager : MonoBehaviour
             rewardVideoForLife.ProcessingOfButtonArrays();
             rewardVideoForDailyGift.ProcessingOfButtonArrays();
         }
-#endif
+//#endif
     }
 
     //создание кнопки просмотра видео

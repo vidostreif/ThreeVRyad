@@ -158,6 +158,15 @@ public class ThingsManager : MonoBehaviour
             }
     }
 
+    //предзагрузка спрайтов
+    public void PreloadSprites() {
+        foreach (Thing thingItem in instruments)
+        {
+            SpriteBank.SetShape(thingItem.Type);
+            SpriteBank.SetShape(thingItem.Type, true);
+        }
+    }
+
     public Thing GetThing(InstrumentsEnum type) {
         if (instruments != null)
         {
