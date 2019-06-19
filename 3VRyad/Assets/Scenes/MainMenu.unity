@@ -119,10 +119,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 19, guid: ef0be9df780aeef448c6023379b6a320, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -21.099976
-      objectReference: {fileID: 0}
     - target: {fileID: 25, guid: ef0be9df780aeef448c6023379b6a320, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -211,20 +207,45 @@ PrefabInstance:
       propertyPath: m_Name
       value: CanvasShop
       objectReference: {fileID: 0}
-    - target: {fileID: 1171634884543082150, guid: ef0be9df780aeef448c6023379b6a320,
+    - target: {fileID: 7145910706161324711, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7145910706161324711, guid: ef0be9df780aeef448c6023379b6a320,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 172.40002
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1171634884543082150, guid: ef0be9df780aeef448c6023379b6a320,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -21.099976
+      value: -22.930176
       objectReference: {fileID: 0}
     - target: {fileID: 18, guid: ef0be9df780aeef448c6023379b6a320, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 7457034389743375135}
+    - target: {fileID: 960947733563752246, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 960947733563752246, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 960947733563752246, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -80
+      objectReference: {fileID: 0}
+    - target: {fileID: 960947733563752246, guid: ef0be9df780aeef448c6023379b6a320,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -23
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef0be9df780aeef448c6023379b6a320, type: 3}
 --- !u!1 &630875481

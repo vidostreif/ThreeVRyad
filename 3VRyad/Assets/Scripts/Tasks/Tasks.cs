@@ -25,6 +25,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     private GameObject targetsParent;
     private GameObject canvasStartGame;
     [SerializeField] private int moves; //количество ходов
+    private int realMoves;
     private int addMoves;
     public bool endGame { get; protected set; } //признак что можно выполнить ход   
     public bool addMovesOnEndGAme { get; protected set; } //признак что добавляли ходы
@@ -35,16 +36,21 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             return moves + addMoves;
         }
-        //private set
-        //{
-        //    moves = value;
-        //}
+    }
+
+    public int RealMoves
+    {
+        get
+        {
+            return realMoves;
+        }
     }
 
     //добавление ходов в конце игры за просмотр рекламы
     public void AddMovesOnEndGAme(Reward args)
     {
         LifeManager.Instance.AddLive();
+
         StartCoroutine(CurAddMovesOnEndGAme(args));
     }
 
@@ -95,6 +101,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         }
         Instance = this;
         addMoves = 0;
+        realMoves = 0;
         thisTransform = transform;
         movesText = GetComponentInChildren<Text>();
         endGame = false;
@@ -109,6 +116,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         collectedAll = false;
         addMovesOnEndGAme = false;
         addMoves = 0;
+        realMoves = 0;
         UpdateMovesText();
         CreateCollectedElements();
     }
@@ -336,6 +344,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         if (Moves > 0)
         {
             moves--;
+            realMoves++;
             UpdateMovesText();
             if (Moves == 0)
             {

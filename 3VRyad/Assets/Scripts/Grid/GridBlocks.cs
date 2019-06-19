@@ -599,7 +599,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //поиск следующего хода для активации элементов
     public void NextActionElementsAfterMove()
     {
-
         BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
                                                                                               //перемешиваем найденные элементы
         SupportFunctions.MixArray(findeObjects);
@@ -612,7 +611,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 item.FoundNextActionAfterMove();
             }
         }
-
     }
 
     //проверяет нахождение блока в массивах для обработки

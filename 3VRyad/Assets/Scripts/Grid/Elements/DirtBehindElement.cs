@@ -10,7 +10,7 @@ public class DirtBehindElement : BehindElement
     public override void PerformActionAfterMove()
     {
         //если нужно активировать этот элемент в этом ходу
-        if (!destroyed && ActivationMove == Tasks.Instance.Moves)
+        if (!destroyed && ActivationMove == Tasks.Instance.RealMoves)
         {  
             Block block = FoundBlockForSpread();
             BehindElement newBehindElement = null;
@@ -42,7 +42,7 @@ public class DirtBehindElement : BehindElement
 
             if (deactivate)
             {
-                ActivationMove = int.MaxValue;
+                ActivationMove = -1;
                 if (PSNextMove != null)
                 {
                     Destroy(PSNextMove);
@@ -55,7 +55,7 @@ public class DirtBehindElement : BehindElement
 
     public override bool FoundNextActionAfterMove()
     {
-        if (nextProcessedMoveForAction >= Tasks.Instance.Moves || ActivationMove == Tasks.Instance.Moves)
+        if (nextProcessedMoveForAction <= Tasks.Instance.RealMoves || ActivationMove == Tasks.Instance.RealMoves)
         {
             Block block = FoundBlockForSpread();
 
@@ -64,7 +64,7 @@ public class DirtBehindElement : BehindElement
                 //находим все блоки с таким же элементом на заднем плане и указываем у них, что элемент для следующего хода найден
                 Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBehindElements(type, shape);
 
-                nextProcessedMoveForAction = Tasks.Instance.Moves - 1 - actionDelay;
+                nextProcessedMoveForAction = Tasks.Instance.RealMoves + 1 + actionDelay;
                 ActivationMove = nextProcessedMoveForAction;
 
                 UpdateSprite(1);

@@ -167,7 +167,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
     //обнолвление текста
     private void UpdateText()
     {
-        text.text = "Количество очков: " + score;
+        text.text = "" + score;
     }
 
     //количество полученных звезд
