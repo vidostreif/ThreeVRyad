@@ -17,8 +17,9 @@ public class Shop : MonoBehaviour, IStoreListener
     private GameObject panelShop; //магазин
     private GameObject panelShopConfirmation; //панель подтверждения действия
     private Transform panelShopOnGame;// панель которая отображается в верхнем углу экрана
-
+    private Transform panelShopButParent;//родитель панели
     private Transform buttonShopTransform;//кнопка магазина в углу экрана
+    
     private Text textCoins;//текст монет в верхнем углу экрана
 
     private static IStoreController m_StoreController;
@@ -100,8 +101,8 @@ public class Shop : MonoBehaviour, IStoreListener
         }
         InitializePurchasing();
 
-        panelShopOnGame = transform.Find("PanelShopOnGame");
-        //panelLives = transform.Find("PanelLives");
+        panelShopButParent = transform.Find("PanelShopButParent");
+        panelShopOnGame = panelShopButParent.Find("PanelShopOnGame");        
         buttonShopTransform = panelShopOnGame.Find("ButtonOpenShop");        
         Transform gOTextCoins = panelShopOnGame.Find("TextCoins");
         textCoins = gOTextCoins.GetComponent(typeof(Text)) as Text;        
@@ -263,16 +264,16 @@ public class Shop : MonoBehaviour, IStoreListener
         ThingsManager.Instance.CreateInstrumentsOnShop(panelShopInstruments);
 
         Transform panelLivesTransform = LifeManager.Instance.ThisTransform;
-        Vector3 panelLivesStartPosition = LifeManager.Instance.StartPosition;
-        panelLivesTransform.SetParent(panelShopInstruments);
-        MainAnimator.Instance.AddElementForSmoothMove(panelLivesTransform, new Vector3(panelLivesStartPosition.x, panelLivesStartPosition.y - 0.4f, panelLivesStartPosition.z), 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
-        //panelLives.position = new Vector3(panelLives.position.x, panelLives.position.y - 0.5f, panelLives.position.z);
-        //увеличиваем панель в верхнем углу
-        //panelLives.localScale = panelLives.localScale * 2.0f;
+        Transform panelLivePlace = panelShop.transform.Find("PanelLivePlace");
+        panelLivesTransform.SetParent(panelShop.transform, true);
+        MainAnimator.Instance.AddElementForSmoothMove(panelLivesTransform, panelLivePlace.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
+        panelLivesTransform.localScale = panelLivesTransform.localScale * 1.5f;
 
-        panelShopOnGame.SetParent(panelShopInstruments);
+        panelShopOnGame.SetParent(panelShop.transform, true);
+        Transform panelShopButPlase = panelShop.transform.Find("PanelShopButPlase");
+        MainAnimator.Instance.AddElementForSmoothMove(panelShopOnGame, panelShopButPlase.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
         //увеличиваем панель в верхнем углу
-        panelShopOnGame.localScale = panelShopOnGame.localScale * 2.0f;
+        panelShopOnGame.localScale = panelShopOnGame.localScale * 1.5f;
         //Заменяем кнопке действие на Закрыть
         SupportFunctions.ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");        
     }
@@ -661,14 +662,16 @@ public class Shop : MonoBehaviour, IStoreListener
         if (!stateOfPurchase)
         {
             Transform panelLivesTransform = LifeManager.Instance.ThisTransform;
-            Vector3 panelLivesStartPosition = LifeManager.Instance.StartPosition;
-            panelLivesTransform.SetParent(this.transform);
-            MainAnimator.Instance.AddElementForSmoothMove(panelLivesTransform, panelLivesStartPosition, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
+            Vector3 panelLivesStartPosition = LifeManager.Instance.StartParent.position;
+            panelLivesTransform.SetParent(LifeManager.Instance.StartParent, true);
+            MainAnimator.Instance.AddElementForSmoothMove(panelLivesTransform, panelLivesStartPosition, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
+            panelLivesTransform.localScale = panelLivesTransform.localScale / 1.5f;
 
-            panelShopOnGame.SetParent(this.transform);
+            panelShopOnGame.SetParent(this.transform, true);
+            MainAnimator.Instance.AddElementForSmoothMove(panelShopOnGame, panelShopButParent.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
             //уменьшаем панель в верхнем углу
-            panelShopOnGame.localScale = panelShopOnGame.localScale / 2.0f;
-
+            panelShopOnGame.localScale = panelShopOnGame.localScale / 1.5f;
+            
             Destroy(panelShop);
             SupportFunctions.ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
 

@@ -12,7 +12,7 @@ public class LifeManager : MonoBehaviour
     [SerializeField] private int maxLife; //максимальное количество жизней
     [SerializeField] private int timeToGetOneLife; //количество минут для получения одной жизни 
     private Transform thisTransform;
-    private Vector3 startPosition;// позиция панели жизней на старте
+    private Transform startParent;
     private DateTime timeToNextLife; //время получения следующей жизни
     private DateTime endTimeImmortal; //время окончания бессметрия
     private int addMinutesTimeImmortal = 0;
@@ -22,8 +22,8 @@ public class LifeManager : MonoBehaviour
     private float LastArrayProcessingTime = 0;
 
     public int Life { get => life; }
+    public Transform StartParent { get => startParent; }
     public Transform ThisTransform { get => thisTransform; }
-    public Vector3 StartPosition { get => startPosition; }
     public DateTime TimeToNextLife { get => timeToNextLife; }
     public DateTime EndTimeImmortal {
         get {
@@ -54,7 +54,7 @@ public class LifeManager : MonoBehaviour
         textLiveTime = transform.Find("TextLiveTime").GetComponent<Text>();
         imageLive = GetComponentInChildren<Image>();
         thisTransform = transform;
-
+        startParent = thisTransform.parent;
         LoadSave();
         StartCalculatingLives();
         UpdateText();
@@ -62,7 +62,7 @@ public class LifeManager : MonoBehaviour
 
     private void Start()
     {
-        startPosition = thisTransform.position;
+        //startPosition = thisTransform.position;
     }
 
     // Update is called once per frame
