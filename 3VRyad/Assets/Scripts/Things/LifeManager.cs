@@ -11,7 +11,8 @@ public class LifeManager : MonoBehaviour
     private int life; //коилчество жизней
     [SerializeField] private int maxLife; //максимальное количество жизней
     [SerializeField] private int timeToGetOneLife; //количество минут для получения одной жизни 
-    //private DateTime timeToGetOneLifeDateTime; //количество минут для получения одной жизни 
+    private Transform thisTransform;
+    private Vector3 startPosition;// позиция панели жизней на старте
     private DateTime timeToNextLife; //время получения следующей жизни
     private DateTime endTimeImmortal; //время окончания бессметрия
     private int addMinutesTimeImmortal = 0;
@@ -21,6 +22,8 @@ public class LifeManager : MonoBehaviour
     private float LastArrayProcessingTime = 0;
 
     public int Life { get => life; }
+    public Transform ThisTransform { get => thisTransform; }
+    public Vector3 StartPosition { get => startPosition; }
     public DateTime TimeToNextLife { get => timeToNextLife; }
     public DateTime EndTimeImmortal {
         get {
@@ -50,9 +53,16 @@ public class LifeManager : MonoBehaviour
         textLive = transform.Find("TextLive").GetComponent<Text>();
         textLiveTime = transform.Find("TextLiveTime").GetComponent<Text>();
         imageLive = GetComponentInChildren<Image>();
+        thisTransform = transform;
+
         LoadSave();
         StartCalculatingLives();
         UpdateText();
+    }
+
+    private void Start()
+    {
+        startPosition = thisTransform.position;
     }
 
     // Update is called once per frame
@@ -64,7 +74,7 @@ public class LifeManager : MonoBehaviour
             if (life < maxLife && CheckTime.Realtime() >= timeToNextLife)
             {
                 timeToNextLife = CheckTime.Realtime().AddMinutes(timeToGetOneLife);
-                PlusLive();
+                AddLive();
                 RecordSave();
             }
             LastArrayProcessingTime = Time.realtimeSinceStartup;
@@ -84,7 +94,7 @@ public class LifeManager : MonoBehaviour
             double minutes = timeSpan.TotalMinutes;
             while (minutes > timeToGetOneLife && life < maxLife)
             {
-                PlusLive();
+                AddLive();
                 timeToNextLife = timeToNextLife.AddMinutes(timeToGetOneLife);
                 Debug.Log(timeToNextLife.ToString());
                 minutes -= timeToGetOneLife;
@@ -132,7 +142,7 @@ public class LifeManager : MonoBehaviour
         }
     }
 
-    private void PlusLive() {
+    public void AddLive() {
         if (life < maxLife)
         {
             life++;                    
@@ -181,7 +191,7 @@ public class LifeManager : MonoBehaviour
     {
         if (args.Amount > 0 && life < maxLife)
         {
-            PlusLive();
+            AddLive();
             RecordSave();
             //звук добавления
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);

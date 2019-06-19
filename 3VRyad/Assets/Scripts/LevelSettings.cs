@@ -58,6 +58,7 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
         XElement.Add(new XElement("bundelCount", Gift.Bundel.Length));
         //добавляем количество монет
         XElement.Add(new XElement("coins", Gift.Coins));
+        XElement.Add(new XElement("timeImmortalLives", Gift.TimeImmortalLives));
         XElement.Add(new XElement("optional", optional));//пометка, что уровень не обязательный
 
         return XElement;
@@ -65,7 +66,9 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
 
     public void RecoverFromXElement(XElement XElement)
     {
-        int Coins = int.Parse(XElement.Element("coins").Value);
+        int coins = int.Parse(XElement.Element("coins").Value);
+        int timeImmortalLives = 0;
+        try { timeImmortalLives = int.Parse(XElement.Element("timeImmortalLives").Value); } catch (Exception) { }
         try {optional = bool.Parse(XElement.Element("optional").Value);} catch (Exception){}
 
         //временны массив
@@ -80,7 +83,7 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
         }
 
         //восстанавливаем значения
-        gift = new Gift(bundleShopV.ToArray(), Coins);        
+        gift = new Gift(bundleShopV.ToArray(), coins, timeImmortalLives);        
     }
 }
 
@@ -88,20 +91,24 @@ public class LevelSettings : MonoBehaviour, IESaveAndLoad {
 public class Gift {
     [SerializeField] private BundleShopV[] bundel;
     [SerializeField] private int coins;
+    [SerializeField] private int timeImmortalLives;//сколько получаем времени бессмертия (минут)
 
     public BundleShopV[] Bundel { get => bundel; }
     public int Coins { get => coins; set => coins = value; }
+    public int TimeImmortalLives { get => timeImmortalLives; }
 
-    public Gift(BundleShopV[] bundel, int coins)
+    public Gift(BundleShopV[] bundel, int coins, int timeImmortalLives)
     {
         this.bundel = bundel;
         this.coins = coins;
+        this.timeImmortalLives = timeImmortalLives;
     }
 
     public Gift()
     {
         this.bundel = new BundleShopV[0];
         this.coins = 0;
+        this.timeImmortalLives = 0;
     }
 }
 

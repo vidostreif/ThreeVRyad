@@ -491,23 +491,24 @@ public class LevelMenu : MonoBehaviour
     {
         if (lastLoadLevel != null)
         {
-            if (regionsList[lastLoadLevel.regionNumber].levelList[lastLoadLevel.levelNumber] == lastLoadLevel)
-            {
+            //if (regionsList[lastLoadLevel.regionNumber].levelList[lastLoadLevel.levelNumber] == lastLoadLevel)
+            //{
                 //если последний уровень в регионе
-                if ((lastLoadLevel.levelNumber + 1) == regionsList[lastLoadLevel.regionNumber].levelList.Count)
-                {
-                    JsonSaveAndLoad.RecordSave(regionsList[lastLoadLevel.regionNumber].levelList, lastLoadLevel.regionNumber);
-                    if (regionsList.Count > lastLoadLevel.regionNumber + 1)
-                    {
-                        regionsList[lastLoadLevel.regionNumber + 1].levelList[0].SetLevelOpend();
-                    }
-                }
-                else
-                {
+            if ((lastLoadLevel.levelNumber + 1) == regionsList[lastLoadLevel.regionNumber].levelList.Count)
+            {
+                JsonSaveAndLoad.RecordSave(regionsList[lastLoadLevel.regionNumber].levelList, lastLoadLevel.regionNumber);
+                if (regionsList.Count > lastLoadLevel.regionNumber + 1)
+                {                    
+                    regionsList[lastLoadLevel.regionNumber + 1].levelList[0].SetLevelOpend();
+                    JsonSaveAndLoad.RecordSave(regionsList[lastLoadLevel.regionNumber + 1].levelList, lastLoadLevel.regionNumber + 1);
+                }                    
+            }
+            else
+            {
                     regionsList[lastLoadLevel.regionNumber].levelList[lastLoadLevel.levelNumber + 1].SetLevelOpend();
                     JsonSaveAndLoad.RecordSave(regionsList[lastLoadLevel.regionNumber].levelList, lastLoadLevel.regionNumber);
-                }
             }
+            //}
         }
     }
 
@@ -515,33 +516,20 @@ public class LevelMenu : MonoBehaviour
     {
         if (inLevel != null)
         {
-            //bool found = false;
-            //for (int i = 0; i < regionsList.Count; i++)
-            //{
-            //    //if (level.region != regionsList[i] && !found)
-            //    //{
-            //    //    continue;
-            //    //}
-            //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-            //    {
-            //if (found)
-            //{
-            //    regionsList[i].levelList[j].SetLevelOpend();
-            //    JsonSaveAndLoad.RecordSave(regionsList[i].levelList, i);
-            //    return;
-            //}
+
             if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
             {
-                //found = true;
                 //если последний уровень в регионе
                 if ((inLevel.levelNumber + 1) == regionsList[inLevel.regionNumber].levelList.Count)
                 {
-                    JsonSaveAndLoad.RecordSave(regionsList[inLevel.regionNumber].levelList, inLevel.regionNumber);
                     if (regionsList.Count > inLevel.regionNumber + 1)
                     {
-                        regionsList[inLevel.regionNumber + 1].levelList[0].SetLevelOpend();
+                        JsonSaveAndLoad.RecordSave(regionsList[inLevel.regionNumber].levelList, inLevel.regionNumber);
+                        if (regionsList.Count > inLevel.regionNumber + 1)
+                        {
+                            regionsList[inLevel.regionNumber + 1].levelList[0].SetLevelOpend();
+                        }
                     }
-
                 }
                 else
                 {

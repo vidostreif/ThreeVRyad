@@ -158,7 +158,8 @@ public static class JsonSaveAndLoad
         if (save.regionSave.Count < region + 1)
         {
             //добавляем элементы в массив
-            for (int i = 0; i < region - save.regionSave.Count + 1; i++)
+            int regionSaveCount = save.regionSave.Count;
+            for (int i = 0; i < region - regionSaveCount + 1; i++)
             {
                 save.regionSave.Add(new RegionSave());
             }

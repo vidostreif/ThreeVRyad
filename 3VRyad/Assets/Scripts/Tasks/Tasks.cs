@@ -44,7 +44,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
     //добавление ходов в конце игры за просмотр рекламы
     public void AddMovesOnEndGAme(Reward args)
     {
-        //Debug.Log("AddMovesOnEndGAme start");
+        LifeManager.Instance.AddLive();
         StartCoroutine(CurAddMovesOnEndGAme(args));
     }
 

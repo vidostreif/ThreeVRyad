@@ -133,15 +133,18 @@
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
   <LevelSettings>
-    <bundles />
-    <bundelCount>0</bundelCount>
-    <coins>0</coins>
+    <bundles>
+      <bundleShopV type="Shovel" count="3" />
+    </bundles>
+    <bundelCount>1</bundelCount>
+    <coins>20</coins>
+    <timeImmortalLives>60</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>31000</scoreForFirstStar>
-    <scoreForSecondStar>41000</scoreForSecondStar>
-    <scoreForThirdStar>51000</scoreForThirdStar>
+    <scoreForFirstStar>200</scoreForFirstStar>
+    <scoreForSecondStar>300</scoreForSecondStar>
+    <scoreForThirdStar>500</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>12000</maxBonusPower>
@@ -149,10 +152,10 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>30</moves>
+    <moves>3</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Spider" goal="1" collectEverything="true" />
+      <shapeAndGoal shape="Bush" goal="1" collectEverything="false" />
     </targets>
   </Tasks>
   <InstrumentPanel>

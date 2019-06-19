@@ -158,20 +158,18 @@ public class Level
             if (LevelSettings.Instance.Gift.Bundel.Length > 0)
             {
                 result = ThingsManager.Instance.addinstruments(LevelSettings.Instance.Gift.Bundel);
-                //if (result)
-                //{
-                //    gift.Bundel = GiftScript.Instance.Gift.Bundel;
-                //}
             }
 
             //если небыло никаких ошибок и есть монеты - добавляем монеты
             if (result && LevelSettings.Instance.Gift.Coins > 0)
             {
                 result = Shop.Instance.AddGiftCoins(this, LevelSettings.Instance.Gift.Coins);
-                //if (result)
-                //{
-                //    gift.Coins += GiftScript.Instance.Gift.Coins;
-                //}
+            }
+
+            //если небыло никаких ошибок и есть жизни - добавляем время бессмертия
+            if (result && LevelSettings.Instance.Gift.TimeImmortalLives > 0)
+            {
+                result = LifeManager.Instance.addTimeImmortal(LevelSettings.Instance.Gift.TimeImmortalLives);
             }
 
             //если небыло никаких ошибок помечаем подарок как выданный

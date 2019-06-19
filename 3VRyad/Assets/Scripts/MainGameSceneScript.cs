@@ -160,8 +160,8 @@ public class MainGameSceneScript : MonoBehaviour {
             }
             );
         }
-                
 
+        //yield return new WaitForSeconds(0.15f);
         //запускаем куротину для постепенного отображения элементов
         //если выполнили все задания
         if (victory)
@@ -189,6 +189,10 @@ public class MainGameSceneScript : MonoBehaviour {
             if (!LevelMenu.Instance.NextLevelIsOpen())
             {
                 Destroy(gONextLevelButton.gameObject);
+            }
+            else
+            {
+                SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 1);
             }
 
             JsonSaveAndLoad.SetSaveToFile();
@@ -221,7 +225,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 {
                     textEndGame.text = "У вас закончились ходы! Добавим за просмотр видео?";
                     //создаем кнопку видео на месте загрузки следующего уровня    
-                    SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0);
+                    //SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0);
                     AdMobManager.Instance.GetVideoBrowseButton(gONextLevelButton, VideoForFeeEnum.ForMove);
                 }
                 else
@@ -385,6 +389,10 @@ public class MainGameSceneScript : MonoBehaviour {
                 {
                     giftLength++;
                 }
+                if (gift.TimeImmortalLives > 0)
+                {
+                    giftLength++;
+                }
                 if (gift.Bundel.Length > 0)
                 {
                     giftLength += gift.Bundel.Length;
@@ -393,7 +401,9 @@ public class MainGameSceneScript : MonoBehaviour {
                 //если есть подарки то продолжаем
                 if (giftLength > 0)
                 {
-                    yield return new WaitForSeconds(0.4f);
+                    yield return new WaitForSeconds(0.2f);
+                    SupportFunctions.ChangeAlfa(panelGiftTransform.GetComponent<Image>(), 1);
+                    yield return new WaitForSeconds(0.2f);
                     SoundManager.Instance.PlaySoundInternal(SoundsEnum.Magic);
                     yield return new WaitForSeconds(0.8f);
                     //находим наш сундук
@@ -412,19 +422,34 @@ public class MainGameSceneScript : MonoBehaviour {
 
                             yield return StartCoroutine(Shop.Instance.CreateThingAnimation(startPosition, panelGiftTransform, gift.Bundel[i].type, gift.Bundel[i].count, newPosition));
                         }
-                        yield return new WaitForSeconds(0.3f);
+                        yield return new WaitForSeconds(0.1f);
                     }
 
+                    float numberGifts = gift.Bundel.Length;
                     //показываем монеты
                     if (gift.Coins > 0)
                     {
                         Vector3 startPosition = new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z);
-                        Vector3 newPosition = new Vector3(startingXPoint + (gift.Bundel.Length * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z);
+                        Vector3 newPosition = new Vector3(startingXPoint + (numberGifts * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z);
 
                         yield return StartCoroutine(Shop.Instance.CreateCoinAnimation(startPosition, panelGiftTransform, gift.Coins, newPosition));
 
-                        yield return new WaitForSeconds(0.3f);
+                        numberGifts++;
+                        yield return new WaitForSeconds(0.1f);
                     }
+
+                    //показываем жизни
+                    if (gift.TimeImmortalLives > 0)
+                    {
+                        Vector3 startPosition = new Vector3(imageOpenGiftBoxTransform.position.x, imageOpenGiftBoxTransform.position.y - 0.5f, imageOpenGiftBoxTransform.position.z);
+                        Vector3 newPosition = new Vector3(startingXPoint + (numberGifts * (1 + 0.5f)), panelGiftTransform.position.y, panelGiftTransform.position.z);
+
+                        yield return StartCoroutine(Shop.Instance.CreateLivesAnimation(startPosition, panelGiftTransform, gift.TimeImmortalLives, newPosition));
+
+                        yield return new WaitForSeconds(0.1f);
+                    }
+
+                    yield return new WaitForSeconds(0.15f);
                 }
                 else
                 {
@@ -435,6 +460,7 @@ public class MainGameSceneScript : MonoBehaviour {
             else
             {
                 //находим закрытый ящик и показываем его
+                //SupportFunctions.ChangeAlfa(CloseGiftTransform.GetComponent<Image>(), 1);
                 CloseGiftTransform.GetComponent<Animation>().Play();               
                 Destroy(panelGiftTransform.gameObject);
                 yield return new WaitForSeconds(1.3f);
