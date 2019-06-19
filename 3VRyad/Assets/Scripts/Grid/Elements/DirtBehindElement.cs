@@ -64,15 +64,6 @@ public class DirtBehindElement : BehindElement
                 //находим все блоки с таким же элементом на заднем плане и указываем у них, что элемент для следующего хода найден
                 Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBehindElements(type, shape);
 
-                ////обрабатываем все блоки, если натыкаемся на блок в котором найденное время активации такое, же или больше, тогда прерываем
-                //foreach (Block BlockItem in blocks)
-                //{
-                //    if (Tasks.Instance.Moves - 1 - actionDelay >= BlockItem.BehindElement.NextProcessedMoveForAction)
-                //    {
-                //        nextProcessedMoveForAction = BlockItem.BehindElement.NextProcessedMoveForAction;
-                //        return false;
-                //    }
-                //}
                 nextProcessedMoveForAction = Tasks.Instance.Moves - 1 - actionDelay;
                 ActivationMove = nextProcessedMoveForAction;
 
@@ -116,5 +107,4 @@ public class DirtBehindElement : BehindElement
         }
         return null;
     }
-
 }

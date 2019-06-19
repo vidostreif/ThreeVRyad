@@ -15,7 +15,13 @@ public static class SpriteBank
         }
         else
         {
-            return Resources.Load<Sprite>("Sprites/Elements/" + shape.ToString()) as Sprite;
+            string dopString = "";
+            if (option != 0)
+            {
+                dopString = "_" + option;
+            }
+
+            return Resources.Load<Sprite>("Sprites/Elements/" + shape.ToString() + dopString) as Sprite;
         }               
 
     }
@@ -41,7 +47,6 @@ public static class SpriteBank
 
     public static Sprite SetShape(BlockTypeEnum shape, int option = 0)
     {
-
         //в зависимости от типа блока 
         switch (shape)
         {
@@ -66,7 +71,13 @@ public static class SpriteBank
         }
         else
         {
-            return Resources.Load<Sprite>("Sprites/BlockingElement/" + shape.ToString()) as Sprite;
+            string dopString = "";
+            if (option != 0)
+            {
+                dopString = "_" + option;
+            }
+
+            return Resources.Load<Sprite>("Sprites/BlockingElement/" + shape.ToString() + dopString) as Sprite;
         }
         
     }

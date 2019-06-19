@@ -79,9 +79,9 @@ public class Block : MonoBehaviour {
         set
         {
             //заменяем элемент у блока
-            if (this.Type != BlockTypeEnum.Empty)
-            {
-                //если елемент не заблокирован
+            //if (this.Type != BlockTypeEnum.Empty)
+            //{
+                //если елемент не уничтожен
                 if (value != null && !value.Destroyed)
                 {
                     element = value;
@@ -95,16 +95,15 @@ public class Block : MonoBehaviour {
                 else if (value.Destroyed)
                 {
                    element = null;
-                   //Debug.Log("Попытка замены уничтоженного элемента " + this.name);
                    return;
                 }
-            }
-            else if (value == null)
-            {
-                element = value;
-                element.PositionInGrid = positionInGrid;
-                element.thisTransform.parent = thisTransform;
-            }
+            //}
+            //else if (value == null)
+            //{
+            //    element = value;
+            //    element.PositionInGrid = positionInGrid;
+            //    element.thisTransform.parent = thisTransform;
+            //}
         }
     }
     public BehindElement BehindElement

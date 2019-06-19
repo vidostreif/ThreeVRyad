@@ -175,33 +175,29 @@ public class Element : BaseElement
         }
         set
         {                
-                if (value != null)
-                {
-                    blockingElement = value;
-                    blockingElement.transform.parent = thisTransform;
-
-                    ////если растояние меньше размеров блока сетки, то перемещаем моментально на позицию блока
-                    ////расчитываем вектор смещения
-                    //Vector3 vector = blockingElement.transform.position - thisTransform.position;
-                    ////вычисляем расстояние на которое смещаем объект
-                    //float distance = vector.magnitude;
-
-                    //if (distance < Grid.Instance.blockSize)
-                    //{
-                        blockingElement.transform.position = thisTransform.position;
-                //}
+            if (value != null && !value.Destroyed)
+            {
+                blockingElement = value;
+                blockingElement.transform.parent = thisTransform;
+                //blockingElement.transform.position = thisTransform.position;
+                blockingElement.PositionInGrid = positionInGrid;
 
                 lockedForMove = true;
-                }
-                else if (value == null)
-                {
-                    blockingElement = value;
+            }
+            else if (value == null)
+            {
+                blockingElement = value;
+                lockedForMove = false;
+            }
+            else if (value.Destroyed)
+            {
+                blockingElement = value;
                 lockedForMove = false;
             }
         }
     }
     
-    public virtual void CreatBlockingElement(GameObject prefabBlockingElement, AllShapeEnum shape, BlockingElementsTypeEnum typeBlockingElementsEnum)
+    public virtual BlockingElement CreatBlockingElement(GameObject prefabBlockingElement, AllShapeEnum shape, BlockingElementsTypeEnum typeBlockingElementsEnum, Transform startTransform = null)
     {
         //создаем элемент у блока
         if (this.Type != ElementsTypeEnum.Empty)
@@ -213,34 +209,51 @@ public class Element : BaseElement
             }
 
             //создаем новый элемент
-            GameObject blockingElementGameObject = Instantiate(prefabBlockingElement, thisTransform.position, Quaternion.identity);
+            GameObject blockingElementGameObject;
+            //определяем позицию, где будем создавать
+            if (startTransform == null)
+            {
+                blockingElementGameObject = Instantiate(prefabBlockingElement, thisTransform.position, Quaternion.identity);
+            }
+            else
+            {
+                blockingElementGameObject = Instantiate(prefabBlockingElement, startTransform.position, Quaternion.identity);
+                MainAnimator.Instance.AddElementForSmoothMove(blockingElementGameObject.transform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
+            }
+                
             BlockingElement curElement;
 
             if (typeBlockingElementsEnum == BlockingElementsTypeEnum.Liana)
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
                 curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 200);
-                lockedForMove = true;                
+                //lockedForMove = true;                
             }
             else if(typeBlockingElementsEnum == BlockingElementsTypeEnum.Spread)
             {
                 curElement = blockingElementGameObject.AddComponent<SpreadBlockingElement>();
                 curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 300);
-                curElement.MakeActionAfterMove(2, false);
-                lockedForMove = true;
+                curElement.MakeActionAfterMove(1, true);
+                if (ParticleSystemManager.Instance != null)
+                {
+                    ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSWeb, 3);
+                }
+                //lockedForMove = true;
             }
             else
             {
                 Debug.LogError("У элемента " + this.name + " не удалось определить тип создаваемого блокирующего элемента");
                 DestroyImmediate(blockingElementGameObject);
-                return;
+                return null;
             }
 
             curElement.Shape = shape;
             HelpToPlayer.AddHint(typeBlockingElementsEnum);
             //Добавляем в элемент
             this.BlockingElement = curElement;
-        }        
+            return this.BlockingElement;
+        }
+        return null;
     }
 
     //проверка на существование элемента

@@ -71,8 +71,19 @@ public static class BlockCheck
 
     public static bool ThisBlockWithCurBehindElement(Block block, BehindElementsTypeEnum behindElementsTypeEnum)
     {
-
         if (block != null && block.BehindElement != null && !block.BehindElement.Destroyed && block.BehindElement.Type == behindElementsTypeEnum)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool ThisBlockWithCurBlockingElement(Block block, BlockingElementsTypeEnum blockingElementsTypeEnum)
+    {
+        if (block != null && block.Element != null && !block.Element.Destroyed && block.Element.BlockingElement != null && !block.Element.BlockingElement.Destroyed && block.Element.BlockingElement.Type == blockingElementsTypeEnum)
         {
             return true;
         }

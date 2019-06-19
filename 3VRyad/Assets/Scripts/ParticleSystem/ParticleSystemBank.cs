@@ -18,14 +18,15 @@ public static class ParticleSystemBank
     {
         if (pSList == null)
         {
-            pSList = new PSResurse[7];
+            pSList = new PSResurse[8];
             pSList[0] = new PSResurse(PSEnum.PSCollect, pSFolder, "PSCollect");
             pSList[1] = new PSResurse(PSEnum.PSCollectAll, pSFolder, "PSCollectAll");
             pSList[2] = new PSResurse(PSEnum.PSSelect, pSFolder, "PSSelect");
             pSList[3] = new PSResurse(PSEnum.PSAddPowerSuperBonus, pSFolder, "PSAddSuperBonus");
             pSList[4] = new PSResurse(PSEnum.PSBeatsSuperBonus, pSFolder, "PSBeatSuperBonus");
             pSList[5] = new PSResurse(PSEnum.PSDirt, pSFolder, "PSDirt");
-            pSList[6] = new PSResurse(PSEnum.PSDirtNextAction, pSFolder, "PSDirtNextAction");            
+            pSList[6] = new PSResurse(PSEnum.PSDirtNextAction, pSFolder, "PSDirtNextAction");
+            pSList[7] = new PSResurse(PSEnum.PSWeb, pSFolder, "PSWeb");
         }
     }
 

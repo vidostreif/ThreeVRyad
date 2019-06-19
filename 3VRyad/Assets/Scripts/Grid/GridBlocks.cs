@@ -571,7 +571,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //действия элементов после хода
     private void PerformActionElementsAfterMove()
     {
-
         //предварительно собераем все элементы которые выполняют действие
 
         //!!! переделать систему поиска
@@ -604,7 +603,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         BaseElement[] findeObjects = FindObjectsOfType(typeof(BaseElement)) as BaseElement[]; //находим всех объекты с компонентом и создаём массив из них
                                                                                               //перемешиваем найденные элементы
         SupportFunctions.MixArray(findeObjects);
-
 
         foreach (BaseElement item in findeObjects)
         {
@@ -1515,6 +1513,47 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (BlockCheck.ThisBlockWithCurBehindElement(containers[x].block[y], behindElementsTypeEnum))
                 {
                     if (containers[x].block[y].BehindElement.Shape == allShapeEnum)
+                    {
+                        blocks.Add(containers[x].block[y]);
+                    }
+                }
+            }
+        }
+        return blocks.ToArray();
+    }
+
+    //возвращает все блоки с указаным блокирующим элементом 
+    public Block[] GetAllBlocksWithCurBlockingElements(BlockingElementsTypeEnum blockingElementsTypeEnum)
+    {
+        List<Block> blocks = new List<Block>();
+
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если блок существует по данному адресу и в нем есть нужный элемент
+                if (BlockCheck.ThisBlockWithCurBlockingElement(containers[x].block[y], blockingElementsTypeEnum))
+                {
+                    blocks.Add(containers[x].block[y]);
+                }
+            }
+        }
+        return blocks.ToArray();
+    }
+
+    //возвращает все блоки с указаным блокирующим элементом 
+    public Block[] GetAllBlocksWithCurBlockingElements(BlockingElementsTypeEnum blockingElementsTypeEnum, AllShapeEnum allShapeEnum)
+    {
+        List<Block> blocks = new List<Block>();
+
+        for (int x = 0; x < containers.GetLength(0); x++)
+        {
+            for (int y = 0; y < containers[x].block.GetLength(0); y++)
+            {
+                //если блок существует по данному адресу и в нем есть нужный элемент
+                if (BlockCheck.ThisBlockWithCurBlockingElement(containers[x].block[y], blockingElementsTypeEnum))
+                {
+                    if (containers[x].block[y].Element.BlockingElement.Shape == allShapeEnum)
                     {
                         blocks.Add(containers[x].block[y]);
                     }

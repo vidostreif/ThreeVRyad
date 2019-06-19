@@ -229,7 +229,6 @@ public class BaseElement : MonoBehaviour
         SuperBonus.Instance.CreatePowerSuperBonus(transform.position, score);
         AnimatElement.StopAllAnimation();
 
-
         //звук уничтожения
         //int randomNumber = UnityEngine.Random.Range(1, 4);
         //Debug.Log(randomNumber);

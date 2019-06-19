@@ -45,7 +45,7 @@ public class BlockingElement : BaseElement
             //если елемент убили, то возвращаем null
             if (life <= 0)
             {
-                base.DestroyElement();
+                DestroyElement();
             }
         }
         

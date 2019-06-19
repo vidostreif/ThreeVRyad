@@ -62,6 +62,7 @@ public enum BlockingElementsShapeEnum
 {
     Empty, //пустой элемент
     Liana, //лиана   
+    Web, //паутина
 }//Внешние виды блокирующих элементов
 
 
@@ -87,6 +88,7 @@ public enum AllShapeEnum
     SeedBarrel,//бочка
     Bush,//куст
     Brick,//кирпич
+    Web, //паутина
 }//Внешние виды элементов
 
 public enum BlockTypeEnum
@@ -231,6 +233,7 @@ public enum PSEnum
     PSBeatsSuperBonus,
     PSDirt,
     PSDirtNextAction,//эффект подсветки грязи которая будет ходит в следующем ходу
+    PSWeb,
 
 }//тип эфектов
 
