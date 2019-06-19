@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5088141014481200944}
   - component: {fileID: 5088141014481200945}
   - component: {fileID: 5088141014481200946}
+  - component: {fileID: 3165406118322426507}
   m_Layer: 5
   m_Name: ButtonStart
   m_TagString: Untagged
@@ -117,6 +118,22 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!111 &3165406118322426507
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5088141014481200948}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 6cfac5ad73e1420439a7a414ff56efa1, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 6cfac5ad73e1420439a7a414ff56efa1, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &5088141014545908909
 GameObject:
   m_ObjectHideFlags: 0
