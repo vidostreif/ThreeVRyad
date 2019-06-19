@@ -152,7 +152,7 @@
     <moves>30</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Spider" goal="2" collectEverything="true" />
+      <shapeAndGoal shape="Spider" goal="1" collectEverything="true" />
     </targets>
   </Tasks>
   <InstrumentPanel>

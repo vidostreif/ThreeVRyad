@@ -157,14 +157,14 @@ public class BaseElement : MonoBehaviour
         //this.preliminarySearchToActivate = preliminarySearchToActivate;
         this.actionDelay = actionDelay;
         this.nextProcessedMoveForAction = int.MaxValue;
-        //if (singleItemActivated)
-        //{            
+        if (singleItemActivated || !Application.isPlaying)
+        {            
             this.ActivationMove = int.MaxValue;
-        //}
-        //else
-        //{
-        //    this.ActivationMove = Tasks.Instance.Moves;
-        //}
+        }
+        else
+        {
+           this.ActivationMove = Tasks.Instance.Moves - 1 - actionDelay;
+        }
         
         UpdateSprite();        
     }

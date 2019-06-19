@@ -298,7 +298,7 @@ public class Block : MonoBehaviour {
             {
                 curElement = elementGameObject.AddComponent<SpiderElement>();
                 curElement.InitialSettings(typeElementsEnum, true, false, false, false, HitTypeEnum.Empty, 7, 1000);
-                curElement.MakeActionAfterMove(1, true);
+                curElement.MakeActionAfterMove(1, false);
             }
             else
             {
