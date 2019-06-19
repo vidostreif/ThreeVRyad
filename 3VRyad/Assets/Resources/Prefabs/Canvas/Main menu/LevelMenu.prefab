@@ -58,54 +58,168 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 51bdc6956b0de2847b5fbeb4ec92051d, type: 3}
     levelList:
     - xmlDocument: {fileID: 4900000, guid: 992518209d9f18e41904fa68f9623119, type: 3}
+      regionNumber: 0
+      levelNumber: 0
     - xmlDocument: {fileID: 4900000, guid: 2a48b0f72c57bd241b79e75865d69b64, type: 3}
+      regionNumber: 0
+      levelNumber: 1
     - xmlDocument: {fileID: 4900000, guid: 351932dc137792543b1213d5ae32fe2c, type: 3}
+      regionNumber: 0
+      levelNumber: 2
     - xmlDocument: {fileID: 4900000, guid: 54498fc43ec39b842b14273089149bcf, type: 3}
+      regionNumber: 0
+      levelNumber: 3
     - xmlDocument: {fileID: 4900000, guid: 60560723d54196849bb5bc97a76ec2ad, type: 3}
+      regionNumber: 0
+      levelNumber: 4
     - xmlDocument: {fileID: 4900000, guid: c74c79ce0795f05418a4eaf16e83a359, type: 3}
+      regionNumber: 0
+      levelNumber: 5
     - xmlDocument: {fileID: 4900000, guid: 63fc19ed614553f439003f6923aa4ba5, type: 3}
+      regionNumber: 0
+      levelNumber: 6
     - xmlDocument: {fileID: 4900000, guid: f6cf12855b9cdd7419a1ee072bf909d8, type: 3}
+      regionNumber: 0
+      levelNumber: 7
     - xmlDocument: {fileID: 4900000, guid: fc8e51ea4f533fa4dba9071680f5d1d2, type: 3}
+      regionNumber: 0
+      levelNumber: 8
     - xmlDocument: {fileID: 4900000, guid: 5da8710a4d5de7a4c8c5d2c006e7037d, type: 3}
+      regionNumber: 0
+      levelNumber: 9
     - xmlDocument: {fileID: 4900000, guid: 05e2abade434c6c49a775f11a5cd412d, type: 3}
+      regionNumber: 0
+      levelNumber: 10
     - xmlDocument: {fileID: 4900000, guid: fc59e1762ff6f0b45992fdf88e855714, type: 3}
+      regionNumber: 0
+      levelNumber: 11
     - xmlDocument: {fileID: 4900000, guid: 389822efbc6f12c4d8ec7a8c68ae43a4, type: 3}
+      regionNumber: 0
+      levelNumber: 12
     - xmlDocument: {fileID: 4900000, guid: 1f864cb1a595b0a4698a140714e200c9, type: 3}
+      regionNumber: 0
+      levelNumber: 13
     - xmlDocument: {fileID: 4900000, guid: 65705eb740a1ad04bbae942cf7c43ddc, type: 3}
+      regionNumber: 0
+      levelNumber: 14
     - xmlDocument: {fileID: 4900000, guid: 1694e8888d810d447bb7d213087cb6c0, type: 3}
+      regionNumber: 0
+      levelNumber: 15
     - xmlDocument: {fileID: 4900000, guid: 74169292bca3f4541b7c8e31c9f6c3e6, type: 3}
+      regionNumber: 0
+      levelNumber: 16
     - xmlDocument: {fileID: 4900000, guid: 6607f028059f8204c824aa8ada9e1967, type: 3}
+      regionNumber: 0
+      levelNumber: 17
     - xmlDocument: {fileID: 4900000, guid: 00be14a17641aeb41b93755119027ba1, type: 3}
+      regionNumber: 0
+      levelNumber: 18
     - xmlDocument: {fileID: 4900000, guid: 1be772cead074014d898925c27c1d05c, type: 3}
+      regionNumber: 0
+      levelNumber: 19
     - xmlDocument: {fileID: 4900000, guid: eb4a3e136c592ad488da9ce8c71a77ba, type: 3}
+      regionNumber: 0
+      levelNumber: 20
     - xmlDocument: {fileID: 4900000, guid: c1504147bbf97a9408dea8a95447576a, type: 3}
+      regionNumber: 0
+      levelNumber: 21
     - xmlDocument: {fileID: 4900000, guid: a08f5ea6d19e3cf4f90fc9dcd802b69d, type: 3}
+      regionNumber: 0
+      levelNumber: 22
     - xmlDocument: {fileID: 4900000, guid: 4383cb0bbd6168e4a88d2377fa7eabdb, type: 3}
+      regionNumber: 0
+      levelNumber: 23
     - xmlDocument: {fileID: 4900000, guid: 0dad2342a901e714d830aa4aff2aea8f, type: 3}
+      regionNumber: 0
+      levelNumber: 24
     - xmlDocument: {fileID: 4900000, guid: 38495e9a1d6dfb3498fd0043f797ce3f, type: 3}
+      regionNumber: 0
+      levelNumber: 25
     - xmlDocument: {fileID: 4900000, guid: 207cc178a59502b45997ccf29b3e3ccb, type: 3}
+      regionNumber: 0
+      levelNumber: 26
     - xmlDocument: {fileID: 4900000, guid: 26b9cbb98b5e7d846886ecb78be5912e, type: 3}
+      regionNumber: 0
+      levelNumber: 27
     - xmlDocument: {fileID: 4900000, guid: 41ca4091a2c047e4b800438f3ba28391, type: 3}
+      regionNumber: 0
+      levelNumber: 28
     - xmlDocument: {fileID: 4900000, guid: 0aa51325b42895c48bf53cb8012a2ade, type: 3}
+      regionNumber: 0
+      levelNumber: 29
     - xmlDocument: {fileID: 4900000, guid: f340679282e4553448750dfbbb65236f, type: 3}
+      regionNumber: 0
+      levelNumber: 30
     - xmlDocument: {fileID: 4900000, guid: 81914d7022b2e1b4c8bc32e5499aa30e, type: 3}
+      regionNumber: 0
+      levelNumber: 31
     - xmlDocument: {fileID: 4900000, guid: 6769bacc1f46f744890aa4b0c1be54c8, type: 3}
+      regionNumber: 0
+      levelNumber: 32
     - xmlDocument: {fileID: 4900000, guid: 4a1d4221cec9d3545bcd8a8d319b0089, type: 3}
+      regionNumber: 0
+      levelNumber: 33
     - xmlDocument: {fileID: 4900000, guid: d6877d181f6dbd342862e6d1a1ff56a2, type: 3}
+      regionNumber: 0
+      levelNumber: 34
     - xmlDocument: {fileID: 4900000, guid: c9fb1431763b2584b8b2757c7a34c689, type: 3}
+      regionNumber: 0
+      levelNumber: 35
     - xmlDocument: {fileID: 4900000, guid: 6569967198a5b0248a508a8347cfbcf7, type: 3}
+      regionNumber: 0
+      levelNumber: 36
     - xmlDocument: {fileID: 4900000, guid: 51a223712d85b7c4291a24f9a3a339a3, type: 3}
+      regionNumber: 0
+      levelNumber: 37
     - xmlDocument: {fileID: 4900000, guid: ae7962ea1acab994697822354ecaa48b, type: 3}
+      regionNumber: 0
+      levelNumber: 38
     - xmlDocument: {fileID: 4900000, guid: b415c5a411a0e794eba0cd682312cdcc, type: 3}
+      regionNumber: 0
+      levelNumber: 39
     - xmlDocument: {fileID: 4900000, guid: cfe98a001caddb34c85371ce2c33d1cc, type: 3}
+      regionNumber: 0
+      levelNumber: 40
+    - xmlDocument: {fileID: 4900000, guid: 34ba7ea149fc0ac4fad96f689be0e3a0, type: 3}
+      regionNumber: 0
+      levelNumber: 41
+    - xmlDocument: {fileID: 4900000, guid: 2c757c2e0a400804283a8c7dbeb97972, type: 3}
+      regionNumber: 0
+      levelNumber: 42
+    - xmlDocument: {fileID: 4900000, guid: 576095fc1d0b46149840427e19c70452, type: 3}
+      regionNumber: 0
+      levelNumber: 43
+    - xmlDocument: {fileID: 4900000, guid: 0a9d9f55b1885b64f9bff507ddff6914, type: 3}
+      regionNumber: 0
+      levelNumber: 44
+    - xmlDocument: {fileID: 4900000, guid: 45fbd5df680b8d440b596562b2dd5404, type: 3}
+      regionNumber: 0
+      levelNumber: 45
+    - xmlDocument: {fileID: 4900000, guid: 382ef57421df8f34d9042100bb6b944f, type: 3}
+      regionNumber: 0
+      levelNumber: 46
+    - xmlDocument: {fileID: 4900000, guid: 20a41d34669238a4caf5c01a4dc18f3d, type: 3}
+      regionNumber: 0
+      levelNumber: 47
+    - xmlDocument: {fileID: 4900000, guid: 5f555a2bd32931c4696739b92ba81c0d, type: 3}
+      regionNumber: 0
+      levelNumber: 48
+    - xmlDocument: {fileID: 4900000, guid: 95e89e83c91f6c8448c10b8fcf1672b1, type: 3}
+      regionNumber: 0
+      levelNumber: 49
   - name: Region_1
     fullName: "\u0423\u0447\u0430\u0441\u0442\u043E\u043A \u0431\u0430\u0431\u0443\u0448\u043A\u0438
       \u0428\u0443\u0440\u044B"
-    sprite: {fileID: 21300000, guid: bd670cce06efbae4bbd45e5aba747559, type: 3}
+    sprite: {fileID: 21300000, guid: 652dd8ff575a17a4a9b5f433e3486775, type: 3}
     levelList:
-    - xmlDocument: {fileID: 4900000, guid: b8f818ca39cbe2347b965b23492dcec5, type: 3}
-  lastLoadXmlDocument: Level_34
-  lastLoadFolder: Region_0
+    - xmlDocument: {fileID: 4900000, guid: 432a3b4a3158e484e8906c60e4ef2d48, type: 3}
+      regionNumber: 1
+      levelNumber: 0
+    - xmlDocument: {fileID: 4900000, guid: 485cba1c590a17f48beca3720cb98e44, type: 3}
+      regionNumber: 1
+      levelNumber: 1
+  lastLoadXmlDocument: Level_1
+  lastLoadFolder: Region_1
   levelSaved: 0
 --- !u!223 &6844234493297698153
 Canvas:

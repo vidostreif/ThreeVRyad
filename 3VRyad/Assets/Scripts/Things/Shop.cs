@@ -215,12 +215,6 @@ public class Shop : MonoBehaviour, IStoreListener
         ThingsManager.Instance.CountAllNumber();
         CountCoins();
 
-        //увеличиваем панель в верхнем углу
-        panelShopOnGame.localScale = panelShopOnGame.localScale * 2.0f;
-
-        //Показать инструменты в верху экрана
-        ThingsManager.Instance.CreateInstrumentsOnShop(panelShopInstruments);
-
         //витрина
         foreach (ProductV product in PRODUCTS)
         {
@@ -259,10 +253,16 @@ public class Shop : MonoBehaviour, IStoreListener
             product.AddAction(bottonGO);
         }
 
-        //Заменяем кнопке действие на Закрыть
-        SupportFunctions.ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");
+        yield return new WaitForSeconds(0.15f);
 
-        
+        //Показать инструменты в верху экрана
+        ThingsManager.Instance.CreateInstrumentsOnShop(panelShopInstruments);
+
+        panelShopOnGame.SetParent(panelShopInstruments);
+        //увеличиваем панель в верхнем углу
+        panelShopOnGame.localScale = panelShopOnGame.localScale * 2.0f;
+        //Заменяем кнопке действие на Закрыть
+        SupportFunctions.ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");        
     }
 
     //создаем панель подтверждения покупки
@@ -280,7 +280,9 @@ public class Shop : MonoBehaviour, IStoreListener
             SupportFunctions.ChangeButtonAction(buttonOkTransform, DestroyPanelShopConfirmation);
             Button buttonOk = buttonOkTransform.GetComponent<Button>();
             buttonOk.interactable = false;//отключаем кнопку до конца проигрования анимации
-            
+
+            yield return new WaitForSeconds(0.1f);
+
             //проигрываем анимацию 
             yield return StartCoroutine(ShopConfirmationAnimation(panelShop, panelShopConfirmation, product));
 
@@ -646,6 +648,7 @@ public class Shop : MonoBehaviour, IStoreListener
         //если не в состоянии покупки
         if (!stateOfPurchase)
         {
+            panelShopOnGame.SetParent(this.transform);
             //уменьшаем панель в верхнем углу
             panelShopOnGame.localScale = panelShopOnGame.localScale / 2.0f;
 
