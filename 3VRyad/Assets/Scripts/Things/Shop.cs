@@ -215,10 +215,12 @@ public class Shop : MonoBehaviour, IStoreListener
         ThingsManager.Instance.CountAllNumber();
         CountCoins();
 
+        yield return new WaitForSeconds(0.1f);
         //витрина
         foreach (ProductV product in PRODUCTS)
         {
-            yield return new WaitForEndOfFrame();
+            //yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.02f);
             GameObject bottonGO = Instantiate(PrefabBank.ShopButtonPrefab, contentTransform);
             Transform textNameTransform = bottonGO.transform.Find("TextName");
             textNameTransform.GetComponentInChildren<Text>().text = product.name;
@@ -253,7 +255,7 @@ public class Shop : MonoBehaviour, IStoreListener
             product.AddAction(bottonGO);
         }
 
-        yield return new WaitForSeconds(0.15f);
+        //yield return new WaitForSeconds(0.15f);
 
         //Показать инструменты в верху экрана
         ThingsManager.Instance.CreateInstrumentsOnShop(panelShopInstruments);
