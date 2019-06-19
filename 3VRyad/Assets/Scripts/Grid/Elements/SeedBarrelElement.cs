@@ -42,21 +42,10 @@ public class SeedBarrelElement : Element
             DestroyImmediate(TextCollectTransform.gameObject);
         }
         GameObject TextCollectObg = Instantiate(PrefabBank.TextCollectElement);
-        //GameObject TextCollectObg = new GameObject();
         TextCollectObg.name = TextCollectName;
         TextCollectObg.transform.SetParent(transform, false);
-
-        //MeshRenderer collectMeshRenderer = TextCollectObg.AddComponent<MeshRenderer>();
-        //collectMeshRenderer.sortingLayerName = "Elements";
-        //collectMeshRenderer.sortingOrder = 101;
-
         collectText = TextCollectObg.GetComponent<TextMesh>();
         collectText.text = numberOfElementCollected.ToString();
-        //collectText.text = numberOfElementCollected.ToString();
-        //collectText.fontSize = 50;
-        //collectText.anchor = TextAnchor.UpperCenter;
-        ////collectText.font = new Font("HFF Pure Vain");
-        //TextCollectObg.transform.localScale = new Vector3(0.08f, 0.08f);
     }
 
     //добавляем в коллекцию элемент

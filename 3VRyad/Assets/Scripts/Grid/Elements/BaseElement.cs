@@ -15,6 +15,7 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected HitTypeEnum[] vulnerabilityTypeEnum;//уязвимость к типам удара
     [SerializeField] protected bool destroyed = false;//признак что элемент был уничтожен
     [SerializeField] protected int life;
+    protected TextMesh lifeText;
     [SerializeField] protected int score;//количество очков за уничтожение элемента
     [SerializeField] protected bool immortal;//признак бессмертия
 
@@ -156,7 +157,15 @@ public class BaseElement : MonoBehaviour
         //this.preliminarySearchToActivate = preliminarySearchToActivate;
         this.actionDelay = actionDelay;
         this.nextProcessedMoveForAction = int.MaxValue;
-        this.ActivationMove = int.MaxValue;
+        //if (singleItemActivated)
+        //{            
+            this.ActivationMove = int.MaxValue;
+        //}
+        //else
+        //{
+        //    this.ActivationMove = Tasks.Instance.Moves;
+        //}
+        
         UpdateSprite();        
     }
 

@@ -14,6 +14,7 @@ public enum ElementsTypeEnum
     BigFlask,//фласка большая
     SeedBarrel,//бочка собирающая элементы
     Drop,//сбрасваемый элемент
+    Spider, //паук
 }//Типы элементов
 
 public enum ElementsShapeEnum
@@ -35,6 +36,7 @@ public enum ElementsShapeEnum
     SeedBarrel,//бочка
     Bush,//куст
     Brick,//кирпич
+    Spider, //паук
 }//Внешние виды элементов
 
 public enum BehindElementsTypeEnum
@@ -89,6 +91,7 @@ public enum AllShapeEnum
     Bush,//куст
     Brick,//кирпич
     Web, //паутина
+    Spider, //паук
 }//Внешние виды элементов
 
 public enum BlockTypeEnum

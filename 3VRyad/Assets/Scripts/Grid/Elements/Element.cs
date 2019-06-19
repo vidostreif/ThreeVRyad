@@ -88,13 +88,14 @@ public class Element : BaseElement
     //}
 
     //установка настроек элементов
-    public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, HitTypeEnum hitTypeEnum, int score) {
+    public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, HitTypeEnum hitTypeEnum, int life, int score) {
         this.type = type;
         this.lockedForMove = lockedForMove;
         this.immortal = immortal;
         this.createLine = createLine;
         this.activated = activated;
         this.thisHitTypeEnum = hitTypeEnum;
+        this.life = life;
         this.score = score;
         DopSettings();
     }
@@ -126,7 +127,15 @@ public class Element : BaseElement
                 //если элемент не бессмертный
                 if (!Immortal)
                 {
-                    ActionAfterHitting(hitType);
+                    life--;
+                    if (lifeText != null)
+                    {
+                        lifeText.text = Life.ToString();
+                    }
+                    if (life <=0)
+                    {
+                        ActionAfterHitting(hitType);
+                    }                    
                 }
             }
             
