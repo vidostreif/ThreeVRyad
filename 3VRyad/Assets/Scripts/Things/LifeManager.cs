@@ -13,6 +13,8 @@ public class LifeManager : MonoBehaviour
     [SerializeField] private int timeToGetOneLife; //количество минут для получения одной жизни 
     private Transform thisTransform;
     private Transform startParent;
+    private Animation thisAnimation;
+    //private float LastPlayAnimation = 0;
     private DateTime timeToNextLife; //время получения следующей жизни
     private DateTime endTimeImmortal; //время окончания бессметрия
     private int addMinutesTimeImmortal = 0;
@@ -51,8 +53,9 @@ public class LifeManager : MonoBehaviour
 
         //timeToGetOneLifeDateTime = new DateTime(0, 0, 0, 0, timeToGetOneLife, 0);
         textLive = transform.Find("TextLive").GetComponent<Text>();
-        textLiveTime = transform.Find("TextLiveTime").GetComponent<Text>();
-        imageLive = GetComponentInChildren<Image>();
+        textLiveTime = transform.Find("TextLiveTime").GetComponent<Text>();        
+        imageLive = transform.Find("ImageLive").GetComponent<Image>();
+        thisAnimation = transform.Find("ImageLive").GetComponent<Animation>();
         thisTransform = transform;
         startParent = thisTransform.parent;
         LoadSave();
@@ -110,10 +113,12 @@ public class LifeManager : MonoBehaviour
         }
         endTimeImmortal = endTimeImmortal.AddMinutes(price);
         addMinutesTimeImmortal -= price;
+
         UpdateText();
-        if (price > 0)
-        {
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Coin);
+        if (price > 0 && !thisAnimation.IsPlaying("Life_add"))
+        {            
+            thisAnimation.Play("Life_add");
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Life_add);
         }
     }
 
@@ -132,6 +137,8 @@ public class LifeManager : MonoBehaviour
                 timeToNextLife = CheckTime.Realtime().AddMinutes(timeToGetOneLife);
             }
             life--;
+            thisAnimation.Play("Life_sub");
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Life_sub);
             RecordSave();
             UpdateText();
             return true;
@@ -145,7 +152,9 @@ public class LifeManager : MonoBehaviour
     public void AddLive() {
         if (life < maxLife)
         {
-            life++;                    
+            life++;
+            thisAnimation.Play("Life_add");
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Life_add);
             UpdateText();            
         }
     }
@@ -158,6 +167,8 @@ public class LifeManager : MonoBehaviour
             endTimeImmortal = CheckTime.Realtime();
         }
         addMinutesTimeImmortal += time;
+        //thisAnimation.Play("Life_add");
+        //SoundManager.Instance.PlaySoundInternal(SoundsEnum.Life_add);
         if (EndTimeImmortal > CheckTime.Realtime())
         {
             life = maxLife;
@@ -193,10 +204,10 @@ public class LifeManager : MonoBehaviour
         {
             AddLive();
             RecordSave();
-            //звук добавления
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);
+            ////звук добавления
+            //SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);
             //эффект                
-            ParticleSystemManager.Instance.CreateCollectAllEffect(this.transform, imageLive);            
+            ParticleSystemManager.Instance.CreateCollectAllEffect(imageLive.transform, imageLive);            
         }
     }
 

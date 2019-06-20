@@ -30,6 +30,12 @@ public static class ParticleSystemBank
         }
     }
 
+    //предзагрузка всех PS
+    public static void Preload()
+    {
+        CreatePSList();
+    }
+
     //асинхронная загрузка данных
     public static ResourceRequest GetPSAsync(PSEnum pSEnum)
     {
@@ -49,7 +55,6 @@ public static class ParticleSystemBank
         return Resources.LoadAsync<GameObject>(pSResurse.PSFolderName + "/" + pSResurse.PSName);
     }
 
-
     //синхронная загрузка GO
     public static GameObject GetPS(PSEnum pSEnum)
     {
@@ -64,9 +69,29 @@ public static class ParticleSystemBank
         return null;
     }
 
+    public static PSResurse GetPSResurse(PSEnum pSEnum)
+    {
+        CreatePSList();
+        for (int i = 0; i < pSList.Length; i++)
+        {
+            if (pSList[i].PSEnum == pSEnum)
+            {
+                return pSList[i];
+            }
+        }
+        return null;
+    }
+
     public static GameObject GetPS(PSResurse pSResurse)
     {
-        return Resources.Load<GameObject>(pSResurse.PSFolderName + "/" + pSResurse.PSName);
+        if (pSResurse.Go != null)
+        {
+            return pSResurse.Go;
+        }
+        else
+        {
+            return Resources.Load<GameObject>(pSResurse.PSFolderName + "/" + pSResurse.PSName);
+        }        
     }
 }
 
@@ -76,15 +101,18 @@ public class PSResurse
     private PSEnum pSEnum;
     private string pSFolderName;
     private string pSName;
+    private GameObject go;
 
     public PSEnum PSEnum { get => pSEnum; }
     public string PSFolderName { get => pSFolderName; }
     public string PSName { get => pSName; }
+    public GameObject Go { get => go; }
 
     public PSResurse(PSEnum pSEnum, string pSFolderName, string pSName)
     {
         this.pSEnum = pSEnum;
         this.pSFolderName = pSFolderName;
         this.pSName = pSName;
+        this.go = ParticleSystemBank.GetPS(this);
     }
 }

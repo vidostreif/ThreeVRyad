@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 20}
   - component: {fileID: 11}
   - component: {fileID: 30}
+  - component: {fileID: 161717893}
   m_Layer: 5
   m_Name: ImageLive
   m_TagString: Untagged
@@ -166,6 +167,23 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!111 &161717893
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: bc7f796be8d8ddf46aa17ceb6d314a22, type: 2}
+  - {fileID: 7400000, guid: cdca510dc586d154a8b01dba661a86ae, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &3
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,7 +561,7 @@ MonoBehaviour:
     productType: 0
     compositionBundle: []
     coins: 0
-    timeImmortalLives: 30
+    timeImmortalLives: 180
     image: {fileID: 21300000, guid: e583088164cd45b4e9cf9a484eb1626c, type: 3}
 --- !u!114 &41
 MonoBehaviour:
@@ -593,7 +611,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 66.7, y: -23}
+  m_AnchoredPosition: {x: 66.70001, y: -23}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7015933331047417142
@@ -744,7 +762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 178.3, y: -22.929932}
+  m_AnchoredPosition: {x: 178.29999, y: -22.929932}
   m_SizeDelta: {x: 100, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &164372529214540569
@@ -831,7 +849,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -79.9, y: -23}
+  m_AnchoredPosition: {x: -79.8999, y: -23}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6365491677433329072

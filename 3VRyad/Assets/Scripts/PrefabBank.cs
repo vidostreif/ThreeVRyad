@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 //#if UNITY_EDITOR
@@ -62,7 +63,6 @@ public static class PrefabBank
     public static GameObject PanelInformationWithVideo { get => panelInformationWithVideo; }
     public static GameObject PanelDailyGift { get => panelDailyGift; }
     public static GameObject ImageCoin { get => imageCoin; }
-
     public static GameObject ScoreElementPrefab { get => scoreElementPrefab;}
     public static GameObject CanvasHelpToPlayer { get => canvasHelpToPlayer;}
     public static GameObject CanvasStartGame { get => canvasStartGame;}
@@ -73,31 +73,26 @@ public static class PrefabBank
     public static GameObject PanelShopReceivingCoins { get => panelShopReceivingCoins; }
     public static GameObject BlockBacklight { get => blockBacklight; }
 
-    //private void LoadAllPrefab() {
-    //    levelsCanvasPrefab = Resources.Load(prefabFolder + "Arrow") as GameObject;
-    //}
+    public static void Preload()
+    {
+        //FieldInfo[] properties = PrefabBank.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+        //foreach (FieldInfo property in properties)
+        //{
+        //    if (property.FieldType == typeof(string))
+        //    {
+        //        try
+        //        {
+        //            property.SetValue(this, string.Empty);
+        //        }
+        //        catch (Exception exception)
+        //        {
+        //            //Обрабатываем исключительную ситуацию, пишем логи
+        //        }
+        //    }
+        //}
 
 
-    //void Awake()
-    //{
-    //    if (Instance)
-    //    {
-    //        Destroy(this.gameObject); //Delete duplicate
-    //        return;
-    //    }
-    //    else
-    //    {
-    //        Instance = this; //Make this object the only instance            
-    //    }
-    //    if (Application.isPlaying)
-    //    {
-    //        DontDestroyOnLoad(gameObject); //Set as do not destroy
-    //    }
-    //    //// регистрация синглтона
-    //    //if (Instance != null)
-    //    //{
-    //    //    Debug.LogError("Несколько экземпляров PrefabBank!");
-    //    //}
-    //    //Instance = this;
-    //}
+    }
+    
 }

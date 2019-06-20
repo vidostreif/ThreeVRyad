@@ -4,16 +4,16 @@ using UnityEngine;
 
 public static class SoundBank 
 {
-    private static List<SoundResurse> soundsList = null;
+    private static SoundResurse[] soundsArray = null;
     private static string soundFolder = "Sound";
 
     //здесь указываем enum для подсказок
     private static void CreateSoundList()
     {
-        if (soundsList == null)
+        if (soundsArray == null)
         {
-            soundsList = new List<SoundResurse>();
-            soundsList.Add( new SoundResurse(SoundsEnum.CreateElement, soundFolder, "klick_quiet"));
+            List<SoundResurse> soundsList = new List<SoundResurse>();
+            soundsList.Add(new SoundResurse(SoundsEnum.CreateElement, soundFolder, "klick_quiet"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_1, soundFolder, "Socapex"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_2, soundFolder, "Socapex1"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_3, soundFolder, "Socapex2"));
@@ -57,12 +57,25 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Closed_chest, soundFolder, "closed_chest"));
             soundsList.Add(new SoundResurse(SoundsEnum.Zero_moves, soundFolder, "Zero_moves"));
             soundsList.Add(new SoundResurse(SoundsEnum.Two_moves, soundFolder, "Two_moves"));
-        }
+            soundsList.Add(new SoundResurse(SoundsEnum.Life_add, soundFolder, "Life_add"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Life_sub, soundFolder, "Life_sub"));
+            soundsArray = soundsList.ToArray();
+        }        
+    }
+
+    //предзагрузка всех звуков
+    public static void Preload()
+    {
+        CreateSoundList();
+        //foreach (SoundResurse item in soundsList)
+        //{
+        //    GetSound(item);
+        //}
     }
 
     public static ResourceRequest GetSoundAsync(SoundsEnum soundName) {
         CreateSoundList();
-        foreach (SoundResurse soundResurse in soundsList)
+        foreach (SoundResurse soundResurse in soundsArray)
         {
             if (soundResurse.SoundEnum == soundName)
             {
@@ -77,10 +90,28 @@ public static class SoundBank
         return Resources.LoadAsync<AudioClip>(soundResurse.SoundFolderName + "/" + soundResurse.SoundName);
     }
 
+    public static AudioClip GetSound(SoundResurse soundResurse)
+    {
+        return Resources.Load<AudioClip>(soundResurse.SoundFolderName + "/" + soundResurse.SoundName);
+    }
+
+    public static AudioClip GetSound(SoundsEnum soundName)
+    {
+        CreateSoundList();
+        foreach (SoundResurse soundResurse in soundsArray)
+        {
+            if (soundResurse.SoundEnum == soundName)
+            {
+                return soundResurse.AudioClip;
+            }
+        }
+        return null;
+    }
+
     public static SoundResurse GetSoundResurse(SoundsEnum soundName)
     {
         CreateSoundList();
-        foreach (SoundResurse soundResurse in soundsList)
+        foreach (SoundResurse soundResurse in soundsArray)
         {
             if (soundResurse.SoundEnum == soundName)
             {
@@ -89,22 +120,24 @@ public static class SoundBank
         }
         return null;
     }
-
 }
 
 public class SoundResurse {
     private SoundsEnum soundEnum;
     private string soundFolderName;
     private string soundName;
+    private AudioClip audioClip;
 
     public SoundsEnum SoundEnum { get => soundEnum; }
     public string SoundFolderName { get => soundFolderName; }
     public string SoundName { get => soundName; }
+    public AudioClip AudioClip { get => audioClip; }
 
     public SoundResurse(SoundsEnum soundEnum, string soundFolderName, string soundName)
     {
         this.soundEnum = soundEnum;
         this.soundFolderName = soundFolderName;
         this.soundName = soundName;
+        audioClip = SoundBank.GetSound(this);
     }
 }

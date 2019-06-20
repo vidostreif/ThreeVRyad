@@ -144,7 +144,7 @@ public static class HelpToPlayer
             Hint hint = hintsList.Find(item => item.help == help);
             if (hint == null)
             {
-                //определяем позицию в по длинам энумов
+                //определяем позицию по длинам энумов
                 int count = GetEnumPosition(enumType);
 
                 if (toTop)

@@ -177,64 +177,46 @@ public class SoundManager : MonoBehaviour
 
     private IEnumerator PlaySoundInternalSoon(SoundResurse soundResurse, bool thisOutCompress)
     {
-        ResourceRequest request = SoundBank.GetSoundAsync(soundResurse);
-        loadSoundList.Add(soundResurse);
-        while (request != null && !request.isDone)
-        {
-            yield return null;
-        }
-        loadSoundList.Remove(soundResurse);
+        AudioClip soundClip = soundResurse.AudioClip;
 
-        //если не нашли, или не смогли загрузить, то выходим
-        if (request == null)
-        {
-            Debug.Log("Звук не загружен: " + soundResurse.SoundName);
-            yield break;
-        }
-
-        AudioClip soundClip = (AudioClip)request.asset;
+        //если потеряяли аудио, то предзагружаем его асинхронно
         if (soundClip == null)
         {
-            Debug.Log("Звук не загружен: " + soundResurse.SoundName);
-            yield break;
+            ResourceRequest request = SoundBank.GetSoundAsync(soundResurse);
+            loadSoundList.Add(soundResurse);
+            while (request != null && !request.isDone)
+            {
+                yield return null;
+            }
+            loadSoundList.Remove(soundResurse);
+
+            //если не нашли, или не смогли загрузить, то выходим
+            if (request == null)
+            {
+                Debug.Log("Звук не загружен: " + soundResurse.SoundName);
+                yield break;
+            }
+
+            soundClip = (AudioClip)request.asset;
+            if (soundClip == null)
+            {
+                Debug.Log("Звук не загружен: " + soundResurse.SoundName);
+                yield break;
+            }
         }
 
-        //GameObject sound = (GameObject)Instantiate(soundPrefab);
         GameObject sound = new GameObject();
         sound.transform.parent = transform;
         sound.transform.position = transform.position;
 
-        ////определяем громкость
-        //float volume = 1;
-        //if (countSoundsAlreadyPlayed != 0)
-        //{
-        //    volume = 1.2f/((float)countSoundsAlreadyPlayed + 1);
-        //    SetVolumeForSoundResurseType(soundResurse.SoundName, volume);
-        //}
-
         AudioSource soundSource = sound.AddComponent<AudioSource>();
         soundSource.mute = !SettingsController.SoundOn;
-        //soundSource.volume = volume;//уменьшаем громкость на количество уже воспроизводимых таких звуков
         soundSource.clip = soundClip;
         soundSource.outputAudioMixerGroup = thisOutCompress ? audMixThisoutCompressor : audMixThisCompressor;
         soundSource.Play();
-        //soundSource.ignoreListenerPause = !pausable;
 
         soundsList.Add(soundSource);
     }
-
-    //public void SetVolumeForSoundResurseType(string name, float volume)
-    //{
-    //    //изменяем громкость для всех соундов с таким названием
-    //    foreach (AudioSource item in soundsList)
-    //    {
-    //        if (item.clip.name == name)
-    //        {
-    //            item.volume = volume;
-    //            Debug.Log("Громкость " + volume);
-    //        }
-    //    }
-    //}
 
     public void SoundMute(bool mute) {
         //CreateSoundsList();

@@ -24,11 +24,11 @@ public class ParticleSystemManager : MonoBehaviour
         {
             DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy
         }
-        WarmingUp();
+        //WarmingUp();
     }
 
     //прогрев всех GO
-    private void WarmingUp() {
+    public void Preload() {
 
         GameObject warmingUpPS= new GameObject();
         warmingUpPS.name = "warmingUpPS";
@@ -44,26 +44,36 @@ public class ParticleSystemManager : MonoBehaviour
        
     private IEnumerator CurCreatePSAsync(Transform parentTransform, PSEnum pSEnum, float lifeTime = 0)
     {
-        ResourceRequest request = ParticleSystemBank.GetPSAsync(pSEnum);
-        //ожидаем загрузки ресурса
-        while (request != null && !request.isDone)
+        GameObject requestGO;
+        PSResurse pSResurse = ParticleSystemBank.GetPSResurse(pSEnum);
+        if (pSResurse.Go != null)
         {
-            yield return null;
+            requestGO = pSResurse.Go;
+        }
+        else
+        {
+            ResourceRequest request = ParticleSystemBank.GetPSAsync(pSResurse);
+            //ожидаем загрузки ресурса
+            while (request != null && !request.isDone)
+            {
+                yield return null;
+            }
+
+            //если не нашли, или не смогли загрузить, то выходим
+            if (request == null)
+            {
+                Debug.Log("Эффект не загружен: " + pSEnum);
+                yield break;
+            }
+
+            requestGO = (GameObject)request.asset;
+            if (requestGO == null)
+            {
+                Debug.Log("Эффект не загружен: " + pSEnum);
+                yield break;
+            }
         }
 
-        //если не нашли, или не смогли загрузить, то выходим
-        if (request == null)
-        {
-            Debug.Log("Эффект не загружен: " + pSEnum);
-            yield break;
-        }
-
-        GameObject requestGO = (GameObject)request.asset;
-        if (requestGO == null)
-        {
-            Debug.Log("Эффект не загружен: " + pSEnum);
-            yield break;
-        }
 
         if (parentTransform != null)
         {

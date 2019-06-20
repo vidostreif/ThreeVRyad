@@ -6,6 +6,108 @@ using UnityEngine;
 
 public static class SpriteBank 
 {
+    //массивы предзагруженных спрайтов
+    private static SpriteResurseArray[] spriteResurseArray = null;
+
+    //предзагрузка всех картинок
+    public static void Preload()
+    {
+        CreateSpritesList();
+    }
+
+    //создаем листы спрайтов
+    private static void CreateSpritesList()
+    {
+        if (spriteResurseArray == null)
+        {
+            spriteResurseArray = new SpriteResurseArray[6];
+            SpriteResurse[] spriteResursesElementsShapeEnum = CreateSpriteResurseList(typeof(ElementsShapeEnum));
+            int i = 0;
+            foreach (var curEnum in Enum.GetValues(typeof(ElementsShapeEnum)))
+            {
+                Sprite sprite = SetShape((ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), curEnum.ToString()));
+
+                spriteResursesElementsShapeEnum[i] = new SpriteResurse(curEnum.ToString(), sprite);
+                i++;
+            }
+            spriteResurseArray[0] = new SpriteResurseArray(typeof(ElementsShapeEnum), spriteResursesElementsShapeEnum);
+
+            SpriteResurse[] spriteResursesBehindElementsShapeEnum = CreateSpriteResurseList(typeof(BehindElementsShapeEnum));
+            i = 0;
+            foreach (var curEnum in Enum.GetValues(typeof(BehindElementsShapeEnum)))
+            {
+                Sprite sprite = SetShape((BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), curEnum.ToString()));
+
+                spriteResursesBehindElementsShapeEnum[i] = new SpriteResurse(curEnum.ToString(), sprite);
+                i++;
+            }
+            spriteResurseArray[1] = new SpriteResurseArray(typeof(BehindElementsShapeEnum), spriteResursesBehindElementsShapeEnum);
+
+            SpriteResurse[] spriteResursesBlockTypeEnum = CreateSpriteResurseList(typeof(BlockTypeEnum));
+            i = 0;
+            foreach (var curEnum in Enum.GetValues(typeof(BlockTypeEnum)))
+            {
+                Sprite sprite = SetShape((BlockTypeEnum)Enum.Parse(typeof(BlockTypeEnum), curEnum.ToString()));
+
+                spriteResursesBlockTypeEnum[i] = new SpriteResurse(curEnum.ToString(), sprite);
+                i++;
+            }
+            spriteResurseArray[2] = new SpriteResurseArray(typeof(BlockTypeEnum), spriteResursesBlockTypeEnum);
+
+            SpriteResurse[] spriteResursesBlockingElementsShapeEnum = CreateSpriteResurseList(typeof(BlockingElementsShapeEnum));
+            i = 0;
+            foreach (var curEnum in Enum.GetValues(typeof(BlockingElementsShapeEnum)))
+            {
+                Sprite sprite = SetShape((BlockingElementsShapeEnum)Enum.Parse(typeof(BlockingElementsShapeEnum), curEnum.ToString()));
+
+                spriteResursesBlockingElementsShapeEnum[i] = new SpriteResurse(curEnum.ToString(), sprite);
+                i++;
+            }
+            spriteResurseArray[3] = new SpriteResurseArray(typeof(BlockingElementsShapeEnum), spriteResursesBlockingElementsShapeEnum);
+
+            SpriteResurse[] spriteResursesInstrumentsEnum = CreateSpriteResurseList(typeof(InstrumentsEnum));
+            i = 0;
+            foreach (var curEnum in Enum.GetValues(typeof(InstrumentsEnum)))
+            {
+                Sprite sprite = SetShape((InstrumentsEnum)Enum.Parse(typeof(InstrumentsEnum), curEnum.ToString()));
+
+                spriteResursesInstrumentsEnum[i] = new SpriteResurse(curEnum.ToString(), sprite);
+                i++;
+            }
+            spriteResurseArray[4] = new SpriteResurseArray(typeof(InstrumentsEnum), spriteResursesInstrumentsEnum);
+
+            SpriteResurse[] spriteResursesBorderEnum = CreateSpriteResurseList(typeof(BorderEnum));
+            i = 0;
+            foreach (var curEnum in Enum.GetValues(typeof(BorderEnum)))
+            {
+                Sprite sprite = SetShape((BorderEnum)Enum.Parse(typeof(BorderEnum), curEnum.ToString()));
+
+                spriteResursesBorderEnum[i] = new SpriteResurse(curEnum.ToString(), sprite);
+                i++;
+            }
+            spriteResurseArray[5] = new SpriteResurseArray(typeof(BorderEnum), spriteResursesBorderEnum);
+        }
+    }
+
+    private static Sprite GetSprite(Type enumType, int spriteNumber) {
+        CreateSpritesList();
+        foreach (SpriteResurseArray item in spriteResurseArray)
+        {
+            if (item != null && item.EnumType == enumType)
+            {
+                return item.SpriteResurse[spriteNumber].Sprite;
+            }
+        }
+        return null;
+    }
+
+    private static SpriteResurse[] CreateSpriteResurseList(Type type)
+    {
+        //создаем массив ресурсов
+        int count = Enum.GetNames(type).Length;        
+        return new SpriteResurse[count];
+    }
+
     public static Sprite SetShape(ElementsShapeEnum shape, int option = 0)
     {
         ////в зависимости от типа
@@ -15,6 +117,17 @@ public static class SpriteBank
         }
         else
         {
+            //пробуем получить предзагруженный спрайт
+            if (option == 0)
+            {
+                Sprite sprite = GetSprite(typeof(ElementsShapeEnum), (int)shape);
+                if (sprite != null)
+                {
+                    return sprite;
+                }
+            }
+
+            //если не смогли получить предзагруженный спрайт или option != 0
             string dopString = "";
             if (option != 0)
             {
@@ -22,8 +135,7 @@ public static class SpriteBank
             }
 
             return Resources.Load<Sprite>("Sprites/Elements/" + shape.ToString() + dopString) as Sprite;
-        }               
-
+        }
     }
 
     public static Sprite SetShape(BehindElementsShapeEnum shape, int option = 0)
@@ -35,6 +147,16 @@ public static class SpriteBank
         }
         else
         {
+            //пробуем получить предзагруженный спрайт
+            if (option == 0)
+            {
+                Sprite sprite = GetSprite(typeof(BehindElementsShapeEnum), (int)shape);
+                if (sprite != null)
+                {
+                    return sprite;
+                }
+            }
+
             string dopString = "";
             if (option != 0)
             {
@@ -47,19 +169,46 @@ public static class SpriteBank
 
     public static Sprite SetShape(BlockTypeEnum shape, int option = 0)
     {
-        //в зависимости от типа блока 
-        switch (shape)
+
+        ////в зависимости от типа
+        if (shape == BlockTypeEnum.Empty)
         {
-            case BlockTypeEnum.Empty:
-                return null;
-            case BlockTypeEnum.StandardBlock:
-                return Resources.Load<Sprite>("Sprites/Blocks/ground") as Sprite;
-            case BlockTypeEnum.Sliding:
-                return Resources.Load<Sprite>("Sprites/Blocks/Sliding") as Sprite;
-            default:
-                Debug.LogError("Не определен тип " + shape);
-                return null;
+            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
         }
+        else
+        {
+            //пробуем получить предзагруженный спрайт
+            if (option == 0)
+            {
+                Sprite sprite = GetSprite(typeof(BlockTypeEnum), (int)shape);
+                if (sprite != null)
+                {
+                    return sprite;
+                }
+            }
+
+            string dopString = "";
+            if (option != 0)
+            {
+                dopString = "_" + option;
+            }
+
+            //в зависимости от типа блока 
+            switch (shape)
+            {
+                case BlockTypeEnum.Empty:
+                    return null;
+                case BlockTypeEnum.StandardBlock:
+                    return Resources.Load<Sprite>("Sprites/Blocks/ground" + dopString) as Sprite;
+                case BlockTypeEnum.Sliding:
+                    return Resources.Load<Sprite>("Sprites/Blocks/Sliding" + dopString) as Sprite;
+                default:
+                    Debug.LogError("Не определен тип " + shape);
+                    return null;
+            }
+        }
+
+
     }
 
     public static Sprite SetShape(BlockingElementsShapeEnum shape, int option = 0)
@@ -71,6 +220,16 @@ public static class SpriteBank
         }
         else
         {
+            //пробуем получить предзагруженный спрайт
+            if (option == 0)
+            {
+                Sprite sprite = GetSprite(typeof(BlockingElementsShapeEnum), (int)shape);
+                if (sprite != null)
+                {
+                    return sprite;
+                }
+            }
+
             string dopString = "";
             if (option != 0)
             {
@@ -91,6 +250,16 @@ public static class SpriteBank
         }
         else
         {
+            //пробуем получить предзагруженный спрайт
+            if (mini == false)
+            {
+                Sprite sprite = GetSprite(typeof(InstrumentsEnum), (int)shape);
+                if (sprite != null)
+                {
+                    return sprite;
+                }
+            }
+
             return Resources.Load("Sprites/Instruments/" + shape.ToString() + (mini ? "_mini" : ""), typeof(Sprite)) as Sprite;
         }        
     }
@@ -104,6 +273,16 @@ public static class SpriteBank
         }
         else
         {
+            //пробуем получить предзагруженный спрайт
+            //if (option == 0)
+            //{
+                Sprite sprite = GetSprite(typeof(BorderEnum), (int)shape);
+                if (sprite != null)
+                {
+                    return sprite;
+                }
+            //}
+
             return Resources.Load<Sprite>("Sprites/Border/" + shape.ToString()) as Sprite;
         }
         
@@ -130,5 +309,35 @@ public static class SpriteBank
             return SetShape((BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), shape.ToString()), option);
         }
         return null;
+    }
+}
+
+public class SpriteResurseArray
+{
+    private Type enumType;
+    private SpriteResurse[] spriteResurse;
+
+    public Type EnumType { get => enumType; }
+    public SpriteResurse[] SpriteResurse { get => spriteResurse; }
+
+    public SpriteResurseArray(Type enumType, SpriteResurse[] spriteResurse)
+    {
+        this.enumType = enumType;
+        this.spriteResurse = spriteResurse;
+    }
+}
+
+public class SpriteResurse
+{
+    private string spriteName;
+    private Sprite sprite;
+
+    public string SpriteName { get => spriteName; }
+    public Sprite Sprite { get => sprite; }
+
+    public SpriteResurse(string spriteName, Sprite sprite)
+    {
+        this.spriteName = spriteName;
+        this.sprite = sprite;
     }
 }

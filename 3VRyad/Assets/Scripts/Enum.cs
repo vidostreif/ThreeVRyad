@@ -222,6 +222,9 @@ public enum SoundsEnum
     Closed_chest,
     Zero_moves,
     Two_moves,
+    Life_add,
+    Life_sub,
+
 
 }//тип звуков
 

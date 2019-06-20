@@ -436,30 +436,6 @@ public class LevelMenu : MonoBehaviour
 
     public bool NextLevelIsOpen()
     {
-        //if (lastLoadLevel != null)
-        //{
-        //    bool found = false;
-        //    for (int i = 0; i < regionsList.Count; i++)
-        //    {
-        //        for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //        {
-        //            if (found)
-        //            {
-        //                //если уровень открыт
-        //                if (regionsList[i].levelList[j].Open)
-        //                {
-        //                    return true;
-        //                }
-        //                return false;
-        //            }
-        //            if (regionsList[i].levelList[j] == lastLoadLevel)
-        //            {
-        //                found = true;
-        //            }
-        //        }
-        //    }
-        //}
-        //return false;
 
         if (lastLoadLevel != null)
         {
