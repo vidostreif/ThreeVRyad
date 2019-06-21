@@ -14,6 +14,7 @@ public class DailyGiftManager : MonoBehaviour
     private int numberOfGiftsIssuedToday; //количество выданных подарков сегодня
     private GameObject dailyGiftPanel;
     private GameObject dailyGiftBut; //кнопка
+    private Text TextTimeUntilNextDailyGift;
     private Transform dailyGiftButtonPlace;
     private float lastProcessingTime = 0;
 
@@ -40,7 +41,7 @@ public class DailyGiftManager : MonoBehaviour
             DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy            
         }
         dailyGiftButtonPlace = transform.Find("DailyGiftButtonPlace");
-
+        TextTimeUntilNextDailyGift = dailyGiftButtonPlace.Find("TextTimeUntilNextDailyGift").GetComponent<Text>();
         LoadSave();
 
         DetermineMomentOfIssuingNextGift();
@@ -58,6 +59,8 @@ public class DailyGiftManager : MonoBehaviour
                 {
                     Destroy(dailyGiftBut);
                 }
+                TimeSpan timeUntilNextDailyGift = TimeUntilNextDailyGift();
+                TextTimeUntilNextDailyGift.text = "" + timeUntilNextDailyGift.Hours + "h " + timeUntilNextDailyGift.Minutes + "m " + timeUntilNextDailyGift.Seconds + "s";
             }
             else
             {
@@ -65,6 +68,7 @@ public class DailyGiftManager : MonoBehaviour
                 {
                     dailyGiftBut = GameObject.Instantiate(PrefabBank.DailyGiftButton, dailyGiftButtonPlace);
                     SupportFunctions.ChangeButtonAction(dailyGiftBut.transform, delegate { CreateDailyGiftPanel(); });
+                    TextTimeUntilNextDailyGift.text = "";
                 }                
             }
         }
