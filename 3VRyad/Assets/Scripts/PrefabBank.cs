@@ -32,6 +32,7 @@ public static class PrefabBank
     private static GameObject panelShopInformation = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopInformation") as GameObject;
     private static GameObject prefabVideoBrowseButton = Resources.Load(prefabFolder + "Canvas/Shop/VideoBrowseButton") as GameObject;
     private static GameObject panelShopReceivingCoins = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopReceivingCoins") as GameObject;
+    private static GameObject dailyGiftButton = Resources.Load(prefabFolder + "Canvas/Shop/DailyGiftButton") as GameObject;
     private static GameObject imageCoin = Resources.Load(prefabFolder + "Canvas/GameCanvas/ImageCoin") as GameObject;
 
 
@@ -72,6 +73,7 @@ public static class PrefabBank
     public static GameObject PrefabVideoBrowseButton { get => prefabVideoBrowseButton; }
     public static GameObject PanelShopReceivingCoins { get => panelShopReceivingCoins; }
     public static GameObject BlockBacklight { get => blockBacklight; }
+    public static GameObject DailyGiftButton { get => dailyGiftButton; }
 
     public static void Preload()
     {

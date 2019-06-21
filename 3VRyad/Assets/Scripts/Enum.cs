@@ -256,3 +256,14 @@ public enum VideoForFeeEnum
     ForLive,
     ForDailyGift,
 }//тип видео за вознаграждение
+
+public enum SpritesEnum
+{
+    Empty,
+    Coin,
+    Move,
+    Life,
+    Daily_Gift,
+    Gift_Box,
+    Gift_Box_Open,
+}//спрайты

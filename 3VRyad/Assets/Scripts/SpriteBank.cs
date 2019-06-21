@@ -264,6 +264,53 @@ public static class SpriteBank
         }        
     }
 
+    public static Sprite SetShape(SpritesEnum shape, bool mini = false)
+    {
+        ////в зависимости от типа
+        if (shape == SpritesEnum.Empty)
+        {
+            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
+        }
+        else
+        {
+            //пробуем получить предзагруженный спрайт
+            if (mini == false)
+            {
+                Sprite sprite = GetSprite(typeof(SpritesEnum), (int)shape);
+                if (sprite != null)
+                {
+                    return sprite;
+                }
+            }
+
+            //string dopString = "";
+            //if (mini)
+            //{
+            //    dopString = "_mini";
+            //}
+
+            ////в зависимости от типа блока 
+            //switch (shape)
+            //{
+            //    case SpritesEnum.Sprite_Coin:
+            //        return Resources.Load<Sprite>("Sprites/Coin" + dopString) as Sprite;
+            //    case SpritesEnum.Sprite_Life:
+            //        return Resources.Load<Sprite>("Sprites/Life" + dopString) as Sprite;
+            //    case SpritesEnum.Sprite_Move:
+            //        return Resources.Load<Sprite>("Sprites/Move" + dopString) as Sprite;
+            //    case SpritesEnum.Sprite_Gift_Box:
+            //        return Resources.Load<Sprite>("Sprites/GiftBox" + dopString) as Sprite;
+            //    case SpritesEnum.Sprite_Gift_Box_Open:
+            //        return Resources.Load<Sprite>("Sprites/GiftBoxOpen" + dopString) as Sprite;
+            //    default:
+            //        Debug.LogError("Не определен тип " + shape);
+            //        return null;
+            //}
+
+            return Resources.Load("Sprites/" + shape.ToString() + (mini ? "_mini" : ""), typeof(Sprite)) as Sprite;
+        }
+    }
+
     public static Sprite SetShape(BorderEnum shape)
     {
         ////в зависимости от типа

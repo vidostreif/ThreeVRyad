@@ -54,11 +54,11 @@ public class AdMobManager : MonoBehaviour
 
         //actionSuccess = AddMovesOnEndGAme;
 
-        rewardVideoForCoin = new RewardVideo(Shop.Instance.AddCoinsForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 60, 0);
+        rewardVideoForCoin = new RewardVideo(Shop.Instance.AddCoinsForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Coin), 60, 0);
 
-        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300, 30);
+        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Move), 300, 30);
 
-        rewardVideoForLife = new RewardVideo(LifeManager.Instance.AddLifeForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 300, 20);
+        rewardVideoForLife = new RewardVideo(LifeManager.Instance.AddLifeForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Life), 300, 20);
 
         //определяем время загрузки видео для ежедневного подарка
         int timeLoadVideoForDailyGift = 10;
@@ -71,7 +71,7 @@ public class AdMobManager : MonoBehaviour
             }
         }     
         
-        rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, 5, timeLoadVideoForDailyGift);
+        rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, timeLoadVideoForDailyGift);
     }
 
     public void Update()

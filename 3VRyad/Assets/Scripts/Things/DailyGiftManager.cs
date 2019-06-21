@@ -13,10 +13,11 @@ public class DailyGiftManager : MonoBehaviour
     private DateTime nextGiftTimeIssued; //время выдачи следующего подарка
     private int numberOfGiftsIssuedToday; //количество выданных подарков сегодня
     private GameObject dailyGiftPanel;
+    private GameObject dailyGiftBut; //кнопка
+    private Transform dailyGiftButtonPlace;
+    private float lastProcessingTime = 0;
 
     private VideoBrowseButton[] videoBrowseButtonList;
-    //private VideoBrowseButton secondVideoBrowseButton;
-    //private VideoBrowseButton thirdVideoBrowseButton;
 
     public DateTime LastGiftTimeIssued { get => lastGiftTimeIssued; }
     public int NumberOfGiftsIssuedToday { get => numberOfGiftsIssuedToday; }
@@ -38,6 +39,8 @@ public class DailyGiftManager : MonoBehaviour
         {
             DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy            
         }
+        dailyGiftButtonPlace = transform.Find("DailyGiftButtonPlace");
+
         LoadSave();
 
         DetermineMomentOfIssuingNextGift();
@@ -46,7 +49,25 @@ public class DailyGiftManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //обрабатываем не чаще двух раз в секунду
+        if (lastProcessingTime + 0.5f < Time.realtimeSinceStartup)
+        {
+            if (TodayReceivedAllDailyGift())
+            {
+                if (dailyGiftBut != null)
+                {
+                    Destroy(dailyGiftBut);
+                }
+            }
+            else
+            {
+                if (dailyGiftBut == null)
+                {
+                    dailyGiftBut = GameObject.Instantiate(PrefabBank.DailyGiftButton, dailyGiftButtonPlace);
+                    SupportFunctions.ChangeButtonAction(dailyGiftBut.transform, delegate { CreateDailyGiftPanel(); });
+                }                
+            }
+        }
     }
 
     private void DetermineMomentOfIssuingNextGift() {

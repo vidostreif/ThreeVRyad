@@ -390,7 +390,6 @@ public class Shop : MonoBehaviour, IStoreListener
                 GameObject mminiThingGO = GameObject.Instantiate(PrefabBank.ImageCoin, go.transform.position, Quaternion.identity, transformParent);
                 Image miniGiftImage = mminiThingGO.GetComponent<Image>();
                 miniGiftImage.sprite = SpriteBank.SetShape(instrumentsEnum, true);
-                //mminiThingGO.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum, true);
 
                 //перемещаем на рандомную позицию
                 MainAnimator.Instance.AddElementForSmoothMove(mminiThingGO.transform, new Vector3(go.transform.position.x + randomNumberX, go.transform.position.y + randomNumberY, go.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
@@ -432,7 +431,7 @@ public class Shop : MonoBehaviour, IStoreListener
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
         GameObject giftCoinGO = Instantiate(PrefabBank.PrefabButtonThing, position, Quaternion.identity, transformParent);
         Image giftCoinImage = giftCoinGO.GetComponent<Image>();
-        giftCoinImage.sprite = Resources.Load<Sprite>("Sprites/coin") as Sprite;
+        giftCoinImage.sprite = SpriteBank.SetShape(SpritesEnum.Coin);
         giftCoinGO.GetComponentInChildren<Text>().text = "+" + getCoins;
 
         //если требуется перемещаем на новую позицию
@@ -459,7 +458,8 @@ public class Shop : MonoBehaviour, IStoreListener
             float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
             float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
-            GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftCoinGO.transform.position, Quaternion.identity, transformParent);
+            GameObject coinGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftCoinGO.transform.position, Quaternion.identity, transformParent);
+            //coinGO.GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Coin, true);
             coinGOList.Add(coinGO);
             //перемещаем на рандомную позицию
             MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, new Vector3(giftCoinGO.transform.position.x + randomNumberX, giftCoinGO.transform.position.y + randomNumberY, giftCoinGO.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
@@ -505,7 +505,7 @@ public class Shop : MonoBehaviour, IStoreListener
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
         GameObject giftGO = Instantiate(PrefabBank.PrefabButtonThing, position, Quaternion.identity, transformParent);
         Image giftCoinImage = giftGO.GetComponent<Image>();
-        giftCoinImage.sprite = Resources.Load<Sprite>("Sprites/interface/Life") as Sprite;
+        giftCoinImage.sprite = SpriteBank.SetShape(SpritesEnum.Life);
         giftGO.GetComponentInChildren<Text>().text = "+" + timeImmortalLives + "m";
 
         //если требуется перемещаем на новую позицию
@@ -532,8 +532,8 @@ public class Shop : MonoBehaviour, IStoreListener
             float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
             float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
-            GameObject miniGiftGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, giftGO.transform.position, Quaternion.identity, transformParent);
-            miniGiftGO.GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/interface/Life") as Sprite;
+            GameObject miniGiftGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftGO.transform.position, Quaternion.identity, transformParent);
+            miniGiftGO.GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Life, true);
             miniGiftGOList.Add(miniGiftGO);
             //перемещаем на рандомную позицию
             MainAnimator.Instance.AddElementForSmoothMove(miniGiftGO.transform, new Vector3(giftGO.transform.position.x + randomNumberX, giftGO.transform.position.y + randomNumberY, giftGO.transform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);

@@ -20,13 +20,15 @@ public class RewardVideo
     private string adAndroidId; //идентификатор рекламы за просмотр которой выдается вознаграждение
     private string adIOSId; //идентификатор рекламы за просмотр которой выдается вознаграждение
     private GameObject prefabButton;
+    private Sprite giftSprite;
 
-    public RewardVideo(Action<Reward> actionSuccess, string adAndroidId, string adIOSId, GameObject prefabButton, float pauseBetweenViews = 0, int firstLoadDelay = 0)
+    public RewardVideo(Action<Reward> actionSuccess, string adAndroidId, string adIOSId, GameObject prefabButton, Sprite giftSprite, float pauseBetweenViews = 0, int firstLoadDelay = 0)
     {
         this.actionSuccess = actionSuccess;
         this.adAndroidId = adAndroidId;
         this.adIOSId = adIOSId;
         this.prefabButton = prefabButton;
+        this.giftSprite = giftSprite;
         this.pauseBetweenViews = pauseBetweenViews;
         this.firstLoadDelay = firstLoadDelay;
         this.lastTryLoadVideo = 0;
@@ -54,6 +56,7 @@ public class RewardVideo
         videoBrowseButton.button = videoBrowseButton.go.GetComponent<Button>();
         Transform textTimerTran = videoBrowseButton.go.transform.Find("TextTimer");
         videoBrowseButton.textTimer = textTimerTran.GetComponent<Text>();
+        videoBrowseButton.go.transform.Find("GiftImage").GetComponent<Image>().sprite = giftSprite;
         SupportFunctions.ChangeButtonAction(videoBrowseButton.button.transform, delegate { CreateBanerForFee(videoBrowseButton); });
         firstLoadDelay = 0;
         lastTryLoadVideo = 0;
