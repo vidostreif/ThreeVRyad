@@ -52,8 +52,7 @@ public class ElementSmallFlask : Element
                 blockBacklightGo = Instantiate(PrefabBank.BlockBacklight, aroundBlocks[i].thisTransform.position, Quaternion.identity, aroundBlocks[i].thisTransform);
                 Destroy(blockBacklightGo, 1f);
                 aroundBlocks[i].Hit(hitTypeEnum, this.shape);
-            }
-                
+            }                
         }
     }    
 

@@ -14,7 +14,7 @@ public enum ElementsTypeEnum
     BigFlask,//фласка большая
     SeedBarrel,//бочка собирающая элементы
     Drop,//сбрасваемый элемент
-    Spider, //паук
+    WildPlant, //дикое растение
 }//Типы элементов
 
 public enum ElementsShapeEnum
@@ -36,7 +36,7 @@ public enum ElementsShapeEnum
     SeedBarrel,//бочка
     Bush,//куст
     Brick,//кирпич
-    Spider, //паук
+    WildPlant, //дикое растение
 }//Внешние виды элементов
 
 public enum BehindElementsTypeEnum
@@ -91,7 +91,7 @@ public enum AllShapeEnum
     Bush,//куст
     Brick,//кирпич
     Web, //паутина
-    Spider, //паук
+    WildPlant, //дикое растение
 }//Внешние виды элементов
 
 public enum BlockTypeEnum
@@ -224,6 +224,11 @@ public enum SoundsEnum
     Two_moves,
     Life_add,
     Life_sub,
+    Hit_1,
+    Hit_2,
+    Hit_3,
+    Hit_4,
+    Hit_5,
 
 
 }//тип звуков
@@ -240,6 +245,7 @@ public enum PSEnum
     PSDirt,
     PSDirtNextAction,//эффект подсветки грязи которая будет ходит в следующем ходу
     PSWeb,
+    PSLiana,
 
 }//тип эфектов
 

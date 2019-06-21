@@ -36,9 +36,9 @@ public class ParticleSystemManager : MonoBehaviour
         warmingUpPS.transform.position = new Vector3(1000, 1000, 0);
         GameObject.Destroy(warmingUpPS, 5);
 
-        for (int i = 0; i < ParticleSystemBank.PSList.Length; i++)
+        for (int i = 0; i < ParticleSystemBank.PSArray.Length; i++)
         {
-            CreatePSAsync(warmingUpPS.transform, ParticleSystemBank.PSList[i].PSEnum, 3);
+            CreatePSAsync(warmingUpPS.transform, ParticleSystemBank.PSArray[i].PSEnum, 3);
         }
     }
        

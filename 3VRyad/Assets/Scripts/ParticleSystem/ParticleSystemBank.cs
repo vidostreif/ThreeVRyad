@@ -4,29 +4,31 @@ using UnityEngine;
 
 public static class ParticleSystemBank
 {
-    private static PSResurse[] pSList = null;
+    private static PSResurse[] pSArray = null;
     private static string pSFolder = "Prefabs/ParticleSystem";
 
-    public static PSResurse[] PSList {
+    public static PSResurse[] PSArray {
         get {
             CreatePSList();
-            return pSList;
+            return pSArray;
         }
     }
 
     private static void CreatePSList()
     {
-        if (pSList == null)
+        if (pSArray == null)
         {
-            pSList = new PSResurse[8];
-            pSList[0] = new PSResurse(PSEnum.PSCollect, pSFolder, "PSCollect");
-            pSList[1] = new PSResurse(PSEnum.PSCollectAll, pSFolder, "PSCollectAll");
-            pSList[2] = new PSResurse(PSEnum.PSSelect, pSFolder, "PSSelect");
-            pSList[3] = new PSResurse(PSEnum.PSAddPowerSuperBonus, pSFolder, "PSAddSuperBonus");
-            pSList[4] = new PSResurse(PSEnum.PSBeatsSuperBonus, pSFolder, "PSBeatSuperBonus");
-            pSList[5] = new PSResurse(PSEnum.PSDirt, pSFolder, "PSDirt");
-            pSList[6] = new PSResurse(PSEnum.PSDirtNextAction, pSFolder, "PSDirtNextAction");
-            pSList[7] = new PSResurse(PSEnum.PSWeb, pSFolder, "PSWeb");
+            List<PSResurse> pSResurseList = new List<PSResurse>();
+            pSResurseList.Add(new PSResurse(PSEnum.PSCollect, pSFolder, "PSCollect"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSCollectAll, pSFolder, "PSCollectAll"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSelect, pSFolder, "PSSelect"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSAddPowerSuperBonus, pSFolder, "PSAddSuperBonus"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSBeatsSuperBonus, pSFolder, "PSBeatSuperBonus"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSDirt, pSFolder, "PSDirt"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSDirtNextAction, pSFolder, "PSDirtNextAction"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSWeb, pSFolder, "PSWeb"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSLiana, pSFolder, "PSLiana"));
+            pSArray = pSResurseList.ToArray();
         }
     }
 
@@ -40,11 +42,11 @@ public static class ParticleSystemBank
     public static ResourceRequest GetPSAsync(PSEnum pSEnum)
     {
         CreatePSList();
-        for (int i = 0; i < pSList.Length; i++)
+        for (int i = 0; i < pSArray.Length; i++)
         {
-            if (pSList[i].PSEnum == pSEnum)
+            if (pSArray[i].PSEnum == pSEnum)
             {
-                return GetPSAsync(pSList[i]);
+                return GetPSAsync(pSArray[i]);
             }
         }
         return null;
@@ -59,11 +61,11 @@ public static class ParticleSystemBank
     public static GameObject GetPS(PSEnum pSEnum)
     {
         CreatePSList();
-        for (int i = 0; i < pSList.Length; i++)
+        for (int i = 0; i < pSArray.Length; i++)
         {
-            if (pSList[i].PSEnum == pSEnum)
+            if (pSArray[i].PSEnum == pSEnum)
             {
-                return GetPS(pSList[i]);
+                return GetPS(pSArray[i]);
             }
         }
         return null;
@@ -72,11 +74,11 @@ public static class ParticleSystemBank
     public static PSResurse GetPSResurse(PSEnum pSEnum)
     {
         CreatePSList();
-        for (int i = 0; i < pSList.Length; i++)
+        for (int i = 0; i < pSArray.Length; i++)
         {
-            if (pSList[i].PSEnum == pSEnum)
+            if (pSArray[i].PSEnum == pSEnum)
             {
-                return pSList[i];
+                return pSArray[i];
             }
         }
         return null;

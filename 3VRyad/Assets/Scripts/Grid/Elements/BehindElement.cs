@@ -43,16 +43,11 @@ public class BehindElement : BaseElement
     {
         if (vulnerabilityTypeEnum.Contains(hitType))
         {
-            //если не неразрушаемый
-            if (!this.immortal)
-            {
-                life--;
-            }
-            //если елемент убили, то возвращаем null
-            if (life <= 0)
-            {
-                base.DestroyElement();
-            }
+                //если елемент убили
+                if (SubLife())
+                {
+                    base.DestroyElement();
+                }
         }
     }
 

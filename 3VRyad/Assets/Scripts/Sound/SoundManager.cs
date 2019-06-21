@@ -42,20 +42,6 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        //// Only one instance of SoundManager at a time!
-        //if (_instance != null)
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
-        //_instance = this;
-        //if (Application.isPlaying)
-        //{
-        //    DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy
-        //}
-        
-        ////_sounds = new List<AudioSource>();
-
         if (_instance)
         {
             Destroy(this); //Delete duplicate
@@ -259,6 +245,14 @@ public class SoundManager : MonoBehaviour
         else if (allShapeEnum == AllShapeEnum.Dirt)
         {
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_create);
+        }
+    }
+
+    public void PlayHitElement(AllShapeEnum allShapeEnum)
+    {
+        if (allShapeEnum == AllShapeEnum.WildPlant)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Hit_5);
         }
     }
 

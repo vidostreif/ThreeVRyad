@@ -294,9 +294,9 @@ public class Block : MonoBehaviour {
                 curElement.InitialSettings(typeElementsEnum, false, false, false, false, HitTypeEnum.Empty, 1, 600);
                 curElement.MakeDrop();
             }
-            else if (typeElementsEnum == ElementsTypeEnum.Spider)
+            else if (typeElementsEnum == ElementsTypeEnum.WildPlant)
             {
-                curElement = elementGameObject.AddComponent<SpiderElement>();
+                curElement = elementGameObject.AddComponent<WildPlantElement>();
                 curElement.InitialSettings(typeElementsEnum, true, false, false, false, HitTypeEnum.Empty, 7, 1000);
                 curElement.MakeActionAfterMove(1, false);
             }

@@ -10,7 +10,7 @@ public class SpreadBlockingElement : BlockingElement
     public override void PerformActionAfterMove()
     {
         //если нужно активировать этот элемент в этом ходу
-        if (!destroyed && ActivationMove == Tasks.Instance.Moves)
+        if (!destroyed && ActivationMove == Tasks.Instance.RealMoves)
         {
             Block block = FoundBlockForSpread();
             BlockingElement newElement = null;
@@ -51,12 +51,12 @@ public class SpreadBlockingElement : BlockingElement
             }
         }
         //если остался один ход до активации
-        else if (!destroyed && ActivationMove + 1 == Tasks.Instance.Moves)
+        else if (!destroyed && ActivationMove - 1 == Tasks.Instance.RealMoves)
         {
             UpdateSprite(1);
         }
         //если осталось два хода до активации
-        else if (!destroyed && ActivationMove + 2 == Tasks.Instance.Moves)
+        else if (!destroyed && ActivationMove - 2 == Tasks.Instance.RealMoves)
         {
             UpdateSprite(2);
         }
@@ -64,7 +64,7 @@ public class SpreadBlockingElement : BlockingElement
 
     public override bool FoundNextActionAfterMove()
     {
-        if (nextProcessedMoveForAction >= Tasks.Instance.Moves || ActivationMove == Tasks.Instance.Moves)
+        if (nextProcessedMoveForAction <= Tasks.Instance.RealMoves || ActivationMove == Tasks.Instance.RealMoves)
         {
             Block block = FoundBlockForSpread();
 
@@ -73,7 +73,7 @@ public class SpreadBlockingElement : BlockingElement
                 //находим все блоки с таким же элементом и указываем у них, что элемент для следующего хода найден
                 Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBlockingElements(type, shape);
 
-                nextProcessedMoveForAction = Tasks.Instance.Moves - 1 - actionDelay;
+                nextProcessedMoveForAction = Tasks.Instance.RealMoves + 1 + actionDelay;
                 ActivationMove = nextProcessedMoveForAction;
 
                 UpdateSprite(actionDelay + 1);

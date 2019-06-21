@@ -68,7 +68,7 @@
       <block posX="5" posY="1" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="3" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="5" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Spider" elementShape="Spider" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="5" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="WildPlant" elementShape="WildPlant" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="5" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="6" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="7" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -152,10 +152,10 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>3</moves>
+    <moves>30</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Bush" goal="1" collectEverything="false" />
+      <shapeAndGoal shape="WildPlant" goal="1" collectEverything="false" />
     </targets>
   </Tasks>
   <InstrumentPanel>

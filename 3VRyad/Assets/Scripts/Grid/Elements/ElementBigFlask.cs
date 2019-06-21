@@ -6,8 +6,7 @@ using UnityEngine;
 public class ElementBigFlask : ElementSmallFlask
 {
     protected override void DopSettings()
-    {
-        
+    {        
         //base.DopSettings();
         explosionRadius = 3;
 

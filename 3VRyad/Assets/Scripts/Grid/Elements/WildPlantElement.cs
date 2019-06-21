@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderElement : Element
+//дикое растение, кажды Х количество ходдов распространяет лиану на блоки вокруг
+public class WildPlantElement : Element
 {    
-
     protected override void DopSettings()
     {
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.HitFromNearbyElement, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
@@ -27,9 +27,9 @@ public class SpiderElement : Element
     {
         if (!destroyed)
         {
-            if (ActivationMove >= Tasks.Instance.Moves)
+            if (ActivationMove <= Tasks.Instance.RealMoves)
             {
-                ActivationMove = Tasks.Instance.Moves - 1 - actionDelay;
+                ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
                 //UpdateSprite();
 
                 //распространение на блоки вокруг
@@ -43,7 +43,7 @@ public class SpiderElement : Element
                     {
                         if (block.Element.BlockingElement == null || block.Element.BlockingElement.Destroyed)
                         {
-                            block.Element.CreatBlockingElement(GridBlocks.Instance.prefabBlockingWall, AllShapeEnum.Web, BlockingElementsTypeEnum.Liana, thisTransform);
+                            block.Element.CreatBlockingElement(GridBlocks.Instance.prefabBlockingWall, AllShapeEnum.Liana, BlockingElementsTypeEnum.Liana, thisTransform);
                             break;
                         }
                     }

@@ -6,23 +6,19 @@ using UnityEngine;
 public class BaseElement : MonoBehaviour
 {
     public Transform thisTransform;
-    //protected SpriteBank objectManagement;
     protected SpriteRenderer spriteRenderer;
-    protected AnimatorElement animatorElement;
+    private AnimatorElement animatorElement;
     [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected AllShapeEnum shape;//форма элемента
-    //[SerializeField] protected SoundsEnum soundDestroy;//звук уничтожения
     [SerializeField] protected HitTypeEnum[] vulnerabilityTypeEnum;//уязвимость к типам удара
     [SerializeField] protected bool destroyed = false;//признак что элемент был уничтожен
-    [SerializeField] protected int life;
+    [SerializeField] protected int life; //количество жизней
     protected TextMesh lifeText;
     [SerializeField] protected int score;//количество очков за уничтожение элемента
     [SerializeField] protected bool immortal;//признак бессмертия
 
     [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода    
-    //[SerializeField] private bool preliminarySearchToActivate = false;//предварительный поиск хода для активации
     [SerializeField] protected int actionDelay;//задержка перед активированием    
-    //[SerializeField] protected int timerActionDelay;//отсчет до активации
     [SerializeField] protected int activationMove;//следующий ход для активации
     [SerializeField] protected bool singleItemActivated = false;//признак что активируется только один элемент из всех с таким типом и внешностью
     [SerializeField] protected int nextProcessedMoveForAction;//следующий обработанный ход для этой группы элементов    
@@ -147,6 +143,41 @@ public class BaseElement : MonoBehaviour
         {
             UpdateSprite();
         }        
+    }
+
+    //минус жизнь
+    public virtual bool SubLife()
+    {
+        if (!this.immortal)
+        {
+            if (life > 0)
+            {
+                life--;
+                if (life > 0)
+                {
+                    AnimatElement.PlayIdleAnimation();
+                }
+                SoundManager.Instance.PlayHitElement(shape);
+                if (lifeText != null)
+                {
+                    lifeText.text = Life.ToString();
+                }
+            }
+
+            //если убили
+            if (life == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 
     //делаем элемент активным после хода

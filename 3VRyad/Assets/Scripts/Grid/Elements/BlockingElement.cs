@@ -37,15 +37,10 @@ public class BlockingElement : BaseElement
     {
         if (vulnerabilityTypeEnum.Contains(hitType))
         {
-            //если не неразрушаемый
-            if (!this.immortal)
+            //если елемент убили
+            if (SubLife())
             {
-                life--;
-            }
-            //если елемент убили, то возвращаем null
-            if (life <= 0)
-            {
-                DestroyElement();
+                base.DestroyElement();
             }
         }
         

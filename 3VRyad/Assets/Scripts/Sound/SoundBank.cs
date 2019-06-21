@@ -58,7 +58,12 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Zero_moves, soundFolder, "Zero_moves"));
             soundsList.Add(new SoundResurse(SoundsEnum.Two_moves, soundFolder, "Two_moves"));
             soundsList.Add(new SoundResurse(SoundsEnum.Life_add, soundFolder, "Life_add"));
-            soundsList.Add(new SoundResurse(SoundsEnum.Life_sub, soundFolder, "Life_sub"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Hit_1, soundFolder, "Hit_1"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Hit_2, soundFolder, "Hit_2"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Hit_3, soundFolder, "Hit_3"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Hit_4, soundFolder, "Hit_4"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Hit_5, soundFolder, "Hit_5"));
+
             soundsArray = soundsList.ToArray();
         }        
     }

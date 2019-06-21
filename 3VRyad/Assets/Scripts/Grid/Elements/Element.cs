@@ -18,8 +18,10 @@ public class Element : BaseElement
     [SerializeField] protected ElementsTypeEnum type;//тип элемента    
     [SerializeField] protected BlockingElement blockingElement;// блокирующий элемент
     [SerializeField] protected bool lockedForMove;//признак что элемент заблокирован для передвижения
+    [SerializeField] protected bool baseLockedForMove;//базовый параметр что элемент заблокирован для передвижения
     [SerializeField] protected bool createLine;//признак что элемент создает линию
     [SerializeField] protected bool activated;//признак что элемент активируемый
+    //[SerializeField] protected bool hitNeighboringBlocks;//признак что элемент ударяет по соседним после смерти
     [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у элемента
     
 
@@ -81,16 +83,11 @@ public class Element : BaseElement
         GetComponent<ElementController>().ThisElement = this;
     }
 
-    //public void Start()
-    //{
-    //    AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-    //    animatorElement.PlayCreatureAnimation();
-    //}
-
     //установка настроек элементов
     public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, HitTypeEnum hitTypeEnum, int life, int score) {
         this.type = type;
         this.lockedForMove = lockedForMove;
+        this.baseLockedForMove = lockedForMove;
         this.immortal = immortal;
         this.createLine = createLine;
         this.activated = activated;
@@ -119,51 +116,20 @@ public class Element : BaseElement
                 //если уничтожили блокирующий элемент
                 if (blockingElement.Destroyed)
                 {
-                    lockedForMove = false;
+                    lockedForMove = baseLockedForMove;
                 }
             }
             else if (vulnerabilityTypeEnum.Contains(hitType))
             {
-                //если элемент не бессмертный
-                if (!Immortal)
-                {
-                    life--;
-                    if (lifeText != null)
-                    {
-                        lifeText.text = Life.ToString();
-                    }
-                    if (life <=0)
+                    if (SubLife())
                     {
                         ActionAfterHitting(hitType);
+                    }
+                    else
+                    {
+                        //AnimatElement.PlayIdleAnimation();
                     }                    
-                }
             }
-            
-
-            ////если прямой удар или взрыв
-            //if (vulnerabilityTypeEnum.Contains(hitType))
-            //{
-            //    //если стоит блокировка на элементе, то пытаемся ее снять
-            //    if (BlockingElementExists())
-            //    {
-            //        blockingElement.Hit();
-
-            //        //если уничтожили блокирующий элемент
-            //        if (blockingElement.Destroyed)
-            //        {
-            //            lockedForMove = false;
-            //        }
-            //    }
-            //    //если элемент не заблокирован, то уничтожаем элемент        
-            //    else
-            //    {
-            //        //если элемент не бессмертный
-            //        if (!Immortal)
-            //        {
-            //            ActionAfterHitting(hitType);
-            //        }
-            //    }
-            //}
         }
     }
 
@@ -236,7 +202,10 @@ public class Element : BaseElement
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
                 curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 200);
-                //lockedForMove = true;                
+                //if (ParticleSystemManager.Instance != null)
+                //{
+                //    ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSLiana, 3);
+                //}
             }
             else if(typeBlockingElementsEnum == BlockingElementsTypeEnum.Spread)
             {

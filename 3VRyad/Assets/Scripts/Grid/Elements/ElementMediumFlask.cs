@@ -10,7 +10,6 @@ public class ElementMediumFlask : ElementSmallFlask
     {               
         //base.DopSettings();
         explosionRadius = 2;
-
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick, HitTypeEnum.Instrument };
         //находим аниматор
         transform.GetComponent<AnimatorElement>().playIdleAnimationRandomTime = true;
