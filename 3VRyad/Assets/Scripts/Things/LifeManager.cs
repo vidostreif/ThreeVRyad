@@ -260,7 +260,7 @@ public class LifeManager : MonoBehaviour
             }
             else
             {
-                textLiveTime.text = "";
+                textLiveTime.text = "ВСЕ";
             }
         }
 
