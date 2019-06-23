@@ -117,8 +117,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PRODUCTS:
   - id: bundel_x1
-    name: "\u0411\u0430\u043D\u0434\u043B \u04451"
-    priceCoins: 25
+    name: "\u041F\u0430\u043A \u04451"
+    priceCoins: 50
     productType: 0
     compositionBundle:
     - type: 1
@@ -132,41 +132,41 @@ MonoBehaviour:
     coins: 0
     timeImmortalLives: 0
     image: {fileID: 21300000, guid: 48191ad8dee00c34ab761cec0d173506, type: 3}
-  - id: bundel_x10
-    name: "\u0411\u0430\u043D\u0434\u043B \u044510"
-    priceCoins: 225
+  - id: bundel_x5
+    name: "\u041F\u0430\u043A \u04455"
+    priceCoins: 235
     productType: 0
     compositionBundle:
     - type: 1
-      count: 10
+      count: 5
     - type: 2
-      count: 10
+      count: 5
     - type: 3
-      count: 10
+      count: 5
     - type: 4
-      count: 10
+      count: 5
     coins: 0
-    timeImmortalLives: 0
+    timeImmortalLives: 30
     image: {fileID: 21300000, guid: 219ebc1a769ba5d4eb58526dcde9b272, type: 3}
-  - id: coins_100
-    name: "100 \u043C\u043E\u043D\u0435\u0442"
-    priceCoins: 0
+  - id: bundel_x10
+    name: "\u041F\u0430\u043A \u044510"
+    priceCoins: 450
     productType: 0
-    compositionBundle: []
-    coins: 100
-    timeImmortalLives: 0
-    image: {fileID: 21300000, guid: 98ba1eea80ce68448b2859b015176b5a, type: 3}
-  - id: coins_500_for_1
-    name: "500 \u043C\u043E\u043D\u0435\u0442 \u0437\u0430 \u043E\u0434\u043D\u0443"
-    priceCoins: 1
-    productType: 0
-    compositionBundle: []
-    coins: 500
-    timeImmortalLives: 0
-    image: {fileID: 21300000, guid: 98ba1eea80ce68448b2859b015176b5a, type: 3}
+    compositionBundle:
+    - type: 1
+      count: 10
+    - type: 2
+      count: 10
+    - type: 3
+      count: 10
+    - type: 4
+      count: 10
+    coins: 0
+    timeImmortalLives: 60
+    image: {fileID: 21300000, guid: 1f46353d46baa4a42b875973142beef3, type: 3}
   - id: bundel_x20
-    name: "\u0411\u0430\u043D\u0434\u043B \u044520"
-    priceCoins: 500
+    name: "\u041F\u0430\u043A \u044520"
+    priceCoins: 800
     productType: 0
     compositionBundle:
     - type: 1
@@ -178,16 +178,23 @@ MonoBehaviour:
     - type: 4
       count: 20
     coins: 0
-    timeImmortalLives: 0
-    image: {fileID: 21300000, guid: 9b3faf4772e962b43b494f4db951ecc7, type: 3}
+    timeImmortalLives: 120
+    image: {fileID: 21300000, guid: b6d360cff9494a740bc002caa66a0ce8, type: 3}
   - id: ImortalLife_30min
-    name: "\u0411\u0435\u0441\u043A\u043E\u043D\u0435\u0447\u043D\u044B\u0435 \u0436\u0438\u0437\u043D\u0438
-      \u043D\u0430 30 \u043C\u0438\u043D\u0443\u0442"
-    priceCoins: 10
+    name: "\u0411\u0435\u0441\u0441\u043C\u0435\u0440\u0442\u0438\u0435 30 \u043C\u0438\u043D\u0443\u0442"
+    priceCoins: 50
     productType: 0
     compositionBundle: []
     coins: 0
-    timeImmortalLives: 180
+    timeImmortalLives: 30
+    image: {fileID: 21300000, guid: e583088164cd45b4e9cf9a484eb1626c, type: 3}
+  - id: ImortalLife_60min
+    name: "\u0411\u0435\u0441\u0441\u043C\u0435\u0440\u0442\u0438\u0435 60 \u043C\u0438\u043D\u0443\u0442"
+    priceCoins: 90
+    productType: 0
+    compositionBundle: []
+    coins: 0
+    timeImmortalLives: 60
     image: {fileID: 21300000, guid: e583088164cd45b4e9cf9a484eb1626c, type: 3}
 --- !u!114 &41
 MonoBehaviour:
@@ -272,7 +279,7 @@ PrefabInstance:
     - target: {fileID: 6607222718794777264, guid: ef67cef838c64964cba5399b3b5a4794,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -79.8999
+      value: -80
       objectReference: {fileID: 0}
     - target: {fileID: 6607222718794777264, guid: ef67cef838c64964cba5399b3b5a4794,
         type: 3}
@@ -319,6 +326,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2013974393389919723, guid: ef67cef838c64964cba5399b3b5a4794,
+        type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 3854978422762660690}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef67cef838c64964cba5399b3b5a4794, type: 3}
 --- !u!224 &6816671355505673295 stripped
@@ -327,6 +339,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 371613443118614271}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3854978422762660690 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3483426586865706413, guid: ef67cef838c64964cba5399b3b5a4794,
+    type: 3}
+  m_PrefabInstance: {fileID: 371613443118614271}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &801038201231834292
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -397,7 +421,7 @@ PrefabInstance:
     - target: {fileID: 5962451961217378504, guid: 0be19ea05daa6da4a999900945c2f774,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 66.70001
+      value: 66.5
       objectReference: {fileID: 0}
     - target: {fileID: 5962451961217378504, guid: 0be19ea05daa6da4a999900945c2f774,
         type: 3}
@@ -443,6 +467,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4883162258352895009, guid: 0be19ea05daa6da4a999900945c2f774,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 7.299999
+      objectReference: {fileID: 0}
+    - target: {fileID: 4883162258352895011, guid: 0be19ea05daa6da4a999900945c2f774,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 7.299999
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0be19ea05daa6da4a999900945c2f774, type: 3}
@@ -522,12 +556,12 @@ PrefabInstance:
     - target: {fileID: 4619560224428705235, guid: da7b9512512c02344b596cd617a1de12,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 178.29999
+      value: 178.5
       objectReference: {fileID: 0}
     - target: {fileID: 4619560224428705235, guid: da7b9512512c02344b596cd617a1de12,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -22.929932
+      value: -23
       objectReference: {fileID: 0}
     - target: {fileID: 4619560224428705235, guid: da7b9512512c02344b596cd617a1de12,
         type: 3}
@@ -568,6 +602,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2981317611705950445, guid: da7b9512512c02344b596cd617a1de12,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 8.299999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7477992256581706264, guid: da7b9512512c02344b596cd617a1de12,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.47000122
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da7b9512512c02344b596cd617a1de12, type: 3}
