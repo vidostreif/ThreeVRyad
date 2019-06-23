@@ -255,49 +255,49 @@ public class Block : MonoBehaviour {
             if (typeElementsEnum == ElementsTypeEnum.StandardElement)
             {                
                 curElement = elementGameObject.AddComponent<Element>();
-                curElement.InitialSettings(typeElementsEnum, false, false, true, false, true, HitTypeEnum.HitFromNearbyElement ,1 , 100);
+                curElement.InitialSettings(typeElementsEnum, false, false, true, false, true, HitTypeEnum.HitFromNearbyElement ,1 , 100, false);
             }
             else if (typeElementsEnum == ElementsTypeEnum.CrushableWall)
             {                
                 curElement = elementGameObject.AddComponent<ElementWall>();
-                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 1, 200);
+                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 1, 200, false);
             }
             else if (typeElementsEnum == ElementsTypeEnum.ImmortalWall)
             {
                 curElement = elementGameObject.AddComponent<ElementWall>();
-                curElement.InitialSettings(typeElementsEnum, true, true, false, false, false, HitTypeEnum.Empty, 1, 0);
+                curElement.InitialSettings(typeElementsEnum, true, true, false, false, false, HitTypeEnum.Empty, 1, 0, false);
             }
             else if (typeElementsEnum == ElementsTypeEnum.BigFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementBigFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 1500);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 1000, true);
             }
             else if (typeElementsEnum == ElementsTypeEnum.MediumFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementMediumFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 1000);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 700, true);
             }
             else if (typeElementsEnum == ElementsTypeEnum.SmallFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementSmallFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 500);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 400, true);
             }
             else if (typeElementsEnum == ElementsTypeEnum.SeedBarrel)
             {
                 curElement = elementGameObject.AddComponent<SeedBarrelElement>();
-                curElement.InitialSettings(typeElementsEnum, true, true, false, false, false, HitTypeEnum.Empty, 1, 1200);
+                curElement.InitialSettings(typeElementsEnum, true, true, false, false, false, HitTypeEnum.Empty, 1, 1200, false);
                 curElement.MakeCollector(dopShape, 8);
             }
             else if (typeElementsEnum == ElementsTypeEnum.Drop)
             {
                 curElement = elementGameObject.AddComponent<Element>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, false, false, HitTypeEnum.Empty, 1, 600);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, false, false, HitTypeEnum.Empty, 1, 600, false);
                 curElement.MakeDrop();
             }
             else if (typeElementsEnum == ElementsTypeEnum.WildPlant)
             {
                 curElement = elementGameObject.AddComponent<WildPlantElement>();
-                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 7, 1000);
+                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 7, 1000, false);
                 curElement.MakeActionAfterMove(1, false);
             }
             else
@@ -356,12 +356,12 @@ public class Block : MonoBehaviour {
             if (typeElementsEnum == BehindElementsTypeEnum.Grass)
             {
                 curElement = elementGameObject.AddComponent<BehindElement>();
-                curElement.InitialSettings(typeElementsEnum, false, 1, 200);
+                curElement.InitialSettings(typeElementsEnum, false, 1, 200, false);
             }
             else if(typeElementsEnum == BehindElementsTypeEnum.Dirt)
             {
                 curElement = elementGameObject.AddComponent<DirtBehindElement>();
-                curElement.InitialSettings(typeElementsEnum, false, 1, 300);
+                curElement.InitialSettings(typeElementsEnum, false, 1, 300, false);
                 curElement.MakeActionAfterMove(0, true);
                 if (ParticleSystemManager.Instance != null)
                 {

@@ -118,7 +118,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         addMoves = 0;
         realMoves = 0;
         UpdateMovesText();
-        CreateCollectedElements();
+        //CreateCollectedElements();
     }
 
     //создание коллекции целей
@@ -401,6 +401,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
     public void RecoverFromXElement(XElement tasksXElement)
     {
+        ResetParameters();
         //восстанавливаем значения
         this.moves = int.Parse(tasksXElement.Element("moves").Value);
         int sizeTargets = int.Parse(tasksXElement.Element("sizeTargets").Value);
@@ -416,8 +417,9 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             this.targets[iteration] = target;
             iteration++;
         }
-        
-        ResetParameters();
+
+        UpdateMovesText();
+        CreateCollectedElements();
     }
 }
 

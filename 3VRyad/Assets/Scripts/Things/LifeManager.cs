@@ -243,10 +243,10 @@ public class LifeManager : MonoBehaviour
     private void UpdateText() {
 
         if (endTimeImmortal > CheckTime.Realtime())
-        {
-            TimeSpan dateTime = endTimeImmortal.Subtract(CheckTime.Realtime());
+        {            
             textLive.text = "" + (char)8734;
-            textLiveTime.text = "" + dateTime.Hours + "h " + dateTime.Minutes + "m " + dateTime.Seconds + "s";
+            TimeSpan dateTime = endTimeImmortal.Subtract(CheckTime.Realtime());
+            textLiveTime.text = SupportFunctions.GetStringTime(dateTime);
         }
         else
         {
@@ -254,9 +254,7 @@ public class LifeManager : MonoBehaviour
             if (life < maxLife)
             {
                 TimeSpan dateTime = timeToNextLife.Subtract(CheckTime.Realtime());
-                //int minutes = (int)(timeToNextLife - Time.realtimeSinceStartup) / 60;
-                //int seconds = (int)(timeToNextLife - Time.realtimeSinceStartup - (minutes * 60));
-                textLiveTime.text = "" + dateTime.Minutes + "m " + dateTime.Seconds + "s";
+                textLiveTime.text = SupportFunctions.GetStringTime(dateTime);
             }
             else
             {

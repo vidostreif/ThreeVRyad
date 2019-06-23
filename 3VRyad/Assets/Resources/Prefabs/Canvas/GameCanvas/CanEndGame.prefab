@@ -30,7 +30,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6567990481107247956}
+  - {fileID: 9173068504908616469}
   m_Father: {fileID: 5143023421354139124}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -667,7 +667,7 @@ RectTransform:
   - {fileID: 8132817482557118449}
   - {fileID: 1580786115220209097}
   - {fileID: 5143023421354139124}
-  - {fileID: 1633039445128617719}
+  - {fileID: 6764806608122103529}
   m_Father: {fileID: 6577434973905200744}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -890,7 +890,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4184142ad713c7b4eaf4cc970f4afb6f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c1368aeda3aa41744a0ad976e455e7ff, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1436,7 +1436,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f84475db3d58c624186d79d123873bb6, type: 3}
---- !u!224 &1633039445128617719 stripped
+--- !u!224 &6764806608122103529 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5424818288687503375, guid: f84475db3d58c624186d79d123873bb6,
     type: 3}
@@ -1561,7 +1561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63f30c2c83191fa468cbad173768c26c, type: 3}
---- !u!224 &6567990481107247956 stripped
+--- !u!224 &9173068504908616469 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2624325071231889477, guid: 63f30c2c83191fa468cbad173768c26c,
     type: 3}

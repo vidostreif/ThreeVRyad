@@ -399,6 +399,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     // проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFieldsList);
 
+                    //очищаем массив очков
+                    Score.Instance.ClearCountPoints();
+
                     //ударяем по найденным блокам
                     foreach (Block blockField in blockFieldsList)
                     {
@@ -436,6 +439,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             ExchangeElements(touchingBlock, destinationBlock);
                         }
                     }
+
+                    if (!Tasks.Instance.endGame)
+                    {
+                        //подсчитываем очки
+                        Score.Instance.CountPoints();
+                    }                    
 
                     //создаем бонусы
                     if (iteration == 1 && matchFound && (touchingBlock != null || destinationBlock != null))
@@ -857,23 +866,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
                 else
                 {
-                    //if (!needFilling)
-                    //{
-                    //перемешиваем поле
                     if (numberOfShuffles > 0)
                     {
                         numberOfShuffles--;
                         mix = true;
                         foundNextMove.mix = true;
                         MixStandartElements();
-                        //yield return StartCoroutine(Filling(false));
-                    }
-
-                    //}else 
-                    ////если еще требуется заполнение                    
-                    //{
-                    //    yield return StartCoroutine(Filling(false));
-                    //}                    
+                    }                 
                 }
             }
             else
@@ -887,6 +886,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //Находим лучший ход 
         if (elementsForNextMoveList.Count > 0)
         {
+            if (numberOfShuffles < 10)
+            {
+                SupportFunctions.CreateInformationText("Ходов нет! Перемешиваем!", Color.blue, 45);
+            }
+
             ElementsForNextMove elementsForNextMove = elementsForNextMoveList[0];
             foundNextMove.found = true;
             foreach (ElementsForNextMove item in elementsForNextMoveList)
@@ -919,7 +923,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         else//если не удалось ничего найти
         {
             foundNextMove.found = false;
-            Debug.Log("Ходы не найдены!");
+            SupportFunctions.CreateInformationText("Мы больше не нашли ходов!", Color.blue, 45);
         }
 
         return foundNextMove;
@@ -1144,6 +1148,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public void MixStandartElements()
     {
         MasterController.Instance.ForcedDropElement();
+        SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind_active);
         List<ElementsPriority> listPriority = new List<ElementsPriority>();
         List<Block> blockList = new List<Block>();//лист блоков в которых будут заменены элементы
         elementsForMixList.Clear();

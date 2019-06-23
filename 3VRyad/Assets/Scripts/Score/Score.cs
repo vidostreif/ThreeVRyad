@@ -26,9 +26,10 @@ public class Score : MonoBehaviour, IESaveAndLoad
     private Image imageStar3;
     private bool imageStar3shown;
 
+    private ScorePositionsList scoreScalesList;//лист скалируемых очков
+    private ScorePositionsList scoreList;// лист остальных очков
+
     public int getScore { get => score + addScore; }
-
-
 
     void Awake()
     {
@@ -40,8 +41,6 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
         Instance = this;
 
-        score = 0;
-        addScore = 0;
         text = transform.GetComponentInChildren<Text>();
         ResetParameters();
     }
@@ -79,6 +78,8 @@ public class Score : MonoBehaviour, IESaveAndLoad
         //Сбрасываем значения
         score = 0;
         addScore = 0;
+        scoreScalesList = new ScorePositionsList();
+        scoreList = new ScorePositionsList();
         if (Application.isPlaying)
         {
             UpdateText();
@@ -113,20 +114,85 @@ public class Score : MonoBehaviour, IESaveAndLoad
         UpdateLineAndStars();
     }
 
-    public void CreateScoreElement(Vector3 position, int score)
+    public void AddScore(Vector3 position, int score, bool scoreScale)
+    {
+        if (scoreScale)
+        {
+            scoreScalesList.AddScore(position, score);
+        }
+        else
+        {
+            scoreList.AddScore(position, score);
+        }        
+        CreateScoreElement(position, score);        
+    }
+
+    private void CreateScoreElement(Vector3 position, int score)
     {
         GameObject scoreElement = Instantiate(PrefabBank.ScoreElementPrefab, transform);
         scoreElement.transform.position = position;
         Text scoreElementText = scoreElement.GetComponent<Text>();
         scoreElementText.text = score.ToString();
-        scoreElementText.fontSize = scoreElementText.fontSize * (score/100);
+        scoreElementText.fontSize = scoreElementText.fontSize * (score / 100);
         MainAnimator.Instance.AddElementForSmoothMove(scoreElement.transform, transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 1, destroyAfterMoving: true);
-        AddScore(score);
-    }
-
-    private void AddScore(int addScore) {
         this.addScore += addScore;
     }
+
+    public void CountPoints() {
+        StartCoroutine(CurCountPoints(scoreScalesList, scoreList));
+        ClearCountPoints();
+    }
+
+    public void ClearCountPoints()
+    {
+        scoreScalesList = new ScorePositionsList();
+        scoreList = new ScorePositionsList();
+    }
+
+    private IEnumerator CurCountPoints(ScorePositionsList thisScoreScalesList, ScorePositionsList ThisScoreList) {
+   
+
+        //если набрали больше определенного количества очков
+        int scoreCount = thisScoreScalesList.Score + ThisScoreList.Score;
+        bool pause = false;
+        if (scoreCount > 10000)
+        {
+            SupportFunctions.CreateInformationText("Невероятно!", Color.red, 20 * (scoreCount/ 3000), this.transform, ThisScoreList.GetCentralPosition());
+            pause = true;
+        }
+        else if (scoreCount > 8000)
+        {
+            SupportFunctions.CreateInformationText("Восхитительно!", Color.yellow, 20 * (scoreCount / 3000), this.transform, ThisScoreList.GetCentralPosition());
+            pause = true;
+        }
+        else if (scoreCount > 6000)
+        {
+            SupportFunctions.CreateInformationText("Превосходно!", Color.blue, 20 * (scoreCount / 3000), this.transform, ThisScoreList.GetCentralPosition());
+            pause = true;
+        }
+        else if (scoreCount > 5000)
+        {
+            SupportFunctions.CreateInformationText("Отлично!", Color.green, 20 * (scoreCount / 3000), this.transform, ThisScoreList.GetCentralPosition());
+            pause = true;
+        }
+
+        if (pause)
+        {
+            yield return new WaitForSeconds(0.8f);
+        }        
+
+        if (thisScoreScalesList.PositionList.Count > 1)
+        {
+            Vector3 textPosition = thisScoreScalesList.GetCentralPosition();
+            SupportFunctions.CreateInformationText("Бонус х" + thisScoreScalesList.PositionList.Count, Color.cyan, 15 * thisScoreScalesList.PositionList.Count, this.transform, textPosition);
+            CreateScoreElement(textPosition, thisScoreScalesList.Score);
+            
+        }
+    }
+
+    //private void AddScore(int addScore) {
+    //    this.addScore += addScore;
+    //}
 
     //обновляем отображение линии и звезд
     private void UpdateLineAndStars()
@@ -222,5 +288,61 @@ public class Score : MonoBehaviour, IESaveAndLoad
             text.text = "Для первой " + scoreFor1Star + "\nДля второй " + scoreFor2Star + "\nДля третьей " + scoreFor3Star;
         }
         ResetParameters();
+    }
+}
+
+public class ScorePositionsList
+{
+    private List<Vector3> positionList;
+    private int score;
+
+    public ScorePositionsList()
+    {
+        this.positionList = new List<Vector3>();
+        this.score = 0;
+    }
+
+    public List<Vector3> PositionList { get => positionList; }
+    public int Score { get => score; }
+
+    public void AddScore(Vector3 position, int score)
+    {
+        this.positionList.Add(position);
+        this.score += score;
+    }
+
+    public Vector3 GetCentralPosition() {
+        if (positionList.Count > 0)
+        {
+            //находим середину
+            Vector2 min = positionList[0];
+            Vector2 max = positionList[0];
+            foreach (Vector3 item in positionList)
+            {
+                if (item.x < min.x)
+                {
+                    min.x = item.x;
+                }
+                if (item.y < min.y)
+                {
+                    min.y = item.y;
+                }
+
+                if (item.x > max.x)
+                {
+                    max.x = item.x;
+                }
+                if (item.y > max.y)
+                {
+                    max.y = item.y;
+                }
+            }
+
+            return (min + max) / 2;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
     }
 }

@@ -107,6 +107,27 @@ public static class SupportFunctions
         return panelInfirmation;
     }
 
+    //создание текста информации
+    public static void CreateInformationText(string str, Color color, int fontSize, Transform transformParent = null, Vector3 place = new Vector3())
+    {
+        if (transformParent == null)
+        {
+            transformParent = GameObject.Find("GameHelper").transform;
+        }
+        GameObject textInfirmationGO = GameObject.Instantiate(PrefabBank.TextInformationPrefab, transformParent);
+        textInfirmationGO.transform.position = place;
+        Text textInfirmation = textInfirmationGO.transform.GetComponent<Text>();
+        textInfirmation.text = str;
+        textInfirmation.color = color;
+        if (fontSize > 65)
+        {
+            fontSize = 65;
+        }
+        textInfirmation.fontSize = fontSize;
+        //textInfirmationGO.transform.GetComponent<Animation>().Play();
+        //GameObject.Destroy(textInfirmationGO, 2);
+    }
+
     //создание панели информации с просмотром видео
     public static GameObject CreateInformationPanelWithVideo(string str, VideoForFeeEnum videoForFeeEnum, Transform transformParent = null)
     {
@@ -139,5 +160,33 @@ public static class SupportFunctions
 
     public static void DestroyPanelInfirmation() {
         GameObject.Destroy(panelInfirmation);
+    }
+
+    public static string GetStringTime(TimeSpan timeSpan) {
+
+        String textTime;
+        int days = timeSpan.Days;
+        int hours = timeSpan.Hours;
+        int minutes = timeSpan.Minutes;
+        int seconds = timeSpan.Seconds;
+
+        if (days > 0)
+        {
+            textTime = "" + days + "d " + hours + "h ";
+        }
+        else if (hours > 0)
+        {
+            textTime = "" + hours + "h " + minutes + "m ";
+        }
+        else if (minutes > 0)
+        {
+            textTime = "" + minutes + "m " + seconds + "s";
+        }
+        else
+        {
+            textTime = "" + seconds + "s";
+        }
+
+        return textTime;
     }
 }

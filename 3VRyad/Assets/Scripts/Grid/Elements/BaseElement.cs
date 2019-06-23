@@ -15,6 +15,7 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected int life; //количество жизней
     protected TextMesh lifeText;
     [SerializeField] protected int score;//количество очков за уничтожение элемента
+    [SerializeField] protected bool scoreScale;//очки приумножаются при уничтожении одинаковых элементов в один ход
     [SerializeField] protected bool immortal;//признак бессмертия
 
     [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода    
@@ -265,7 +266,7 @@ public class BaseElement : MonoBehaviour
     {        
         destroyed = true;
         ElementsList.DellElement(shape);
-        Score.Instance.CreateScoreElement(transform.position, score);
+        Score.Instance.AddScore(transform.position, score, scoreScale);
         SuperBonus.Instance.CreatePowerSuperBonus(transform.position, score);
         AnimatElement.StopAllAnimation();
 

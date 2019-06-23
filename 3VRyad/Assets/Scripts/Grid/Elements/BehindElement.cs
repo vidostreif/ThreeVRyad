@@ -25,12 +25,13 @@ public class BehindElement : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(BehindElementsTypeEnum type, bool immortal, int life, int score)
+    public void InitialSettings(BehindElementsTypeEnum type, bool immortal, int life, int score, bool scoreScale)
     {
         this.type = type;
         this.immortal = immortal;
         this.life = life;
         this.score = score;
+        this.scoreScale = scoreScale;
         DopSettings();
     }
 

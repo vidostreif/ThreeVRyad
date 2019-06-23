@@ -18,12 +18,13 @@ public class BlockingElement : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(BlockingElementsTypeEnum type, bool immortal, int life, int score)
+    public void InitialSettings(BlockingElementsTypeEnum type, bool immortal, int life, int score, bool scoreScale)
     {
         this.type = type;
         this.life = life;
         this.immortal = immortal;
         this.score = score;
+        this.scoreScale = scoreScale;
         DopSettings();
     }
 

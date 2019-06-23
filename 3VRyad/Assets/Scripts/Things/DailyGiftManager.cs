@@ -60,22 +60,27 @@ public class DailyGiftManager : MonoBehaviour
                     Destroy(dailyGiftBut);
                 }
 
-                TextTimeUntilNextDailyGift.text = "";
-                TimeSpan timeUntilNextDailyGift = TimeUntilNextDailyGift();
+                //TextTimeUntilNextDailyGift.text = "";
+                //TimeSpan timeUntilNextDailyGift = TimeUntilNextDailyGift();
 
-                int hours = timeUntilNextDailyGift.Hours;
-                if (hours > 0)
-                {
-                    TextTimeUntilNextDailyGift.text += "" + hours + "h ";
-                }
+                //String textTime;
+                //int hours = timeUntilNextDailyGift.Hours;
+                //int minutes = timeUntilNextDailyGift.Minutes;
+                //int seconds = timeUntilNextDailyGift.Seconds;
+                //if (hours > 0)
+                //{
+                //    textTime = "" + hours + "h " + minutes + "m ";
+                //}
+                //else if (minutes > 0)
+                //{
+                //    textTime = "" + minutes + "m " + seconds + "s";
+                //}
+                //else
+                //{
+                //    textTime = "" + seconds + "s";
+                //}
 
-                int minutes = timeUntilNextDailyGift.Minutes;
-                if (minutes > 0)
-                {
-                    TextTimeUntilNextDailyGift.text += "" + minutes + "m ";
-                }
-
-                TextTimeUntilNextDailyGift.text += "" + timeUntilNextDailyGift.Seconds + "s";
+                TextTimeUntilNextDailyGift.text = SupportFunctions.GetStringTime(TimeUntilNextDailyGift());
             }
             else
             {

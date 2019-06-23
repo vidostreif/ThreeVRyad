@@ -373,7 +373,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         
         if (blocks.Length > 1)
         {
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind_active);
+            //SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind_active);
             GridBlocks.Instance.MixStandartElements();
             yield return new WaitForSeconds(0.3f);
             DestroyHighlightBlocks();

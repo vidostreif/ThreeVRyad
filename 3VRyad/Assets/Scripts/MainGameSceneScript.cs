@@ -123,7 +123,15 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
         Button nextLevelButton = gONextLevelButton.GetComponent<Button>();
         nextLevelButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
-        nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
+        if (LevelMenu.Instance.NextLevelIsOpen())
+        {
+            nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
+        }
+        else
+        {
+            nextLevelButton.onClick.AddListener(delegate { SupportFunctions.CreateInformationPanel("Следующий уровень еще не открыт!", CanvasMenu.transform); });
+        }
+        
         nextLevelButton.interactable = false;
 
         //передача аналитики
@@ -188,7 +196,8 @@ public class MainGameSceneScript : MonoBehaviour {
 
             if (!LevelMenu.Instance.NextLevelIsOpen())
             {
-                Destroy(gONextLevelButton.gameObject);
+                SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0.5f);
+                //Destroy(gONextLevelButton.gameObject);
             }
             else
             {
@@ -215,7 +224,12 @@ public class MainGameSceneScript : MonoBehaviour {
                 textEndGame.text = "Это тупик!";
                 if (!LevelMenu.Instance.NextLevelIsOpen())
                 {
-                    Destroy(gONextLevelButton.gameObject);
+                    SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0.5f);
+                    //Destroy(gONextLevelButton.gameObject);
+                }
+                else
+                {
+                    SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 1);
                 }
             }
             else
@@ -225,7 +239,6 @@ public class MainGameSceneScript : MonoBehaviour {
                 {
                     textEndGame.text = "У вас закончились ходы! Добавим за просмотр видео?";
                     //создаем кнопку видео на месте загрузки следующего уровня    
-                    //SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0);
                     AdMobManager.Instance.GetVideoBrowseButton(gONextLevelButton, VideoForFeeEnum.ForMove);
                 }
                 else
@@ -233,7 +246,12 @@ public class MainGameSceneScript : MonoBehaviour {
                     textEndGame.text = "У вас закончились ходы!";
                     if (!LevelMenu.Instance.NextLevelIsOpen())
                     {
-                        Destroy(gONextLevelButton.gameObject);
+                        SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0.5f);
+                        //Destroy(gONextLevelButton.gameObject);
+                    }
+                    else
+                    {
+                        SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 1);
                     }
                 }              
             }
@@ -258,10 +276,10 @@ public class MainGameSceneScript : MonoBehaviour {
             {
                 restartButton.interactable = true;
                 exitButton.interactable = true;
-                if (victory && LevelMenu.Instance.NextLevelIsOpen())
-                {
+                //if (LevelMenu.Instance.NextLevelIsOpen())
+                //{
                     nextLevelButton.interactable = true;
-                }
+                //}
                 break;
             }
             yield return new WaitForSeconds(0.2f);
@@ -483,6 +501,7 @@ public class MainGameSceneScript : MonoBehaviour {
         HelpToPlayer.ClearHintList();//очищаем список подсказок
         MainAnimator.Instance.ClearAllMassive();
         Tasks.Instance.ResetParameters();
+        Tasks.Instance.CreateCollectedElements();
         Score.Instance.ResetParameters();
         SuperBonus.Instance.ResetParameters();
         InstrumentPanel.Instance.ResetParameters();

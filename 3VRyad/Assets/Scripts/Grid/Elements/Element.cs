@@ -92,7 +92,7 @@ public class Element : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, bool hitBack, HitTypeEnum hitTypeEnum, int life, int score) {
+    public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, bool hitBack, HitTypeEnum hitTypeEnum, int life, int score, bool scoreScale) {
         this.type = type;
         this.lockedForMove = lockedForMove;
         this.baseLockedForMove = lockedForMove;
@@ -103,6 +103,7 @@ public class Element : BaseElement
         this.thisHitTypeEnum = hitTypeEnum;
         this.life = life;
         this.score = score;
+        this.scoreScale = scoreScale;
         DopSettings();
     }
 
@@ -206,7 +207,7 @@ public class Element : BaseElement
             if (typeBlockingElementsEnum == BlockingElementsTypeEnum.Liana)
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
-                curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 200);
+                curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 200, false);
                 //if (ParticleSystemManager.Instance != null)
                 //{
                 //    ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSLiana, 3);
@@ -215,7 +216,7 @@ public class Element : BaseElement
             else if(typeBlockingElementsEnum == BlockingElementsTypeEnum.Spread)
             {
                 curElement = blockingElementGameObject.AddComponent<SpreadBlockingElement>();
-                curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 300);
+                curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 300, false);
                 curElement.MakeActionAfterMove(1, true);
                 if (ParticleSystemManager.Instance != null)
                 {

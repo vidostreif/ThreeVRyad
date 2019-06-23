@@ -136,6 +136,7 @@
     <bundles />
     <bundelCount>0</bundelCount>
     <coins>0</coins>
+    <timeImmortalLives>0</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>
@@ -149,7 +150,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>30</moves>
+    <moves>35</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="Dirt" goal="20" collectEverything="true" />
