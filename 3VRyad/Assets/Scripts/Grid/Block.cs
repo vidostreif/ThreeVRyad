@@ -255,49 +255,49 @@ public class Block : MonoBehaviour {
             if (typeElementsEnum == ElementsTypeEnum.StandardElement)
             {                
                 curElement = elementGameObject.AddComponent<Element>();
-                curElement.InitialSettings(typeElementsEnum, false, false, true, false, HitTypeEnum.HitFromNearbyElement ,1 , 100);
+                curElement.InitialSettings(typeElementsEnum, false, false, true, false, true, HitTypeEnum.HitFromNearbyElement ,1 , 100);
             }
             else if (typeElementsEnum == ElementsTypeEnum.CrushableWall)
             {                
                 curElement = elementGameObject.AddComponent<ElementWall>();
-                curElement.InitialSettings(typeElementsEnum, true, false, false, false, HitTypeEnum.Empty, 1, 200);
+                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 1, 200);
             }
             else if (typeElementsEnum == ElementsTypeEnum.ImmortalWall)
             {
                 curElement = elementGameObject.AddComponent<ElementWall>();
-                curElement.InitialSettings(typeElementsEnum, true, true, false, false, HitTypeEnum.Empty, 1, 0);
+                curElement.InitialSettings(typeElementsEnum, true, true, false, false, false, HitTypeEnum.Empty, 1, 0);
             }
             else if (typeElementsEnum == ElementsTypeEnum.BigFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementBigFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 1, 1500);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 1500);
             }
             else if (typeElementsEnum == ElementsTypeEnum.MediumFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementMediumFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 1, 1000);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 1000);
             }
             else if (typeElementsEnum == ElementsTypeEnum.SmallFlask)
             {
                 curElement = elementGameObject.AddComponent<ElementSmallFlask>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, true, HitTypeEnum.Explosion, 1, 500);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, true, true, HitTypeEnum.Explosion, 1, 500);
             }
             else if (typeElementsEnum == ElementsTypeEnum.SeedBarrel)
             {
                 curElement = elementGameObject.AddComponent<SeedBarrelElement>();
-                curElement.InitialSettings(typeElementsEnum, true, true, false, false, HitTypeEnum.Empty, 1, 1200);
+                curElement.InitialSettings(typeElementsEnum, true, true, false, false, false, HitTypeEnum.Empty, 1, 1200);
                 curElement.MakeCollector(dopShape, 8);
             }
             else if (typeElementsEnum == ElementsTypeEnum.Drop)
             {
                 curElement = elementGameObject.AddComponent<Element>();
-                curElement.InitialSettings(typeElementsEnum, false, false, false, false, HitTypeEnum.Empty, 1, 600);
+                curElement.InitialSettings(typeElementsEnum, false, false, false, false, false, HitTypeEnum.Empty, 1, 600);
                 curElement.MakeDrop();
             }
             else if (typeElementsEnum == ElementsTypeEnum.WildPlant)
             {
                 curElement = elementGameObject.AddComponent<WildPlantElement>();
-                curElement.InitialSettings(typeElementsEnum, true, false, false, false, HitTypeEnum.Empty, 7, 1000);
+                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 7, 1000);
                 curElement.MakeActionAfterMove(1, false);
             }
             else
@@ -390,17 +390,18 @@ public class Block : MonoBehaviour {
 
         if (element != null && !element.Destroyed)
         {
+            bool hitBack = element.HitBack;
             element.Hit(hitTypeEnum, hitElementShape);
-            //если уничтожили элемент то ударяем по элементу позади
-            if ((behindElement != null && !behindElement.Destroyed) && (element == null || element.Destroyed))
+            //если уничтожили элемент и он ударяет в ответ, то ударяем по элементу позади
+            if (hitBack && (behindElement != null && !behindElement.Destroyed) && (element == null || element.Destroyed))
             {
                 behindElement.Hit();
             }
         }
-        else if (behindElement != null && !behindElement.Destroyed)
-        {
-            behindElement.Hit(hitTypeEnum, hitElementShape);
-        }
+        //else if (behindElement != null && !behindElement.Destroyed)
+        //{
+        //    behindElement.Hit(hitTypeEnum, hitElementShape);
+        //}
     }
 
 }

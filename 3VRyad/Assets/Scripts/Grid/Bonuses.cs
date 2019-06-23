@@ -98,7 +98,7 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
                 //делаем анимацию перемещения уничтоженных элементов
                 foreach (Block item in findedBlockInLine)
                 {
-                    if (item.Element != null)
+                    if (BlockCheck.ThisBlockWithDestroyElement(item))
                     {
                         //создаем эффект   
                         SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_5);

@@ -21,6 +21,7 @@ public class Element : BaseElement
     [SerializeField] protected bool baseLockedForMove;//базовый параметр что элемент заблокирован для передвижения
     [SerializeField] protected bool createLine;//признак что элемент создает линию
     [SerializeField] protected bool activated;//признак что элемент активируемый
+    [SerializeField] protected bool hitBack;//признак что элемент уничтожает элемент позади себя
     //[SerializeField] protected bool hitNeighboringBlocks;//признак что элемент ударяет по соседним после смерти
     [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у элемента
     
@@ -60,6 +61,13 @@ public class Element : BaseElement
             return activated;
         }
     }//признак что элемент активируемый
+    public bool HitBack
+    {
+        get
+        {
+            return hitBack;
+        }
+    }
     public ElementsTypeEnum Type {
         get
         {
@@ -84,13 +92,14 @@ public class Element : BaseElement
     }
 
     //установка настроек элементов
-    public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, HitTypeEnum hitTypeEnum, int life, int score) {
+    public void InitialSettings(ElementsTypeEnum type, bool lockedForMove, bool immortal, bool createLine, bool activated, bool hitBack, HitTypeEnum hitTypeEnum, int life, int score) {
         this.type = type;
         this.lockedForMove = lockedForMove;
         this.baseLockedForMove = lockedForMove;
         this.immortal = immortal;
         this.createLine = createLine;
         this.activated = activated;
+        this.hitBack = hitBack;
         this.thisHitTypeEnum = hitTypeEnum;
         this.life = life;
         this.score = score;
@@ -121,14 +130,10 @@ public class Element : BaseElement
             }
             else if (vulnerabilityTypeEnum.Contains(hitType))
             {
-                    if (SubLife())
-                    {
-                        ActionAfterHitting(hitType);
-                    }
-                    else
-                    {
-                        //AnimatElement.PlayIdleAnimation();
-                    }                    
+                if (SubLife())
+                {
+                    ActionAfterHitting(hitType);
+                }                  
             }
         }
     }

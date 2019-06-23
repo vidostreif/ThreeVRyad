@@ -743,17 +743,17 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             foreach (Block blockField in listForCheck)
             {
                 //добавляем первые элементы                
-                if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(blockField))
+                if (BlockCheck.ThisBlockWithStandartElement(blockField))
                 {
                     NeighboringBlocks neighboringBlocks = GetNeighboringBlocks(blockField.PositionInGrid);
                     foreach (Block neighboringBlock in neighboringBlocks.allBlockField)
                     {
                         //если блок находится по соседству и в нем такой же элемент
-                        if (listForCheck.Contains(neighboringBlock) && BlockCheck.ThisStandardBlockWithStandartElementCanMove(neighboringBlock) && blockField.Element.Shape == neighboringBlock.Element.Shape)
+                        if (listForCheck.Contains(neighboringBlock) && BlockCheck.ThisBlockWithStandartElement(neighboringBlock) && blockField.Element.Shape == neighboringBlock.Element.Shape)
                         {
                             //и если противоположный блок имеет такой же элемент
                             Block OppositeBlock = neighboringBlocks.GetOppositeBlock(neighboringBlock);
-                            if (listForCheck.Contains(OppositeBlock) && BlockCheck.ThisStandardBlockWithStandartElementCanMove(OppositeBlock) && blockField.Element.Shape == OppositeBlock.Element.Shape)
+                            if (listForCheck.Contains(OppositeBlock) && BlockCheck.ThisBlockWithStandartElement(OppositeBlock) && blockField.Element.Shape == OppositeBlock.Element.Shape)
                             {
                                 if (blocksInLine.Count == 0)
                                 {
