@@ -108,7 +108,7 @@ public static class SupportFunctions
     }
 
     //создание текста информации
-    public static void CreateInformationText(string str, Color color, int fontSize, Transform transformParent = null, Vector3 place = new Vector3())
+    public static void CreateInformationText(string str, Color color, int fontSize, Transform transformParent = null, Vector3 place = new Vector3(), bool longAnimation = false)
     {
         if (transformParent == null)
         {
@@ -124,7 +124,17 @@ public static class SupportFunctions
             fontSize = 65;
         }
         textInfirmation.fontSize = fontSize;
-        //textInfirmationGO.transform.GetComponent<Animation>().Play();
+
+        if (longAnimation)
+        {
+            textInfirmationGO.transform.GetComponent<Animation>().Play("Create_text_information_long");
+        }
+        else
+        {
+            textInfirmationGO.transform.GetComponent<Animation>().Play("Create_text_information");
+        }
+        
+        
         //GameObject.Destroy(textInfirmationGO, 2);
     }
 

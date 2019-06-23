@@ -53,10 +53,15 @@ public class MainGameSceneScript : MonoBehaviour {
 
     public void Prepare()
     {
+        StartCoroutine(CurPrepare());
+    }
+
+    private IEnumerator CurPrepare()
+    {
         Time.timeScale = 1;        
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
-        GridBlocks.Instance.FoundNextMove();//поиск хода
+        yield return StartCoroutine(GridBlocks.Instance.FoundNextMove());//поиск хода
         GridBlocks.Instance.NextActionElementsAfterMove();//поиск следующего хода для активируемых элементов
 
         if (HelpFromGnome.Instance.helpEnum != HelpEnum.Empty)
@@ -123,14 +128,14 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
         Button nextLevelButton = gONextLevelButton.GetComponent<Button>();
         nextLevelButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
-        if (LevelMenu.Instance.NextLevelIsOpen())
-        {
-            nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
-        }
-        else
-        {
-            nextLevelButton.onClick.AddListener(delegate { SupportFunctions.CreateInformationPanel("Следующий уровень еще не открыт!", CanvasMenu.transform); });
-        }
+        //if (LevelMenu.Instance.NextLevelIsOpen())
+        //{
+        //    nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
+        //}
+        //else
+        //{
+        //    nextLevelButton.onClick.AddListener(delegate { SupportFunctions.CreateInformationPanel("Следующий уровень еще не открыт!", CanvasMenu.transform); });
+        //}
         
         nextLevelButton.interactable = false;
 
@@ -169,7 +174,7 @@ public class MainGameSceneScript : MonoBehaviour {
             );
         }
 
-        //yield return new WaitForSeconds(0.15f);
+        VideoBrowseButton videoBrowseButton = null;
         //запускаем куротину для постепенного отображения элементов
         //если выполнили все задания
         if (victory)
@@ -194,16 +199,6 @@ public class MainGameSceneScript : MonoBehaviour {
             //показываем подарки
             StartCoroutine(EndGameAnimationGift(PanelMenu, levelPassedResult));
 
-            if (!LevelMenu.Instance.NextLevelIsOpen())
-            {
-                SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0.5f);
-                //Destroy(gONextLevelButton.gameObject);
-            }
-            else
-            {
-                SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 1);
-            }
-
             JsonSaveAndLoad.SetSaveToFile();
         }
         else
@@ -222,15 +217,6 @@ public class MainGameSceneScript : MonoBehaviour {
             if (!nextMoveExists)//если не смогли найти следующий ход
             {
                 textEndGame.text = "Это тупик!";
-                if (!LevelMenu.Instance.NextLevelIsOpen())
-                {
-                    SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0.5f);
-                    //Destroy(gONextLevelButton.gameObject);
-                }
-                else
-                {
-                    SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 1);
-                }
             }
             else
             {
@@ -239,20 +225,12 @@ public class MainGameSceneScript : MonoBehaviour {
                 {
                     textEndGame.text = "У вас закончились ходы! Добавим за просмотр видео?";
                     //создаем кнопку видео на месте загрузки следующего уровня    
-                    AdMobManager.Instance.GetVideoBrowseButton(gONextLevelButton, VideoForFeeEnum.ForMove);
+                    videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(gONextLevelButton, VideoForFeeEnum.ForMove);
                 }
                 else
                 {
                     textEndGame.text = "У вас закончились ходы!";
-                    if (!LevelMenu.Instance.NextLevelIsOpen())
-                    {
-                        SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0.5f);
-                        //Destroy(gONextLevelButton.gameObject);
-                    }
-                    else
-                    {
-                        SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 1);
-                    }
+                    
                 }              
             }
             
@@ -262,6 +240,21 @@ public class MainGameSceneScript : MonoBehaviour {
             Destroy(PanelMenu.transform.Find("PanelGift").gameObject);
             Destroy(PanelMenu.transform.Find("TextScore").gameObject);
         }
+
+        //если нет кнопеи видео, то показываем кнопку следующего уровня
+        if (videoBrowseButton == null)
+        {
+            if (!LevelMenu.Instance.NextLevelIsOpen())
+            {
+                SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 0.5f);
+                nextLevelButton.onClick.AddListener(delegate { SupportFunctions.CreateInformationPanel("Следующий уровень еще не открыт!", CanvasMenu.transform); });
+            }
+            else
+            {
+                SupportFunctions.ChangeAlfa(gONextLevelButton.GetComponent<Image>(), 1);
+                nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
+            }
+        }        
 
         //ждем до тех пор
         do

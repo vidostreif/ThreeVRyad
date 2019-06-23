@@ -32,6 +32,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     private List<Block> blockFieldsList = new List<Block>();// найденные блоки для удара
     private List<Block> droppingBlockList = new List<Block>();// список сбрасывающих блоков
     private bool needFilling;
+    private bool foundNextMove;
     //private bool nextMoveExists;//проверка, что остались доступные ходы
 
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
@@ -539,19 +540,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             if (!Tasks.Instance.endGame && !SuperBonus.Instance.InWork())
             {
                 //проверка, что остались доступные ходы
-                FoundNextMove foundNextMove = FoundNextMove();
-
-                //если перемешивали, то делаем паузу
-                if (foundNextMove.mix)
-                {
-                    yield return new WaitForSeconds(0.5f);
-                }
+                yield return StartCoroutine(FoundNextMove());
 
                 //если не конец игры, но ходов не осталось  и супер бонус не активен то рисуем проигрыш
-                if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove.found)
+                if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove)
                 {
                     yield return new WaitForSeconds(0.5f);
-                    StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove.found));
+                    StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove));
                     blockedForMove = false;
                     yield break;
                 }
@@ -829,26 +824,25 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         return listBlocksInLine;
     }
 
-    public FoundNextMove FoundNextMove()
+    public IEnumerator FoundNextMove()
     {
         //проверка, что остались доступные ходы
         MainAnimator.Instance.ClearElementsForNextMove();
 
-        //структура для возврата данных
-        FoundNextMove foundNextMove;
-        foundNextMove.found = false;
-        foundNextMove.mix = false;
-        List<ElementsForNextMove> elementsForNextMoveList;
+        foundNextMove = false;
+        List<ElementsForNextMove> elementsForNextMoveList = new List<ElementsForNextMove>();
         Block[] blocksWithActivatedElements = new Block[0];
+        List<Block> blocksOnMatchingLine = new List<Block>();
         int numberOfShuffles = 10;
         bool mix;
+        bool pause = false;
         do
         {
+            blocksOnMatchingLine = CheckMatchingLine();
             //если есть совпадающие линии, то выходим
-            if (CheckMatchingLine().Count > 0)
-            {
-                foundNextMove.found = true;
-                return foundNextMove;
+            if (blocksOnMatchingLine.Count > 0)
+            {                
+                break;
             }
 
             mix = false;
@@ -868,10 +862,28 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 {
                     if (numberOfShuffles > 0)
                     {
+                        if (numberOfShuffles == 10)
+                        {
+                            if (Tasks.Instance.RealMoves > 0)
+                            {                                
+                                SupportFunctions.CreateInformationText("Нет ходов!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
+                                yield return new WaitForSeconds(1.2f);
+                                elementsForMoveList.Clear();
+                                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind_active);
+                            }                           
+                        }
                         numberOfShuffles--;
                         mix = true;
-                        foundNextMove.mix = true;
-                        MixStandartElements();
+                        pause = true;
+                        if (Tasks.Instance.RealMoves == 0)
+                        {
+                            MixStandartElements(true);
+                        }
+                        else
+                        {
+                            MixStandartElements(false);
+                        }
+                        
                     }                 
                 }
             }
@@ -879,20 +891,23 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             {
                 break;
             }
-            //iteration2++;
 
         } while (needFilling || mix || numberOfShuffles > 0);//повторяем проверку
 
-        //Находим лучший ход 
-        if (elementsForNextMoveList.Count > 0)
+        if (pause)
         {
-            if (numberOfShuffles < 10)
-            {
-                SupportFunctions.CreateInformationText("Ходов нет! Перемешиваем!", Color.blue, 45);
-            }
+            yield return new WaitForSeconds(0.5f);
+        }
 
+        if (blocksOnMatchingLine.Count > 0)
+        {
+            foundNextMove = true;
+        }
+        //Находим лучший ход 
+        else if (elementsForNextMoveList.Count > 0)
+        {
             ElementsForNextMove elementsForNextMove = elementsForNextMoveList[0];
-            foundNextMove.found = true;
+            foundNextMove = true;
             foreach (ElementsForNextMove item in elementsForNextMoveList)
             {
                 //добавляем подсказки для линий больше 3
@@ -918,15 +933,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         }
         else if (blocksWithActivatedElements.Length > 0)//если нашли активируемые элементы
         {
-            foundNextMove.found = true;
+            foundNextMove = true;
         }
         else//если не удалось ничего найти
         {
-            foundNextMove.found = false;
+            foundNextMove = false;
             SupportFunctions.CreateInformationText("Мы больше не нашли ходов!", Color.blue, 45);
         }
-
-        return foundNextMove;
     }
 
     //возвращает массив элементов которые могут составить линию в следующем ходу
@@ -1145,10 +1158,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //перемешать стандартные элементы
-    public void MixStandartElements()
+    public void MixStandartElements(bool moveInstantly = false)
     {
-        MasterController.Instance.ForcedDropElement();
-        SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind_active);
+        MasterController.Instance.ForcedDropElement();        
         List<ElementsPriority> listPriority = new List<ElementsPriority>();
         List<Block> blockList = new List<Block>();//лист блоков в которых будут заменены элементы
         elementsForMixList.Clear();
@@ -1181,19 +1193,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
         var sortedlistPriority = listPriority.OrderByDescending(u => u.priority);
 
-        //if (increasePriority)
-        //{
-        //    //мешаем массив
-        //    SupportFunctions.MixArray(listPriority);
-
         //ищем максимальное вхождение элемента
         foreach (ElementsPriority item in sortedlistPriority)
         {
-            //bool found = false;
-            //foreach (ElementsPriority listPriorityItem in listPriority)
-            //{
-            //    if (listPriorityItem == item)
-            //    {
             //ищем нет ли такого элемента в заданиях
             bool foundOnTarget = false;
             foreach (Target targetItem in Tasks.Instance.targets)
@@ -1216,18 +1218,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         break;
                     }
                 }
-                //listPriorityItem.priority++;
-                //listPriorityItem.limitOnAmountCreated++;
-                //found = true;
                 break;
             }
-            //    }                
-            //}
-
-            //if (found)
-            //{
-            //    break;
-            //}
         }
         //перемешиваем
         SupportFunctions.MixArray(elementsForMixList);
@@ -1236,10 +1228,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         for (int i = 0; i < elementsForMixList.Count; i++)
         {
             blockList[i].Element = elementsForMixList[i];
+            //переместить моментально
+            if (moveInstantly)
+            {
+                blockList[i].Element.thisTransform.position = blockList[i].thisTransform.position;
+            }
         }
-
-        ////перезаполняем новыми элементами
-        //StartFilling(listPriority, true);
     }
 
     //элементы совпадают

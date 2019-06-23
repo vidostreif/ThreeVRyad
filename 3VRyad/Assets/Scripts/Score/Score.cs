@@ -134,8 +134,8 @@ public class Score : MonoBehaviour, IESaveAndLoad
         Text scoreElementText = scoreElement.GetComponent<Text>();
         scoreElementText.text = score.ToString();
         scoreElementText.fontSize = scoreElementText.fontSize * (score / 100);
-        MainAnimator.Instance.AddElementForSmoothMove(scoreElement.transform, transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 1, destroyAfterMoving: true);
-        this.addScore += addScore;
+        MainAnimator.Instance.AddElementForSmoothMove(scoreElement.transform, text.transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 1, destroyAfterMoving: true);
+        this.addScore += score;
     }
 
     public void CountPoints() {
@@ -153,7 +153,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
    
 
         //если набрали больше определенного количества очков
-        int scoreCount = thisScoreScalesList.Score + ThisScoreList.Score;
+        int scoreCount = (thisScoreScalesList.Score * thisScoreScalesList.PositionList.Count) + ThisScoreList.Score;
         bool pause = false;
         if (scoreCount > 10000)
         {
@@ -170,7 +170,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
             SupportFunctions.CreateInformationText("Превосходно!", Color.blue, 20 * (scoreCount / 3000), this.transform, ThisScoreList.GetCentralPosition());
             pause = true;
         }
-        else if (scoreCount > 5000)
+        else if (scoreCount > 4000)
         {
             SupportFunctions.CreateInformationText("Отлично!", Color.green, 20 * (scoreCount / 3000), this.transform, ThisScoreList.GetCentralPosition());
             pause = true;
@@ -185,8 +185,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
         {
             Vector3 textPosition = thisScoreScalesList.GetCentralPosition();
             SupportFunctions.CreateInformationText("Бонус х" + thisScoreScalesList.PositionList.Count, Color.cyan, 15 * thisScoreScalesList.PositionList.Count, this.transform, textPosition);
-            CreateScoreElement(textPosition, thisScoreScalesList.Score);
-            
+            CreateScoreElement(textPosition, thisScoreScalesList.Score * (thisScoreScalesList.PositionList.Count - 1));            
         }
     }
 

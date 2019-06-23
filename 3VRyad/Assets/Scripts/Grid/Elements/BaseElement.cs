@@ -224,7 +224,8 @@ public class BaseElement : MonoBehaviour
             //elementTransform.parent = thisTransform;
             MainAnimator.Instance.AddElementForSmoothMove(elementTransform, this.transform.position, 10, SmoothEnum.InLineWithAcceleration, 0.1f, true);
             //уменьшаем в два раза
-            elementTransform.localScale = elementTransform.localScale * 0.5f;
+            elementTransform.localScale = elementTransform.localScale * 0.7f;
+            AnimatElement.PlayIdleAnimation();
             //создаем эффект
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_1);
             GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
@@ -277,10 +278,11 @@ public class BaseElement : MonoBehaviour
         //if (soundDestroy != SoundsEnum.EmptySound)
         //{
             SoundManager.Instance.PlayDestroyElement(shape);
-            //SoundManager.Instance.PlaySoundInternal(soundDestroy);
+        //SoundManager.Instance.PlaySoundInternal(soundDestroy);
         //}        
 
         //определяем есть ли вокруг элементы коллекционирующие наш вид элемента
+        bool addToCollection = false;
         Block[] blocksAround = GridBlocks.Instance.GetAroundBlocks(this.PositionInGrid);
         foreach (Block item in blocksAround)
         {
@@ -289,12 +291,12 @@ public class BaseElement : MonoBehaviour
                 //если добавили элемент в коллекцию то выходим
                 if (item.Element.AddToCollection(this.shape, this.transform))
                 {
-                    return;
+                    addToCollection = true;
                 }  
             }
         }
         //проверяем по заданиям
-        if (!Tasks.Instance.Collect(shape, transform))
+        if (!addToCollection && !Tasks.Instance.Collect(shape, transform))
         {
             //AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
             AnimatElement.PlayDestroyAnimation();

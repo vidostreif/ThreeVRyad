@@ -323,7 +323,11 @@ public class LevelDrawer : PropertyDrawer
             }
             else
             {
-                if (GUI.Button(buttonRect, "Сохранить"))
+                GUIStyle style = new GUIStyle(GUI.skin.button);
+                style.normal.textColor = Color.red;
+                style.fontStyle = FontStyle.Bold;
+
+                if (GUI.Button(buttonRect, "Сохранить", style))
                 {
                     levelMenu.SaveXml(level);
                 }
@@ -336,7 +340,10 @@ public class LevelDrawer : PropertyDrawer
                 levelMenu.GetXmlDocument(level);
                 if (level.xmlDocument == null)
                 {
-                    if (GUI.Button(buttonRect, "Создать"))
+                    GUIStyle style = new GUIStyle(GUI.skin.button);
+                    style.fontStyle = FontStyle.Bold;
+
+                    if (GUI.Button(buttonRect, "Создать", style))
                     {
                         levelMenu.CreateXml(level);
                     }
@@ -348,13 +355,15 @@ public class LevelDrawer : PropertyDrawer
         {
             Rect butDel = new Rect(position.x, position.y + height + 2, 110, height);
             Rect butAdd = new Rect(position.x + 120, position.y + height + 2, 100, height);
+            GUIStyle style = new GUIStyle(GUI.skin.button);
+            style.fontStyle = FontStyle.Bold;
 
-            if (GUI.Button(butDel, "Удалить"))
+            if (GUI.Button(butDel, "Удалить", style))
             {
                 levelMenu.DellLevelOnRegion(level);
             }
 
-            if (GUI.Button(butAdd, "Добавить"))
+            if (GUI.Button(butAdd, "Добавить", style))
             {
                 levelMenu.AddLevelOnRegion(level);
             }

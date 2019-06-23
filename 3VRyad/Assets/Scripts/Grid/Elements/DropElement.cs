@@ -9,5 +9,6 @@ public class DropElement : Element
     protected override void DopSettings()
     {        
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.Drop };
+        //vulnerabilityOnBlockingElementTypeEnum = new HitTypeEnum[] { HitTypeEnum.Explosion, HitTypeEnum.Instrument };
     }
 }

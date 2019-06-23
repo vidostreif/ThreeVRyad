@@ -24,7 +24,8 @@ public class Element : BaseElement
     [SerializeField] protected bool hitBack;//признак что элемент уничтожает элемент позади себя
     //[SerializeField] protected bool hitNeighboringBlocks;//признак что элемент ударяет по соседним после смерти
     [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у элемента
-    
+    //[SerializeField] protected HitTypeEnum[] vulnerabilityOnBlockingElementTypeEnum;//типы ударов от которых умирает блокирующий элемент
+
 
     public override Position PositionInGrid
     {
@@ -110,15 +111,16 @@ public class Element : BaseElement
     protected virtual void DopSettings()
     {        
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
+        //vulnerabilityOnBlockingElementTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
     }
 
     //удар по элементу
     public override void Hit(HitTypeEnum hitType = HitTypeEnum.StandartHit, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
     {
-        if (!destroyed && vulnerabilityTypeEnum.Contains(hitType))
+        if (!destroyed)
         {
             //если есть блокирующий элемент
-            if (BlockingElementExists())
+            if (BlockingElementExists() && (vulnerabilityTypeEnum.Contains(hitType) || hitType == HitTypeEnum.Explosion || hitType == HitTypeEnum.Instrument))
             {
                 ////если типы удара которые убивают блокирующий элемент
                 blockingElement.Hit(hitType);
@@ -129,7 +131,7 @@ public class Element : BaseElement
                     lockedForMove = baseLockedForMove;
                 }
             }
-            else 
+            else if (vulnerabilityTypeEnum.Contains(hitType))
             {
                 if (SubLife())
                 {
