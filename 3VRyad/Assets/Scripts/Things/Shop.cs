@@ -342,13 +342,13 @@ public class Shop : MonoBehaviour, IStoreListener
                         
             if (product.coins > 0)
             {
-                yield return StartCoroutine(CreateCoinAnimation(new Vector3(startingXPoint + ((0 + product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.coins));
+                yield return StartCoroutine(CreateCoinAnimation(new Vector3(startingXPoint + ((product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.coins));
                 yield return new WaitForSeconds(0.3f);
             }
 
             if (product.timeImmortalLives > 0)
             {
-                yield return StartCoroutine(CreateLivesAnimation(new Vector3(startingXPoint + ((0 + product.compositionBundle.Length + product.coins > 0 ? 1 : 0) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.timeImmortalLives));
+                yield return StartCoroutine(CreateLivesAnimation(new Vector3(startingXPoint + ((product.compositionBundle.Length + (product.coins > 0 ? 1 : 0)) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.timeImmortalLives));
             }
         }
         yield return new WaitForSeconds(1.0f);

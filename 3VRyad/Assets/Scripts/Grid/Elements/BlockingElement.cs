@@ -29,20 +29,20 @@ public class BlockingElement : BaseElement
 
     protected virtual void DopSettings()
     {
-        vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
+        //vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.Instrument };
     }
 
     //удар элементу
     public override void Hit(HitTypeEnum hitType = HitTypeEnum.StandartHit, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
     {
-        if (vulnerabilityTypeEnum.Contains(hitType))
-        {
+        //if (vulnerabilityTypeEnum.Contains(hitType))
+        //{
             //если елемент убили
             if (SubLife())
             {
                 base.DestroyElement();
             }
-        }
+        //}
         
     }
 

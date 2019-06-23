@@ -114,12 +114,12 @@ public class Element : BaseElement
     //удар по элементу
     public override void Hit(HitTypeEnum hitType = HitTypeEnum.StandartHit, AllShapeEnum hitElementShape = AllShapeEnum.Empty)
     {
-        if (!destroyed)
+        if (!destroyed && vulnerabilityTypeEnum.Contains(hitType))
         {
             //если есть блокирующий элемент
             if (BlockingElementExists())
             {
-                //если типы удара которые убивают блокирующий элемент
+                ////если типы удара которые убивают блокирующий элемент
                 blockingElement.Hit(hitType);
 
                 //если уничтожили блокирующий элемент
@@ -128,7 +128,7 @@ public class Element : BaseElement
                     lockedForMove = baseLockedForMove;
                 }
             }
-            else if (vulnerabilityTypeEnum.Contains(hitType))
+            else 
             {
                 if (SubLife())
                 {
