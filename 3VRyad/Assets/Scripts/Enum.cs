@@ -179,6 +179,11 @@ public enum SoundsEnum
 {
     EmptySound,
     CreateElement,
+    Create_liana,
+    Spread_liana,
+    Create_web,
+    Create_wildplant,
+    Destroy_web,
     DestroyElement_1,
     DestroyElement_2,
     DestroyElement_3,
@@ -229,7 +234,9 @@ public enum SoundsEnum
     Hit_3,
     Hit_4,
     Hit_5,
-
+    Spider_1,
+    Spider_2,
+    //Spider_3,
 
 }//тип звуков
 

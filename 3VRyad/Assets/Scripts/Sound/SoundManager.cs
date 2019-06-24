@@ -246,6 +246,18 @@ public class SoundManager : MonoBehaviour
         {
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_create);
         }
+        else if (allShapeEnum == AllShapeEnum.Liana)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Create_liana);
+        }
+        else if (allShapeEnum == AllShapeEnum.Web)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Create_web);
+        }
+        else if (allShapeEnum == AllShapeEnum.WildPlant)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Create_wildplant);
+        }
     }
 
     public void PlayHitElement(AllShapeEnum allShapeEnum)
@@ -314,6 +326,14 @@ public class SoundManager : MonoBehaviour
         {
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_destroy);
         }
+        else if (allShapeEnum == AllShapeEnum.Web)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_web);
+        }
+        //else if (allShapeEnum == AllShapeEnum.WildPlant)
+        //{
+        //    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_web);
+        //}
 
     }
 }

@@ -53,11 +53,13 @@ public class SpreadBlockingElement : BlockingElement
         //если остался один ход до активации
         else if (!destroyed && ActivationMove - 1 == Tasks.Instance.RealMoves)
         {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Spider_2);
             UpdateSprite(1);
         }
         //если осталось два хода до активации
         else if (!destroyed && ActivationMove - 2 == Tasks.Instance.RealMoves)
         {
+            
             UpdateSprite(2);
         }
     }
@@ -78,7 +80,7 @@ public class SpreadBlockingElement : BlockingElement
 
                 UpdateSprite(actionDelay + 1);
                 //звук появления паука
-                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Dirt_swelling);
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Spider_1);
 
                 ////создаем эффект что элемент будет активирован
                 //if (ParticleSystemManager.Instance != null && PSNextMove == null)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,9 @@ public static class SoundBank
         {
             List<SoundResurse> soundsList = new List<SoundResurse>();
             soundsList.Add(new SoundResurse(SoundsEnum.CreateElement, soundFolder, "klick_quiet"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Create_liana, soundFolder, "Create_liana"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Spread_liana, soundFolder, "Spread_liana"));            
+            soundsList.Add(new SoundResurse(SoundsEnum.Create_wildplant, soundFolder, "Create_wildplant"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_1, soundFolder, "Socapex"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_2, soundFolder, "Socapex1"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_3, soundFolder, "Socapex2"));
@@ -63,8 +67,21 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Hit_3, soundFolder, "Hit_3"));
             soundsList.Add(new SoundResurse(SoundsEnum.Hit_4, soundFolder, "Hit_4"));
             soundsList.Add(new SoundResurse(SoundsEnum.Hit_5, soundFolder, "Hit_5"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Spider_1, soundFolder, "Spider_1"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Spider_2, soundFolder, "Spider_2"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Create_web, soundFolder, "Create_web"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Destroy_web, soundFolder, "Destroy_web"));
 
-            soundsArray = soundsList.ToArray();
+            //soundsArray = soundsList.ToArray();
+
+            //упоряд. массив
+            int count = Enum.GetNames(typeof(SoundsEnum)).Length;
+            soundsArray = new SoundResurse[count];
+
+            foreach (SoundResurse item in soundsList)
+            {
+                soundsArray[(int)item.SoundEnum] = item;
+            }  
         }        
     }
 
@@ -80,13 +97,13 @@ public static class SoundBank
 
     public static ResourceRequest GetSoundAsync(SoundsEnum soundName) {
         CreateSoundList();
-        foreach (SoundResurse soundResurse in soundsArray)
-        {
-            if (soundResurse.SoundEnum == soundName)
+        //foreach (SoundResurse soundResurse in soundsArray)
+        //{
+            if (soundsArray[(int)soundName] != null)
             {
-                return GetSoundAsync(soundResurse);
+                return GetSoundAsync(soundsArray[(int)soundName]);
             }
-        }
+        //}
         return null;
     }
 
@@ -103,12 +120,9 @@ public static class SoundBank
     public static AudioClip GetSound(SoundsEnum soundName)
     {
         CreateSoundList();
-        foreach (SoundResurse soundResurse in soundsArray)
+        if (soundsArray[(int)soundName] != null)
         {
-            if (soundResurse.SoundEnum == soundName)
-            {
-                return soundResurse.AudioClip;
-            }
+            return soundsArray[(int)soundName].AudioClip;
         }
         return null;
     }
@@ -116,12 +130,9 @@ public static class SoundBank
     public static SoundResurse GetSoundResurse(SoundsEnum soundName)
     {
         CreateSoundList();
-        foreach (SoundResurse soundResurse in soundsArray)
+        if (soundsArray[(int)soundName] != null)
         {
-            if (soundResurse.SoundEnum == soundName)
-            {
-                return soundResurse;
-            }
+            return soundsArray[(int)soundName];
         }
         return null;
     }

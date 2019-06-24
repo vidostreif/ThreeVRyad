@@ -33,8 +33,7 @@ public class WildPlantElement : Element
             }
 
             if (ActivationMove <= Tasks.Instance.RealMoves)
-            {
-                ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
+            {                
                 //UpdateSprite();
 
                 //распространение на блоки вокруг
@@ -48,6 +47,8 @@ public class WildPlantElement : Element
                     {
                         if (block.Element.BlockingElement == null || block.Element.BlockingElement.Destroyed)
                         {
+                            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Spread_liana);
+                            ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
                             block.Element.CreatBlockingElement(GridBlocks.Instance.prefabBlockingWall, AllShapeEnum.Liana, BlockingElementsTypeEnum.Liana, thisTransform);
                             break;
                         }
