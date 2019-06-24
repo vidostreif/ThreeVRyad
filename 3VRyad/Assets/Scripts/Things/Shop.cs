@@ -218,64 +218,69 @@ public class Shop : MonoBehaviour, IStoreListener
         ThingsManager.Instance.CountAllNumber();
         CountCoins();
 
-        yield return new WaitForSeconds(0.1f);
-        //витрина
-        foreach (ProductV product in PRODUCTS)
+        yield return new WaitForSeconds(0.2f);
+
+        //если не уничтожили панель магазина
+        if (panelShop != null)
         {
-            //yield return new WaitForEndOfFrame();
-            yield return new WaitForSeconds(0.02f);
-            GameObject bottonGO = Instantiate(PrefabBank.ShopButtonPrefab, contentTransform);
-            Transform textNameTransform = bottonGO.transform.Find("TextName");
-            textNameTransform.GetComponentInChildren<Text>().text = product.name;
+            //Показать инструменты в верху экрана
+            ThingsManager.Instance.CreateInstrumentsOnShop(panelShopInstruments);
 
-            //выбираем как будем отоброжать цену - монеты или реальные деньги
-            Transform textPriceCoinTransform = bottonGO.transform.Find("TextPriceCoin");
-            Transform textPriceReMoneyTransform = bottonGO.transform.Find("TextPriceReMoney");
-            if (product.priceCoins != 0)
+            Transform panelLivesTransform = LifeManager.Instance.ThisTransform;
+            Transform panelLivePlace = panelShop.transform.Find("PanelLivePlace");
+            panelLivesTransform.SetParent(panelShop.transform, true);
+            MainAnimator.Instance.AddElementForSmoothMove(panelLivesTransform, panelLivePlace.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
+            panelLivesTransform.localScale = new Vector3(1.5f, 1.5f, 1.5f);// panelLivesTransform.localScale * 1.5f;
+
+            panelShopOnGame.SetParent(panelShop.transform, true);
+            Transform panelShopButPlase = panelShop.transform.Find("PanelShopButPlase");
+            MainAnimator.Instance.AddElementForSmoothMove(panelShopOnGame, panelShopButPlase.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
+            //увеличиваем панель в верхнем углу
+            panelShopOnGame.localScale = new Vector3(1.5f, 1.5f, 1.5f); //panelShopOnGame.localScale * 1.5f;
+            //Заменяем кнопке действие на Закрыть
+            SupportFunctions.ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");
+
+            //витрина
+            foreach (ProductV product in PRODUCTS)
             {
-                textPriceCoinTransform.GetComponentInChildren<Text>().text = product.priceCoins.ToString();
-                //скрываем другой текст
-                Destroy(textPriceReMoneyTransform.gameObject);
-            }
-            else
-            {
-                if (m_StoreController != null)
-                {
-                    textPriceReMoneyTransform.GetComponentInChildren<Text>().text = m_StoreController.products.WithID(product.id).metadata.localizedPriceString;
+                yield return new WaitForSeconds(0.05f);
+                if (panelShop != null)
+                {                    
+                    GameObject bottonGO = Instantiate(PrefabBank.ShopButtonPrefab, contentTransform);
+                    Transform textNameTransform = bottonGO.transform.Find("TextName");
+                    textNameTransform.GetComponentInChildren<Text>().text = product.name;
+
+                    //выбираем как будем отоброжать цену - монеты или реальные деньги
+                    Transform textPriceCoinTransform = bottonGO.transform.Find("TextPriceCoin");
+                    Transform textPriceReMoneyTransform = bottonGO.transform.Find("TextPriceReMoney");
+                    if (product.priceCoins != 0)
+                    {
+                        textPriceCoinTransform.GetComponentInChildren<Text>().text = product.priceCoins.ToString();
+                        //скрываем другой текст
+                        Destroy(textPriceReMoneyTransform.gameObject);
+                    }
+                    else
+                    {
+                        if (m_StoreController != null)
+                        {
+                            textPriceReMoneyTransform.GetComponentInChildren<Text>().text = m_StoreController.products.WithID(product.id).metadata.localizedPriceString;
+                        }
+                        else
+                        {
+                            textPriceReMoneyTransform.GetComponentInChildren<Text>().text = "";
+                        }
+
+                        //скрываем другой текст
+                        Destroy(textPriceCoinTransform.gameObject);
+                    }
+
+                    Transform imageTransform = bottonGO.transform.Find("Image");
+                    imageTransform.GetComponentInChildren<Image>().sprite = product.image;
+
+                    product.AddAction(bottonGO);
                 }
-                else
-                {
-                    textPriceReMoneyTransform.GetComponentInChildren<Text>().text = "";
-                }
-                
-                //скрываем другой текст
-                Destroy(textPriceCoinTransform.gameObject);
             }
-
-            Transform imageTransform = bottonGO.transform.Find("Image");
-            imageTransform.GetComponentInChildren<Image>().sprite = product.image;
-
-            product.AddAction(bottonGO);
-        }
-
-        //yield return new WaitForSeconds(0.15f);
-
-        //Показать инструменты в верху экрана
-        ThingsManager.Instance.CreateInstrumentsOnShop(panelShopInstruments);
-
-        Transform panelLivesTransform = LifeManager.Instance.ThisTransform;
-        Transform panelLivePlace = panelShop.transform.Find("PanelLivePlace");
-        panelLivesTransform.SetParent(panelShop.transform, true);
-        MainAnimator.Instance.AddElementForSmoothMove(panelLivesTransform, panelLivePlace.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
-        panelLivesTransform.localScale = panelLivesTransform.localScale * 1.5f;
-
-        panelShopOnGame.SetParent(panelShop.transform, true);
-        Transform panelShopButPlase = panelShop.transform.Find("PanelShopButPlase");
-        MainAnimator.Instance.AddElementForSmoothMove(panelShopOnGame, panelShopButPlase.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
-        //увеличиваем панель в верхнем углу
-        panelShopOnGame.localScale = panelShopOnGame.localScale * 1.5f;
-        //Заменяем кнопке действие на Закрыть
-        SupportFunctions.ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");        
+        }   
     }
 
     //создаем панель подтверждения покупки
@@ -665,12 +670,12 @@ public class Shop : MonoBehaviour, IStoreListener
             Vector3 panelLivesStartPosition = LifeManager.Instance.StartParent.position;
             panelLivesTransform.SetParent(LifeManager.Instance.StartParent, true);
             MainAnimator.Instance.AddElementForSmoothMove(panelLivesTransform, panelLivesStartPosition, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
-            panelLivesTransform.localScale = panelLivesTransform.localScale / 1.5f;
+            panelLivesTransform.localScale = new Vector3(1, 1, 1); //panelLivesTransform.localScale / 1.5f;
 
             panelShopOnGame.SetParent(this.transform, true);
             MainAnimator.Instance.AddElementForSmoothMove(panelShopOnGame, panelShopButParent.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
             //уменьшаем панель в верхнем углу
-            panelShopOnGame.localScale = panelShopOnGame.localScale / 1.5f;
+            panelShopOnGame.localScale = new Vector3(1, 1, 1); //panelShopOnGame.localScale / 1.5f;
             
             Destroy(panelShop);
             SupportFunctions.ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
@@ -723,8 +728,17 @@ public class Shop : MonoBehaviour, IStoreListener
         Debug.Log("OnInitializeFailed InitializationFailureReason:" + error);
     }
     
+    //вывод вопроса на подтверждение покупки
+    public void BuyQuestion(ProductV product)
+    {
+        if (!stateOfPurchase)
+        {
+            SupportFunctions.CreateYesNoPanel(this.transform, "Вы хотите приобрести " + product.name + "?", delegate { Shop.Instance.Buy(product); });
+        }
+    }
+
     //купить товар
-    public void Buy(ProductV product)
+    private void Buy(ProductV product)
     {
         //если не уже в состоянии покупки
         if (!stateOfPurchase)
@@ -934,8 +948,8 @@ public class ProductV {
 
     //действие при нажатии
     public void Action()
-    {
-        Shop.Instance.Buy(this);
+    {        
+        Shop.Instance.BuyQuestion(this);
     }
 }
 

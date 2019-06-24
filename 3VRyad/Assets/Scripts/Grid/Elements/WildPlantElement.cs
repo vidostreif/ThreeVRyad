@@ -27,7 +27,11 @@ public class WildPlantElement : Element
     {
         if (!destroyed)
         {
-            if (ActivationMove <= Tasks.Instance.RealMoves)
+            if (ActivationMove == -1)
+            {
+                ActivationMove = Tasks.Instance.RealMoves + actionDelay;
+            }
+            else if (ActivationMove <= Tasks.Instance.RealMoves)
             {
                 ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
                 //UpdateSprite();

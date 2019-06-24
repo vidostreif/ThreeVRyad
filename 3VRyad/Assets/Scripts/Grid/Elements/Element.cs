@@ -25,7 +25,7 @@ public class Element : BaseElement
     //[SerializeField] protected bool hitNeighboringBlocks;//признак что элемент ударяет по соседним после смерти
     [SerializeField] protected HitTypeEnum thisHitTypeEnum;//тип удара у элемента
     //[SerializeField] protected HitTypeEnum[] vulnerabilityOnBlockingElementTypeEnum;//типы ударов от которых умирает блокирующий элемент
-
+    [SerializeField] protected bool moveBlockingElementIdle; //куротина выполняется
 
     public override Position PositionInGrid
     {
@@ -90,6 +90,38 @@ public class Element : BaseElement
         destroyed = false;
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
         GetComponent<ElementController>().ThisElement = this;
+    }
+
+    //// Update is called once per frame
+    //void Update()
+    //{
+    //    //если есть элемент и он не на позиции нашего блока то медлено премещаем его к блоку
+    //    if (this.blockingElement != null && !this.blockingElement.Destroyed && this.blockingElement.thisTransform.position != thisTransform.position )
+    //    {
+    //        MainAnimator.Instance.AddElementForSmoothMove(this.blockingElement.thisTransform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
+    //    }
+    //}
+
+    //перемещение блокирующего элемента на позицию нашего элменета
+    private IEnumerator MoveBlockingElement() {
+
+        moveBlockingElementIdle = true;
+        do
+        {
+            if (this.blockingElement != null && !this.blockingElement.Destroyed)
+            {
+                if (this.blockingElement.thisTransform.position != thisTransform.position)
+                {
+                    MainAnimator.Instance.AddElementForSmoothMove(this.blockingElement.thisTransform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
+                }                
+            }
+            else
+            {
+                break;
+            }
+            yield return new WaitForSeconds(0.5f);
+        } while (true);
+        moveBlockingElementIdle = false;
     }
 
     //установка настроек элементов
@@ -191,6 +223,12 @@ public class Element : BaseElement
                 DestroyImmediate(this.blockingElement.gameObject);
             }
 
+            //если элемент перетаскивается
+            if (drag)
+            {
+                MasterController.Instance.ForcedDropElement();
+            }
+
             //создаем новый элемент
             GameObject blockingElementGameObject;
             //определяем позицию, где будем создавать
@@ -201,7 +239,7 @@ public class Element : BaseElement
             else
             {
                 blockingElementGameObject = Instantiate(prefabBlockingElement, startTransform.position, Quaternion.identity);
-                MainAnimator.Instance.AddElementForSmoothMove(blockingElementGameObject.transform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
+                //MainAnimator.Instance.AddElementForSmoothMove(blockingElementGameObject.transform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
             }
                 
             BlockingElement curElement;
@@ -237,6 +275,11 @@ public class Element : BaseElement
             HelpToPlayer.AddHint(typeBlockingElementsEnum);
             //Добавляем в элемент
             this.BlockingElement = curElement;
+            //если не запущена куротина передвижения блокирующего элемента
+            if (!moveBlockingElementIdle)
+            {
+                StartCoroutine(MoveBlockingElement());
+            }            
             return this.BlockingElement;
         }
         return null;

@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 8379323497455455179}
   - component: {fileID: 6473075458361180887}
   - component: {fileID: 6750890583348512666}
+  - component: {fileID: 8168427665160022151}
   m_Layer: 5
   m_Name: PanelYesNo
   m_TagString: Untagged
@@ -231,6 +232,22 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!111 &8168427665160022151
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4397172633841714702}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 3a5c379179595bd4dabd527f59256f5e, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 3a5c379179595bd4dabd527f59256f5e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &4711856253076686373
 GameObject:
   m_ObjectHideFlags: 0

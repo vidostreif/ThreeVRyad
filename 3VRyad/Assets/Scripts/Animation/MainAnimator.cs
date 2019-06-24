@@ -196,8 +196,7 @@ public class MainAnimator : MonoBehaviour {
 
             //добавляем
             moveElements.Add(new MoveElement(objTransform, targetPosition, smoothTime, smoothEnum, priority, destroyAfterMoving, action));
-        }
-        
+        }        
     }
 
     //процедура сглаженного перемещения объектов к указанной позиции

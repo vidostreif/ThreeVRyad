@@ -189,14 +189,14 @@ public class BaseElement : MonoBehaviour
         //this.preliminarySearchToActivate = preliminarySearchToActivate;
         this.actionDelay = actionDelay;
         this.nextProcessedMoveForAction = -1;
-        if (singleItemActivated || !Application.isPlaying)
-        {            
+        //if (singleItemActivated || !Application.isPlaying)
+        //{            
             this.ActivationMove = -1;
-        }
-        else
-        {
-           this.ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
-        }
+        //}
+        //else
+        //{
+        //   this.ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
+        //}
         
         UpdateSprite();        
     }
