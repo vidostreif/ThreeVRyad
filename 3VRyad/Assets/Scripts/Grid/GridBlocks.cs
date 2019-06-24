@@ -938,7 +938,9 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         else//если не удалось ничего найти
         {
             foundNextMove = false;
-            SupportFunctions.CreateInformationText("Мы больше не нашли ходов!", Color.blue, 45);
+            SupportFunctions.CreateInformationText("Торнадо нам не помог!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
+            yield return new WaitForSeconds(0.7f);
+            //SupportFunctions.CreateInformationText("Мы больше не нашли ходов!", Color.blue, 45);
         }
     }
 
@@ -1149,6 +1151,28 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                         else
                             elementsForNextMove.elementsList.Clear();
+                    }
+                }
+                else if (BlockCheck.ThisBlockNoDropingWithDropElement(containers[x].block[y]))//если блок со сбрасывающим элементом
+                {
+                    NeighboringBlocks neighboringBlocks = GetNeighboringBlocks(containers[x].block[y].PositionInGrid);
+                    foreach (Block blockItem in neighboringBlocks.allBlockField)
+                    {
+                        //если нашли рядом сбрасывающий блок незаблокированный
+                        if (BlockCheck.ThisBlockDropingNoBlocking(blockItem))
+                        {
+                            elementsForNextMove.elementsList.Add(containers[x].block[y].Element);
+
+                            elementsForNextMove.elementsList.Add(blockItem.Element);
+                            elementsForNextMove.elementForMove = containers[x].block[y].Element;
+                            elementsForNextMove.blockElementForMove = containers[x].block[y];
+                            elementsForNextMove.directionForMove = neighboringBlocks.GetDirection(blockItem);
+                            elementsForNextMove.oppositeDirectionForMove = neighboringBlocks.GetOppositeDirection(blockItem);
+                            elementsForNextMove.targetBlock = blockItem;
+
+                            ElementsForNextMoveList.Add(elementsForNextMove);
+                            elementsForNextMove = new ElementsForNextMove();
+                        }
                     }
                 }
             }

@@ -286,6 +286,20 @@ public static class BlockCheck
         }
     }
 
+    //не сбрасывающий блок со сбрасываемым элементом
+    public static bool ThisBlockNoDropingWithDropElement(Block block)
+    {
+
+        if (block != null && !block.Dropping && block.Element != null && !block.Element.Destroyed && block.Element.Drop)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //сбрасывающий блок со сбрасываемым элементом
     public static bool ThisBlockDropingWithDropElement(Block block)
     {
@@ -293,6 +307,26 @@ public static class BlockCheck
         if (block != null && block.Dropping && block.Element != null && !block.Element.Destroyed && block.Element.Drop)
         {
             return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    //сбрасывающий блок не заблокированный
+    public static bool ThisBlockDropingNoBlocking(Block block)
+    {
+        if (block != null && block.Dropping)
+        {
+            if (block.Element == null || (block.Element != null &&  block.Element.Destroyed) || (block.Element != null && !block.Element.Destroyed && !block.Element.LockedForMove))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }            
         }
         else
         {
