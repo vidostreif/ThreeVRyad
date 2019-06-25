@@ -268,7 +268,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (!blockedForMove)
                 {
                     //Debug.Log("Запуск новой куротины MakeMove.");
-                    StartCoroutine(GridBlocks.Instance.MakeMove(touchingBlock, destinationBlock));
+                    StartCoroutine(MakeMove());
                 }
             }
             else if ((touchingBlock != null && destinationBlock != null))
@@ -280,7 +280,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
     //выполняем ход
     //принимаем параметры - 1. Блок с которого передвигаем элемент 2. Блок к которому передвигаем элемент 
-    private IEnumerator MakeMove(Block touchingBlock = null, Block destinationBlock = null)
+    private IEnumerator MakeMove()
     {
         blockedForMove = true;
         if (elementsForMoveList.Count > 0)
@@ -291,8 +291,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 bool gameHelpWasDell = HelpToPlayer.DellGameHelp();
 
                 Blocks blocks = elementsForMoveList[0];
-                touchingBlock = blocks.block[0];
-                destinationBlock = blocks.block[1];
+                Block touchingBlock = blocks.block[0];
+                Block destinationBlock = blocks.block[1];
 
                 MainAnimator.Instance.ClearElementsForNextMove();
 
@@ -570,6 +570,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
         }
         blockedForMove = false;
+
+        //в конце проверяем массив ходов и если он не пуст, то запускаем новую куротину
+        if (elementsForMoveList.Count > 0)
+        {
+            StartCoroutine(MakeMove());
+        }
     }
 
     //действия элементов после хода

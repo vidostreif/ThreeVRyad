@@ -28,6 +28,7 @@ public static class ParticleSystemBank
             pSResurseList.Add(new PSResurse(PSEnum.PSDirtNextAction, pSFolder, "PSDirtNextAction"));
             pSResurseList.Add(new PSResurse(PSEnum.PSWeb, pSFolder, "PSWeb"));
             pSResurseList.Add(new PSResurse(PSEnum.PSLiana, pSFolder, "PSLiana"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSWildPlantNextAction, pSFolder, "PSWildPlantNextAction"));
             pSArray = pSResurseList.ToArray();
         }
     }

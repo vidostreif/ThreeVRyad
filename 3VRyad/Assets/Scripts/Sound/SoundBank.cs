@@ -71,6 +71,9 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.Spider_2, soundFolder, "Spider_2"));
             soundsList.Add(new SoundResurse(SoundsEnum.Create_web, soundFolder, "Create_web"));
             soundsList.Add(new SoundResurse(SoundsEnum.Destroy_web, soundFolder, "Destroy_web"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Destroy_wildplant, soundFolder, "Destroy_wildplant"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Preparation_wildplant, soundFolder, "Preparation_wildplant"));
+            soundsList.Add(new SoundResurse(SoundsEnum.SeedBarrel_collect, soundFolder, "SeedBarrel_collect"));
 
             //soundsArray = soundsList.ToArray();
 

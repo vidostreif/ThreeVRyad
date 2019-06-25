@@ -184,6 +184,8 @@ public enum SoundsEnum
     Create_web,
     Create_wildplant,
     Destroy_web,
+    Destroy_wildplant,
+    Preparation_wildplant,
     DestroyElement_1,
     DestroyElement_2,
     DestroyElement_3,
@@ -236,7 +238,7 @@ public enum SoundsEnum
     Hit_5,
     Spider_1,
     Spider_2,
-    //Spider_3,
+    SeedBarrel_collect,
 
 }//тип звуков
 
@@ -253,6 +255,7 @@ public enum PSEnum
     PSDirtNextAction,//эффект подсветки грязи которая будет ходит в следующем ходу
     PSWeb,
     PSLiana,
+    PSWildPlantNextAction,
 
 }//тип эфектов
 

@@ -52,6 +52,10 @@ public class SeedBarrelElement : Element
     public override bool AddToCollection(AllShapeEnum elementShape, Transform elementTransform)
     {
         bool i = base.AddToCollection(elementShape, elementTransform);
+        if (i)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.SeedBarrel_collect);
+        }
         if (collectText == null)
         {
             collectText = GetComponentInChildren<TextMesh>();

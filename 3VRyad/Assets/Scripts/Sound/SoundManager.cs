@@ -330,10 +330,10 @@ public class SoundManager : MonoBehaviour
         {
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_web);
         }
-        //else if (allShapeEnum == AllShapeEnum.WildPlant)
-        //{
-        //    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_web);
-        //}
+        else if (allShapeEnum == AllShapeEnum.WildPlant)
+        {
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_wildplant);
+        }
 
     }
 }

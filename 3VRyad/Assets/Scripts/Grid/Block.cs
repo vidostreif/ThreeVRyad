@@ -297,7 +297,7 @@ public class Block : MonoBehaviour {
             else if (typeElementsEnum == ElementsTypeEnum.WildPlant)
             {
                 curElement = elementGameObject.AddComponent<WildPlantElement>();
-                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 7, 1000, false);
+                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 10, 1000, false);
                 curElement.MakeActionAfterMove(1, false);
             }
             else
@@ -398,10 +398,6 @@ public class Block : MonoBehaviour {
                 behindElement.Hit();
             }
         }
-        //else if (behindElement != null && !behindElement.Destroyed)
-        //{
-        //    behindElement.Hit(hitTypeEnum, hitElementShape);
-        //}
     }
 
 }

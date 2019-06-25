@@ -227,7 +227,7 @@ public class BaseElement : MonoBehaviour
             elementTransform.localScale = elementTransform.localScale * 0.7f;
             AnimatElement.PlayIdleAnimation();
             //создаем эффект
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_1);
+            //SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_1);
             GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
             GameObject.Destroy(psGO, 3);
             ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
