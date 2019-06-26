@@ -182,11 +182,11 @@ public static class SupportFunctions
 
         if (days > 0)
         {
-            textTime = "" + days + "d " + hours + "h ";
+            textTime = "" + days + "d " + hours + "h";
         }
         else if (hours > 0)
         {
-            textTime = "" + hours + "h " + minutes + "m ";
+            textTime = "" + hours + "h " + minutes + "m";
         }
         else if (minutes > 0)
         {

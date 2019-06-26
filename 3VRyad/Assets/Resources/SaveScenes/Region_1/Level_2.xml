@@ -146,7 +146,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>38</moves>
+    <moves>35</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="Strawberry" goal="50" collectEverything="false" />

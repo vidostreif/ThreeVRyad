@@ -60,26 +60,6 @@ public class DailyGiftManager : MonoBehaviour
                     Destroy(dailyGiftBut);
                 }
 
-                //TextTimeUntilNextDailyGift.text = "";
-                //TimeSpan timeUntilNextDailyGift = TimeUntilNextDailyGift();
-
-                //String textTime;
-                //int hours = timeUntilNextDailyGift.Hours;
-                //int minutes = timeUntilNextDailyGift.Minutes;
-                //int seconds = timeUntilNextDailyGift.Seconds;
-                //if (hours > 0)
-                //{
-                //    textTime = "" + hours + "h " + minutes + "m ";
-                //}
-                //else if (minutes > 0)
-                //{
-                //    textTime = "" + minutes + "m " + seconds + "s";
-                //}
-                //else
-                //{
-                //    textTime = "" + seconds + "s";
-                //}
-
                 TextTimeUntilNextDailyGift.text = SupportFunctions.GetStringTime(TimeUntilNextDailyGift());
             }
             else
