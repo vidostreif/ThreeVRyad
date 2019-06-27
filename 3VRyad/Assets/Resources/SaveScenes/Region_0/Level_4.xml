@@ -118,6 +118,7 @@
     <bundles />
     <bundelCount>0</bundelCount>
     <coins>0</coins>
+    <timeImmortalLives>0</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>
@@ -131,7 +132,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>20</moves>
+    <moves>22</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="Brick" goal="3" collectEverything="true" />

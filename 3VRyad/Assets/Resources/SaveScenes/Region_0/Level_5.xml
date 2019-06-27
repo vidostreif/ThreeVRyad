@@ -138,7 +138,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>20</moves>
+    <moves>22</moves>
     <sizeTargets>2</sizeTargets>
     <targets>
       <shapeAndGoal shape="Plum" goal="30" collectEverything="false" />

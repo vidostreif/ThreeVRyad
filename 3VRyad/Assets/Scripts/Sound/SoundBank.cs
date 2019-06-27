@@ -16,6 +16,9 @@ public static class SoundBank
             List<SoundResurse> soundsList = new List<SoundResurse>();
             soundsList.Add(new SoundResurse(SoundsEnum.CreateElement, soundFolder, "klick_quiet"));
             soundsList.Add(new SoundResurse(SoundsEnum.Create_liana, soundFolder, "Create_liana"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Destroy_liana, soundFolder, "Destroy_liana"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Destroy_liana_2, soundFolder, "Destroy_liana_2"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Destroy_liana_3, soundFolder, "Destroy_liana_3"));
             soundsList.Add(new SoundResurse(SoundsEnum.Spread_liana, soundFolder, "Spread_liana"));            
             soundsList.Add(new SoundResurse(SoundsEnum.Create_wildplant, soundFolder, "Create_wildplant"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_1, soundFolder, "Socapex"));

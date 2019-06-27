@@ -300,7 +300,20 @@ public class SoundManager : MonoBehaviour
         }
         else if (allShapeEnum == AllShapeEnum.Liana)
         {
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.LeafRustling);
+            int randomNumber = UnityEngine.Random.Range(1, 4);
+            if (randomNumber == 1)
+            {
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_liana);
+            }
+            if (randomNumber == 2)
+            {
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_liana_2);
+            }
+            else
+            {
+                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_liana_3);
+            }
+            
         }
         else if (allShapeEnum == AllShapeEnum.Bush)
         {
