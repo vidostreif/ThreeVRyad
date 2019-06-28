@@ -171,6 +171,8 @@ public enum HelpEnum
     Line6,
     Gift,
     OptionalLvl,
+    Lifes,
+    DailyGift
 
 
 }//тип сглаженного перемещения
@@ -194,6 +196,7 @@ public enum SoundsEnum
     DestroyElement_3,
     DestroyElement_4,
     DestroyElement_5,
+    Destroy_brick,
     CreateBonus,
     Magic,
     Bite,

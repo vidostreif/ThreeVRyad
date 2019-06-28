@@ -26,6 +26,7 @@ public static class SoundBank
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_3, soundFolder, "Socapex2"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_4, soundFolder, "Socapex3"));
             soundsList.Add(new SoundResurse(SoundsEnum.DestroyElement_5, soundFolder, "Socapex4"));
+            soundsList.Add(new SoundResurse(SoundsEnum.Destroy_brick, soundFolder, "Destroy_brick"));
             soundsList.Add(new SoundResurse(SoundsEnum.CreateBonus, soundFolder, "CreateBonus"));
             soundsList.Add(new SoundResurse(SoundsEnum.Bite, soundFolder, "bite"));
             soundsList.Add(new SoundResurse(SoundsEnum.LeafRustling, soundFolder, "leafRustling"));

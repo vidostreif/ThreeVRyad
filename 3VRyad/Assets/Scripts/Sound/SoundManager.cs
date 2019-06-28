@@ -321,7 +321,7 @@ public class SoundManager : MonoBehaviour
         }
         else if (allShapeEnum == AllShapeEnum.Brick)
         {
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_4);
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Destroy_brick);
         }
         else if (allShapeEnum == AllShapeEnum.BigFlask)
         {

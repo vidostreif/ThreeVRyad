@@ -210,13 +210,14 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         activateSuperBonusOnEnd = true;
         GameObject movesText = GameObject.Find("movesText");
             //запускаем супер бонус пока есть ходы
-        while (Tasks.Instance.SubMoves())
+        while (Tasks.Instance.Moves > 0)
         {
             //если супер бонус выполняет действие, то ожидаем
             while (activated)
             {
                 yield return new WaitForSeconds(0.05f);
             }
+            Tasks.Instance.SubMoves();
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Repainting_ring);
             GameObject psAddSuperBonusFromLevels = ParticleSystemManager.Instance.CreatePS(movesText.transform, PSEnum.PSAddSuperBonusFromLevels, 5);
             MainAnimator.Instance.AddElementForSmoothMove(psAddSuperBonusFromLevels.transform, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), 1, SmoothEnum.InArc, smoothTime: 0.15f, destroyAfterMoving: false);

@@ -300,6 +300,14 @@ public static class HelpToPlayer
                 {
                     created = InterfaceHelp("Gnome");
                 }
+                else if (activeHint.help == HelpEnum.Lifes.ToString())
+                {
+                    created = InterfaceHelp("PanelLivesParent");
+                }
+                else if (activeHint.help == HelpEnum.DailyGift.ToString())
+                {
+                    created = InterfaceHelp("PanelDailyGift");
+                }
                 else if (activeHint.help == HelpEnum.OptionalLvl.ToString())
                 {
                     created = InterfaceHelp("Gnome");
@@ -445,7 +453,6 @@ public static class HelpToPlayer
 
         if (transformsList.Count > 0 || rectTransformList.Count > 0)
         {
-
             Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
             Transform textCloud = gOPanel.transform.Find("TextCloud");
             RectTransform rectTransformGOPanel = gOPanel.GetComponent<RectTransform>();
@@ -604,6 +611,14 @@ public static class HelpToPlayer
             else if (activeHint.help == HelpEnum.Gnome.ToString())
             {
                 text.text = "Привет! Я твой помошник и буду всячески тебе помогать!";
+            }
+            else if (activeHint.help == HelpEnum.Lifes.ToString())
+            {
+                text.text = "Это твои жизни! Каждые несколько минут добавляется одна жизнь, а магазине можно купить бессмертие ;)";
+            }
+            else if (activeHint.help == HelpEnum.DailyGift.ToString())
+            {
+                text.text = "Заходи в игру каждый день и получай подароки!";
             }
             else if (activeHint.help == HelpEnum.Gift.ToString())
             {
