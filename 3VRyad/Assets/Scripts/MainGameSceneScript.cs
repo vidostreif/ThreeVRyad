@@ -182,9 +182,9 @@ public class MainGameSceneScript : MonoBehaviour {
             //победа
             textEndGame.text = "Победа!";
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Victory);
-            GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/Rocket") as GameObject, CanvasMenu.transform);
+            GameObject psGO = ParticleSystemManager.Instance.CreatePS(CanvasMenu.transform, PSEnum.PSRocket);
             psGO.transform.position = new Vector3(-4, -5, 0);
-            GameObject psGO2 = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/Rocket") as GameObject, CanvasMenu.transform);
+            GameObject psGO2 = ParticleSystemManager.Instance.CreatePS(CanvasMenu.transform, PSEnum.PSRocket);
             psGO2.transform.position = new Vector3(4, -5, 0);
             //Выдаем звезды
             int stars = Score.Instance.NumberOfStarsReceived();
@@ -321,7 +321,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 //создаем монеты
                 for (int j = 0; j < coinsForOneStar; j++)
                 {
-                    GameObject coinGO = GameObject.Instantiate(Resources.Load("Prefabs/Canvas/GameCanvas/ImageCoin") as GameObject, starTransform.position, Quaternion.identity, shopImageCoinsGO.transform);
+                    GameObject coinGO = GameObject.Instantiate(PrefabBank.ImageCoin, starTransform.position, Quaternion.identity, shopImageCoinsGO.transform);
                     //перемещаем чуть выше
                     MainAnimator.Instance.AddElementForSmoothMove(coinGO.transform, new Vector3(starTransform.position.x - 0.5f + j * 0.5f, starTransform.position.y + 1, starTransform.position.z), 1, SmoothEnum.InLineWithSlowdown, 0.05f, false, true);
                     //перемещаем к монете в магазине

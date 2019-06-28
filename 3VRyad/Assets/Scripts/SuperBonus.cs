@@ -218,9 +218,9 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                 yield return new WaitForSeconds(0.05f);
             }
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Repainting_ring);
-            GameObject psAddSuperBonusFromLevels = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSAddSuperBonusFromLevels") as GameObject, movesText.transform);
+            GameObject psAddSuperBonusFromLevels = ParticleSystemManager.Instance.CreatePS(movesText.transform, PSEnum.PSAddSuperBonusFromLevels, 5);
             MainAnimator.Instance.AddElementForSmoothMove(psAddSuperBonusFromLevels.transform, new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), 1, SmoothEnum.InArc, smoothTime: 0.15f, destroyAfterMoving: false);
-            Destroy(psAddSuperBonusFromLevels, 5);
+            //Destroy(psAddSuperBonusFromLevels, 5);
             charges++;            
             yield return new WaitForSeconds(0.4f);            
 
@@ -353,26 +353,16 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         FilledImage();
 
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusActiveted);
-        GameObject psSuperBonusActiveted = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSuperBonusActiveted") as GameObject, transform);
-        Destroy(psSuperBonusActiveted, 5);
+        ParticleSystemManager.Instance.CreatePSAsync(transform, PSEnum.PSSuperBonusActiveted, 5);
+        //Destroy(psSuperBonusActiveted, 5);
         yield return new WaitForSeconds(0.15f);
 
         newHitSuperBonusList = new List<HitSuperBonus>();
 
         foreach (Block block in blocks)
         {
-            ////если сбросили параметры, то останавливаем работу
-            //if (!activated)
-            //{                
-            //    foreach (HitSuperBonus item in newHitSuperBonusList)
-            //    {
-            //        Destroy(item.backlight);
-            //    }
-
-            //    yield return null;
-            //}
             //подсветка
-            GameObject backlight = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSelectTargetBlock") as GameObject, block.transform);
+            GameObject backlight = ParticleSystemManager.Instance.CreatePS(block.transform, PSEnum.PSSelectTargetBlock);
             backlight.transform.position = block.transform.position;
             newHitSuperBonusList.Add(new HitSuperBonus(backlight, block));//добавляем в список для последующей обработки 
 
@@ -382,16 +372,6 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         int iteration = 0;
         foreach (Block block in blocks)
         {
-            ////если сбросили параметры, то останавливаем работу
-            //if (!activated)
-            //{
-            //    foreach (HitSuperBonus item in newHitSuperBonusList)
-            //    {
-            //        Destroy(item.backlight);
-            //        Destroy(item.gameObjectBeat);
-            //    }
-            //    yield return null;
-            //}
 
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusRocket);
             newHitSuperBonusList[iteration].gameObjectBeat = CreateBeatsSuperBonus(block.transform);
@@ -409,16 +389,6 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
 
             iteration++;
         }
-
-        ////если сбросили параметры, то останавливаем работу
-        //if (!activated)
-        //{
-        //    foreach (HitSuperBonus item in newHitSuperBonusList)
-        //    {
-        //        Destroy(item.backlight);
-        //        Destroy(item.gameObjectBeat);
-        //    }
-        //}
 
         ////добавляем в список для последующей обработки 
         //HitSuperBonusList.AddRange(newHitSuperBonusList);

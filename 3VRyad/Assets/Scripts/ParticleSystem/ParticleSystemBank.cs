@@ -29,6 +29,11 @@ public static class ParticleSystemBank
             pSResurseList.Add(new PSResurse(PSEnum.PSWeb, pSFolder, "PSWeb"));
             pSResurseList.Add(new PSResurse(PSEnum.PSLiana, pSFolder, "PSLiana"));
             pSResurseList.Add(new PSResurse(PSEnum.PSWildPlantNextAction, pSFolder, "PSWildPlantNextAction"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSRocket, pSFolder, "Rocket"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSAddSuperBonusFromLevels, pSFolder, "PSAddSuperBonusFromLevels"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSuperBonusActiveted, pSFolder, "PSSuperBonusActiveted"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSelectTargetBlock, pSFolder, "PSSelectTargetBlock"));
+            
             pSArray = pSResurseList.ToArray();
         }
     }

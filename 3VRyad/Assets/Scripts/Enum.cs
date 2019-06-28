@@ -259,6 +259,10 @@ public enum PSEnum
     PSWeb,
     PSLiana,
     PSWildPlantNextAction,
+    PSRocket,
+    PSAddSuperBonusFromLevels,
+    PSSuperBonusActiveted,
+    PSSelectTargetBlock
 
 }//тип эфектов
 

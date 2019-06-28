@@ -870,7 +870,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     {
                         if (numberOfShuffles == 10)
                         {
-                            if (Tasks.Instance.RealMoves > 0)
+                            if (Score.Instance.getScore > 0)
                             {                                
                                 SupportFunctions.CreateInformationText("Нет ходов!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
                                 yield return new WaitForSeconds(1.2f);
@@ -881,7 +881,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         numberOfShuffles--;
                         mix = true;
                         pause = true;
-                        if (Tasks.Instance.RealMoves == 0)
+                        if (Score.Instance.getScore == 0)
                         {
                             MixStandartElements(true);
                         }

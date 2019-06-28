@@ -59,14 +59,13 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         //если не собрали коллекцию, конец игры, и нет ходов
         if (!addMovesOnEndGAme && !collectedAll && endGame && Moves == 0)
         {
-        //Debug.Log("CurAddMovesOnEndGAme start");
-        addMovesOnEndGAme = true;
-        //отменяем конец игры
-        endGame = false;
-        //уничтожаем канвас окончания игры
-        
-        MainGameSceneScript.Instance.DestroyCanvasMenu();
-        addMoves = (int)args.Amount;
+            addMovesOnEndGAme = true;
+            //отменяем конец игры
+            endGame = false;
+            //уничтожаем канвас окончания игры        
+            MainGameSceneScript.Instance.DestroyCanvasMenu();            
+
+            addMoves = (int)args.Amount;
             Debug.Log("addMoves: " + addMoves);
             if (movesText == null)
             {
@@ -75,6 +74,8 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
 
             Transform moveImageTransform = movesText.transform.Find("MoveImage");
             Image moveImage = moveImageTransform.GetComponent<Image>();
+
+            yield return StartCoroutine(GridBlocks.Instance.FoundNextMove());//поиск хода
 
             while (addMoves > 0)
             {

@@ -228,10 +228,13 @@ public class BaseElement : MonoBehaviour
             AnimatElement.PlayIdleAnimation();
             //создаем эффект
             //SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_1);
-            GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
-            GameObject.Destroy(psGO, 3);
-            ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-            ps.textureSheetAnimation.AddSprite(SpriteBank.SetShape(collectShape));
+
+            ParticleSystemManager.Instance.CreateCollectEffect(gameObject.transform, SpriteBank.SetShape(collectShape));
+
+            //GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
+            //GameObject.Destroy(psGO, 3);
+            //ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
+            //ps.textureSheetAnimation.AddSprite(SpriteBank.SetShape(collectShape));
 
             numberOfElementCollected--;
             //если собрали колецию
@@ -268,7 +271,7 @@ public class BaseElement : MonoBehaviour
         destroyed = true;
         ElementsList.DellElement(shape);
         Score.Instance.AddScore(transform.position, score, scoreScale);
-        SuperBonus.Instance.CreatePowerSuperBonus(transform.position, score);
+        //SuperBonus.Instance.CreatePowerSuperBonus(transform.position, score);
         AnimatElement.StopAllAnimation();
 
         //звук уничтожения
