@@ -293,7 +293,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 Destroy(panelShopConfirmation);
             }
             panelShopConfirmation = Instantiate(PrefabBank.PanelShopConfirmation, panelShop.transform);
-            panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = "Вы успешно преобрели " + product.name;
+            panelShopConfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = "Вы успешно приобрели " + product.name;
             Transform buttonOkTransform = panelShopConfirmation.transform.Find("ButtonOk");
             SupportFunctions.ChangeButtonAction(buttonOkTransform, DestroyPanelShopConfirmation);
             Button buttonOk = buttonOkTransform.GetComponent<Button>();

@@ -101,12 +101,13 @@
     </bundles>
     <bundelCount>1</bundelCount>
     <coins>0</coins>
+    <timeImmortalLives>0</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>24000</scoreForFirstStar>
-    <scoreForSecondStar>36000</scoreForSecondStar>
-    <scoreForThirdStar>46000</scoreForThirdStar>
+    <scoreForFirstStar>20000</scoreForFirstStar>
+    <scoreForSecondStar>30000</scoreForSecondStar>
+    <scoreForThirdStar>40000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>10000</maxBonusPower>

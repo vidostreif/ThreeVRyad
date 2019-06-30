@@ -302,8 +302,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 bool makeActionElementsAfterMove = false;
                 do
                 {
-                    //добавить проверку, что если нет destinationBlock, то не искать совпадающие линии
-
                     //ищем совпавшие линии 
                     matchFound = false;
                     blockFieldsList = CheckMatchingLine();
@@ -335,21 +333,19 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 iteration++;
                                 yield return StartCoroutine(Filling(false, iteration));
 
-                                blockFieldsList = CheckMatchingLine();
                                 countblockFields = blockFieldsList.Count;
+                                blockFieldsList = CheckMatchingLine();
+                                
                                 //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
                                 {
-                                    //Debug.Log("Прерывание хода.");
                                     break;
                                 }
-
                             }
 
                             //прерывание в случае вмешательства игрока
                             if (CountElementsForMove < elementsForMoveList.Count)
                             {
-                                //Debug.Log("Прерывание хода.");
                                 break;
                             }
 
@@ -360,20 +356,18 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                     iteration++;
                                     yield return StartCoroutine(Filling(false, iteration));
                                 }
+                                //blockFieldsList = CheckMatchingLine();
                                 //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
                                 {
-                                    //Debug.Log("Прерывание хода.");
                                     break;
                                 }
                                 iteration++;
                                 StartCoroutine(Filling(false, iteration));
-                                //прерывание в случае вмешательства игрока
-                                if (CountElementsForMove < elementsForMoveList.Count)
-                                {
-                                    //Debug.Log("Прерывание хода.");
-                                    break;
-                                }
+                            }
+                            else
+                            {
+                                yield return new WaitForSeconds(0.1f);
                             }
                         }
                         else
@@ -397,7 +391,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                     }
 
-                    // проверяем длинну совпавших линий для бонусов
+                    //проверяем длинну совпавших линий для бонусов
                     List<List<Block>> findedBlockInLine = CountCollectedLine(blockFieldsList);
 
                     //очищаем массив очков
@@ -413,6 +407,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                         else
                         {
+                            ////проаускаем активируемые элементы
+                            //if (blockField.Element != null && blockField.Element.Activated)
+                            //{
+                            //    continue;
+                            //}
                             blockField.Hit();
                         }
                     }
@@ -536,13 +535,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 yield break;
             }
 
-            //если не конец игры, создаем подсказку
+            //если не конец игры, ищем существующие ходы создаем подсказку
             if (!Tasks.Instance.endGame && !SuperBonus.Instance.InWork())
             {
                 //проверка, что остались доступные ходы
                 yield return StartCoroutine(FoundNextMove());
 
-                //если не конец игры, но ходов не осталось  и супер бонус не активен то рисуем проигрыш
+                //если не конец игры, но ходов не осталось и супер бонус не активен то рисуем проигрыш
                 if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove)
                 {
                     yield return new WaitForSeconds(0.5f);
@@ -555,6 +554,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 {
                     Debug.Log("Создаем подсказку!");
                     //если создали, то прерываем процесс
+                    blockFieldsList.Clear();
                     elementsForMoveList.Clear();
                     blockedForMove = false;
                     yield break;
@@ -874,6 +874,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             {                                
                                 SupportFunctions.CreateInformationText("Нет ходов!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
                                 yield return new WaitForSeconds(1.2f);
+                                blockFieldsList.Clear();
                                 elementsForMoveList.Clear();
                                 SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind_active);
                             }                           

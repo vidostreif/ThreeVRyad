@@ -48,17 +48,13 @@ public class AdMobManager : MonoBehaviour
         // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize(appId);
 
-        //Action<Reward> actionForCoin;
-        //actionForCoin = Shop.Instance.AddCoinsForViewingAds;
-        //string adUnitId = "ca-app-pub-6280237892174167/9330414827";
+        //тестовый код рекламы ca-app-pub-3940256099942544/5224354917
 
-        //actionSuccess = AddMovesOnEndGAme;
+        rewardVideoForCoin = new RewardVideo(Shop.Instance.AddCoinsForViewingAds, "ca-app-pub-6280237892174167/9330414827", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Coin), 60, 0);
 
-        rewardVideoForCoin = new RewardVideo(Shop.Instance.AddCoinsForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Coin), 60, 0);
+        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-6280237892174167/5734011639", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Move), 300, 30);
 
-        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Move), 300, 30);
-
-        rewardVideoForLife = new RewardVideo(LifeManager.Instance.AddLifeForViewingAds, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Life), 300, 20);
+        rewardVideoForLife = new RewardVideo(LifeManager.Instance.AddLifeForViewingAds, "ca-app-pub-6280237892174167/8374640938", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Life), 300, 20);
 
         //определяем время загрузки видео для ежедневного подарка
         int timeLoadVideoForDailyGift = 10;
@@ -71,7 +67,7 @@ public class AdMobManager : MonoBehaviour
             }
         }     
         
-        rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-3940256099942544/5224354917", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, timeLoadVideoForDailyGift);
+        rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-6280237892174167/9113007538", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, timeLoadVideoForDailyGift);
     }
 
     public void Update()

@@ -39,12 +39,6 @@ public static class HelpToPlayer
         CreateHintStatusList();
     }
 
-    //public static void LoadShowHintsStatus()
-    //{
-    //    //showHints = JsonSaveAndLoad.LoadSave().SettingsSave.showHints;
-    //    showHints = SettingsController.ShowHints;
-    //}
-
     //здесь указываем enum для подсказок
     private static void CreateHintStatusList()
     {
@@ -562,67 +556,67 @@ public static class HelpToPlayer
 
             if (activeHint.help == BlockTypeEnum.Sliding.ToString())
             {
-                text.text = "По этому блоку все скользит в низ!";
+                text.text = "Это льдинка, по ней всё скользит вниз!";
             }
             else if (activeHint.help == ElementsTypeEnum.StandardElement.ToString())
             {
-                text.text = "Что бы собрать растения в нашем саду, их нужно собрать в линии из более чем двух растений. Попробуйте передвинуть выделяющееся растение!";
+                text.text = "Что бы убрать растения в нашем саду, их нужно собрать в комбинации из трех или более растений. Попробуй!";
             }
             else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString())
             {
-                text.text = "Это маленький бонус за сбор линии из 4 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
+                text.text = "Дарю тебе маленькое зелье за сбор линии из 4 растений. Нажми на него дважды и оно взорвет все ненужное и соберёт нужное!";
             }
             else if (activeHint.help == ElementsTypeEnum.MediumFlask.ToString())
             {
-                text.text = "Это уже не маленький бонус за сбор линии из 5 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
+                text.text = "Это среднее зелье за сбор комбинации из 5 растений. Жми на него дважды!";
             }
             else if (activeHint.help == ElementsTypeEnum.BigFlask.ToString())
             {
-                text.text = "Это очень большой бонус за сбор линии из 6 растений. Нажмите на него дважды и он взорвет всю выделенную область!";
+                text.text = "Это большое зелье за сбор комбинации из 6 растений. Ты уже знаешь что с ним делать!";
             }
             else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
             {
-                text.text = "Это стену вы можете взорвать или уничтожить собрав линию рядом! Соберите линию.";
+                text.text = "Это куст. Его можно убрать, собрав комбинацию рядом или, взорвав зелье! Собери комбинацию.";
             }
             else if (activeHint.help == ElementsTypeEnum.ImmortalWall.ToString())
             {
-                text.text = "Это стену вы не сможете разрушить, она очень крепкая!";
+                text.text = "Это каменная стена. Её невозможно разрушить, она очень крепкая!";
             }
             else if (activeHint.help == ElementsTypeEnum.Drop.ToString())
             {
-                text.text = "Этот элемент лишний на поле, и что бы его убрать, его нужно согнать через все поле в самый низ!";
+                text.text = "Это хороший кирпич, из него можно построить новый сарай. Веди его жерез поле в самый низ!";
             }
             else if (activeHint.help == ElementsTypeEnum.SeedBarrel.ToString())
             {
-                text.text = "Это бочка с зернами, она наполняется когда рядом собираются растения указанные на бочке!";
+                text.text = "Это бочка с семенами. Наполни её, собирая рядом растения, указанные на бочке!";
             }
             else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
             {
-                text.text = "Эта лиана захватила весь наш сад! Её можно уничтожить собрав комбинацию или взорвав магическую колбу!";
+                text.text = "Эта лиана захватила весь наш сад! Её можно уничтожить, собрав комбинацию или, взорвав магическую колбу!";
             }            
             else if (activeHint.help == BehindElementsTypeEnum.Grass.ToString())
             {
-                text.text = "Этот сорняк позади элемент можно уничтьжить собрав комбинацию из элементов или можно просто взорвать!";
+                text.text = "Это сорняк. Он убирается вместе с растением, которое находится на нём!";
             }
             else if (activeHint.help == BehindElementsTypeEnum.Dirt.ToString())
             {
-                text.text = "Уничтож эту грязь! Потемневшая грязь каждый ход распространяеется на соседнюю клетку с элементом!";
+                text.text = "Уничтожь эту грязь! Потемневшая грязь каждый ход распространяется на соседнюю клетку с растением!";
             }
             else if (activeHint.help == HelpEnum.Gnome.ToString())
             {
-                text.text = "Привет! Я твой помошник и буду всячески тебе помогать!";
+                text.text = "Привет, я гномик Сеня! Мои магия и подсказки помогут тебе в этом интересном путишествии!";
             }
             else if (activeHint.help == HelpEnum.Lifes.ToString())
             {
-                text.text = "Это твои жизни! Каждые несколько минут добавляется одна жизнь, а магазине можно купить бессмертие ;)";
+                text.text = "Помни, что наших сил хватить лишь на несколько попыток собрать растения! Но в волшебном магазине можно прикупить зелье временного бессмертия!";
             }
             else if (activeHint.help == HelpEnum.DailyGift.ToString())
             {
-                text.text = "Заходи в игру каждый день и получай подароки!";
+                text.text = "Приходи в сад каждый день и забирай подарки от белочки Гифти! И где она их только берёт?";
             }
             else if (activeHint.help == HelpEnum.Gift.ToString())
             {
-                text.text = "Набери три звезды при прохождении этого уровня и получишь подарок!";
+                text.text = "Набери три звезды при прохождении этого уровня и получи подарок!";
             }
             else if (activeHint.help == HelpEnum.OptionalLvl.ToString())
             {
@@ -630,7 +624,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.Tasks.ToString())
             {
-                text.text = "На этой панеле показано, сколько элементов нужно собрать и сколько ходов для этого осталось!";
+                text.text = "Здесь ты видишь, что нужно собрать и сколько ходов для этого у тебя есть!";
             }
             else if (activeHint.help == HelpEnum.Score.ToString())
             {
@@ -638,39 +632,39 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.SuperBonus.ToString())
             {
-                text.text = "Это чан с волшебным зельем который наполняется энергией собраных элементов, а после выплескивает эту энергию на поле в виде нескольких магических лучей!";
+                text.text = "Это котёл с волшебным зельем, который наполняется энергией собраных растений, а после помогает тебе, изливая волшебные капли на поле!";
             }
             else if (activeHint.help == HelpEnum.Instruments.ToString())
             {
-                text.text = "Это панель с инструментами, которые могут помочь вам пройти уровень. Вам уже доступен инструмент Лопата, которая ударяет по одному блоку!";
+                text.text = "Это твои инструменты-помощники. У тебя уже есть инструмент Лопата, она убирает одно растение!";
             }
             else if (activeHint.help == HelpEnum.Shop.ToString())
             {
-                text.text = "Это кнопка открывает магазин, в котором вы можете купить что нибудь полезное!";
+                text.text = "Эта кнопка открывает волшебный магазин, в котором ты можешь найти всякие магические штучки!";
             }
             else if (activeHint.help == HelpEnum.Hoe.ToString())
             {
-                text.text = "Теперь вам доступпен новый инструмент Матыга! Он ударяет крест на крес по полю. Попробуйте!";
+                text.text = "Теперь у тебя есть Газонокосилка! Она убирает две пересекающиеся линии. Заводи!";
             }
             else if (activeHint.help == HelpEnum.Vortex.ToString())
             {
-                text.text = "Теперь вам доступпен новый инструмент Смерч! Он перемешивает все фрукты на поле. Попробуйте!";
+                text.text = "Теперь у тебя есть Вихрь! Он перемешивает все растения на поле. Давай дунем! :))";
             }
             else if (activeHint.help == HelpEnum.Repainting.ToString())
             {
-                text.text = "Теперь вам доступпен новый инструмент Перекраска! Он перекрашивает несколько фруктов на поле в фрук который вы укажите. Попробуйте!";
+                text.text = "Теперь у тебя есть Перекраска! Она заменяет несколько растений на поле в растение, которое ты укажешь. Выбирай!";
             }
             else if (activeHint.help == HelpEnum.Line4.ToString())
             {
-                text.text = "Попробуйте собрать линию из 4 элементов!";
+                text.text = "Попробуй собрать комбинацию из 4 растений!";
             }
             else if (activeHint.help == HelpEnum.Line5.ToString())
             {
-                text.text = "Попробуйте собрать линию из 5 элементов!";
+                text.text = "А давай соберём комбинацию из 5 растений!";
             }
             else if (activeHint.help == HelpEnum.Line6.ToString())
             {
-                text.text = "Попробуйте собрать линию из 6 элементов!";
+                text.text = "А что если собрать комбинацию из 6 растений?";
             }
             else
             {
