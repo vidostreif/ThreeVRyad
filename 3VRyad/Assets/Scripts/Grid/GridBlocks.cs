@@ -282,6 +282,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //принимаем параметры - 1. Блок с которого передвигаем элемент 2. Блок к которому передвигаем элемент 
     private IEnumerator MakeMove()
     {
+        Debug.Log("Запуск новой куротины MakeMove.");
         blockedForMove = true;
         if (elementsForMoveList.Count > 0)
         {
@@ -335,7 +336,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                                 countblockFields = blockFieldsList.Count;
                                 blockFieldsList = CheckMatchingLine();
-                                
+
                                 //прерывание в случае вмешательства игрока
                                 if (CountElementsForMove < elementsForMoveList.Count)
                                 {
@@ -444,7 +445,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     {
                         //подсчитываем очки
                         Score.Instance.CountPoints();
-                    }                    
+                    }
 
                     //создаем бонусы
                     if (iteration == 1 && matchFound && (touchingBlock != null || destinationBlock != null))
@@ -560,22 +561,20 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     yield break;
                 }
             }
-
-            //если остались совпадающие линии, то делаем еще ход
-            if (CheckMatchingLine().Count > 0 || needFilling)
+            
+            if (elementsForMoveList.Count > 0)//в конце проверяем массив ходов и если он не пуст, то запускаем новую куротину
+            {
+                StartCoroutine(MakeMove());
+                yield break;
+            }
+            else if (CheckMatchingLine().Count > 0 || needFilling)//если остались совпадающие линии, то делаем еще ход
             {
                 blockedForMove = false;
                 Move();
+                yield break;
             }
-
         }
         blockedForMove = false;
-
-        //в конце проверяем массив ходов и если он не пуст, то запускаем новую куротину
-        if (elementsForMoveList.Count > 0)
-        {
-            StartCoroutine(MakeMove());
-        }
     }
 
     //действия элементов после хода
@@ -830,6 +829,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         return listBlocksInLine;
     }
 
+    //поиск следующего хода
     public IEnumerator FoundNextMove()
     {
         //проверка, что остались доступные ходы
@@ -840,70 +840,68 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         Block[] blocksWithActivatedElements = new Block[0];
         List<Block> blocksOnMatchingLine = new List<Block>();
         int numberOfShuffles = 10;
-        bool mix;
+        //bool mix;
         bool pause = false;
         do
         {
             blocksOnMatchingLine = CheckMatchingLine();
             //если есть совпадающие линии, то выходим
             if (blocksOnMatchingLine.Count > 0)
-            {                
+            {
                 break;
             }
 
-            mix = false;
             //проверяем доступные ходы
             elementsForNextMoveList = CheckElementsForNextMove();
-
             //Если нет доступных ходов и нет бонусов на поле, то перемешиваем поле
-            if (elementsForNextMoveList.Count == 0)
+            if (elementsForNextMoveList.Count > 0)
             {
-                //ищем бонусы на поле
-                blocksWithActivatedElements = GetAllBlocksWithActivatedElementsNoBlocking();
-                if (blocksWithActivatedElements.Length > 0)
+                break;
+            }
+
+            //ищем бонусы на поле
+            blocksWithActivatedElements = GetAllBlocksWithActivatedElementsNoBlocking();
+            if (blocksWithActivatedElements.Length > 0)
+            {
+                break;
+            }
+
+            //если первый проход, то сообщаем что нет ходов
+            if (numberOfShuffles == 10)
+            {
+                if (Score.Instance.getScore > 0)
                 {
-                    break;
+                    SupportFunctions.CreateInformationText("Нет ходов!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
+                    yield return new WaitForSeconds(1.2f);
+                    blockFieldsList.Clear();
+                    elementsForMoveList.Clear();
+                    SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind_active);
+                    //будем делать паузу
+                    pause = true;
                 }
-                else
-                {
-                    if (numberOfShuffles > 0)
-                    {
-                        if (numberOfShuffles == 10)
-                        {
-                            if (Score.Instance.getScore > 0)
-                            {                                
-                                SupportFunctions.CreateInformationText("Нет ходов!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
-                                yield return new WaitForSeconds(1.2f);
-                                blockFieldsList.Clear();
-                                elementsForMoveList.Clear();
-                                SoundManager.Instance.PlaySoundInternal(SoundsEnum.Wind_active);
-                            }                           
-                        }
-                        numberOfShuffles--;
-                        mix = true;
-                        pause = true;
-                        if (Score.Instance.getScore == 0)
-                        {
-                            MixStandartElements(true);
-                        }
-                        else
-                        {
-                            MixStandartElements(false);
-                        }
-                        
-                    }                 
-                }
+            } 
+
+            //если начало игры, то перемешиваем незаметно для пользователя 
+            if (Score.Instance.getScore == 0)
+            {
+                MixStandartElements(true);
             }
             else
             {
-                break;
+                MixStandartElements(false);
             }
 
-        } while (needFilling || mix || numberOfShuffles > 0);//повторяем проверку
+            numberOfShuffles--;
+
+        } while (numberOfShuffles > 0);//повторяем проверку
 
         if (pause)
         {
             yield return new WaitForSeconds(0.5f);
+            //если делаем паузу, то заново заполняем все наи массивы
+            blocksOnMatchingLine = CheckMatchingLine();
+            elementsForNextMoveList = CheckElementsForNextMove();
+            blocksWithActivatedElements = GetAllBlocksWithActivatedElementsNoBlocking();
         }
 
         if (blocksOnMatchingLine.Count > 0)
@@ -947,7 +945,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             foundNextMove = false;
             SupportFunctions.CreateInformationText("Торнадо нам не помог!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
             yield return new WaitForSeconds(0.7f);
-            //SupportFunctions.CreateInformationText("Мы больше не нашли ходов!", Color.blue, 45);
         }
     }
 
@@ -1191,7 +1188,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //перемешать стандартные элементы
     public void MixStandartElements(bool moveInstantly = false)
     {
-        MasterController.Instance.ForcedDropElement();        
+        MasterController.Instance.ForcedDropElement();
         List<ElementsPriority> listPriority = new List<ElementsPriority>();
         List<Block> blockList = new List<Block>();//лист блоков в которых будут заменены элементы
         elementsForMixList.Clear();

@@ -71,6 +71,7 @@ public class MainGameSceneScript : MonoBehaviour {
         //если не создали первую подсказку для уровня, то выполняем ход
         if (!HelpToPlayer.CreateNextGameHelp())
         {
+            yield return new WaitForSeconds(1f);
             GridBlocks.Instance.Move();//выполнение хода
         }              
     }
