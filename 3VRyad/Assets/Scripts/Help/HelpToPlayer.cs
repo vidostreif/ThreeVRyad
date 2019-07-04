@@ -592,7 +592,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
             {
-                text.text = "Эта лиана захватила весь наш сад! Её можно уничтожить, собрав комбинацию или, взорвав магическую колбу!";
+                text.text = "Эта лиана захватила весь наш сад! Её можно уничтожить тем же, чем уничтожается захваченное растение!";
             }            
             else if (activeHint.help == BehindElementsTypeEnum.Grass.ToString())
             {
