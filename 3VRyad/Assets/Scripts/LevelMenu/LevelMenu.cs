@@ -402,7 +402,7 @@ public class LevelMenu : MonoBehaviour
         }
         else
         {
-            Debug.Log("Нет жизней!");
+            //Debug.Log("Нет жизней!");
             SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы запустить уровень. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
         }        
     }

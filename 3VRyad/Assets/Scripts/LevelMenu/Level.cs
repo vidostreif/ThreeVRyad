@@ -153,37 +153,42 @@ public class Level
         {
             //выдаем подарок
             bool result = true;
+            ////подарок существует
+            //bool giftExists = false;
 
             //если есть бандл инструментов
             if (LevelSettings.Instance.Gift.Bundel.Length > 0)
             {
                 result = ThingsManager.Instance.addinstruments(LevelSettings.Instance.Gift.Bundel);
+                displayBox = true;
             }
 
             //если небыло никаких ошибок и есть монеты - добавляем монеты
             if (result && LevelSettings.Instance.Gift.Coins > 0)
             {
                 result = Shop.Instance.AddGiftCoins(this, LevelSettings.Instance.Gift.Coins);
+                displayBox = true;
             }
 
             //если небыло никаких ошибок и есть жизни - добавляем время бессмертия
             if (result && LevelSettings.Instance.Gift.TimeImmortalLives > 0)
             {
                 result = LifeManager.Instance.addTimeImmortal(LevelSettings.Instance.Gift.TimeImmortalLives);
+                displayBox = true;
             }
 
-            //если небыло никаких ошибок помечаем подарок как выданный
-            if (result)
+            //если небыло никаких ошибок и подарок существует помечаем подарок как выданный
+            if (result && displayBox)
             {
                 giftIssued = true;
-                displayBox = true;
+                //displayBox = true;
                 boxOpen = true;
             }
         }
         else if (!giftIssued)
         {
             //если подарок не выдан, но есть что выдать
-            if (LevelSettings.Instance.Gift.Bundel.Length > 0 || LevelSettings.Instance.Gift.Coins > 0)
+            if (LevelSettings.Instance.Gift.Bundel.Length > 0 || LevelSettings.Instance.Gift.Coins > 0 || LevelSettings.Instance.Gift.TimeImmortalLives > 0)
             {
                 displayBox = true;
             }

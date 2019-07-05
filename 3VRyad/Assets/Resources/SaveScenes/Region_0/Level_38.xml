@@ -125,10 +125,11 @@
   </HelpFromGnome>
   <LevelSettings>
     <bundles>
-      <bundleShopV type="Vortex" count="1" />
+      <bundleShopV type="Hoe" count="1" />
     </bundles>
     <bundelCount>1</bundelCount>
-    <coins>10</coins>
+    <coins>15</coins>
+    <timeImmortalLives>30</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>

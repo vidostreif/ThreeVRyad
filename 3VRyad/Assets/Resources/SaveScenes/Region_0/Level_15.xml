@@ -123,9 +123,12 @@
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
   <LevelSettings>
-    <bundles />
-    <bundelCount>0</bundelCount>
+    <bundles>
+      <bundleShopV type="Shovel" count="2" />
+    </bundles>
+    <bundelCount>1</bundelCount>
     <coins>0</coins>
+    <timeImmortalLives>30</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>

@@ -505,7 +505,8 @@ public class MainGameSceneScript : MonoBehaviour {
     //запрос на перезапуск сцены во время игры
     public void RequestRestartLevel() {
 
-        if (LifeManager.Instance.Immortal())
+        //если у нас бессмертие или наш левел опциональный
+        if (LifeManager.Instance.Immortal() || (LifeManager.Instance.Life > 0 && LevelSettings.Instance.Optional))
         {
             RestartLevel();
         }
@@ -577,7 +578,7 @@ public class MainGameSceneScript : MonoBehaviour {
     //запрос на выход в меню в время игры
     public void RequestExitToMenu()
     {
-        if (LifeManager.Instance.Immortal())
+        if (LifeManager.Instance.Immortal() || LevelSettings.Instance.Optional)
         {
             ExitToMenu();
         }
@@ -593,7 +594,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
     //выход в меню с уменьшением количества жизней
     public void ExitToMenuInGame()
-    {
+    {        
         LifeManager.Instance.SubLive();
         ExitToMenu();
     }

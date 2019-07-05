@@ -109,7 +109,7 @@
   <LevelSettings>
     <bundles />
     <bundelCount>0</bundelCount>
-    <coins>0</coins>
+    <coins>30</coins>
     <timeImmortalLives>0</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>

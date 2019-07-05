@@ -71,7 +71,7 @@
     </bundles>
     <bundelCount>1</bundelCount>
     <coins>10</coins>
-    <timeImmortalLives>0</timeImmortalLives>
+    <timeImmortalLives>30</timeImmortalLives>
     <optional>true</optional>
   </LevelSettings>
   <Score>

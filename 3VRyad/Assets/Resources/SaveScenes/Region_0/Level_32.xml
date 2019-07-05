@@ -114,9 +114,12 @@
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
   <LevelSettings>
-    <bundles />
-    <bundelCount>0</bundelCount>
-    <coins>0</coins>
+    <bundles>
+      <bundleShopV type="Repainting" count="2" />
+    </bundles>
+    <bundelCount>1</bundelCount>
+    <coins>10</coins>
+    <timeImmortalLives>30</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>
