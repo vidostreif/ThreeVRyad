@@ -132,7 +132,7 @@ MonoBehaviour:
       count: 1
     coins: 0
     timeImmortalLives: 0
-    image: {fileID: 21300000, guid: 48191ad8dee00c34ab761cec0d173506, type: 3}
+    image: {fileID: 21300000, guid: e385fefc85113ff46bc8ac1f6d129b37, type: 3}
   - id: Bundel_x5
     name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u043C\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
       \u04455"
@@ -149,7 +149,7 @@ MonoBehaviour:
       count: 5
     coins: 0
     timeImmortalLives: 30
-    image: {fileID: 21300000, guid: 219ebc1a769ba5d4eb58526dcde9b272, type: 3}
+    image: {fileID: 21300000, guid: d0bdc4c1a7c5124488986de47e917807, type: 3}
   - id: Bundel_x10
     name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u043C\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
       \u044510"
@@ -166,7 +166,7 @@ MonoBehaviour:
       count: 10
     coins: 0
     timeImmortalLives: 60
-    image: {fileID: 21300000, guid: 1f46353d46baa4a42b875973142beef3, type: 3}
+    image: {fileID: 21300000, guid: 0d41eb291b1e28c42888d94eef3581bf, type: 3}
   - id: Bundel_x20
     name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u043C\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
       \u044520"
@@ -183,7 +183,7 @@ MonoBehaviour:
       count: 20
     coins: 0
     timeImmortalLives: 120
-    image: {fileID: 21300000, guid: b6d360cff9494a740bc002caa66a0ce8, type: 3}
+    image: {fileID: 21300000, guid: 409d4d4a683d5d74f8d365812bf126ee, type: 3}
   - id: ImortalLife_30min
     name: "\u0411\u0435\u0441\u0441\u043C\u0435\u0440\u0442\u0438\u0435 30 \u043C\u0438\u043D\u0443\u0442"
     priceCoins: 50
@@ -706,7 +706,7 @@ PrefabInstance:
     - target: {fileID: 7477992256581706264, guid: da7b9512512c02344b596cd617a1de12,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.85
+      value: -0.8500004
       objectReference: {fileID: 0}
     - target: {fileID: 7477992256581706264, guid: da7b9512512c02344b596cd617a1de12,
         type: 3}
