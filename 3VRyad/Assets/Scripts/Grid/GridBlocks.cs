@@ -371,10 +371,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 yield return new WaitForSeconds(0.1f);
                             }
                         }
-                        else
-                        {
-                            makeActionElementsAfterMove = true;
-                        }
+                        //else
+                        //{
+                        //    makeActionElementsAfterMove = true;
+                        //}
                     }
 
                     //если не конец игры, создаем подсказку
@@ -425,15 +425,14 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             touchingBlock.Hit();
                             yield return new WaitForSeconds(0.1f);
                             matchFound = true;
-                            makeActionElementsAfterMove = true;
+                            //makeActionElementsAfterMove = true;
                         }
-
                         else if (destinationBlock != null && destinationBlock.Element != null && destinationBlock.Element.Activated)
                         {
                             destinationBlock.Hit();
                             yield return new WaitForSeconds(0.1f);
                             matchFound = true;
-                            makeActionElementsAfterMove = true;
+                            //makeActionElementsAfterMove = true;
                         }
                         else if (blockFieldsList.Count == 0 || (!blockFieldsList.Contains(destinationBlock) && !blockFieldsList.Contains(touchingBlock)))
                         {
@@ -452,6 +451,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     {
                         //минус ход
                         Tasks.Instance.SubMoves();
+                        makeActionElementsAfterMove = true;
 
                         foreach (List<Block> item in findedBlockInLine)
                             Bonuses.Instance.CheckBonuses(item, touchingBlock, destinationBlock);
@@ -464,6 +464,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         yield return new WaitForSeconds(0.07f);
                     }
 
+                    blockFieldsList.Clear();                    
+
                     if (matchFound && iteration != 1)
                     {
                         //прерывание в случае вмешательства игрока
@@ -474,11 +476,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                         yield return new WaitForSeconds(0.1f);
                     }
-
-                    blockFieldsList.Clear();
-                    elementsForMoveList.Remove(blocks);
+                    else if (iteration == 1)
+                    {
+                        elementsForMoveList.Remove(blocks);
+                    }
                     yield return StartCoroutine(Filling(true, iteration));
-
 
                     //если есть элементы в очереди на движение
                     if (elementsForMoveList.Count > 0)
