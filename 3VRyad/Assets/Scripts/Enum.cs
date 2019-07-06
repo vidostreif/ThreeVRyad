@@ -286,4 +286,7 @@ public enum SpritesEnum
     Daily_Gift,
     Gift_Box,
     Gift_Box_Open,
+    Button_Shop,
+    Button_Shop_Close,
+    
 }//спрайты

@@ -283,31 +283,16 @@ public static class SpriteBank
                 }
             }
 
-            //string dopString = "";
-            //if (mini)
-            //{
-            //    dopString = "_mini";
-            //}
-
-            ////в зависимости от типа блока 
-            //switch (shape)
-            //{
-            //    case SpritesEnum.Sprite_Coin:
-            //        return Resources.Load<Sprite>("Sprites/Coin" + dopString) as Sprite;
-            //    case SpritesEnum.Sprite_Life:
-            //        return Resources.Load<Sprite>("Sprites/Life" + dopString) as Sprite;
-            //    case SpritesEnum.Sprite_Move:
-            //        return Resources.Load<Sprite>("Sprites/Move" + dopString) as Sprite;
-            //    case SpritesEnum.Sprite_Gift_Box:
-            //        return Resources.Load<Sprite>("Sprites/GiftBox" + dopString) as Sprite;
-            //    case SpritesEnum.Sprite_Gift_Box_Open:
-            //        return Resources.Load<Sprite>("Sprites/GiftBoxOpen" + dopString) as Sprite;
-            //    default:
-            //        Debug.LogError("Не определен тип " + shape);
-            //        return null;
-            //}
-
-            return Resources.Load("Sprites/" + shape.ToString() + (mini ? "_mini" : ""), typeof(Sprite)) as Sprite;
+            ////в зависимости от типа
+            switch (shape)
+            {
+                case SpritesEnum.Button_Shop:
+                    return Resources.Load<Sprite>("Sprites/interface/Buttons/" + shape) as Sprite;
+                case SpritesEnum.Button_Shop_Close:
+                    return Resources.Load<Sprite>("Sprites/interface/Buttons/" + shape) as Sprite;
+                default:
+                    return Resources.Load("Sprites/" + shape.ToString() + (mini ? "_mini" : ""), typeof(Sprite)) as Sprite;
+            }            
         }
     }
 

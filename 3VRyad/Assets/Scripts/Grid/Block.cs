@@ -398,6 +398,14 @@ public class Block : MonoBehaviour {
                 behindElement.Hit();
             }
         }
+        //если узрыв или удар инструментом, то удаляем элемент позади
+        else if(hitTypeEnum == HitTypeEnum.Explosion || hitTypeEnum == HitTypeEnum.Instrument)
+        {
+            if (behindElement != null && !behindElement.Destroyed)
+            {
+                behindElement.Hit();
+            }
+        }
     }
 
 }

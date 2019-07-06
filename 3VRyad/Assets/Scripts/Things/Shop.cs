@@ -238,6 +238,7 @@ public class Shop : MonoBehaviour, IStoreListener
             //увеличиваем панель в верхнем углу
             panelShopOnGame.localScale = new Vector3(1.5f, 1.5f, 1.5f); //panelShopOnGame.localScale * 1.5f;
             //Заменяем кнопке действие на Закрыть
+            buttonShopTransform.GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Button_Shop_Close);
             SupportFunctions.ChangeButtonAction(buttonShopTransform, DestroyPanelShop, "Закрыть");
 
             //витрина
@@ -678,6 +679,7 @@ public class Shop : MonoBehaviour, IStoreListener
             panelShopOnGame.localScale = new Vector3(1, 1, 1); //panelShopOnGame.localScale / 1.5f;
             
             Destroy(panelShop);
+            buttonShopTransform.GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Button_Shop);
             SupportFunctions.ChangeButtonAction(buttonShopTransform, CreateShop, "Магазин");
 
             //принудительно пересчитываем количество вещей и монет

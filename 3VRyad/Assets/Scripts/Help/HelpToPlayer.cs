@@ -596,7 +596,7 @@ public static class HelpToPlayer
             }            
             else if (activeHint.help == BehindElementsTypeEnum.Grass.ToString())
             {
-                text.text = "Это сорняк. Он убирается вместе с растением, которое находится на нём!";
+                text.text = "Это сорняк. Он убирается вместе с благородным растением или от взрыва!";
             }
             else if (activeHint.help == BehindElementsTypeEnum.Dirt.ToString())
             {

@@ -112,7 +112,10 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform PanelMenu = CanvasMenu.transform.Find("Panel");
         Transform gOtextEndGame = PanelMenu.transform.Find("TextEndGame");
         Text textEndGame = gOtextEndGame.GetComponent(typeof(Text)) as Text;
-                
+
+        Transform gOTextLevel = PanelMenu.transform.Find("TextLevel");
+        gOTextLevel.GetComponent<Text>().text = (LevelMenu.Instance.LastLoadLevel.regionNumber + 1) + "-" + (LevelMenu.Instance.LastLoadLevel.levelNumber + 1);
+
         //добавляем действие к кнопкам
         Transform gORestartButton = PanelMenu.transform.Find("RestartButton");
         Button restartButton = gORestartButton.GetComponent<Button>();
