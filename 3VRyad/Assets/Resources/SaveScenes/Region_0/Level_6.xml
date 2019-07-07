@@ -118,7 +118,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>29</moves>
+    <moves>30</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="Liana" goal="12" collectEverything="true" />
