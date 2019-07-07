@@ -18,7 +18,7 @@ public class WildPlantElement : Element
         {
             DestroyImmediate(TextCollectTransform.gameObject);
         }
-        GameObject TextCollectObg = Instantiate(PrefabBank.TextCollectElement);
+        GameObject TextCollectObg = Instantiate(PrefabBank.TextLifeElement);
         TextCollectObg.name = TextCollectName;
         TextCollectObg.transform.SetParent(transform, false);
         lifeText = TextCollectObg.GetComponent<TextMesh>();

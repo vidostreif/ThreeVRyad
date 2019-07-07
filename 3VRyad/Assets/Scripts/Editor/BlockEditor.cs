@@ -74,20 +74,20 @@ public class BlockEditor : Editor
             EditorGUILayout.LabelField("Настройка элемента:", EditorStyles.boldLabel);
             ElementsTypeEnum elementType;//тип элемента            
             ElementsShapeEnum elementShape;//внешний вид элемента
-            ElementsShapeEnum dopShape;//дополнительный внешний вид
+            AllShapeEnum dopShape;//дополнительный внешний вид
             if (block.Element == null) {
                 elementType = ElementsTypeEnum.Empty;
                 elementShape = ElementsShapeEnum.Empty;
-                dopShape = ElementsShapeEnum.Empty;
+                dopShape = AllShapeEnum.Empty;
             }
             else {
                 elementType = block.Element.Type;
                 elementShape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), block.Element.Shape.ToString());
-                dopShape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), block.Element.CollectShape.ToString());
+                dopShape = (AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), block.Element.CollectShape.ToString());
             }                
             elementType = (ElementsTypeEnum)EditorGUILayout.EnumPopup("  Тип элемента", elementType);      
             elementShape = (ElementsShapeEnum)EditorGUILayout.EnumPopup("  Внешность элемента", elementShape);
-            dopShape = (ElementsShapeEnum)EditorGUILayout.EnumPopup("Дополнительная внешность", dopShape);
+            dopShape = (AllShapeEnum)EditorGUILayout.EnumPopup("Дополнительная внешность", dopShape);
 
             //создаем элемент если нужно
             if (elementType != ElementsTypeEnum.Empty && block.Element == null) {

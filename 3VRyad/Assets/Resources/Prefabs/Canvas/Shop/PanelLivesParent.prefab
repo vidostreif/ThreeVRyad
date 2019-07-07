@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 7.3, y: -0.297}
+  m_AnchoredPosition: {x: 7.299999, y: -0.297}
   m_SizeDelta: {x: 22, y: 22.887}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4883162258352895034
@@ -130,8 +130,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 49.924, y: -0.0022393}
-  m_SizeDelta: {x: 43.543, y: 23.476}
+  m_AnchoredPosition: {x: 49.924, y: 0}
+  m_SizeDelta: {x: 43.54, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4883162258352895035
 CanvasRenderer:
@@ -225,7 +225,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 7.3, y: 1.3}
+  m_AnchoredPosition: {x: 7.299999, y: 1.3}
   m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4883162258352895036
@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLife: 5
-  timeToGetOneLife: 25
+  timeToGetOneLife: 20
 --- !u!1 &6008822692453888159
 GameObject:
   m_ObjectHideFlags: 0

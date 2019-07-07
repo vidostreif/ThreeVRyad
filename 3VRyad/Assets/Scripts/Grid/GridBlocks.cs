@@ -62,6 +62,12 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
             }
         }
+
+        //заполнение стартовых приоритетов
+        foreach (ElementsPriority elementsPriorityItem in elementsPriorityList)
+        {
+            elementsPriorityItem.ResetPriority();
+        }
     }
 
     void Update()
@@ -1211,7 +1217,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     else
                     {
                         int index = listPriority.IndexOf(elementsSAndP);
-                        listPriority[index].priority++;
+                        listPriority[index].Priority++;
                         listPriority[index].limitOnAmountCreated++;
                     }
                     elementsForMixList.Add(containers[x].block[y].Element);
@@ -1221,7 +1227,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
         }
 
-        var sortedlistPriority = listPriority.OrderByDescending(u => u.priority);
+        var sortedlistPriority = listPriority.OrderByDescending(u => u.Priority);
 
         //ищем максимальное вхождение элемента
         foreach (ElementsPriority item in sortedlistPriority)
@@ -1877,7 +1883,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         {
             XAttribute shape = new XAttribute("shape", shapeAndPriority.ElementsShape);
             XAttribute type = new XAttribute("type", shapeAndPriority.elementsType);
-            XAttribute priority = new XAttribute("priority", shapeAndPriority.priority);
+            XAttribute priority = new XAttribute("priority", shapeAndPriority.Priority);
             XAttribute maxAmountOnField = new XAttribute("maxAmountOnField", shapeAndPriority.maxAmountOnField);
             XAttribute limitOnAmountCreated = new XAttribute("limitOnAmountCreated", shapeAndPriority.limitOnAmountCreated);
             XElement shapeXElement = new XElement("shapeAndPriority", shape, type, priority, maxAmountOnField, limitOnAmountCreated);
@@ -2008,7 +2014,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 Image image = imageElementAndParameters.GetComponent(typeof(Image)) as Image;
                 image.sprite = SpriteBank.SetShape(item.ElementsShape);
                 Text Text = imageElementAndParameters.GetComponentInChildren<Text>();
-                Text.text = "Тип: " + item.elementsType + "\n Приоритет: " + item.priority + "\n Макс кол. на поле: " + item.maxAmountOnField + "\n Макс кол. будет создано: " + item.limitOnAmountCreated;
+                Text.text = "Тип: " + item.elementsType + "\n Приоритет: " + item.Priority + "\n Макс кол. на поле: " + item.maxAmountOnField + "\n Макс кол. будет создано: " + item.limitOnAmountCreated;
                 i++;
             }
         }

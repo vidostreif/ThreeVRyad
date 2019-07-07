@@ -191,7 +191,7 @@ MonoBehaviour:
     compositionBundle: []
     coins: 0
     timeImmortalLives: 30
-    image: {fileID: 21300000, guid: e583088164cd45b4e9cf9a484eb1626c, type: 3}
+    image: {fileID: 21300000, guid: a6fdd446851bb164f82cac0c65cdec43, type: 3}
   - id: ImortalLife_60min
     name: "\u0411\u0435\u0441\u0441\u043C\u0435\u0440\u0442\u0438\u0435 60 \u043C\u0438\u043D\u0443\u0442"
     priceCoins: 90
@@ -199,7 +199,7 @@ MonoBehaviour:
     compositionBundle: []
     coins: 0
     timeImmortalLives: 60
-    image: {fileID: 21300000, guid: e583088164cd45b4e9cf9a484eb1626c, type: 3}
+    image: {fileID: 21300000, guid: 38eeb471e64fc1c45aa40ef714b9bb58, type: 3}
   - id: ImortalLife_120min
     name: "\u0411\u0435\u0441\u0441\u043C\u0435\u0440\u0442\u0438\u0435 120 \u043C\u0438\u043D\u0443\u0442"
     priceCoins: 160
@@ -207,7 +207,7 @@ MonoBehaviour:
     compositionBundle: []
     coins: 0
     timeImmortalLives: 120
-    image: {fileID: 21300000, guid: e583088164cd45b4e9cf9a484eb1626c, type: 3}
+    image: {fileID: 21300000, guid: 34f0d30b59f881744a64f053346c0a13, type: 3}
   - id: coins_100
     name: "100 \u043C\u043E\u043D\u0435\u0442"
     priceCoins: 0
@@ -527,31 +527,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4883162258352895009, guid: 0be19ea05daa6da4a999900945c2f774,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 7.299999
-      objectReference: {fileID: 0}
-    - target: {fileID: 4883162258352895010, guid: 0be19ea05daa6da4a999900945c2f774,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4883162258352895010, guid: 0be19ea05daa6da4a999900945c2f774,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 43.54
-      objectReference: {fileID: 0}
-    - target: {fileID: 4883162258352895010, guid: 0be19ea05daa6da4a999900945c2f774,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 4883162258352895011, guid: 0be19ea05daa6da4a999900945c2f774,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 7.299999
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0be19ea05daa6da4a999900945c2f774, type: 3}

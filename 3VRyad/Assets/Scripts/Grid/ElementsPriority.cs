@@ -9,7 +9,8 @@ public class ElementsPriority
 {
     public ElementsTypeEnum elementsType;
     [SerializeField] private ElementsShapeEnum elementsShape;
-    public int priority;//приоритет при создании новых элементов
+    private int priority;//приоритет при создании новых элементов
+    [SerializeField] private int startPriority;//стартовый приоритет
     public int maxAmountOnField = 999;//максимальное одновременное количество на поле
     public int limitOnAmountCreated = 9999;//ограничение на создаваемое количество
 
@@ -26,11 +27,15 @@ public class ElementsPriority
         }
     }
 
+    public int StartPriority { get => startPriority; }
+    public int Priority { get => priority; set => priority = value; }
+
     public ElementsPriority(ElementsShapeEnum elementsShape, ElementsTypeEnum elementsType, int priority, int maxAmountOnField, int limitOnAmountCreated)
     {
         this.elementsShape = elementsShape;
         this.elementsType = elementsType;
         this.priority = priority;
+        this.startPriority = priority;
         this.maxAmountOnField = maxAmountOnField;
         this.limitOnAmountCreated = limitOnAmountCreated;
     }
@@ -40,11 +45,16 @@ public class ElementsPriority
         this.elementsShape = (ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), elementsShape.ToString());
         this.elementsType = elementsType;
         this.priority = priority;
+        this.startPriority = priority;
         this.limitOnAmountCreated = limitOnAmountCreated;
+    }
+
+    public void ResetPriority() {
+        this.priority = startPriority;
     }
 
     public void Info()
     {
-        Debug.LogError("elementsShape:" + elementsShape + "elementsType:" + elementsType + " priority: " + priority);
+        Debug.LogError("elementsShape:" + elementsShape + "elementsType:" + elementsType + " priority: " + Priority);
     }
 }
