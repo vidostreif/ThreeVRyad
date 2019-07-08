@@ -41,6 +41,7 @@ public class Element : BaseElement
             {
                 blockingElement.PositionInGrid = value;
             }
+            UpdateOrderLayer();
         }
     }
     public bool LockedForMove {

@@ -265,7 +265,8 @@ public enum PSEnum
     PSRocket,
     PSAddSuperBonusFromLevels,
     PSSuperBonusActiveted,
-    PSSelectTargetBlock
+    PSSelectTargetBlock,
+    PSSelectTargetBlockBlue
 
 }//тип эфектов
 

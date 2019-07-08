@@ -51,6 +51,7 @@ public class BaseElement : MonoBehaviour
         set
         {
             positionInGrid = value;
+            UpdateOrderLayer();
         }
     }
     public bool Destroyed
@@ -326,6 +327,15 @@ public class BaseElement : MonoBehaviour
     protected virtual void UpdateSprite(int option = 0)
     {
         spriteRenderer.sprite = SpriteBank.SetShape(shape, option);
+        //UpdateOrderLayer();
+    }
+
+    protected virtual void UpdateOrderLayer()
+    {
+        if (positionInGrid != null)
+        {
+            spriteRenderer.sortingOrder = -positionInGrid.posY;
+        }        
     }
 
 }

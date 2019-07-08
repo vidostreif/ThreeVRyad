@@ -527,6 +527,10 @@ public class LevelMenu : MonoBehaviour
         {
             levelPassedResult = lastLoadLevel.SetLevelPassed(stars, score);
             SetOpenNextLevel();
+            if (lastLoadLevel.levelNumber >= 4 && lastLoadLevel.regionNumber == 0)
+            {
+                JsonSaveAndLoad.TrainingCompleted();
+            }
         }
         return levelPassedResult;
     }

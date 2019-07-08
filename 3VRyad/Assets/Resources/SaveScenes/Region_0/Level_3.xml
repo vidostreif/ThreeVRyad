@@ -18,7 +18,6 @@
       <shapeAndPriority shape="Orange" type="StandardElement" priority="10" maxAmountOnField="2147483647" limitOnAmountCreated="2147483647" />
     </elementsShape>
     <blocks>
-      <block posX="1" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="2" posY="1" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="2" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="2" posY="3" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -89,7 +88,6 @@
       <block posX="9" posY="6" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="9" posY="7" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="9" posY="8" blockType="StandardBlock" generatorElements="true" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="10" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
     </blocks>
   </GridBlocks>
   <HelpFromGnome>
@@ -105,9 +103,9 @@
     <optional>false</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>20000</scoreForFirstStar>
-    <scoreForSecondStar>30000</scoreForSecondStar>
-    <scoreForThirdStar>40000</scoreForThirdStar>
+    <scoreForFirstStar>10000</scoreForFirstStar>
+    <scoreForSecondStar>20000</scoreForSecondStar>
+    <scoreForThirdStar>25000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>10000</maxBonusPower>

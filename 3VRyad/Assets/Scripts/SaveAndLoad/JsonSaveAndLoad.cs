@@ -253,11 +253,18 @@ public static class JsonSaveAndLoad
         return new SettingsSave(true, true);
     }
 
-    ////получить значение настроек по умолчанию
-    //public static void ReloadSettings()
-    //{
-    //    HelpToPlayer.LoadShowHintsStatus();
-    //}
+    //обучение пройдено
+    public static void TrainingCompleted() {
+        LoadSaveFromFile();
+        if (!save.trainingCompleted)
+        {
+            save.trainingCompleted = true;
+            Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventTutorialComplete);
+            //сразу сохраняем в файл
+            saveIsChanged = true;
+            SetSaveToFile();
+        }
+    }
 }
 
 [Serializable]
@@ -270,6 +277,7 @@ public class Save
     public List<HelpSave> helpSave = new List<HelpSave>();
     public List<InstrumentsSave> instrumentsSave = new List<InstrumentsSave>();
     public SettingsSave settingsSave = JsonSaveAndLoad.GetStandartSettings();
+    public bool trainingCompleted = false;
 }
 
 [Serializable]

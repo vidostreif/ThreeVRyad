@@ -288,7 +288,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //принимаем параметры - 1. Блок с которого передвигаем элемент 2. Блок к которому передвигаем элемент 
     private IEnumerator MakeMove()
     {
-        Debug.Log("Запуск новой куротины MakeMove.");
+        //Debug.Log("Запуск новой куротины MakeMove.");
         blockedForMove = true;
         if (elementsForMoveList.Count > 0)
         {
@@ -389,7 +389,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         //если в этом ходу не удаляли предыдущую подсказку
                         if (!gameHelpWasDell && HelpToPlayer.CreateNextGameHelp())
                         {
-                            Debug.Log("Создаем подсказку!");
+                            //Debug.Log("Создаем подсказку!");
                             //если создали, то прерываем процесс
                             blockFieldsList.Clear();
                             elementsForMoveList.Clear();
@@ -510,7 +510,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 {
                     if (HelpToPlayer.CreateNextGameHelp())
                     {
-                        Debug.Log("Создаем подсказку!");
+                        //Debug.Log("Создаем подсказку!");
                         //если создали, то прерываем процесс
                         elementsForMoveList.Clear();
                         blockedForMove = false;
@@ -561,7 +561,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 
                 if (HelpToPlayer.CreateNextGameHelp())
                 {
-                    Debug.Log("Создаем подсказку!");
+                    //Debug.Log("Создаем подсказку!");
                     //если создали, то прерываем процесс
                     blockFieldsList.Clear();
                     elementsForMoveList.Clear();
@@ -919,7 +919,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //Находим лучший ход 
         else if (elementsForNextMoveList.Count > 0)
         {
-            ElementsForNextMove elementsForNextMove = elementsForNextMoveList[0];
+            int randomNumber = UnityEngine.Random.Range(0, elementsForNextMoveList.Count);
+            ElementsForNextMove elementsForNextMove = elementsForNextMoveList[randomNumber];
             foundNextMove = true;
             foreach (ElementsForNextMove item in elementsForNextMoveList)
             {
@@ -951,7 +952,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         else//если не удалось ничего найти
         {
             foundNextMove = false;
-            SupportFunctions.CreateInformationText("Торнадо нам не помог!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
+            SupportFunctions.CreateInformationText("Торнадо нам не помогло!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
             yield return new WaitForSeconds(0.7f);
         }
     }

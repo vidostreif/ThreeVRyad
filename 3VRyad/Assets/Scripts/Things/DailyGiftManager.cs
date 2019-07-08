@@ -43,34 +43,44 @@ public class DailyGiftManager : MonoBehaviour
         dailyGiftButtonPlace = transform.Find("DailyGiftButtonPlace");
         TextTimeUntilNextDailyGift = dailyGiftButtonPlace.Find("TextTimeUntilNextDailyGift").GetComponent<Text>();
         LoadSave();
-
         DetermineMomentOfIssuingNextGift();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //обрабатываем не чаще двух раз в секунду
-        if (lastProcessingTime + 0.5f < Time.realtimeSinceStartup)
+        //обрабатываем не чаще одного раз в секунду
+        if (lastProcessingTime + 1f < Time.realtimeSinceStartup)
         {
-            if (TodayReceivedAllDailyGift())
+            if (JsonSaveAndLoad.LoadSave().trainingCompleted)
+            {
+                if (TodayReceivedAllDailyGift())
+                {
+                    if (dailyGiftBut != null)
+                    {
+                        Destroy(dailyGiftBut);
+                    }
+
+                    TextTimeUntilNextDailyGift.text = SupportFunctions.GetStringTime(TimeUntilNextDailyGift());
+                }
+                else
+                {
+                    if (dailyGiftBut == null)
+                    {
+                        dailyGiftBut = GameObject.Instantiate(PrefabBank.DailyGiftButton, dailyGiftButtonPlace);
+                        SupportFunctions.ChangeButtonAction(dailyGiftBut.transform, delegate { CreateDailyGiftPanel(); });
+                        TextTimeUntilNextDailyGift.text = "";
+                    }
+                }
+            }
+            else
             {
                 if (dailyGiftBut != null)
                 {
                     Destroy(dailyGiftBut);
                 }
-
-                TextTimeUntilNextDailyGift.text = SupportFunctions.GetStringTime(TimeUntilNextDailyGift());
-            }
-            else
-            {
-                if (dailyGiftBut == null)
-                {
-                    dailyGiftBut = GameObject.Instantiate(PrefabBank.DailyGiftButton, dailyGiftButtonPlace);
-                    SupportFunctions.ChangeButtonAction(dailyGiftBut.transform, delegate { CreateDailyGiftPanel(); });
-                    TextTimeUntilNextDailyGift.text = "";
-                }                
-            }
+                TextTimeUntilNextDailyGift.text = "";
+            }            
         }
     }
 

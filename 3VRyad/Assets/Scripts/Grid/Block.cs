@@ -78,15 +78,12 @@ public class Block : MonoBehaviour {
         }
         set
         {
-            //заменяем элемент у блока
-            //if (this.Type != BlockTypeEnum.Empty)
-            //{
-                //если елемент не уничтожен
-                if (value != null && !value.Destroyed)
+            //если елемент не уничтожен
+            if (value != null && !value.Destroyed)
                 {
                     element = value;
                     element.PositionInGrid = positionInGrid;
-                    element.thisTransform.parent = thisTransform;                    
+                    element.thisTransform.parent = thisTransform;
                 }
                 else if (value == null)
                 {
@@ -95,15 +92,7 @@ public class Block : MonoBehaviour {
                 else if (value.Destroyed)
                 {
                    element = null;
-                   return;
                 }
-            //}
-            //else if (value == null)
-            //{
-            //    element = value;
-            //    element.PositionInGrid = positionInGrid;
-            //    element.thisTransform.parent = thisTransform;
-            //}
         }
     }
     public BehindElement BehindElement
@@ -235,11 +224,11 @@ public class Block : MonoBehaviour {
         if (this.Type != BlockTypeEnum.Empty)
         {
             //если уже есть элемент то удаляем его
-            if (element != null && !element.Destroyed)
-            {
-                //ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()));
-                DellElement();
-            }
+            //if (element != null && !element.Destroyed)
+            //{
+            ////ElementsList.DellElement((AllShapeEnum)Enum.Parse(typeof(AllShapeEnum), element.Shape.ToString()));
+            DellElement();
+            //}
 
             //если позиция создания элемента совпадает с позицией блока и блок создает новые элементы
             float addY = 0;
@@ -317,8 +306,18 @@ public class Block : MonoBehaviour {
         return null;
     }
 
-    private void DellElement() {
-        if (element != null)
+    private void DellElement()
+    {
+        if (element != null && !element.Destroyed)
+        {
+            ElementsList.DellElement(element.Shape);
+            if (element.BlockingElement != null && !element.BlockingElement.Destroyed)
+            {
+                ElementsList.DellElement(element.BlockingElement.Shape);
+            }
+            DestroyImmediate(element.gameObject);
+        }
+        else if (element != null)
         {
             //ElementsList.DellElement(element.Shape);
             DestroyImmediate(element.gameObject);
@@ -332,6 +331,7 @@ public class Block : MonoBehaviour {
         //создаем элемент у блока
         if (this.Type != BlockTypeEnum.Empty)
         {
+            DellBehindElement();
             //определяем позицию для создания
             Vector3 startPosition;
             if (startTransform != null)
@@ -381,10 +381,23 @@ public class Block : MonoBehaviour {
             this.BehindElement = curElement;
             return this.BehindElement;
         }
-
         return null;
     }
-    
+
+    private void DellBehindElement()
+    {
+        if (behindElement != null && !behindElement.Destroyed)
+        {
+            ElementsList.DellElement(behindElement.Shape);
+            DestroyImmediate(behindElement.gameObject);
+        }
+        else if (behindElement != null)
+        {
+            DestroyImmediate(behindElement.gameObject);
+        }
+        behindElement = null;
+    }
+
     //удар по блоку
     public void Hit(HitTypeEnum hitTypeEnum = HitTypeEnum.StandartHit, AllShapeEnum hitElementShape = AllShapeEnum.Empty) {
 

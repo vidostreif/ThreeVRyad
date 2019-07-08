@@ -22,6 +22,7 @@ public static class ParticleSystemBank
             pSResurseList.Add(new PSResurse(PSEnum.PSCollect, pSFolder, "PSCollect"));
             pSResurseList.Add(new PSResurse(PSEnum.PSCollectAll, pSFolder, "PSCollectAll"));
             pSResurseList.Add(new PSResurse(PSEnum.PSSelect, pSFolder, "PSSelect"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSMagicalTail, pSFolder, "PSMagicTail"));
             pSResurseList.Add(new PSResurse(PSEnum.PSAddPowerSuperBonus, pSFolder, "PSAddSuperBonus"));
             pSResurseList.Add(new PSResurse(PSEnum.PSBeatsSuperBonus, pSFolder, "PSBeatSuperBonus"));
             pSResurseList.Add(new PSResurse(PSEnum.PSDirt, pSFolder, "PSDirt"));
@@ -33,7 +34,9 @@ public static class ParticleSystemBank
             pSResurseList.Add(new PSResurse(PSEnum.PSAddSuperBonusFromLevels, pSFolder, "PSAddSuperBonusFromLevels"));
             pSResurseList.Add(new PSResurse(PSEnum.PSSuperBonusActiveted, pSFolder, "PSSuperBonusActiveted"));
             pSResurseList.Add(new PSResurse(PSEnum.PSSelectTargetBlock, pSFolder, "PSSelectTargetBlock"));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSelectTargetBlockBlue, pSFolder, "PSSelectTargetBlockBlue"));
             
+
             pSArray = pSResurseList.ToArray();
         }
     }

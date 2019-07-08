@@ -403,7 +403,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                 //подбераем блоки для обработки
                 foreach (Block curBlock in blocks)
                 {
-                    if (curBlock.Element.Shape != block.Element.Shape && !curBlock.Blocked)
+                    if (curBlock.Element.Shape != block.Element.Shape && (curBlock.Element.BlockingElement == null || (curBlock.Element.BlockingElement != null && curBlock.Element.BlockingElement.Destroyed)) && !curBlock.Blocked)
                     {
                         repainted++;
                         blocksForWork[repainted] = curBlock;
@@ -495,8 +495,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         createPsGOsMassive = false;
     }
 
-    private GameObject CreateHighlightEffect(Transform parentBlock, float lifeTime = 0) {
-        GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSelectTargetBlockBlue") as GameObject, parentBlock);
+    private GameObject CreateHighlightEffect(Transform parentBlock, float lifeTime = 0) {        
+        GameObject psGO = ParticleSystemManager.Instance.CreatePS(parentBlock, PSEnum.PSSelectTargetBlockBlue);
         if (lifeTime != 0)
         {
             Destroy(psGO, lifeTime);
