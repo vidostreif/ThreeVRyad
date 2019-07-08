@@ -332,7 +332,7 @@ public class BaseElement : MonoBehaviour
 
     protected virtual void UpdateOrderLayer()
     {
-        if (positionInGrid != null)
+        if (positionInGrid != null && spriteRenderer != null)
         {
             spriteRenderer.sortingOrder = -positionInGrid.posY;
         }        
