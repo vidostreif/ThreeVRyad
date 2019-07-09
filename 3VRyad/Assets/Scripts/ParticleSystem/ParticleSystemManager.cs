@@ -33,7 +33,7 @@ public class ParticleSystemManager : MonoBehaviour
         GameObject warmingUpPS= new GameObject();
         warmingUpPS.name = "warmingUpPS";
         warmingUpPS.transform.parent = transform;
-        warmingUpPS.transform.position = new Vector3(1000, 1000, 0);
+        warmingUpPS.transform.position = new Vector3(-1000, -1000, 0);
         GameObject.Destroy(warmingUpPS, 5);
 
         for (int i = 0; i < ParticleSystemBank.PSArray.Length; i++)
