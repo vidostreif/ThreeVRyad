@@ -83,7 +83,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
                 //звук добавления
                 SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);
                 //эффект                
-                ParticleSystemManager.Instance.CreateCollectAllEffect(moveImageTransform, moveImage);
+                ParticleSystemManager.Instance.CreateCollectAllEffect(moveImageTransform, SpriteBank.SetShape(SpritesEnum.Move, true));
                 moves++;
                 addMoves--;
                 UpdateMovesText();

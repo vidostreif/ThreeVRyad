@@ -53,7 +53,21 @@ public class ThingsManager : MonoBehaviour
             instruments[i] = new Thing(instrumentsEnum, quantity);
         }
     }
-   
+
+    //добавление количества инструментов из бандла
+    public void addinstruments(InstrumentsEnum instrumentsEnum, int count)
+    {
+            foreach (Thing instrument in instruments)
+            {
+                if (instrument.Type == instrumentsEnum)
+                {
+                    instrument.AddQuantity(count);
+                instrument.CountNumber();
+            }
+            }
+        JsonSaveAndLoad.RecordSave(instruments);
+    }
+
     //добавление количества инструментов из бандла
     public bool addinstruments(BundleShopV[] bundleShopV) {
 

@@ -161,7 +161,7 @@ public class Target
                 {
                     //создаем эффект 
                     SoundManager.Instance.PlaySoundInternal(SoundsEnum.CollectElement);
-                    ParticleSystemManager.Instance.CreateCollectAllEffect(gameObject.transform, image);
+                    ParticleSystemManager.Instance.CreateCollectAllEffect(gameObject.transform, SpriteBank.SetShape(elementsShape, mini:true));
                 }
             }
             else
@@ -170,7 +170,7 @@ public class Target
                 {
                     //создаем эффект 
                     SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_1);
-                    ParticleSystemManager.Instance.CreateCollectEffect(gameObject.transform, image);
+                    ParticleSystemManager.Instance.CreateCollectEffect(gameObject.transform, SpriteBank.SetShape(elementsShape, mini: true));
                 }
                 
             }

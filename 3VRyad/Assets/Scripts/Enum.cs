@@ -159,7 +159,7 @@ public enum HelpEnum
     Empty,
     Gnome,
     Score,
-    Tasks,
+    Tasks,    
     SuperBonus,
     Instruments,
     Shop,
@@ -172,7 +172,8 @@ public enum HelpEnum
     Gift,
     OptionalLvl,
     Lifes,
-    DailyGift
+    DailyGift,
+    DropBlock
 
 
 }//тип сглаженного перемещения
@@ -284,6 +285,7 @@ public enum SpritesEnum
     Coin,
     Move,
     Life,
+    Star,
     Daily_Gift,
     Gift_Box,
     Gift_Box_Open,

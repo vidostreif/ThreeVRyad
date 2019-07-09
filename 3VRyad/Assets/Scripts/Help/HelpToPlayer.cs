@@ -228,9 +228,13 @@ public static class HelpToPlayer
                 {
                     created = CreateCrushableWallHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
                 }                
-                else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString() || activeHint.help == ElementsTypeEnum.MediumFlask.ToString() || activeHint.help == ElementsTypeEnum.BigFlask.ToString())
+                else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString() || activeHint.help == ElementsTypeEnum.MediumFlask.ToString())
                 {
-                    created = CreateFlaskHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
+                    created = CreateFlaskHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help), false);
+                }
+                else if (activeHint.help == ElementsTypeEnum.BigFlask.ToString())
+                {
+                    created = CreateFlaskHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help), true);
                 }
                 else if (activeHint.help == ElementsTypeEnum.ImmortalWall.ToString())
                 {
@@ -280,9 +284,9 @@ public static class HelpToPlayer
                         Thing thing = ThingsManager.Instance.GetThing(InstrumentsEnum.Shovel);
                         if (thing != null && thing.Quantity == 0)
                         {
-                            BundleShopV[] bundleShopV = new BundleShopV[1];
-                            bundleShopV[0] = new BundleShopV(InstrumentsEnum.Shovel, 1);
-                            ThingsManager.Instance.addinstruments(bundleShopV);
+                            //BundleShopV[] bundleShopV = new BundleShopV[1];
+                            //bundleShopV[0] = new BundleShopV(InstrumentsEnum.Shovel, 1);
+                            ThingsManager.Instance.addinstruments(InstrumentsEnum.Shovel, 2);
                         }
                     }                    
                 }
@@ -318,9 +322,9 @@ public static class HelpToPlayer
                         Thing thing = ThingsManager.Instance.GetThing(InstrumentsEnum.Hoe);
                         if (thing != null && thing.Quantity == 0)
                         {
-                            BundleShopV[] bundleShopV = new BundleShopV[1];
-                            bundleShopV[0] = new BundleShopV(InstrumentsEnum.Hoe, 1);
-                            ThingsManager.Instance.addinstruments(bundleShopV);
+                            //BundleShopV[] bundleShopV = new BundleShopV[1];
+                            //bundleShopV[0] = new BundleShopV(InstrumentsEnum.Hoe, 2);
+                            ThingsManager.Instance.addinstruments(InstrumentsEnum.Hoe, 2);
                         }
                     }
                 }
@@ -336,9 +340,9 @@ public static class HelpToPlayer
                         Thing thing = ThingsManager.Instance.GetThing(InstrumentsEnum.Vortex);
                         if (thing != null && thing.Quantity == 0)
                         {
-                            BundleShopV[] bundleShopV = new BundleShopV[1];
-                            bundleShopV[0] = new BundleShopV(InstrumentsEnum.Vortex, 1);
-                            ThingsManager.Instance.addinstruments(bundleShopV);
+                            //BundleShopV[] bundleShopV = new BundleShopV[1];
+                            //bundleShopV[0] = new BundleShopV(InstrumentsEnum.Vortex, 1);
+                            ThingsManager.Instance.addinstruments(InstrumentsEnum.Vortex, 2);
                         }
                     }
                 }
@@ -354,9 +358,9 @@ public static class HelpToPlayer
                         Thing thing = ThingsManager.Instance.GetThing(InstrumentsEnum.Repainting);
                         if (thing != null && thing.Quantity == 0)
                         {
-                            BundleShopV[] bundleShopV = new BundleShopV[1];
-                            bundleShopV[0] = new BundleShopV(InstrumentsEnum.Repainting, 1);
-                            ThingsManager.Instance.addinstruments(bundleShopV);
+                            //BundleShopV[] bundleShopV = new BundleShopV[1];
+                            //bundleShopV[0] = new BundleShopV(InstrumentsEnum.Repainting, 1);
+                            ThingsManager.Instance.addinstruments(InstrumentsEnum.Repainting, 2);
                         }
                     }
                 }
@@ -371,6 +375,10 @@ public static class HelpToPlayer
                 else if (activeHint.help == HelpEnum.Line6.ToString())
                 {
                     created = CreateStandardElementHelp(6);
+                }
+                else if (activeHint.help == HelpEnum.DropBlock.ToString())
+                {
+                    created = CreateDropBlockHelp(ElementsTypeEnum.Drop);
                 }
                 else
                 {
@@ -666,6 +674,10 @@ public static class HelpToPlayer
             {
                 text.text = "А что если собрать комбинацию из 6 растений?";
             }
+            else if (activeHint.help == HelpEnum.DropBlock.ToString())
+            {
+                text.text = "Если материалы находятся рядом с собирающей грядкой, то их можно передвинуть к ней и они соберутся!";
+            }
             else
             {
                 text.text = "Често говоря, я и сам не понимаю, что происходит :)";
@@ -885,7 +897,7 @@ public static class HelpToPlayer
         }
     }
 
-    private static bool CreateFlaskHelp(ElementsTypeEnum elementsTypeEnum)
+    private static bool CreateFlaskHelp(ElementsTypeEnum elementsTypeEnum, bool deactivateСlick)
     {
         //берем любую маленькую фласку
         //делаем подсветку фласки и соседних блококв
@@ -908,10 +920,21 @@ public static class HelpToPlayer
                 //отключаем перетаскивание у фласки
                 BlockController blockController = curBlock.GetComponent<BlockController>();
                 activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
-                blockController.handleDragging = false;
+                if (deactivateСlick)
+                {
+                    blockController.handleСlick = false;
+                }
+                else
+                {
+                    blockController.handleDragging = false;
+                }
+                
+
+                //получаем блоки в радиусе поражения
+                Block[] blocks = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, item.GetComponent<ElementSmallFlask>().ExplosionRadius);
 
                 //получаем соседние блоки
-                Block[] blocks = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, item.GetComponent<ElementSmallFlask>().ExplosionRadius);
+                NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(curBlock.PositionInGrid); 
 
                 //перебираем все блоки
                 foreach (Block block in blocks)
@@ -922,9 +945,24 @@ public static class HelpToPlayer
                         blockController = block.GetComponent<BlockController>();
                         //сохраняем настройки
                         activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
+
                         //деактивируем
-                        blockController.handleDragging = false;
+                        //if (deactivateСlick)
+                        //{
+                        //    foreach (Block blockItem in neighboringBlocks.allBlockField)
+                        //    {
+                        //        if (blockItem)
+                        //        {
+
+                        //        }
+                        //    }
+                        //}
+                        //else
+                        //{
+                            blockController.handleDragging = false;                            
+                        //}
                         blockController.handleСlick = false;
+
                     }
                 }
                 return true;
@@ -1125,6 +1163,35 @@ public static class HelpToPlayer
         return false;
     }
 
+    private static bool CreateDropBlockHelp(ElementsTypeEnum elementsTypeEnum)
+    {
+        //получаем возможные ходы
+        List<ElementsForNextMove> elementsForNextMoveList = GridBlocks.Instance.CheckElementsForNextMove();
+        //Если нет доступных ходов, то выходим
+        if (elementsForNextMoveList.Count == 0)
+        {
+            return false;
+        }
+
+        foreach (ElementsForNextMove curElementsForNextMove in elementsForNextMoveList)
+        {
+            foreach (Element element in curElementsForNextMove.elementsList)
+            {
+                //если элемент для передвижения
+                if (element == curElementsForNextMove.elementForMove && element.BlockingElement == null && element.Type == elementsTypeEnum)
+                {
+                    //подсвечиваем элемент
+                    AddToFlashing(element.gameObject, activeHint);
+
+                    //высвечиваем нужный ход
+                    return HighlightSpecifiedMove(curElementsForNextMove);
+                }
+            }
+        }
+        Debug.Log("Не нашли подходящий элемент!");
+        return false;
+    }
+
     private static bool CreateImortalWallHelp()
     {
         //получаем все стены
@@ -1180,7 +1247,7 @@ public static class HelpToPlayer
         Debug.Log("Не нашли ни одного сбрасываемого элемента!");
         return false;
     }
-    
+
     //подсказки для интерфейса
     //goName - название основного элемента
     //flashingItemsNames - элементы которые будут мигать

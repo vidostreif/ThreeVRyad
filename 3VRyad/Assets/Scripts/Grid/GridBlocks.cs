@@ -24,19 +24,15 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public Blocks[] containers;
     public GameObject prefabBlock;
     public GameObject prefabElement;
-    //public GameObject textCollectElement;
     public GameObject prefabBlockingWall;
 
     private List<Element> elementsForMixList = new List<Element>();//элементы для замены во время микса
     private List<Blocks> elementsForMoveList = new List<Blocks>();//элементы для последовательного выполнения ходов
     private List<Block> blockFieldsList = new List<Block>();// найденные блоки для удара
     private List<Block> droppingBlockList = new List<Block>();// список сбрасывающих блоков
-    private bool needFilling;
-    private bool foundNextMove;
-    //private bool nextMoveExists;//проверка, что остались доступные ходы
-
+    private bool needFilling;//требуется заполнение элементами
+    private bool foundNextMove;//найден следующий ход
     public bool blockedForMove { get; protected set; }//признак что сетка заблокирована для действий игроком
-    //public bool NextMoveExists { get => nextMoveExists; }
 
     void Awake()
     {
@@ -1174,8 +1170,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         //если нашли рядом сбрасывающий блок незаблокированный
                         if (BlockCheck.ThisBlockDropingNoBlocking(blockItem))
                         {
-                            elementsForNextMove.elementsList.Add(containers[x].block[y].Element);
+                            //добавление подсказки
+                            HelpToPlayer.AddHint(HelpEnum.DropBlock);
 
+                            elementsForNextMove.elementsList.Add(containers[x].block[y].Element);
                             elementsForNextMove.elementsList.Add(blockItem.Element);
                             elementsForNextMove.elementForMove = containers[x].block[y].Element;
                             elementsForNextMove.blockElementForMove = containers[x].block[y];
@@ -2131,12 +2129,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //Debug.LogAssertion("Поставили блок на позицию: " + newPosition.posX + " " + newPosition.posY);
 
                 //переместить блок на новую позицию в соответствии с позицией в сетке
-                //Block.transform.parent = this.transform;
                 Block.transform.position = new Vector3(this.transform.localPosition.x + newPosition.posX * blockSize, this.transform.localPosition.y + newPosition.posY * blockSize, this.transform.localPosition.z);
                 Block.name = "Block_" + newPosition.posX + "_" + newPosition.posY;
-                //Block.transform.parent = this.transform;
-                //Block.transform.SetParent(this.transform, false);
-
                 return true;
             }
         }
@@ -2145,10 +2139,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             DelBlock(Block);
             //Debug.LogAssertion("2 Удалили блок с позиции: " + oldPosition.posX + " " + oldPosition.posY);
             Block.name = "Block_Free";
-            //Vector3 savePosition =this.transform.position + Block.transform.localPosition;
-            //Block.transform.parent = null;
-            //Block.transform.position = savePosition;
-            //Block.transform.SetParent(null, false);
         }
 
         return false;
@@ -2240,14 +2230,14 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 #endif
 }
 
-public struct FoundNextMove
-{
-    public bool found;
-    public bool mix;
-}
+//public struct FoundNextMove
+//{
+//    public bool found;
+//    public bool mix;
+//}
 
-public struct ElementForNextMove
-{
-    public bool found;
-    public bool mix;
-}
+//public struct ElementForNextMove
+//{
+//    public bool found;
+//    public bool mix;
+//}

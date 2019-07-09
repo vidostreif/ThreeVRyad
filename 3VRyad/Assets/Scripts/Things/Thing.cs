@@ -115,6 +115,7 @@ public class Thing
         UpdateText();
     }
 
+    //пересчет инструментов
     public void CountNumber() {
         quantity += addQuantity;
         addQuantity = 0;

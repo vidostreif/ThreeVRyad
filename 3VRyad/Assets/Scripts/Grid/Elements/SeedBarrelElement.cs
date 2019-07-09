@@ -23,7 +23,7 @@ public class SeedBarrelElement : Element
         collectObg.transform.SetParent(transform, false);
 
         SpriteRenderer collectSpRender = collectObg.GetComponent<SpriteRenderer>();
-        collectSpRender.sprite = SpriteBank.SetShape(collectShape);
+        collectSpRender.sprite = SpriteBank.SetShape(collectShape, mini: true);
         SpriteRenderer[] collectSpRenders = collectObg.GetComponentsInChildren<SpriteRenderer>();
         foreach (SpriteRenderer item in collectSpRenders)
         {

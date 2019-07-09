@@ -123,7 +123,7 @@ public static class SpriteBank
         return new SpriteResurse[count];
     }
 
-    public static Sprite SetShape(ElementsShapeEnum shape, int option = 0)
+    public static Sprite SetShape(ElementsShapeEnum shape, int option = 0, bool mini = false)
     {
         CreateSpritesList();
         ////в зависимости от типа
@@ -150,11 +150,11 @@ public static class SpriteBank
                 dopString = "_" + option;
             }
 
-            return Resources.Load<Sprite>("Sprites/Elements/" + shape.ToString() + dopString + qSuffix) as Sprite;
+            return Resources.Load<Sprite>("Sprites/Elements/" + shape.ToString() + dopString + (mini ? "@1x" : qSuffix)) as Sprite;
         }
     }
 
-    public static Sprite SetShape(BehindElementsShapeEnum shape, int option = 0)
+    public static Sprite SetShape(BehindElementsShapeEnum shape, int option = 0, bool mini = false)
     {
         CreateSpritesList();
         ////в зависимости от типа
@@ -180,7 +180,7 @@ public static class SpriteBank
                 dopString = "_" + option;
             }
 
-            return Resources.Load<Sprite>("Sprites/BehindElements/" + shape.ToString() + dopString + qSuffix) as Sprite;
+            return Resources.Load<Sprite>("Sprites/BehindElements/" + shape.ToString() + dopString + (mini ? "@1x" : qSuffix)) as Sprite;
         }        
     }
 
@@ -228,7 +228,7 @@ public static class SpriteBank
 
     }
 
-    public static Sprite SetShape(BlockingElementsShapeEnum shape, int option = 0)
+    public static Sprite SetShape(BlockingElementsShapeEnum shape, int option = 0, bool mini = false)
     {
         CreateSpritesList();
         ////в зависимости от типа
@@ -254,7 +254,7 @@ public static class SpriteBank
                 dopString = "_" + option;
             }
 
-            return Resources.Load<Sprite>("Sprites/BlockingElement/" + shape.ToString() + dopString + qSuffix) as Sprite;
+            return Resources.Load<Sprite>("Sprites/BlockingElement/" + shape.ToString() + dopString + (mini ? "@1x" : qSuffix)) as Sprite;
         }
         
     }
@@ -311,8 +311,8 @@ public static class SpriteBank
                 case SpritesEnum.Button_Shop_Close:
                     return Resources.Load<Sprite>("Sprites/interface/Buttons/" + shape.ToString()) as Sprite;
 
-                case SpritesEnum.Targets_panel:
-                    return Resources.Load<Sprite>("Sprites/interface/" + shape.ToString() + qSuffix) as Sprite;
+                //case SpritesEnum.Targets_panel:
+                //    return Resources.Load<Sprite>("Sprites/interface/" + shape.ToString() + qSuffix) as Sprite;
                 default:
                     return Resources.Load("Sprites/interface/" + shape.ToString() + (mini ? "@1x" : qSuffix), typeof(Sprite)) as Sprite;
             }            
@@ -344,17 +344,17 @@ public static class SpriteBank
         
     }
 
-    public static Sprite SetShape(AllShapeEnum shape, int option = 0)
+    public static Sprite SetShape(AllShapeEnum shape, int option = 0, bool mini = false)
     {
         //поиск в других коллекциях данное значение с перенаправлением к другому SetShape
 
         if (Enum.IsDefined(typeof(BlockingElementsShapeEnum), shape.ToString()))
         {
-           return SetShape((BlockingElementsShapeEnum)Enum.Parse(typeof(BlockingElementsShapeEnum), shape.ToString()), option);
+           return SetShape((BlockingElementsShapeEnum)Enum.Parse(typeof(BlockingElementsShapeEnum), shape.ToString()), option, mini);
         }
         else if (Enum.IsDefined(typeof(ElementsShapeEnum), shape.ToString()))
         {
-            return SetShape((ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shape.ToString()), option);
+            return SetShape((ElementsShapeEnum)Enum.Parse(typeof(ElementsShapeEnum), shape.ToString()), option, mini);
         }
         else if (Enum.IsDefined(typeof(BlockTypeEnum), shape.ToString()))
         {
@@ -362,7 +362,7 @@ public static class SpriteBank
         }
         else if (Enum.IsDefined(typeof(BehindElementsShapeEnum), shape.ToString()))
         {
-            return SetShape((BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), shape.ToString()), option);
+            return SetShape((BehindElementsShapeEnum)Enum.Parse(typeof(BehindElementsShapeEnum), shape.ToString()), option, mini);
         }
         return null;
     }

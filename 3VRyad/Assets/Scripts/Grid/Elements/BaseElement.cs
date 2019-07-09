@@ -230,7 +230,7 @@ public class BaseElement : MonoBehaviour
             //создаем эффект
             //SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_1);
 
-            ParticleSystemManager.Instance.CreateCollectEffect(gameObject.transform, SpriteBank.SetShape(collectShape));
+            ParticleSystemManager.Instance.CreateCollectEffect(gameObject.transform, SpriteBank.SetShape(collectShape, mini: true));
 
             //GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
             //GameObject.Destroy(psGO, 3);

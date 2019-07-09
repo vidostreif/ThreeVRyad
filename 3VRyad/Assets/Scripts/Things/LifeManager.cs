@@ -207,7 +207,7 @@ public class LifeManager : MonoBehaviour
             ////звук добавления
             //SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);
             //эффект                
-            ParticleSystemManager.Instance.CreateCollectAllEffect(imageLive.transform, imageLive);            
+            ParticleSystemManager.Instance.CreateCollectAllEffect(imageLive.transform, SpriteBank.SetShape(SpritesEnum.Life, true));            
         }
     }
 

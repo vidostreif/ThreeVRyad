@@ -309,7 +309,7 @@ public class MainGameSceneScript : MonoBehaviour {
             Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
             SupportFunctions.ChangeAlfa(starImage, 1);
             //создаем эффект 
-            ParticleSystemManager.Instance.CreateCollectAllEffect(starTransform, starImage);
+            ParticleSystemManager.Instance.CreateCollectAllEffect(starTransform, SpriteBank.SetShape(SpritesEnum.Star, true));
             //Звук выдачи звезды
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Star);
 
