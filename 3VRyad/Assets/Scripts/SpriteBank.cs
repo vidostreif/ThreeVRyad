@@ -6,6 +6,7 @@ using UnityEngine;
 
 public static class SpriteBank 
 {
+    private static string qSuffix = "@2x";
     //массивы предзагруженных спрайтов
     private static SpriteResurseArray[] spriteResurseArray = null;
 
@@ -20,6 +21,9 @@ public static class SpriteBank
     {
         if (spriteResurseArray == null)
         {
+            //определение префикса под нужное разрешение экрана
+            qSuffix = GetQuality();
+
             spriteResurseArray = new SpriteResurseArray[6];
             SpriteResurse[] spriteResursesElementsShapeEnum = CreateSpriteResurseList(typeof(ElementsShapeEnum));
             int i = 0;
@@ -89,6 +93,17 @@ public static class SpriteBank
         }
     }
 
+    private static string GetQuality()
+    {
+        int screenH = Screen.height;
+        if (screenH > 1300)
+            return "@4x";
+        else if (screenH < 670)
+            return "@1x";
+        else
+            return "@2x";
+    }
+
     private static Sprite GetSprite(Type enumType, int spriteNumber) {
         CreateSpritesList();
         foreach (SpriteResurseArray item in spriteResurseArray)
@@ -110,6 +125,7 @@ public static class SpriteBank
 
     public static Sprite SetShape(ElementsShapeEnum shape, int option = 0)
     {
+        CreateSpritesList();
         ////в зависимости от типа
         if (shape == ElementsShapeEnum.Empty)
         {
@@ -134,12 +150,13 @@ public static class SpriteBank
                 dopString = "_" + option;
             }
 
-            return Resources.Load<Sprite>("Sprites/Elements/" + shape.ToString() + dopString) as Sprite;
+            return Resources.Load<Sprite>("Sprites/Elements/" + shape.ToString() + dopString + qSuffix) as Sprite;
         }
     }
 
     public static Sprite SetShape(BehindElementsShapeEnum shape, int option = 0)
     {
+        CreateSpritesList();
         ////в зависимости от типа
         if (shape == BehindElementsShapeEnum.Empty)
         {
@@ -163,13 +180,13 @@ public static class SpriteBank
                 dopString = "_" + option;
             }
 
-            return Resources.Load<Sprite>("Sprites/BehindElements/" + shape.ToString() + dopString) as Sprite;
+            return Resources.Load<Sprite>("Sprites/BehindElements/" + shape.ToString() + dopString + qSuffix) as Sprite;
         }        
     }
 
     public static Sprite SetShape(BlockTypeEnum shape, int option = 0)
     {
-
+        CreateSpritesList();
         ////в зависимости от типа
         if (shape == BlockTypeEnum.Empty)
         {
@@ -199,9 +216,9 @@ public static class SpriteBank
                 case BlockTypeEnum.Empty:
                     return null;
                 case BlockTypeEnum.StandardBlock:
-                    return Resources.Load<Sprite>("Sprites/Blocks/ground" + dopString) as Sprite;
+                    return Resources.Load<Sprite>("Sprites/Blocks/ground" + dopString + qSuffix) as Sprite;
                 case BlockTypeEnum.Sliding:
-                    return Resources.Load<Sprite>("Sprites/Blocks/Sliding" + dopString) as Sprite;
+                    return Resources.Load<Sprite>("Sprites/Blocks/Sliding" + dopString + qSuffix) as Sprite;
                 default:
                     Debug.LogError("Не определен тип " + shape);
                     return null;
@@ -213,6 +230,7 @@ public static class SpriteBank
 
     public static Sprite SetShape(BlockingElementsShapeEnum shape, int option = 0)
     {
+        CreateSpritesList();
         ////в зависимости от типа
         if (shape == BlockingElementsShapeEnum.Empty)
         {
@@ -236,13 +254,14 @@ public static class SpriteBank
                 dopString = "_" + option;
             }
 
-            return Resources.Load<Sprite>("Sprites/BlockingElement/" + shape.ToString() + dopString) as Sprite;
+            return Resources.Load<Sprite>("Sprites/BlockingElement/" + shape.ToString() + dopString + qSuffix) as Sprite;
         }
         
     }
 
     public static Sprite SetShape(InstrumentsEnum shape, bool mini = false)
     {
+        CreateSpritesList();
         ////в зависимости от типа
         if (shape == InstrumentsEnum.Empty)
         {
@@ -260,12 +279,13 @@ public static class SpriteBank
                 }
             }
 
-            return Resources.Load("Sprites/Instruments/" + shape.ToString() + (mini ? "_mini" : ""), typeof(Sprite)) as Sprite;
+            return Resources.Load("Sprites/Instruments/" + shape.ToString() + (mini ? "@1x" : qSuffix), typeof(Sprite)) as Sprite;
         }        
     }
 
     public static Sprite SetShape(SpritesEnum shape, bool mini = false)
     {
+        CreateSpritesList();
         ////в зависимости от типа
         if (shape == SpritesEnum.Empty)
         {
@@ -287,17 +307,21 @@ public static class SpriteBank
             switch (shape)
             {
                 case SpritesEnum.Button_Shop:
-                    return Resources.Load<Sprite>("Sprites/interface/Buttons/" + shape) as Sprite;
+                    return Resources.Load<Sprite>("Sprites/interface/Buttons/" + shape.ToString()) as Sprite;
                 case SpritesEnum.Button_Shop_Close:
-                    return Resources.Load<Sprite>("Sprites/interface/Buttons/" + shape) as Sprite;
+                    return Resources.Load<Sprite>("Sprites/interface/Buttons/" + shape.ToString()) as Sprite;
+
+                case SpritesEnum.Targets_panel:
+                    return Resources.Load<Sprite>("Sprites/interface/" + shape.ToString() + qSuffix) as Sprite;
                 default:
-                    return Resources.Load("Sprites/" + shape.ToString() + (mini ? "_mini" : ""), typeof(Sprite)) as Sprite;
+                    return Resources.Load("Sprites/interface/" + shape.ToString() + (mini ? "@1x" : qSuffix), typeof(Sprite)) as Sprite;
             }            
         }
     }
 
     public static Sprite SetShape(BorderEnum shape)
     {
+        CreateSpritesList();
         ////в зависимости от типа
         if (shape == BorderEnum.Empty)
         {
@@ -315,7 +339,7 @@ public static class SpriteBank
                 }
             //}
 
-            return Resources.Load<Sprite>("Sprites/Border/" + shape.ToString()) as Sprite;
+            return Resources.Load<Sprite>("Sprites/Border/" + shape.ToString() + qSuffix) as Sprite;
         }
         
     }

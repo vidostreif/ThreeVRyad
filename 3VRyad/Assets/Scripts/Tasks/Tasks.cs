@@ -100,6 +100,11 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         {
             Debug.LogError("Несколько экземпляров Tasks!");
         }
+
+        //устанавливаем спрайты под разрешение экрана
+        GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Targets_panel);
+        transform.Find("movesText/MoveImage").GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Move);
+
         Instance = this;
         addMoves = 0;
         realMoves = 0;

@@ -289,5 +289,7 @@ public enum SpritesEnum
     Gift_Box_Open,
     Button_Shop,
     Button_Shop_Close,
-    
+    Targets_panel,
+    Tasks_panel,
+
 }//спрайты

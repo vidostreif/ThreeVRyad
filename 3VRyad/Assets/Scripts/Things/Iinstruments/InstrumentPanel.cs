@@ -37,6 +37,9 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
 
         instrumentPrepared = false;
         successfulActivation = false;
+
+        //устанавливаем спрайты под разрешение экрана
+        GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Tasks_panel);
     }
 
     //создание коллекции инструментов в игре
