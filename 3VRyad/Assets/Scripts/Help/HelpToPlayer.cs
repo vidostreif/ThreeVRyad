@@ -223,6 +223,7 @@ public static class HelpToPlayer
                 else if (activeHint.help == ElementsTypeEnum.StandardElement.ToString())
                 {
                     created = CreateStandardElementHelp(3);
+                    AddHint(HelpEnum.GnomeStandardElement);
                 }
                 else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
                 {
@@ -256,7 +257,7 @@ public static class HelpToPlayer
                 {
                     created = CreateGrassHelp((BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), activeHint.help));
                 }
-                else if (activeHint.help == HelpEnum.Gnome.ToString())
+                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString())
                 {
                     created = InterfaceHelp("Gnome");
                 }
@@ -406,9 +407,6 @@ public static class HelpToPlayer
                     Button buttonDellHelp = buttonDellHelpGO.GetComponent<Button>();
                     buttonDellHelp.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
                     buttonDellHelp.onClick.AddListener(delegate { DeletedByClickingOnButton(); });
-                    ////показываем кнопку постепенно
-                    //Image imageDellHelp = buttonDellHelpGO.GetComponent<Image>();
-                    //MainAnimator.Instance.AddElementForSmoothChangeColor(imageDellHelp, new Color(imageDellHelp.color.r, imageDellHelp.color.g, imageDellHelp.color.b, 1), 0.1f);
 
                     //показываем текст
                     CreateTextCloud();
@@ -568,7 +566,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == ElementsTypeEnum.StandardElement.ToString())
             {
-                text.text = "Что бы убрать растения в нашем саду, их нужно собрать в комбинации из трех или более растений. Попробуй!";
+                text.text = "Что бы убрать растения в нашем саду, их нужно собрать в комбинации из трех или более растений в ряд. Попробуй передвинуть растение!";
             }
             else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString())
             {
@@ -580,7 +578,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == ElementsTypeEnum.BigFlask.ToString())
             {
-                text.text = "Это большое зелье за сбор комбинации из 6 растений. Ты уже знаешь что с ним делать!";
+                text.text = "Это большое зелье за сбор комбинации из 6 растений. Любое зелье можно двигать как обчное растение! Двигай в сторону!";
             }
             else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
             {
@@ -613,6 +611,10 @@ public static class HelpToPlayer
             else if (activeHint.help == HelpEnum.Gnome.ToString())
             {
                 text.text = "Привет, я гномик Сеня! Мои магия и подсказки помогут тебе в этом интересном путишествии!";
+            }
+            else if (activeHint.help == HelpEnum.GnomeStandardElement.ToString())
+            {
+                text.text = "Продолжай собирать растения в ряд пока не выполнишь задание!";
             }
             else if (activeHint.help == HelpEnum.Lifes.ToString())
             {
@@ -739,7 +741,6 @@ public static class HelpToPlayer
         //если есть подсказка для элементов
         if (activeHint != null)
         {
-
             //восстанавливаем значения сортировки спрайтов
             foreach (SpriteRenderSettings item in activeHint.spriteRendersSetingList)
             {

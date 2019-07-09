@@ -158,6 +158,7 @@ public enum HelpEnum
 {
     Empty,
     Gnome,
+    GnomeStandardElement,
     Score,
     Tasks,    
     SuperBonus,

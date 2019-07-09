@@ -50,29 +50,28 @@ public class AdMobManager : MonoBehaviour
 
         //тестовый код рекламы ca-app-pub-3940256099942544/5224354917
 
-        rewardVideoForCoin = new RewardVideo(Shop.Instance.AddCoinsForViewingAds, "ca-app-pub-6280237892174167/9330414827", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Coin), 60, 0);
+        rewardVideoForCoin = new RewardVideo(AdMobManager.Instance.AddCoinsForViewingAds, "ca-app-pub-6280237892174167/9330414827", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Coin), 60, 30);
 
-        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-6280237892174167/5734011639", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Move), 300, 30);
+        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-6280237892174167/5734011639", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Move), 300, 120);
 
-        rewardVideoForLife = new RewardVideo(LifeManager.Instance.AddLifeForViewingAds, "ca-app-pub-6280237892174167/8374640938", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Life), 300, 20);
+        rewardVideoForLife = new RewardVideo(AdMobManager.Instance.AddLifeForViewingAds, "ca-app-pub-6280237892174167/8374640938", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Life), 300, 60);
 
-        //определяем время загрузки видео для ежедневного подарка
-        int timeLoadVideoForDailyGift = 10;
-        if (DailyGiftManager.Instance.TodayReceivedAllDailyGift())
-        {
-            timeLoadVideoForDailyGift = (int)DailyGiftManager.Instance.TimeUntilNextDailyGift().TotalSeconds - 30;
-            if (timeLoadVideoForDailyGift < 10)
-            {
-                timeLoadVideoForDailyGift = 10;
-            }
-        }     
+        ////определяем время загрузки видео для ежедневного подарка
+        //int timeLoadVideoForDailyGift = 10;
+        //if (DailyGiftManager.Instance.TodayReceivedAllDailyGift())
+        //{
+        //    timeLoadVideoForDailyGift = (int)DailyGiftManager.Instance.TimeUntilNextDailyGift().TotalSeconds - 30;
+        //    if (timeLoadVideoForDailyGift < 10)
+        //    {
+        //        timeLoadVideoForDailyGift = 10;
+        //    }
+        //}     
         
-        rewardVideoForDailyGift = new RewardVideo(DailyGiftManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-6280237892174167/9113007538", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, timeLoadVideoForDailyGift);
+        rewardVideoForDailyGift = new RewardVideo(AdMobManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-6280237892174167/9113007538", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, 0);
     }
 
     public void Update()
     {
-//#if !UNITY_EDITOR
         //обрабатываем не чаще двух раз в секунду
         if (LastArrayProcessingTime + 0.5f < Time.realtimeSinceStartup)
         {
@@ -82,7 +81,6 @@ public class AdMobManager : MonoBehaviour
             rewardVideoForLife.ProcessingOfButtonArrays();
             rewardVideoForDailyGift.ProcessingOfButtonArrays();
         }
-//#endif
     }
 
     //создание кнопки просмотра видео
@@ -106,10 +104,34 @@ public class AdMobManager : MonoBehaviour
         return null;
     }
 
+    public void AddCoinsForViewingAds(Reward args)
+    {
+        if (Shop.Instance != null)
+        {
+            Shop.Instance.AddCoinsForViewingAds(args);
+        }
+    }    
+
     public void AddMovesOnEndGAme(Reward args) {
         if (Tasks.Instance != null)
         {
             Tasks.Instance.AddMovesOnEndGAme(args);
+        }
+    }
+
+    public void AddLifeForViewingAds(Reward args)
+    {
+        if (LifeManager.Instance != null)
+        {
+            LifeManager.Instance.AddLifeForViewingAds(args);
+        }
+    }
+
+    public void ConfirmationOfViewingVideo_1(Reward args)
+    {
+        if (DailyGiftManager.Instance != null)
+        {
+            DailyGiftManager.Instance.ConfirmationOfViewingVideo_1(args);
         }
     }
 }

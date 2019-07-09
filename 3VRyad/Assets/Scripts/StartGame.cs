@@ -9,12 +9,20 @@ public class StartGame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(Preload());
+        if (SceneManager.GetActiveScene().name == "Start")
+        {
+            StartCoroutine(Preload());
+            DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy 
+        }
+        else
+        {
+            Destroy(gameObject);
+        }        
     }
 
     private IEnumerator Preload() {
 
-        Transform ImageLoadTransform = transform.Find("PanelLoad/ImageLoad");
+        Transform ImageLoadTransform = transform.Find("ImageLoad");
         Image imageLoad = ImageLoadTransform.GetComponent<Image>();
         Text textLoad = ImageLoadTransform.Find("TextLoad").GetComponent<Text>();
 
@@ -41,7 +49,8 @@ public class StartGame : MonoBehaviour
         textLoad.text = "Загрузка эффектов...";
         imageLoad.fillAmount = 0.60f;
         Debug.Log("Загрузка эффектов: " + Time.realtimeSinceStartup);
-        gameObject.AddComponent<ParticleSystemManager>().Preload();
+        ParticleSystemManager.Instance.Preload();
+        //gameObject.AddComponent<ParticleSystemManager>().Preload();
 
         yield return new WaitForEndOfFrame();
         textLoad.text = "Загрузка сохранений...";
@@ -58,7 +67,7 @@ public class StartGame : MonoBehaviour
         imageLoad.fillAmount = 1;
 
         yield return new WaitForSeconds(0.3f);
-        DontDestroyOnLoadManager.DestroyAll();
+        //DontDestroyOnLoadManager.DestroyAll();
 
         //загружаем уровень
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
@@ -74,5 +83,6 @@ public class StartGame : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
             Destroy(imageMainLoadGO);
+        Destroy(gameObject);
     }
 }
