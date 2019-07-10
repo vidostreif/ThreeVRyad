@@ -127,22 +127,26 @@ public class MessageArray : MonoBehaviour
        
     }
 
-    void OnGUI()
-    {
-        float fps = 1.0f / Time.deltaTime;
-        GUILayout.Label("FPS = " + (int)fps);
+    //void OnGUI()
+    //{
+    //    float fps = 1.0f / Time.deltaTime;
+    //    GUIStyle style = new GUIStyle(GUI.skin.button);
+    //    style.normal.textColor = Color.red;
+    //    style.fontStyle = FontStyle.Bold;
+    //    style.fontSize = 50;
+    //    GUILayout.Label("FPS = " + (int)fps, style);
 
-        string[] names = QualitySettings.names;
-        GUILayout.BeginVertical();
-        for (int i = 0; i < names.Length; i++)
-        {
-            if (GUILayout.Button(names[i]))
-            {
-                QualitySettings.SetQualityLevel(i, true);
-            }
-        }
-        GUILayout.EndVertical();
-    }
+    //    string[] names = QualitySettings.names;
+    //    GUILayout.BeginVertical();
+    //    for (int i = 0; i < names.Length; i++)
+    //    {
+    //        if (GUILayout.Button(names[i], style))
+    //        {
+    //            QualitySettings.SetQualityLevel(i, true);
+    //        }
+    //    }
+    //    GUILayout.EndVertical();
+    //}
 }
 
 public class DebugMessage {

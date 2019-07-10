@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]// требуем наличие у объекта SpriteRenderer
+//[RequireComponent(typeof(SpriteRenderer))]// требуем наличие у объекта SpriteRenderer
 //[RequireComponent(typeof(SpriteBank))]// требуем наличие у объекта ObjectManagement
 [RequireComponent(typeof(ElementController))]// требуем наличие у объекта ElementController
 

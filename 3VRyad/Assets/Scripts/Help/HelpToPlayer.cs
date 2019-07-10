@@ -579,7 +579,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == ElementsTypeEnum.BigFlask.ToString())
             {
-                text.text = "Это большое зелье за сбор комбинации из 6 растений. Любое зелье можно двигать как обчное растение! Двигай в сторону!";
+                text.text = "Это большое зелье за сбор комбинации из 6 растений. Все зелья можно двигать в любую из четырех сторон! Попробуй!";
             }
             else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
             {
@@ -611,7 +611,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.Gnome.ToString())
             {
-                text.text = "Привет, я гномик Сеня! Мои магия и подсказки помогут тебе в этом интересном путишествии!";
+                text.text = "Привет, я гномик Сеня! Мои магия и подсказки помогут тебе в этом интересном путешествии!";
             }
             else if (activeHint.help == HelpEnum.GnomeStandardElement.ToString())
             {
@@ -1463,7 +1463,7 @@ public static class HelpToPlayer
         }
         else if (armMovementEnum == ArmMovementEnum.All_directions)
         {
-            panelArmTF.position = new Vector3(posX + 1f, posY - 1f, 0);
+            panelArmTF.position = new Vector3(posX + 0.5f, posY - 0.5f, 0);
             imageArmAnimation.Play("Arm_all_directions_tf");
         }
         else if (armMovementEnum == ArmMovementEnum.Double_click)

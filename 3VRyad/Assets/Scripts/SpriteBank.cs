@@ -96,9 +96,9 @@ public static class SpriteBank
     private static string GetQuality()
     {
         int screenH = Screen.height;
-        if (screenH > 1300)
+        if (screenH > 1400)
             return "@4x";
-        else if (screenH < 670)
+        else if (screenH < 721)
             return "@1x";
         else
             return "@2x";

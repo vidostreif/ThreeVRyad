@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PRODUCTS:
   - id: Bundel_x1
-    name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u043C\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
+    name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
       \u04451"
     priceCoins: 50
     productType: 0
@@ -134,7 +134,7 @@ MonoBehaviour:
     timeImmortalLives: 0
     image: {fileID: 21300000, guid: e385fefc85113ff46bc8ac1f6d129b37, type: 3}
   - id: Bundel_x5
-    name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u043C\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
+    name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
       \u04455"
     priceCoins: 235
     productType: 0
@@ -151,7 +151,7 @@ MonoBehaviour:
     timeImmortalLives: 30
     image: {fileID: 21300000, guid: d0bdc4c1a7c5124488986de47e917807, type: 3}
   - id: Bundel_x10
-    name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u043C\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
+    name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
       \u044510"
     priceCoins: 450
     productType: 0
@@ -168,7 +168,7 @@ MonoBehaviour:
     timeImmortalLives: 60
     image: {fileID: 21300000, guid: 0d41eb291b1e28c42888d94eef3581bf, type: 3}
   - id: Bundel_x20
-    name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u043C\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
+    name: "\u041D\u0430\u0431\u043E\u0440 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432
       \u044520"
     priceCoins: 800
     productType: 0
@@ -215,7 +215,7 @@ MonoBehaviour:
     compositionBundle: []
     coins: 100
     timeImmortalLives: 0
-    image: {fileID: 21300000, guid: 81d2b56fe166d76449d20496e0635373, type: 3}
+    image: {fileID: 21300000, guid: 8a39482356847d1408c6bd95c7f60568, type: 3}
   - id: coins_250
     name: "250 \u043C\u043E\u043D\u0435\u0442"
     priceCoins: 0
@@ -223,7 +223,7 @@ MonoBehaviour:
     compositionBundle: []
     coins: 250
     timeImmortalLives: 0
-    image: {fileID: 21300000, guid: c225ceb1a7efcde49ac6f0104720c4de, type: 3}
+    image: {fileID: 21300000, guid: 81d2b56fe166d76449d20496e0635373, type: 3}
   - id: coins_500
     name: "500 \u043C\u043E\u043D\u0435\u0442"
     priceCoins: 0
@@ -231,7 +231,7 @@ MonoBehaviour:
     compositionBundle: []
     coins: 500
     timeImmortalLives: 0
-    image: {fileID: 21300000, guid: 27fc57f7e13bb0e4299b5585d627fdf7, type: 3}
+    image: {fileID: 21300000, guid: c225ceb1a7efcde49ac6f0104720c4de, type: 3}
   - id: coins_1000
     name: "1000 \u043C\u043E\u043D\u0435\u0442"
     priceCoins: 0

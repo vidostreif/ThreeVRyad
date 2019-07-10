@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using UnityEngine.UI;
 using GoogleMobileAds.Api;
+using UnityEngine.Profiling;
 
 //#if UNITY_EDITOR
 //[InitializeOnLoad]
@@ -160,56 +161,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                                 }
                             }
                         }
-
-                        ////проверяем что мы не создаем линию из 3 элементов одного вида
-                        //if (x < containers.GetLength(0) - 1 && BlockCheck.ThisBlockWithStandartElement(containers[x + 1].block[y]) && BlockCheck.ThisBlockWithStandartElement(containers[x + 2].block[y]))
-                        //{
-                        //    if (elementsPriority.ElementsShape == containers[x + 1].block[y].Element.Shape && elementsPriority.ElementsShape == containers[x + 2].block[y].Element.Shape)
-                        //    {
-                        //        continue;
-                        //    }
-                        //}
-
-                        //if (x > 1 && BlockCheck.ThisBlockWithStandartElement(containers[x - 1].block[y]) && BlockCheck.ThisBlockWithStandartElement(containers[x - 2].block[y]))
-                        //{
-                        //    if (elementsPriority.ElementsShape == containers[x - 1].block[y].Element.Shape && elementsPriority.ElementsShape == containers[x - 2].block[y].Element.Shape)
-                        //    {
-                        //        continue;
-                        //    }
-                        //}
-
-                        //if (x > 0 && x < containers.GetLength(0) - 1 && BlockCheck.ThisBlockWithStandartElement(containers[x - 1].block[y]) && BlockCheck.ThisBlockWithStandartElement(containers[x + 1].block[y]))
-                        //{
-                        //    if (elementsPriority.ElementsShape == containers[x - 1].block[y].Element.Shape && elementsPriority.ElementsShape == containers[x + 1].block[y].Element.Shape)
-                        //    {
-                        //        continue;
-                        //    }
-                        //}
-
-                        //if (y < containers[x].block.GetLength(0) - 1 && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y + 1]) && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y + 2]))
-                        //{
-                        //    if (elementsPriority.ElementsShape == containers[x].block[y + 1].Element.Shape && elementsPriority.ElementsShape == containers[x].block[y + 2].Element.Shape)
-                        //    {
-                        //        continue;
-                        //    }
-                        //}
-
-                        //if (y > 1 && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y - 1]) && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y - 2]))
-                        //{
-                        //    if (elementsPriority.ElementsShape == containers[x].block[y - 1].Element.Shape && elementsPriority.ElementsShape == containers[x].block[y - 2].Element.Shape)
-                        //    {
-                        //        continue;
-                        //    }
-                        //}
-
-                        //if (y > 0 && y < containers[x].block.GetLength(0) - 1 && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y - 1]) && BlockCheck.ThisBlockWithStandartElement(containers[x].block[y + 1]))
-                        //{
-                        //    if (elementsPriority.ElementsShape == containers[x].block[y - 1].Element.Shape && elementsPriority.ElementsShape == containers[x].block[y + 1].Element.Shape)
-                        //    {
-                        //        continue;
-                        //    }
-                        //}
-
                         //если нашли нужный элемент, то заканчиваем цикл
                         //elementShape = elementsShapeAndPriority[random].elementsShape;
                         elementfound = true;
@@ -254,11 +205,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             if ((!Tasks.Instance.endGame && !InstrumentPanel.Instance.InstrumentPrepared && (Tasks.Instance.Moves - elementsForMoveList.Count) > 0 && (touchingBlock != null || destinationBlock != null))
             || (touchingBlock == null && destinationBlock == null && (elementsForMoveList.Count == 0 || (blockedForMove && elementsForMoveList.Count < 2))))
             {
-                //Reward reward = new Reward();
-                //reward.Amount = 2;
-                //AdMobManager.Instance.actionSuccess(reward);
-                //AdMobManager.Instance.AddMovesOnEndGAme(reward);
-                //Tasks.Instance.AddMovesOnEndGAme(reward);
                 Blocks blocks = new Blocks();
                 blocks.block = new Block[2];
                 blocks.block[0] = touchingBlock;
@@ -543,9 +489,10 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //если не конец игры, ищем существующие ходы создаем подсказку
             if (!Tasks.Instance.endGame && !SuperBonus.Instance.InWork())
             {
+                
                 //проверка, что остались доступные ходы
                 yield return StartCoroutine(FoundNextMove());
-
+                
                 //если не конец игры, но ходов не осталось и супер бонус не активен то рисуем проигрыш
                 if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove)
                 {
@@ -836,6 +783,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //поиск следующего хода
     public IEnumerator FoundNextMove()
     {
+        //Profiler.BeginSample("FoundNextMove");
         //проверка, что остались доступные ходы
         MainAnimator.Instance.ClearElementsForNextMove();
 
@@ -951,6 +899,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             SupportFunctions.CreateInformationText("Торнадо нам не помогло!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
             yield return new WaitForSeconds(0.7f);
         }
+        //Profiler.EndSample();
     }
 
     //возвращает массив элементов которые могут составить линию в следующем ходу
