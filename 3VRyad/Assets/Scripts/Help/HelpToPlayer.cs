@@ -205,6 +205,8 @@ public static class HelpToPlayer
 
                 activeHint = hint;
                 activeHint.canvasHelpToPlayer = UnityEngine.Object.Instantiate(PrefabBank.CanvasHelpToPlayer);
+                //устанавливаем камеру
+                activeHint.canvasHelpToPlayer.GetComponent<Canvas>().worldCamera = Camera.main;
 
                 //находим нужную подсказку
                 if (activeHint.help == BlockTypeEnum.StandardBlock.ToString())
@@ -395,8 +397,7 @@ public static class HelpToPlayer
                     //создаем затемнение                  
                     Image imageHelpToPlayer = activeHint.canvasHelpToPlayer.GetComponentInChildren<Image>();
                     MainAnimator.Instance.AddElementForSmoothChangeColor(imageHelpToPlayer, new Color(imageHelpToPlayer.color.r, imageHelpToPlayer.color.g, imageHelpToPlayer.color.b, 0.9f), 2);
-                    //устанавливаем камеру
-                    activeHint.canvasHelpToPlayer.GetComponent<Canvas>().worldCamera = Camera.main;
+                    
                     //добавляем действие канвасу
                     Transform gOPanel = activeHint.canvasHelpToPlayer.transform.Find("Panel");
                     Button button = gOPanel.GetComponent<Button>();
@@ -506,7 +507,7 @@ public static class HelpToPlayer
             {
                 newPosition = textCloud.position;
                 width = 1;
-                //находим самый левый верхний объект
+                //находим самый правый верхний объект
                 foreach (Transform item in transformsList)
                 {
                     //обрабатываем все кроме элементов
@@ -918,21 +919,22 @@ public static class HelpToPlayer
                 //добавляем эффект мерцания
                 AddToFlashing(curBlock.gameObject, activeHint);
 
+                //получаем блоки в радиусе поражения
+                Block[] blocks = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, item.GetComponent<ElementSmallFlask>().ExplosionRadius);
+
                 //отключаем перетаскивание у фласки
                 BlockController blockController = curBlock.GetComponent<BlockController>();
                 activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
                 if (deactivateСlick)
                 {
                     blockController.handleСlick = false;
+                    CreateArmHelp(blocks, curBlock, ArmMovementEnum.All_directions);
                 }
                 else
                 {
+                    CreateArmHelp(blocks, curBlock, ArmMovementEnum.Double_click);
                     blockController.handleDragging = false;
                 }
-                
-
-                //получаем блоки в радиусе поражения
-                Block[] blocks = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, item.GetComponent<ElementSmallFlask>().ExplosionRadius);
 
                 //получаем соседние блоки
                 NeighboringBlocks neighboringBlocks = GridBlocks.Instance.GetNeighboringBlocks(curBlock.PositionInGrid); 
@@ -1350,6 +1352,7 @@ public static class HelpToPlayer
         }
     }
 
+    //высвечивание хода
     private static bool HighlightSpecifiedMove(ElementsForNextMove elementsForNextMove)
     {
         MainAnimator.Instance.ElementsForNextMove = elementsForNextMove;
@@ -1368,6 +1371,26 @@ public static class HelpToPlayer
         BlockController blockController = elementsForNextMove.targetBlock.GetComponent<BlockController>();
         activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
         blockController.permittedDirection = elementsForNextMove.oppositeDirectionForMove;
+
+        //создаем руку
+        ArmMovementEnum armMovementEnum;
+        if (elementsForNextMove.directionForMove == DirectionEnum.Left)
+        {
+            armMovementEnum = ArmMovementEnum.Left;
+        }
+        else if (elementsForNextMove.directionForMove == DirectionEnum.Right)
+        {
+            armMovementEnum = ArmMovementEnum.Right;
+        }
+        else if (elementsForNextMove.directionForMove == DirectionEnum.Up)
+        {
+            armMovementEnum = ArmMovementEnum.Up;
+        }
+        else
+        {
+            armMovementEnum = ArmMovementEnum.Down;
+        }
+        CreateArmHelp(blocks.ToArray(), elementsForNextMove.targetBlock, armMovementEnum);
 
         //перебираем все блоки
         foreach (Block block in blocks)
@@ -1398,6 +1421,59 @@ public static class HelpToPlayer
             }
         }
         return true;
+    }
+
+    private static void CreateArmHelp(Block[] blocks, Block activeBlock, ArmMovementEnum armMovementEnum) {
+        //находим руку
+        Transform panelTF = activeHint.canvasHelpToPlayer.transform.Find("Panel");
+        Transform panelArmTF = panelTF.transform.Find("PanelArm");
+        Transform imageArmTF = panelArmTF.transform.Find("ImageArm");
+        Animation imageArmAnimation = imageArmTF.GetComponent<Animation>();
+
+        float posY = activeBlock.thisTransform.position.y;
+        float posX = activeBlock.thisTransform.position.x;
+        //если направление влево или вправо, то ищем крайни правый блок для позиции по горизонтали
+        if (armMovementEnum == ArmMovementEnum.Left || armMovementEnum == ArmMovementEnum.Right)
+        {
+            if (armMovementEnum == ArmMovementEnum.Left)
+            {
+                posX += 0.4f;
+            }
+            else
+            {
+                posX -= 0.6f;
+            }
+
+            panelArmTF.position = new Vector3(posX, posY - 0.5f, 0);
+            imageArmAnimation.Play("Arm_left_right_tf");
+        }
+        else if (armMovementEnum == ArmMovementEnum.Up || armMovementEnum == ArmMovementEnum.Down)
+        {
+            if (armMovementEnum == ArmMovementEnum.Up)
+            {
+                posY -= 0.4f;
+            }
+            else
+            {
+                posY += 0.6f;
+            }
+
+            panelArmTF.position = new Vector3(posX + 0.5f, posY, 0);
+            imageArmAnimation.Play("Arm_up_down_tf");
+        }
+        else if (armMovementEnum == ArmMovementEnum.All_directions)
+        {
+            panelArmTF.position = new Vector3(posX + 1f, posY - 1f, 0);
+            imageArmAnimation.Play("Arm_all_directions_tf");
+        }
+        else if (armMovementEnum == ArmMovementEnum.Double_click)
+        {
+            panelArmTF.position = new Vector3(posX + 0.5f, posY - 0.5f, 0);
+            imageArmAnimation.Play("Arm_all_double_click_tf");
+        }
+
+        RectTransform rectTransformPanelArm = panelArmTF.GetComponent<RectTransform>();
+        rectTransformPanelArm.anchoredPosition = new Vector3(rectTransformPanelArm.anchoredPosition.x + rectTransformPanelArm.rect.width * 0.5f, rectTransformPanelArm.anchoredPosition.y - rectTransformPanelArm.rect.height * 0.5f);
     }
 }
 

@@ -7,47 +7,47 @@ using Firebase;
 
 public class CrashlyticsInit : MonoBehaviour
 {
-    public static CrashlyticsInit Instance; // Синглтон
+    //public static CrashlyticsInit Instance; // Синглтон
 
-    public void Awake()
-    {
-        if (Instance)
-        {
-            Destroy(this.gameObject); //Delete duplicate
-            return;
-        }
-        else
-        {
-            Instance = this; //Make this object the only instance            
-        }
-        if (Application.isPlaying)
-        {
-            DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy            
-        }
-    }
+    //public void Awake()
+    //{
+    //    if (Instance)
+    //    {
+    //        Destroy(this.gameObject); //Delete duplicate
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        Instance = this; //Make this object the only instance            
+    //    }
+    //    if (Application.isPlaying)
+    //    {
+    //        DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy            
+    //    }
+    //}
 
-    // Use this for initialization
-    void Start()
-    {
-        // Initialize Firebase
-        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
-            var dependencyStatus = task.Result;
-            if (dependencyStatus == Firebase.DependencyStatus.Available)
-            {
-                // Create and hold a reference to your FirebaseApp,
-                // where app is a Firebase.FirebaseApp property of your application class.
-                // Crashlytics will use the DefaultInstance, as well;
-                // this ensures that Crashlytics is initialized.
-                Firebase.FirebaseApp app = Firebase.FirebaseApp.DefaultInstance;
+    //// Use this for initialization
+    //void Start()
+    //{
+    //    // Initialize Firebase
+    //    Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
+    //        var dependencyStatus = task.Result;
+    //        if (dependencyStatus == Firebase.DependencyStatus.Available)
+    //        {
+    //            // Create and hold a reference to your FirebaseApp,
+    //            // where app is a Firebase.FirebaseApp property of your application class.
+    //            // Crashlytics will use the DefaultInstance, as well;
+    //            // this ensures that Crashlytics is initialized.
+    //            Firebase.FirebaseApp app = Firebase.FirebaseApp.DefaultInstance;
 
-                // Set a flag here for indicating that your project is ready to use Firebase.
-            }
-            else
-            {
-                UnityEngine.Debug.LogError(System.String.Format(
-                  "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
-                // Firebase Unity SDK is not safe to use here.
-            }
-        });
-    }
+    //            // Set a flag here for indicating that your project is ready to use Firebase.
+    //        }
+    //        else
+    //        {
+    //            UnityEngine.Debug.LogError(System.String.Format(
+    //              "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+    //            // Firebase Unity SDK is not safe to use here.
+    //        }
+    //    });
+    //}
 }

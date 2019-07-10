@@ -296,3 +296,15 @@ public enum SpritesEnum
     Tasks_panel,
 
 }//спрайты
+
+public enum ArmMovementEnum
+{
+    Empty,
+    Up,
+    Down,
+    Left,
+    Right,
+    All_directions,
+    Double_click
+
+}//движения руки-подсказки
