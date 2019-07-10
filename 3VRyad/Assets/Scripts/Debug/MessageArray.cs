@@ -131,6 +131,17 @@ public class MessageArray : MonoBehaviour
     {
         float fps = 1.0f / Time.deltaTime;
         GUILayout.Label("FPS = " + (int)fps);
+
+        string[] names = QualitySettings.names;
+        GUILayout.BeginVertical();
+        for (int i = 0; i < names.Length; i++)
+        {
+            if (GUILayout.Button(names[i]))
+            {
+                QualitySettings.SetQualityLevel(i, true);
+            }
+        }
+        GUILayout.EndVertical();
     }
 }
 

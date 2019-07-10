@@ -1174,7 +1174,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                             HelpToPlayer.AddHint(HelpEnum.DropBlock);
 
                             elementsForNextMove.elementsList.Add(containers[x].block[y].Element);
-                            elementsForNextMove.elementsList.Add(blockItem.Element);
+                            //elementsForNextMove.elementsList.Add(blockItem.Element);
                             elementsForNextMove.elementForMove = containers[x].block[y].Element;
                             elementsForNextMove.blockElementForMove = containers[x].block[y];
                             elementsForNextMove.directionForMove = neighboringBlocks.GetDirection(blockItem);

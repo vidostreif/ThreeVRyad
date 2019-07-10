@@ -1155,7 +1155,7 @@ public static class HelpToPlayer
                 //проверяем так же блок назначения
                 if (curElementsForNextMove.targetBlock != null && curElementsForNextMove.targetBlock.BehindElement != null && !curElementsForNextMove.targetBlock.BehindElement.Destroyed && curElementsForNextMove.targetBlock.BehindElement.Type == elementsTypeEnum)
                 {
-                        //подсвечиваем элемент
+                    //подсвечиваем элемент
                     AddToFlashing(curElementsForNextMove.targetBlock.BehindElement.gameObject, activeHint);
                 }
                 //высвечиваем нужный ход
