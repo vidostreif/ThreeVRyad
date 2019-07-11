@@ -307,6 +307,7 @@ public class BaseElement : MonoBehaviour
         }
         else
         {
+            AnimatElement.PlayIdleAnimation();
             //удаляем из блока
             Block block = GridBlocks.Instance.GetBlock(this.positionInGrid);
             if (block != null)
