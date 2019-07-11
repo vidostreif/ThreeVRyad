@@ -11,17 +11,18 @@ public class LifeManager : MonoBehaviour
     private int life; //коилчество жизней
     [SerializeField] private int maxLife; //максимальное количество жизней
     [SerializeField] private int timeToGetOneLife; //количество минут для получения одной жизни 
-    private Transform thisTransform;
-    private Transform startParent;
-    private Animation thisAnimation;
-    //private float LastPlayAnimation = 0;
     private DateTime timeToNextLife; //время получения следующей жизни
     private DateTime endTimeImmortal; //время окончания бессметрия
     private int addMinutesTimeImmortal = 0;
+    private float LastArrayProcessingTime = 0;
+    private bool giftFirstImmortalityIssued;//подарок - первое бессмертие выдано
+
+    private Transform thisTransform;
+    private Transform startParent;
+    private Animation thisAnimation;
     private Text textLive;
     private Text textLiveTime;
     private Image imageLive;
-    private float LastArrayProcessingTime = 0;
 
     public int Life { get => life; }
     public Transform StartParent { get => startParent; }
@@ -32,6 +33,8 @@ public class LifeManager : MonoBehaviour
             return endTimeImmortal.AddMinutes(addMinutesTimeImmortal);
         }
     }
+
+    public bool GiftFirstImmortalityIssued { get => giftFirstImmortalityIssued;}
 
     // Start is called before the first frame update
     void Awake()
@@ -141,6 +144,11 @@ public class LifeManager : MonoBehaviour
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Life_sub);
             RecordSave();
             UpdateText();
+            if (life == 0 && !giftFirstImmortalityIssued)
+            {
+                GameObject informationPanelGO = SupportFunctions.CreateInformationPanel("У тебя закончились жизни! В дальнейшем ты сможешь получить бессмертие из подарков или купить в магазине. А пока прими от меня подарочек!");
+                addTimeImmortal(60, informationPanelGO.transform, new Vector3(0, 2.5f, 0));
+            }
             return true;
         }
         else
@@ -159,16 +167,16 @@ public class LifeManager : MonoBehaviour
         }
     }
 
-    //добавление времени бессмертия из бандла
+    //добавление времени бессмертия
     public bool addTimeImmortal(int time)
     {
         if (EndTimeImmortal < CheckTime.Realtime())
         {
             endTimeImmortal = CheckTime.Realtime();
         }
+
         addMinutesTimeImmortal += time;
-        //thisAnimation.Play("Life_add");
-        //SoundManager.Instance.PlaySoundInternal(SoundsEnum.Life_add);
+
         if (EndTimeImmortal > CheckTime.Realtime())
         {
             life = maxLife;
@@ -204,8 +212,6 @@ public class LifeManager : MonoBehaviour
         {
             AddLive();
             RecordSave();
-            ////звук добавления
-            //SoundManager.Instance.PlaySoundInternal(SoundsEnum.AddMove);
             //эффект                
             ParticleSystemManager.Instance.CreateCollectAllEffect(imageLive.transform, SpriteBank.SetShape(SpritesEnum.Life, true));            
         }
@@ -214,6 +220,7 @@ public class LifeManager : MonoBehaviour
     private void LoadSave()
     {
         LifeSave lifeSave = JsonSaveAndLoad.LoadSave().lifeSave;
+        giftFirstImmortalityIssued = lifeSave.giftFirstImmortalityIssued;
         DateTime dateTimeToNextLifeLong = DateTime.FromFileTimeUtc(lifeSave.timeToNextLifeLong);
         DateTime dateTimeEndTimeImmortal = DateTime.FromFileTimeUtc(lifeSave.endTimeImmortalLong);
         if (lifeSave.life == 0 && dateTimeToNextLifeLong == null)

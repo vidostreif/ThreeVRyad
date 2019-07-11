@@ -14,6 +14,7 @@ public class DailyGiftManager : MonoBehaviour
     private int numberOfGiftsIssuedToday; //количество выданных подарков сегодня
     private GameObject dailyGiftPanel;
     private GameObject dailyGiftBut; //кнопка
+    private GameObject panelCquirrelPlace;//панель с белкой
     private Text TextTimeUntilNextDailyGift;
     private Transform dailyGiftButtonPlace;
     private float lastProcessingTime = 0;
@@ -44,6 +45,7 @@ public class DailyGiftManager : MonoBehaviour
         TextTimeUntilNextDailyGift = dailyGiftButtonPlace.Find("TextTimeUntilNextDailyGift").GetComponent<Text>();
         LoadSave();
         DetermineMomentOfIssuingNextGift();
+        CreateCquirrel();
     }
 
     // Update is called once per frame
@@ -105,6 +107,23 @@ public class DailyGiftManager : MonoBehaviour
         {
             nextGiftTimeIssued = realtime2hours.AddDays(1);
         }
+    }
+
+    //показываем белку
+    public void CreateCquirrel() {
+        DelCquirrel();
+        if (!TodayReceivedAllDailyGift() && JsonSaveAndLoad.LoadSave().trainingCompleted)
+        {
+            GameObject PanelCquirrelPlace = GameObject.Find("PanelCquirrelPlace");
+            panelCquirrelPlace = Instantiate(PrefabBank.Cquirrel, PanelCquirrelPlace.transform);
+            SupportFunctions.ChangeButtonAction(panelCquirrelPlace.transform, CreateDailyGiftPanel);
+        }        
+    }
+
+    //удаляем белку
+    public void DelCquirrel()
+    {
+        Destroy(panelCquirrelPlace);
     }
 
     //выдача рандомного подарка
@@ -190,6 +209,7 @@ public class DailyGiftManager : MonoBehaviour
     public void CreateDailyGiftPanel() {
         DetermineMomentOfIssuingNextGift();
         int maxNumber = 3;
+        DelCquirrel();
         if (numberOfGiftsIssuedToday < maxNumber) {
             DestroyDailyGiftPanel();
             ThingsManager.Instance.PreloadSprites();

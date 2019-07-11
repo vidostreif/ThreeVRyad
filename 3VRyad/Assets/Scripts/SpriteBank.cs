@@ -98,7 +98,7 @@ public static class SpriteBank
         int screenH = Screen.height;
         if (screenH > 1400)
             return "@4x";
-        else if (screenH < 721)
+        else if (screenH < 720)
             return "@1x";
         else
             return "@2x";

@@ -34,6 +34,7 @@ public static class PrefabBank
     private static GameObject panelShopReceivingCoins = Resources.Load(prefabFolder + "Canvas/Shop/PanelShopReceivingCoins") as GameObject;
     private static GameObject dailyGiftButton = Resources.Load(prefabFolder + "Canvas/Shop/DailyGiftButton") as GameObject;
     private static GameObject imageCoin = Resources.Load(prefabFolder + "Canvas/GameCanvas/ImageCoin") as GameObject;
+    private static GameObject cquirrel = Resources.Load(prefabFolder + "Canvas/Shop/Cquirrel") as GameObject;    
 
 
     private static GameObject scoreElementPrefab = Resources.Load(prefabFolder + "Canvas/GameCanvas/ScoreElement") as GameObject;
@@ -77,7 +78,8 @@ public static class PrefabBank
     public static GameObject PanelShopReceivingCoins { get => panelShopReceivingCoins; }
     public static GameObject BlockBacklight { get => blockBacklight; }
     public static GameObject DailyGiftButton { get => dailyGiftButton; }
-
+    public static GameObject Cquirrel { get => cquirrel; }
+    
     public static void Preload()
     {
         //FieldInfo[] properties = PrefabBank.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);

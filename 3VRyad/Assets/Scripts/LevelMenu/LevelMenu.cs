@@ -87,14 +87,12 @@ public class LevelMenu : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            //SupportFunctions.CreateInformationPanel("Не удалось загрузить рекламное видео!", this.transform);
             Prepare();
         }
     }
 
     public void Prepare()
     {
-        //DontDestroyOnLoad(gameObject); //Set as do not destroy
         //загрузить данных из сохранения
         LoadSave();
         regionsList[0].levelList[0].SetLevelOpend();
@@ -104,7 +102,6 @@ public class LevelMenu : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "MainMenu")
         {
             CreateStartScreen();
-            //LoadMainMenu();
         }
 
         Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.EventLogin);
@@ -131,7 +128,6 @@ public class LevelMenu : MonoBehaviour
 
     private void CreateRegionsListFromFiles()
     {
-        //this.regionsList = new List<Region>();
         UnityEngine.Object xmlDocument = null;
         Level level = null;
 
@@ -170,8 +166,6 @@ public class LevelMenu : MonoBehaviour
             }
             r++;
         } while (true);
-
-        //Debug.Log("Stop parse " + Time.fixedTime);
     }
 
     public Level LastLoadLevel { get => lastLoadLevel; }
@@ -179,17 +173,7 @@ public class LevelMenu : MonoBehaviour
 
     private Region FoundLevelInRegions(Level inLevel)
     {
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
             return regionsList[inLevel.regionNumber];
-        //}
-        //    }
-        //}
-        //return null;
     }
 
     private Level FoundLevel(string xmlName, string regionName)
@@ -212,16 +196,6 @@ public class LevelMenu : MonoBehaviour
 
     public void LoadXml(Level inLevel)
     {
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    //if (inLevel.region != regionsList[i])
-        //    //{
-        //    //    continue;
-        //    //}
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
             SaveAndLoadScene.Instance().LoadXml(inLevel.xmlDocument.name, "Region_" + inLevel.regionNumber);
             lastLoadLevel = inLevel;
             lastLoadRegion = regionsList[inLevel.regionNumber];
@@ -234,108 +208,35 @@ public class LevelMenu : MonoBehaviour
                 EditorUtility.SetDirty(this);
             }
 #endif
-        //    return;
-        //}
-        //    }
-        //}
     }
 
 #if UNITY_EDITOR
     public void SaveXml(Level inLevel)
     {
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    //if (inLevel.region != regionsList[i])
-        //    //{
-        //    //    continue;
-        //    //}
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
             inLevel.xmlDocument = SaveAndLoadScene.Instance().SaveXml(inLevel.xmlDocument.name, "Region_" + inLevel.regionNumber);
-        //    return;
-        //}
-        //    }
-        //}
     }
     public void CreateXml(Level inLevel)
     {
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    //if (inLevel.region != regionsList[i])
-        //    //{
-        //    //    continue;
-        //    //}
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
             //сначала пробуем загрузить
             SaveAndLoadScene.Instance().LoadXml("Level_" + inLevel.levelNumber, "Region_" + inLevel.regionNumber);
 
             inLevel.xmlDocument = SaveAndLoadScene.Instance().SaveXml("Level_" + inLevel.levelNumber, "Region_" + inLevel.regionNumber);
-        //    return;
-        //}
-        //    }
-        //}
     }
 #endif
 
     public void GetXmlDocument(Level inLevel)
     {
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    //if (inLevel.region != regionsList[i])
-        //    //{
-        //    //    continue;
-        //    //}
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
             inLevel.xmlDocument = SaveAndLoadScene.Instance().GetXmlDocument("Level_" + inLevel.levelNumber, "Region_" + inLevel.regionNumber);
-        //    return;
-        //}
-        //    }
-        //}
     }
 
     private void SaveNameScene(Level inLevel)
     {
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    //if (inLevel.region != regionsList[i])
-        //    //{
-        //    //    continue;
-        //    //}
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
-            //SaveAndLoadScene.Instance.LoadXml(inLevel.xmlDocument.name, "Region_" + i);
-
             GameMetaData.GetInstance().SetString("name_scene", inLevel.xmlDocument.name);
             GameMetaData.GetInstance().SetString("folder_scene", "Region_" + inLevel.regionNumber);
-            //return;
-        //}
-        //    }
-        //}
     }
 
     public bool ItLastLevelOnRegion(Level inLevel)
     {
-
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    //if (inLevel.region != regionsList[i])
-        //    //{
-        //    //    continue;
-        //    //}
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
             //если последний уровень в регионе
             if ((inLevel.levelNumber + 1) == regionsList[inLevel.regionNumber].levelList.Count)
             {
@@ -345,49 +246,16 @@ public class LevelMenu : MonoBehaviour
             {
                 return false;
             }
-        //}
-        //    }
-        //}
-        //return false;
     }
 
     public void AddLevelOnRegion(Level inLevel)
     {
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    //if (inLevel.region != regionsList[i])
-        //    //{
-        //    //    continue;
-        //    //}
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
             regionsList[inLevel.regionNumber].levelList.Add(new Level(inLevel.regionNumber, regionsList[inLevel.regionNumber].levelList.Count));
-        //}
-        //    }
-        //}
     }
 
     public void DellLevelOnRegion(Level inLevel)
     {
-        //for (int i = 0; i < regionsList.Count; i++)
-        //{
-        //    //if (inLevel.region != regionsList[i])
-        //    //{
-        //    //    continue;
-        //    //}
-        //    for (int j = 0; j < regionsList[i].levelList.Count; j++)
-        //    {
-        //if (regionsList[inLevel.regionNumber].levelList[inLevel.levelNumber] == inLevel)
-        //{
             regionsList[inLevel.regionNumber].levelList.Remove(inLevel);
-
-            //!!!Добавить удаление файла
-        //    return;
-        //}
-        //    }
-        //}
     }
 
     //работа с переходом между уровнями
@@ -395,6 +263,7 @@ public class LevelMenu : MonoBehaviour
     {
         if (LifeManager.Instance.Life > 0)
         {
+            DailyGiftManager.Instance.DelCquirrel();//удаляем белку
             MainAnimator.Instance.ClearAllMassive();
             HelpToPlayer.ClearHintList();//очищаем список подсказок
             StopAllCoroutines();
@@ -515,8 +384,6 @@ public class LevelMenu : MonoBehaviour
 
 
             }
-            //    }
-            //}
         }
     }
 
@@ -563,10 +430,6 @@ public class LevelMenu : MonoBehaviour
             }
             Destroy(imageMainLoadGO);
         }
-        //async.allowSceneActivation = false;
-        ////восстанавливаем настройки уровня
-        ////LoadXml(inLevel);
-        //async.allowSceneActivation = true;
     }
 
     public void CreateLevelMenu(Region region)
@@ -592,6 +455,7 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelSettings);
         }
+        DailyGiftManager.Instance.DelCquirrel();//удаляем белку
         panelLevels = Instantiate(PrefabBank.LevelsCanvasPrefab, transform);
 
         //список уровней
@@ -727,6 +591,7 @@ public class LevelMenu : MonoBehaviour
         {
             Destroy(panelSettings);
         }
+        DailyGiftManager.Instance.DelCquirrel();//удаляем белку
         panelRegions = Instantiate(PrefabBank.RegionsCanvasPrefab, transform);
         Transform contentTransform = panelRegions.transform.Find("Viewport/Content");
 
@@ -867,7 +732,7 @@ public class LevelMenu : MonoBehaviour
     }
 
     public void LoadMainMenu()
-    {
+    {        
         MainAnimator.Instance.ClearAllMassive();
         HelpToPlayer.ClearHintList();//очищаем список подсказок
         StartCoroutine(CurLoadMainMenu());

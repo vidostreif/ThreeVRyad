@@ -106,31 +106,55 @@ public class AdMobManager : MonoBehaviour
 
     public void AddCoinsForViewingAds(Reward args)
     {
-        if (Shop.Instance != null)
-        {
-            Shop.Instance.AddCoinsForViewingAds(args);
-        }
+        StartCoroutine(CurAddCoinsForViewingAds(args));
     }    
 
+    public IEnumerator CurAddCoinsForViewingAds(Reward args)
+    {
+        if (Shop.Instance != null)
+        {
+            yield return new WaitForSeconds(0.1f);
+            Shop.Instance.AddCoinsForViewingAds(args);
+        }
+    }
+
     public void AddMovesOnEndGAme(Reward args) {
+        StartCoroutine(CurAddMovesOnEndGAme(args));
+    }
+
+    public IEnumerator CurAddMovesOnEndGAme(Reward args)
+    {
         if (Tasks.Instance != null)
         {
+            yield return new WaitForSeconds(0.1f);
             Tasks.Instance.AddMovesOnEndGAme(args);
         }
     }
 
     public void AddLifeForViewingAds(Reward args)
     {
+        StartCoroutine(CurAddLifeForViewingAds(args));
+    }
+
+    public IEnumerator CurAddLifeForViewingAds(Reward args)
+    {
         if (LifeManager.Instance != null)
         {
+            yield return new WaitForSeconds(0.1f);
             LifeManager.Instance.AddLifeForViewingAds(args);
         }
     }
 
     public void ConfirmationOfViewingVideo_1(Reward args)
     {
+        StartCoroutine(CurConfirmationOfViewingVideo_1(args));
+    }
+
+    public IEnumerator CurConfirmationOfViewingVideo_1(Reward args)
+    {
         if (DailyGiftManager.Instance != null)
         {
+            yield return new WaitForSeconds(0.1f);
             DailyGiftManager.Instance.ConfirmationOfViewingVideo_1(args);
         }
     }

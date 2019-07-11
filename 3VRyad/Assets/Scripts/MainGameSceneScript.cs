@@ -132,14 +132,6 @@ public class MainGameSceneScript : MonoBehaviour {
         Transform gONextLevelButton = PanelMenu.transform.Find("NextLevelButton");
         Button nextLevelButton = gONextLevelButton.GetComponent<Button>();
         nextLevelButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
-        //if (LevelMenu.Instance.NextLevelIsOpen())
-        //{
-        //    nextLevelButton.onClick.AddListener(delegate { NextLevel(); });
-        //}
-        //else
-        //{
-        //    nextLevelButton.onClick.AddListener(delegate { SupportFunctions.CreateInformationPanel("Следующий уровень еще не открыт!", CanvasMenu.transform); });
-        //}
         
         nextLevelButton.interactable = false;
 
@@ -178,6 +170,9 @@ public class MainGameSceneScript : MonoBehaviour {
             );
         }
 
+        //показываем белку
+        DailyGiftManager.Instance.CreateCquirrel();
+
         VideoBrowseButton videoBrowseButton = null;
         //запускаем куротину для постепенного отображения элементов
         //если выполнили все задания
@@ -201,7 +196,7 @@ public class MainGameSceneScript : MonoBehaviour {
             StartCoroutine(EndGameAnimationScore(PanelMenu, levelPassedResult));
 
             //показываем подарки
-            StartCoroutine(EndGameAnimationGift(PanelMenu, levelPassedResult));
+            StartCoroutine(EndGameAnimationGift(PanelMenu, levelPassedResult));            
 
             JsonSaveAndLoad.SetSaveToFile();
         }
@@ -597,9 +592,9 @@ public class MainGameSceneScript : MonoBehaviour {
 
     //выход в меню с уменьшением количества жизней
     public void ExitToMenuInGame()
-    {        
-        LifeManager.Instance.SubLive();
+    {                
         ExitToMenu();
+        LifeManager.Instance.SubLive();
     }
 
     //выход в меню

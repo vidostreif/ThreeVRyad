@@ -211,11 +211,6 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 7457034389743375135}
-    - target: {fileID: 6199260223589736591, guid: ef0be9df780aeef448c6023379b6a320,
-        type: 3}
-      propertyPath: m_FontData.m_Alignment
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef0be9df780aeef448c6023379b6a320, type: 3}
 --- !u!1 &630875481
@@ -405,6 +400,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 7457034389743375135}
+    - target: {fileID: 77167345, guid: 5fd4fa2f6ad825640a39a5497d8895c8, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -165.2998
+      objectReference: {fileID: 0}
     - target: {fileID: 754313913625643757, guid: 5fd4fa2f6ad825640a39a5497d8895c8,
         type: 3}
       propertyPath: debugMod
@@ -529,11 +528,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6844234493297698153, guid: be7be99c5e5a4644eb0be7c98112471f,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 7457034389743375135}
     - target: {fileID: 3411421771257183270, guid: be7be99c5e5a4644eb0be7c98112471f,
         type: 3}
       propertyPath: regionsList.Array.data[0].levelList.Array.size
@@ -870,6 +864,11 @@ PrefabInstance:
       propertyPath: levelSaved
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6844234493297698153, guid: be7be99c5e5a4644eb0be7c98112471f,
+        type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 7457034389743375135}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: be7be99c5e5a4644eb0be7c98112471f, type: 3}
 --- !u!1001 &7139243662964381983
@@ -883,21 +882,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Main Camera
-      objectReference: {fileID: 0}
-    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.5372549
-      objectReference: {fileID: 0}
-    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.56078434
-      objectReference: {fileID: 0}
-    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.67058825
       objectReference: {fileID: 0}
     - target: {fileID: 7457034389743375328, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
         type: 3}
@@ -953,6 +937,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.5372549
+      objectReference: {fileID: 0}
+    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.56078434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7457034389743375135, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.67058825
       objectReference: {fileID: 0}
     - target: {fileID: 7457034389743375329, guid: c5fa6683a9f5e704a9133c3b1a2bcb88,
         type: 3}
