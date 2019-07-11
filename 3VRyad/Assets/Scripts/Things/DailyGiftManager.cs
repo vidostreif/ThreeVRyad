@@ -87,23 +87,23 @@ public class DailyGiftManager : MonoBehaviour
     private void DetermineMomentOfIssuingNextGift() {
         //определяем момен выдачи следующего подарка
         DateTime realtime = CheckTime.Realtime();
-        DateTime realtime8hours = new DateTime(realtime.Year, realtime.Month, realtime.Day).AddHours(8);//находим 8 час сегодняшнего дня
-        TimeSpan timeSpan = realtime8hours.Subtract(lastGiftTimeIssued);
-        TimeSpan differenceWith8Hours = realtime8hours.Subtract(realtime);
+        DateTime realtime2hours = new DateTime(realtime.Year, realtime.Month, realtime.Day).AddHours(2);//находим 8 час сегодняшнего дня
+        TimeSpan timeSpan = realtime2hours.Subtract(lastGiftTimeIssued);
+        TimeSpan differenceWith8Hours = realtime2hours.Subtract(realtime);
 
         // если выдали предыдущий подарок раньше 8 часов сегодняшнего дня, а сейчас уже больше 8 часов
         if (timeSpan.TotalSeconds > 0 && differenceWith8Hours.TotalSeconds < 0)
         {
-            nextGiftTimeIssued = realtime8hours;
+            nextGiftTimeIssued = realtime2hours;
             numberOfGiftsIssuedToday = 0;
         }
         else if (timeSpan.TotalSeconds > 0 && differenceWith8Hours.TotalSeconds > 0)
         {
-            nextGiftTimeIssued = realtime8hours;
+            nextGiftTimeIssued = realtime2hours;
         }
         else if (timeSpan.TotalSeconds < 0 && differenceWith8Hours.TotalSeconds < 0)
         {
-            nextGiftTimeIssued = realtime8hours.AddDays(1);
+            nextGiftTimeIssued = realtime2hours.AddDays(1);
         }
     }
 

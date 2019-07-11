@@ -52,7 +52,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   regionsList:
-  - name: Region_0
+  - availableForPassing: 1
+    name: Region_0
     fullName: "\u0423\u0447\u0430\u0441\u0442\u043E\u043A \u0434\u0435\u0434\u0443\u0448\u043A\u0438
       \u0412\u0430\u043D\u0438"
     sprite: {fileID: 21300000, guid: 51bdc6956b0de2847b5fbeb4ec92051d, type: 3}
@@ -207,7 +208,8 @@ MonoBehaviour:
     - xmlDocument: {fileID: 4900000, guid: 95e89e83c91f6c8448c10b8fcf1672b1, type: 3}
       regionNumber: 0
       levelNumber: 49
-  - name: Region_1
+  - availableForPassing: 1
+    name: Region_1
     fullName: "\u0423\u0447\u0430\u0441\u0442\u043E\u043A \u0431\u0430\u0431\u0443\u0448\u043A\u0438
       \u0428\u0443\u0440\u044B"
     sprite: {fileID: 21300000, guid: 652dd8ff575a17a4a9b5f433e3486775, type: 3}
@@ -218,8 +220,62 @@ MonoBehaviour:
     - xmlDocument: {fileID: 4900000, guid: 485cba1c590a17f48beca3720cb98e44, type: 3}
       regionNumber: 1
       levelNumber: 1
-  lastLoadXmlDocument: Level_1
-  lastLoadFolder: Region_1
+    - xmlDocument: {fileID: 4900000, guid: ea3a232cd8f2c7d43b1fe0fa07b076f0, type: 3}
+      regionNumber: 1
+      levelNumber: 2
+    - xmlDocument: {fileID: 4900000, guid: b4a736f3d920acb4f9dac96aca7c4f63, type: 3}
+      regionNumber: 1
+      levelNumber: 3
+    - xmlDocument: {fileID: 4900000, guid: 98c36848feac785498fc1b02e070ce78, type: 3}
+      regionNumber: 1
+      levelNumber: 4
+    - xmlDocument: {fileID: 4900000, guid: 6bc2b51d7b6a2b64ca64631728c004cc, type: 3}
+      regionNumber: 1
+      levelNumber: 5
+    - xmlDocument: {fileID: 4900000, guid: 760870508b3f73940a2ad154922de0be, type: 3}
+      regionNumber: 1
+      levelNumber: 6
+    - xmlDocument: {fileID: 4900000, guid: 3b101204aa3361e438592c58303e1772, type: 3}
+      regionNumber: 1
+      levelNumber: 7
+    - xmlDocument: {fileID: 4900000, guid: e2e798bbd8b838e42aa23e915601d480, type: 3}
+      regionNumber: 1
+      levelNumber: 8
+    - xmlDocument: {fileID: 4900000, guid: a4e617c534e326b4aa0cc5f3bc01beae, type: 3}
+      regionNumber: 1
+      levelNumber: 9
+    - xmlDocument: {fileID: 4900000, guid: cd9a98640e54d6e4d9dfe2d5f1678937, type: 3}
+      regionNumber: 1
+      levelNumber: 10
+    - xmlDocument: {fileID: 4900000, guid: 22837ec852508104b930121d4dfe10e7, type: 3}
+      regionNumber: 1
+      levelNumber: 11
+    - xmlDocument: {fileID: 4900000, guid: 2b3680f8e7500b7498ad80664a436e8d, type: 3}
+      regionNumber: 1
+      levelNumber: 12
+    - xmlDocument: {fileID: 4900000, guid: fb24703e77cc5394291b4193ee0bac6d, type: 3}
+      regionNumber: 1
+      levelNumber: 13
+    - xmlDocument: {fileID: 4900000, guid: fd4158bc3375be3439980bc8c387defb, type: 3}
+      regionNumber: 1
+      levelNumber: 14
+    - xmlDocument: {fileID: 4900000, guid: ceb8d9126e2f0c04dac13579f99fa10b, type: 3}
+      regionNumber: 1
+      levelNumber: 15
+    - xmlDocument: {fileID: 4900000, guid: 79b8e9f8be587574f87b6130c1cf9a98, type: 3}
+      regionNumber: 1
+      levelNumber: 16
+    - xmlDocument: {fileID: 4900000, guid: abc2e38effbea09409f0f52abac70265, type: 3}
+      regionNumber: 1
+      levelNumber: 17
+  - availableForPassing: 0
+    name: Region_1
+    fullName: "\u0423\u0447\u0430\u0441\u0442\u043E\u043A \u0431\u0430\u0431\u0443\u0448\u043A\u0438
+      \u0428\u0443\u0440\u044B"
+    sprite: {fileID: 21300000, guid: 652dd8ff575a17a4a9b5f433e3486775, type: 3}
+    levelList: []
+  lastLoadXmlDocument: Level_2
+  lastLoadFolder: Region_0
   levelSaved: 0
 --- !u!223 &6844234493297698153
 Canvas:

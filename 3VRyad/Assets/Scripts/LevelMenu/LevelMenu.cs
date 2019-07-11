@@ -616,14 +616,13 @@ public class LevelMenu : MonoBehaviour
                 {
                     if (ListXElement.Name.ToString() == "LevelSettings")
                     {
-                        if (int.Parse(ListXElement.Element("coins").Value) > 0 || int.Parse(ListXElement.Element("bundelCount").Value) > 0)
+                        if (int.Parse(ListXElement.Element("coins").Value) > 0 || int.Parse(ListXElement.Element("bundelCount").Value) > 0 || int.Parse(ListXElement.Element("timeImmortalLives").Value) > 0)
                         {
                             destroyGiftBox = false;
                         }
                         if (bool.Parse(ListXElement.Element("optional").Value))
                         {
                             levelOptional = true;
-                            //    SetOpenNextLevel(level);
                         }
                         break;
                     }
@@ -735,22 +734,23 @@ public class LevelMenu : MonoBehaviour
         foreach (Region region in regionsList)
         {
             GameObject regionElementGameObject = Instantiate(PrefabBank.RegionButtonPrefab, contentTransform);
-            Transform textNameTransform = regionElementGameObject.transform.Find("TextName");
-            textNameTransform.GetComponentInChildren<Text>().text = region.fullName;
+            Transform textNameTransform = regionElementGameObject.transform.Find("TextName");            
             regionElementGameObject.GetComponent<Image>().sprite = region.sprite;
+                      
 
-            Transform textStarsTransform = regionElementGameObject.transform.Find("TextStars");
-
-            int stars = 0;
-            int allStars = 0;
-            foreach (Level level in region.levelList)
+            //если в регионе есть лвлы и он открыт 
+            if (region.levelList.Count > 0 && region.availableForPassing)
             {
-                stars += level.Stars;
-                allStars += 3;
+                textNameTransform.GetComponentInChildren<Text>().text = region.fullName;
+                StartCoroutine(CountRegionValues(region, regionElementGameObject));
+                region.AddAction(regionElementGameObject);
             }
-            textStarsTransform.GetComponentInChildren<Text>().text = stars + " / " + allStars;
-
-            region.AddAction(regionElementGameObject);
+            else
+            {
+                textNameTransform.GetComponentInChildren<Text>().text = "Скоро!";
+                regionElementGameObject.GetComponent<Button>().interactable = false;
+                Destroy(regionElementGameObject.transform.Find("RegionValues").gameObject);                
+            }            
         }
 
         //добавляем действие к кнопке открытия настроек
@@ -758,6 +758,54 @@ public class LevelMenu : MonoBehaviour
         Button buttonSettings = buttonSettingsTransform.GetComponent(typeof(Button)) as Button;
         buttonSettings.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         buttonSettings.onClick.AddListener(delegate { CreateSettingsMenu(); });
+    }
+
+    public IEnumerator CountRegionValues(Region region, GameObject regionElementGameObject) {
+
+        Transform regionValuesTF = regionElementGameObject.transform.Find("RegionValues");        
+        Text textStars = regionValuesTF.Find("TextStars").GetComponentInChildren<Text>();
+        Text textGift = regionValuesTF.Find("TextGift").GetComponentInChildren<Text>();
+        int stars = 0;
+        int allStars = 0;
+        int giftIssued = 0;
+        int allGift = 0;
+        foreach (Level level in region.levelList)
+        {
+            //ожидаем прогрузки кадра
+            yield return new WaitForEndOfFrame();
+
+            if (regionValuesTF != null)
+            {
+                TextAsset txt = level.xmlDocument as TextAsset;
+                XElement root = XDocument.Parse(txt.text).Element("root");
+                foreach (XElement ListXElement in root.Elements())
+                {
+                    if (ListXElement.Name.ToString() == "LevelSettings")
+                    {
+                        if (int.Parse(ListXElement.Element("coins").Value) > 0 || int.Parse(ListXElement.Element("bundelCount").Value) > 0 || int.Parse(ListXElement.Element("timeImmortalLives").Value) > 0)
+                        {
+                            allGift++;
+                            if (level.GiftIssued)
+                            {
+                                giftIssued++;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                stars += level.Stars;
+                allStars += 3;
+
+                textStars.text = stars + " / " + allStars;
+                textGift.text = giftIssued + " / " + allGift;
+            }
+            else
+            {
+                break;
+            }
+            
+        }        
     }
 
     public void CreateStartScreen()

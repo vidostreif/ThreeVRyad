@@ -116,7 +116,7 @@
     <moves>22</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Bush" goal="30" collectEverything="true" />
+      <shapeAndGoal shape="Bush" goal="28" collectEverything="true" />
     </targets>
   </Tasks>
   <InstrumentPanel>

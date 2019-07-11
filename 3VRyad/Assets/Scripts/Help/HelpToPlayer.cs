@@ -679,7 +679,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.DropBlock.ToString())
             {
-                text.text = "Если материалы находятся рядом с собирающей грядкой, то их можно передвинуть к ней и они соберутся!";
+                text.text = "Двигай материалы к соберающей грядке!";
             }
             else
             {

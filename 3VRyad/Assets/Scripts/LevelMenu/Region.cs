@@ -6,6 +6,7 @@ using UnityEngine.UI;
 [System.Serializable]
 public class Region
 {
+    public bool availableForPassing; //доступен для прохождения
     [HideInInspector]public string name;
     public string fullName;
     public Sprite sprite;
@@ -51,7 +52,7 @@ public class Region
     //действие при нажатии
     public void Action()
     {
-        Debug.Log(text);
+        //Debug.Log(text);
         LevelMenu.Instance.CreateLevelMenu(this);
     }
 
