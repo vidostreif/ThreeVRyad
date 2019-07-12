@@ -147,7 +147,7 @@ public class LifeManager : MonoBehaviour
             if (life == 0 && !giftFirstImmortalityIssued)
             {
                 GameObject informationPanelGO = SupportFunctions.CreateInformationPanel("У тебя закончились жизни! В дальнейшем ты сможешь получить бессмертие из подарков или купить в магазине. А пока прими от меня подарочек!");
-                addTimeImmortal(60, informationPanelGO.transform, new Vector3(0, 2.5f, 0));
+                addTimeImmortal(60, informationPanelGO.transform, new Vector3(0, 1.5f, 0), new Vector3(0, 2.5f, 0));
             }
             return true;
         }
@@ -186,10 +186,10 @@ public class LifeManager : MonoBehaviour
     }
 
     //добавление времени бессмертия с доп параметрами
-    public void addTimeImmortal(int time, Transform curTransform, Vector3 position)
+    public void addTimeImmortal(int time, Transform curTransform, Vector3 position, Vector3 newPosition)
     {
         addTimeImmortal(time);
-        StartCoroutine(Shop.Instance.CreateLivesAnimation(position, curTransform, time));
+        StartCoroutine(Shop.Instance.CreateLivesAnimation(position, curTransform, time, newPosition: newPosition));
     }
 
     public bool Immortal()

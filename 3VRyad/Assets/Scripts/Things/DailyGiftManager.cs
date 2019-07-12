@@ -147,24 +147,23 @@ public class DailyGiftManager : MonoBehaviour
             if (dailyGiftPanel != null)
             {
                 Transform dailyGiftPanelTransform = dailyGiftPanel.transform.Find("VideoPlace_" + place);
+                Vector3 newPosition = new Vector3(dailyGiftPanelTransform.transform.position.x, dailyGiftPanelTransform.transform.position.y + 2, dailyGiftPanelTransform.transform.position.z);
                 //если выпала единица, то выдаем 15 монет
                 if (randomNumber == 1)
                 {
-                    Shop.Instance.AddCoins(15 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
+                    Shop.Instance.AddCoins(15 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position, newPosition);
                 }
                 else if (randomNumber == 2)//если выпала двойка, то дарим бесконечные жизни
                 {
-                    LifeManager.Instance.addTimeImmortal(30 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
+                    LifeManager.Instance.addTimeImmortal(30 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position, newPosition);
                 }
                 else
                 {
                     randomNumber -= 2;
-                    //Debug.Log("randomGiftNumber " + randomNumber);
                     Thing thing = ThingsManager.Instance.GetThing(randomNumber);
-                    //Debug.Log("thing " + thing.Type);
                     if (thing != null)
                     {
-                        ThingsManager.Instance.addinstruments(thing.Type, 1 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position);
+                        ThingsManager.Instance.addinstruments(thing.Type, 1 * randomFactor, dailyGiftPanel.transform, dailyGiftPanelTransform.transform.position, newPosition);
                     }
                 }
                 numberOfGiftsIssuedToday++;

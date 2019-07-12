@@ -58,14 +58,14 @@ public class Shop : MonoBehaviour, IStoreListener
         if (args.Amount > 0)
         {
             this.addCoins += (int)args.Amount;
-            StartCoroutine(CreateCoinAnimation(new Vector3(0, 0, 0), transform, (int)args.Amount, destroyMainCoin: true));
+            StartCoroutine(CreateCoinAnimation(new Vector3(0, 0, 0), transform, (int)args.Amount, new Vector3(0, 1, 0), destroyMainCoin: true));
             JsonSaveAndLoad.RecordSave(this);
             JsonSaveAndLoad.SetSaveToFile();
         }
     }
 
     //другое вознаграждение
-    public void AddCoins(int coins, Transform curTransform, Vector3 position)
+    public void AddCoins(int coins, Transform curTransform, Vector3 position, Vector3 newPosition)
     {
         if (coins > 0)
         {

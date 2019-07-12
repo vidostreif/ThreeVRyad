@@ -119,7 +119,7 @@ public class ThingsManager : MonoBehaviour
     }
 
     //добавление количества инструментов из бандла
-    public void addinstruments(InstrumentsEnum type, int count, Transform curTransform, Vector3 position)
+    public void addinstruments(InstrumentsEnum type, int count, Transform curTransform, Vector3 position, Vector3 newPosition)
     {
         //добавляем указанное количество к инструментам
             foreach (Thing instrument in instruments)
@@ -127,7 +127,7 @@ public class ThingsManager : MonoBehaviour
                 if (instrument.Type == type)
                 {
                     instrument.AddQuantity(count);
-                    StartCoroutine(Shop.Instance.CreateThingAnimation(position, curTransform, type, count));
+                    StartCoroutine(Shop.Instance.CreateThingAnimation(position, curTransform, type, count, newPosition));
                     break;
                 }
             }
