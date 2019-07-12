@@ -70,7 +70,7 @@ public class Shop : MonoBehaviour, IStoreListener
         if (coins > 0)
         {
             this.addCoins += coins;
-            StartCoroutine(CreateCoinAnimation(position, curTransform, coins, destroyMainCoin: false));
+            StartCoroutine(CreateCoinAnimation(position, curTransform, coins, newPosition, destroyMainCoin: false));
             JsonSaveAndLoad.RecordSave(this);
             JsonSaveAndLoad.SetSaveToFile();
         }

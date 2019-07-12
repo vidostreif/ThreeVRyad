@@ -147,7 +147,11 @@ public class DailyGiftManager : MonoBehaviour
             if (dailyGiftPanel != null)
             {
                 Transform dailyGiftPanelTransform = dailyGiftPanel.transform.Find("VideoPlace_" + place);
-                Vector3 newPosition = new Vector3(dailyGiftPanelTransform.transform.position.x, dailyGiftPanelTransform.transform.position.y + 2, dailyGiftPanelTransform.transform.position.z);
+                Vector3 newPosition = new Vector3(dailyGiftPanelTransform.transform.position.x, dailyGiftPanelTransform.transform.position.y + 1.8f, dailyGiftPanelTransform.transform.position.z);
+
+                //создаем сундук
+                Instantiate(PrefabBank.ImageOpenBoxDailyGift, dailyGiftPanelTransform);
+
                 //если выпала единица, то выдаем 15 монет
                 if (randomNumber == 1)
                 {
