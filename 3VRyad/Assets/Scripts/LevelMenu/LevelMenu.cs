@@ -312,7 +312,7 @@ public class LevelMenu : MonoBehaviour
                 //если последний уровень в регионе
                 if ((lastLoadLevel.levelNumber + 1) == regionsList[lastLoadLevel.regionNumber].levelList.Count)
                 {
-                    if (regionsList.Count > lastLoadLevel.regionNumber + 1)
+                    if (regionsList.Count > lastLoadLevel.regionNumber + 1 && regionsList[lastLoadLevel.regionNumber + 1].levelList.Count > 0)
                     {
                        return  regionsList[lastLoadLevel.regionNumber + 1].levelList[0].Open;
                     }
@@ -394,7 +394,7 @@ public class LevelMenu : MonoBehaviour
         {
             levelPassedResult = lastLoadLevel.SetLevelPassed(stars, score);
             SetOpenNextLevel();
-            if (lastLoadLevel.levelNumber >= 4 && lastLoadLevel.regionNumber == 0)
+            if (lastLoadLevel.levelNumber >= 4)
             {
                 JsonSaveAndLoad.TrainingCompleted();
             }
