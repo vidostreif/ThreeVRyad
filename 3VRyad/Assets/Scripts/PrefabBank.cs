@@ -36,7 +36,7 @@ public static class PrefabBank
     private static GameObject imageCoin = Resources.Load(prefabFolder + "Canvas/GameCanvas/ImageCoin") as GameObject;
     private static GameObject cquirrel = Resources.Load(prefabFolder + "Canvas/Shop/Cquirrel") as GameObject;
     private static GameObject imageOpenBoxDailyGift = Resources.Load(prefabFolder + "Canvas/Shop/ImageOpenBoxDailyGift") as GameObject;
-    private static GameObject giftPouchButton = Resources.Load(prefabFolder + "Canvas/Shop/GiftPouchButton") as GameObject;
+    private static GameObject videoBrowsePouchButton = Resources.Load(prefabFolder + "Canvas/Shop/VideoBrowsePouchButton") as GameObject;
     
 
 
@@ -83,7 +83,7 @@ public static class PrefabBank
     public static GameObject DailyGiftButton { get => dailyGiftButton; }
     public static GameObject Cquirrel { get => cquirrel; }
     public static GameObject ImageOpenBoxDailyGift { get => imageOpenBoxDailyGift; }
-    public static GameObject GiftPouchButton { get => giftPouchButton; }
+    public static GameObject VideoBrowsePouchButton { get => videoBrowsePouchButton; }
     
 
     public static void Preload()

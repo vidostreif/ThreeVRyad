@@ -117,6 +117,7 @@ public class DailyGiftManager : MonoBehaviour
             GameObject PanelCquirrelPlace = GameObject.Find("PanelCquirrelPlace");
             panelCquirrelPlace = Instantiate(PrefabBank.Cquirrel, PanelCquirrelPlace.transform);
             SupportFunctions.ChangeButtonAction(panelCquirrelPlace.transform, CreateDailyGiftPanel);
+            SupportFunctions.ChangeButtonAction(panelCquirrelPlace.transform.Find("ImagePouch"), CreateDailyGiftPanel);
         }        
     }
 

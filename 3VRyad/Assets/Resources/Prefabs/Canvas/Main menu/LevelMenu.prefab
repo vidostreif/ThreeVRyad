@@ -268,14 +268,23 @@ MonoBehaviour:
     - xmlDocument: {fileID: 4900000, guid: abc2e38effbea09409f0f52abac70265, type: 3}
       regionNumber: 1
       levelNumber: 17
+    - xmlDocument: {fileID: 4900000, guid: 7c4aee3ca004b064196d6d109189f01d, type: 3}
+      regionNumber: 1
+      levelNumber: 18
+    - xmlDocument: {fileID: 4900000, guid: 59541237823e00e47a7e95c59981a423, type: 3}
+      regionNumber: 1
+      levelNumber: 19
+    - xmlDocument: {fileID: 4900000, guid: 8a5f62da90b4ff648aa82ad846b075b9, type: 3}
+      regionNumber: 1
+      levelNumber: 20
   - availableForPassing: 0
     name: Region_1
     fullName: "\u0423\u0447\u0430\u0441\u0442\u043E\u043A \u0431\u0430\u0431\u0443\u0448\u043A\u0438
       \u0428\u0443\u0440\u044B"
-    sprite: {fileID: 21300000, guid: 652dd8ff575a17a4a9b5f433e3486775, type: 3}
+    sprite: {fileID: 21300000, guid: 141705717e71b09488a2345ae5e3f3d6, type: 3}
     levelList: []
-  lastLoadXmlDocument: Level_2
-  lastLoadFolder: Region_0
+  lastLoadXmlDocument: Level_20
+  lastLoadFolder: Region_1
   levelSaved: 0
 --- !u!223 &6844234493297698153
 Canvas:

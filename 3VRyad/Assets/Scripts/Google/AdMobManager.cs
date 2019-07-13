@@ -67,7 +67,7 @@ public class AdMobManager : MonoBehaviour
         //    }
         //}     
         
-        rewardVideoForDailyGift = new RewardVideo(AdMobManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-6280237892174167/9113007538", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, 0);
+        rewardVideoForDailyGift = new RewardVideo(AdMobManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-6280237892174167/9113007538", "", PrefabBank.VideoBrowsePouchButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, 0);
     }
 
     public void Update()
