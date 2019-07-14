@@ -102,9 +102,10 @@ public class Bonuses : MonoBehaviour, IESaveAndLoad
                     {
                         //создаем эффект   
                         SoundManager.Instance.PlaySoundInternal(SoundsEnum.DestroyElement_5);
-                        GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSMoveElement") as GameObject, item.Element.thisTransform);
-                        GameObject.Destroy(psGO, 4);
-                        MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, destroyAfterMoving: true);
+                        //GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSMoveElement") as GameObject, item.Element.thisTransform);
+                        //GameObject.Destroy(psGO, 4);
+                        ParticleSystemManager.Instance.CreatePS(item.Element.thisTransform, PSEnum.PSMoveElement, 0.5f);
+                        MainAnimator.Instance.AddElementForSmoothMove(item.Element.thisTransform, blockToCreateBonus.thisTransform.position, 6, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
                         //AnimatorElement animatorElement = item.Element.GetComponent<AnimatorElement>();
                         //animatorElement.StopDestroyAnimation();
                         item.Element = null;

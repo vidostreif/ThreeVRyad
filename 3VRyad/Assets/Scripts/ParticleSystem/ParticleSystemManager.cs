@@ -27,87 +27,94 @@ public class ParticleSystemManager : MonoBehaviour
         //WarmingUp();
     }
 
+    private void Start()
+    {
+        Preload();
+    }
+
     //прогрев всех GO
     public void Preload() {
 
-        GameObject warmingUpPS= new GameObject();
-        warmingUpPS.name = "warmingUpPS";
-        warmingUpPS.transform.parent = transform;
-        warmingUpPS.transform.position = new Vector3(-1000, -1000, 0);
-        GameObject.Destroy(warmingUpPS, 5);
+        //GameObject warmingUpPS= new GameObject();
+        //warmingUpPS.name = "warmingUpPS";
+        //warmingUpPS.transform.parent = transform;
+        //warmingUpPS.transform.position = new Vector3(-1000, -1000, 0);
+        //GameObject.Destroy(warmingUpPS, 5);
 
         for (int i = 0; i < ParticleSystemBank.PSArray.Length; i++)
         {
-            CreatePSAsync(warmingUpPS.transform, ParticleSystemBank.PSArray[i].PSEnum, 3);
+            PoolManager.Instance.PoolsSetupAddPool(ParticleSystemBank.PSArray[i].PSEnum.ToString(), ParticleSystemBank.GetPS(ParticleSystemBank.PSArray[i].PSEnum), ParticleSystemBank.PSArray[i].MinNumberOnStage);
+            //CreatePSAsync(warmingUpPS.transform, ParticleSystemBank.PSArray[i].PSEnum, 3);
         }
     }
-       
-    private IEnumerator CurCreatePSAsync(Transform parentTransform, PSEnum pSEnum, float lifeTime = 0)
-    {
-        GameObject requestGO;
-        PSResurse pSResurse = ParticleSystemBank.GetPSResurse(pSEnum);
-        if (pSResurse.Go != null)
-        {
-            requestGO = pSResurse.Go;
-        }
-        else
-        {
-            ResourceRequest request = ParticleSystemBank.GetPSAsync(pSResurse);
-            //ожидаем загрузки ресурса
-            while (request != null && !request.isDone)
-            {
-                yield return null;
-            }
 
-            //если не нашли, или не смогли загрузить, то выходим
-            if (request == null)
-            {
-                Debug.Log("Эффект не загружен: " + pSEnum);
-                yield break;
-            }
+    //private IEnumerator CurCreatePSAsync(Transform parentTransform, PSEnum pSEnum, float lifeTime = 0)
+    //{
+    //    GameObject requestGO;
+    //    PSResurse pSResurse = ParticleSystemBank.GetPSResurse(pSEnum);
+    //    if (pSResurse.Go != null)
+    //    {
+    //        requestGO = pSResurse.Go;
+    //    }
+    //    else
+    //    {
+    //        ResourceRequest request = ParticleSystemBank.GetPSAsync(pSResurse);
+    //        //ожидаем загрузки ресурса
+    //        while (request != null && !request.isDone)
+    //        {
+    //            yield return null;
+    //        }
 
-            requestGO = (GameObject)request.asset;
-            if (requestGO == null)
-            {
-                Debug.Log("Эффект не загружен: " + pSEnum);
-                yield break;
-            }
-        }
+    //        //если не нашли, или не смогли загрузить, то выходим
+    //        if (request == null)
+    //        {
+    //            Debug.Log("Эффект не загружен: " + pSEnum);
+    //            yield break;
+    //        }
+
+    //        requestGO = (GameObject)request.asset;
+    //        if (requestGO == null)
+    //        {
+    //            Debug.Log("Эффект не загружен: " + pSEnum);
+    //            yield break;
+    //        }
+    //    }
 
 
-        if (parentTransform != null)
-        {
-            //создаем эффект 
-            GameObject psGO = GameObject.Instantiate(requestGO, parentTransform);
-            //время жизни эффекта
-            if (lifeTime != 0)
-            {
-                GameObject.Destroy(psGO, lifeTime);
-            }
-        }        
-    }
+    //    if (parentTransform != null)
+    //    {
+    //        //создаем эффект 
+    //        GameObject psGO = GameObject.Instantiate(requestGO, parentTransform);
+    //        //время жизни эффекта
+    //        if (lifeTime != 0)
+    //        {
+    //            GameObject.Destroy(psGO, lifeTime);
+    //        }
+    //    }
+    //}
 
-    public void CreatePSAsync(Transform parentTransform, PSEnum pSEnum, float lifeTime = 0)
-    {
-        StartCoroutine(CurCreatePSAsync(parentTransform, pSEnum, lifeTime));
-    }
-    
+    //public void CreatePSAsync(Transform parentTransform, PSEnum pSEnum, float lifeTime = 0)
+    //{
+    //    StartCoroutine(CurCreatePSAsync(parentTransform, pSEnum, lifeTime));
+    //}
+
     public GameObject CreatePS(Transform parentTransform, PSEnum pSEnum, float lifeTime = 0)
     {
-        GameObject requestGO = ParticleSystemBank.GetPS(pSEnum);
-        if (requestGO == null)
-        {
-            Debug.Log("Эффект не загружен: " + pSEnum);
-            return null;
-        }
+        //GameObject requestGO = ParticleSystemBank.GetPS(pSEnum);
+        //if (requestGO == null)
+        //{
+        //    Debug.Log("Эффект не загружен: " + pSEnum);
+        //    return null;
+        //}
 
         //создаем эффект 
-        GameObject psGO = GameObject.Instantiate(requestGO, parentTransform);
+        //GameObject psGO = GameObject.Instantiate(requestGO, parentTransform);
+        GameObject psGO = PoolManager.Instance.GetObject(pSEnum.ToString(), parentTransform.position, parentTransform, lifeTime);
         //время жизни эффекта
-        if (lifeTime != 0)
-        {
-            GameObject.Destroy(psGO, lifeTime);
-        }
+        //if (lifeTime != 0)
+        //{
+        //    GameObject.Destroy(psGO, lifeTime);
+        //}
 
         return psGO;
     }
@@ -118,7 +125,7 @@ public class ParticleSystemManager : MonoBehaviour
         GameObject psGO = CreatePS(parentTransform, PSEnum.PSCollectAll, 4);
         //изменяем цвет
         ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-        ps.textureSheetAnimation.AddSprite(image.sprite);
+        ps.textureSheetAnimation.SetSprite(0, image.sprite);
     }
 
     public void CreateCollectEffect(Transform parentTransform, Image image)
@@ -127,7 +134,7 @@ public class ParticleSystemManager : MonoBehaviour
         GameObject psGO = CreatePS(parentTransform, PSEnum.PSCollect, 4);
         //изменяем цвет
         ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-        ps.textureSheetAnimation.AddSprite(image.sprite);
+        ps.textureSheetAnimation.SetSprite(0, image.sprite);
     }
 
     public void CreateCollectAllEffect(Transform parentTransform, Sprite sprite)
@@ -136,7 +143,7 @@ public class ParticleSystemManager : MonoBehaviour
         GameObject psGO = CreatePS(parentTransform, PSEnum.PSCollectAll, 4);
         //изменяем цвет
         ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-        ps.textureSheetAnimation.AddSprite(sprite);
+        ps.textureSheetAnimation.SetSprite(0, sprite);
     }
 
     public void CreateCollectEffect(Transform parentTransform, Sprite sprite)
@@ -145,7 +152,7 @@ public class ParticleSystemManager : MonoBehaviour
         GameObject psGO = CreatePS(parentTransform, PSEnum.PSCollect, 4);
         //изменяем цвет
         ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-        ps.textureSheetAnimation.AddSprite(sprite);
+        ps.textureSheetAnimation.SetSprite(0, sprite);
     }
 }
 

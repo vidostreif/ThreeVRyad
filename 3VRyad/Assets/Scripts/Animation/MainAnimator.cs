@@ -98,7 +98,16 @@ public class MainAnimator : MonoBehaviour {
         if (moveElements != null && moveElements.Count > 0)
         {
             foreach (MoveElement item in moveElements)
-            {
+            {                
+                ////выполняем прописанный делегат
+                //if (item.action != null)
+                //{
+                //    if (item.action.Method != null && item.action.Target != null)
+                //    {
+                //        item.action();
+                //    }
+                //}
+
                 if (item.destroyAfterMoving)
                 {
                     Destroy(item.thisTransform.gameObject);
@@ -214,7 +223,7 @@ public class MainAnimator : MonoBehaviour {
         foreach (MoveElement item in moveElements)
         {
             //если еще не двигали
-            if (item.thisTransform != null && !moveIitems.Contains(item.thisTransform))
+            if (item.thisTransform != null && !moveIitems.Contains(item.thisTransform) && item.thisTransform.gameObject.activeInHierarchy)
             {
                 moveIitems.Add(item.thisTransform);
 
@@ -402,7 +411,7 @@ public class MainAnimator : MonoBehaviour {
         //сжимаем и разжимаем все элементы которые попали в коллекцию
         foreach (CompressAndRecover item in CompressAndRecoverElements)
         {
-            if (item.thisTransform != null)
+            if (item.thisTransform != null && item.thisTransform.gameObject.activeInHierarchy)
             {
                 //if (item.compress)
                 //{
@@ -496,7 +505,7 @@ public class MainAnimator : MonoBehaviour {
     {        
         foreach (ChangeColorElement item in changeColorElements)
         {
-            if (item.image != null)
+            if (item.image != null && item.image.gameObject.activeInHierarchy)
             {
                 item.image.color = Color.Lerp(item.image.color, item.newColor, Time.deltaTime * item.speed);
                 if (item.image.color == item.newColor)
@@ -521,7 +530,7 @@ public class MainAnimator : MonoBehaviour {
                     }                    
                 }                    
             }
-            else if (item.spriteRenderer != null)
+            else if (item.spriteRenderer != null && item.spriteRenderer.gameObject.activeInHierarchy)
             {
                 item.spriteRenderer.color = Color.Lerp(item.spriteRenderer.color, item.newColor, Time.deltaTime * item.speed);
                 if (item.spriteRenderer.color == item.newColor)

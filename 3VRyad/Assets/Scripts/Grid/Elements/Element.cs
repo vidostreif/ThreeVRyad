@@ -90,18 +90,9 @@ public class Element : BaseElement
         thisTransform = transform;
         destroyed = false;
         spriteRenderer = this.GetComponent(typeof(SpriteRenderer)) as SpriteRenderer;
+        spriteRenderer.sortingLayerName = "Elements";
         GetComponent<ElementController>().ThisElement = this;
     }
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-    //    //если есть элемент и он не на позиции нашего блока то медлено премещаем его к блоку
-    //    if (this.blockingElement != null && !this.blockingElement.Destroyed && this.blockingElement.thisTransform.position != thisTransform.position )
-    //    {
-    //        MainAnimator.Instance.AddElementForSmoothMove(this.blockingElement.thisTransform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
-    //    }
-    //}
 
     //перемещение блокирующего элемента на позицию нашего элменета
     private IEnumerator MoveBlockingElement() {
@@ -138,6 +129,21 @@ public class Element : BaseElement
         this.life = life;
         this.score = score;
         this.scoreScale = scoreScale;
+        drag = false;
+        destroyed = false;
+        if (type == ElementsTypeEnum.StandardElement)
+        {
+            returnToPool = true;
+            //if (animatorElement == null)
+            //{
+            //    animatorElement = this.GetComponent<AnimatorElement>();
+            //}            
+            //animatorElement.PlayCreatureAnimation();
+        }
+        else
+        {
+            returnToPool = false;
+        }
         DopSettings();
     }
 
@@ -232,16 +238,28 @@ public class Element : BaseElement
 
             //создаем новый элемент
             GameObject blockingElementGameObject;
+
             //определяем позицию, где будем создавать
+            Vector3 pos;
             if (startTransform == null)
             {
-                blockingElementGameObject = Instantiate(prefabBlockingElement, thisTransform.position, Quaternion.identity);
+                pos = thisTransform.position;
             }
             else
             {
-                blockingElementGameObject = Instantiate(prefabBlockingElement, startTransform.position, Quaternion.identity);
-                //MainAnimator.Instance.AddElementForSmoothMove(blockingElementGameObject.transform, thisTransform.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f);
+                pos = startTransform.position;
             }
+
+            //if (Application.isPlaying)
+            //{
+            //    blockingElementGameObject = PoolManager.Instance.GetObject("Element", pos, thisTransform);
+            //    Destroy(blockingElementGameObject.GetComponent<BaseElement>());
+            //}
+            //else
+            //{
+                blockingElementGameObject = Instantiate(prefabBlockingElement, pos, Quaternion.identity);
+            //}
+
                 
             BlockingElement curElement;
 
@@ -249,10 +267,6 @@ public class Element : BaseElement
             {
                 curElement = blockingElementGameObject.AddComponent<BlockingElement>();
                 curElement.InitialSettings(typeBlockingElementsEnum, false, 1, 200, false);
-                //if (ParticleSystemManager.Instance != null)
-                //{
-                //    ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSLiana, 3);
-                //}
             }
             else if(typeBlockingElementsEnum == BlockingElementsTypeEnum.Spread)
             {
@@ -261,7 +275,7 @@ public class Element : BaseElement
                 curElement.MakeActionAfterMove(1, true);
                 if (ParticleSystemManager.Instance != null)
                 {
-                    ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSWeb, 3);
+                    ParticleSystemManager.Instance.CreatePS(thisTransform, PSEnum.PSWeb, 3);
                 }
                 //lockedForMove = true;
             }

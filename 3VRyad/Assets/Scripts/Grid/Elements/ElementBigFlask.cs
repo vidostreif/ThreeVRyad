@@ -11,9 +11,13 @@ public class ElementBigFlask : ElementSmallFlask
         explosionRadius = 3;
 
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick, HitTypeEnum.Instrument };
-        //находим аниматор
-        transform.GetComponent<AnimatorElement>().playIdleAnimationRandomTime = true;
-        //добавляем эфект
-        GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSBigFlask") as GameObject, thisTransform);
+        if (Application.isPlaying)
+        {
+            //находим аниматор
+            transform.GetComponent<AnimatorElement>().playIdleAnimationRandomTime = true;
+            //добавляем эфект
+            DopPS = ParticleSystemManager.Instance.CreatePS(thisTransform, PSEnum.PSBigFlask);
+        }
+        
     }
 }

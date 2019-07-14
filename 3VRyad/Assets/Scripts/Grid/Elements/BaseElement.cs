@@ -7,16 +7,18 @@ public class BaseElement : MonoBehaviour
 {
     public Transform thisTransform;
     protected SpriteRenderer spriteRenderer;
-    private AnimatorElement animatorElement;
+    protected AnimatorElement animatorElement;
     [SerializeField] protected Position positionInGrid;//позиция в сетке
     [SerializeField] protected AllShapeEnum shape;//форма элемента
     [SerializeField] protected HitTypeEnum[] vulnerabilityTypeEnum;//уязвимость к типам удара
+    [SerializeField] protected GameObject DopPS;
     [SerializeField] protected bool destroyed = false;//признак что элемент был уничтожен
     [SerializeField] protected int life; //количество жизней
     protected TextMesh lifeText;
     [SerializeField] protected int score;//количество очков за уничтожение элемента
     [SerializeField] protected bool scoreScale;//очки приумножаются при уничтожении одинаковых элементов в один ход
     [SerializeField] protected bool immortal;//признак бессмертия
+    [SerializeField] protected bool returnToPool;//вернуть в пул
 
     [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода    
     [SerializeField] protected int actionDelay;//задержка перед активированием    
@@ -82,6 +84,13 @@ public class BaseElement : MonoBehaviour
             return actionAfterMove;
         }
     }
+    public bool ReturnToPool
+    {
+        get
+        {
+            return returnToPool;
+        }
+    }
     public AllShapeEnum Shape
     {
         get
@@ -139,7 +148,7 @@ public class BaseElement : MonoBehaviour
 
     public void Start()
     {
-        AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
+        animatorElement = this.GetComponent<AnimatorElement>();
         animatorElement.PlayCreatureAnimation();
         if (!Application.isPlaying)
         {
@@ -222,7 +231,6 @@ public class BaseElement : MonoBehaviour
         if (!this.destroyed && this.collector && elementShape == this.collectShape && this.numberOfElementCollected > 0)
         {
             //перемещаем элемент к себе
-            //elementTransform.parent = thisTransform;
             MainAnimator.Instance.AddElementForSmoothMove(elementTransform, this.transform.position, 10, SmoothEnum.InLineWithAcceleration, 0.1f, true);
             //уменьшаем в два раза
             elementTransform.localScale = elementTransform.localScale * 0.7f;
@@ -248,11 +256,6 @@ public class BaseElement : MonoBehaviour
         return false;
     }
 
-    ////удар элементу
-    //public virtual void Hit()
-    //{
-    //}
-
     public virtual void Hit(HitTypeEnum hitType, AllShapeEnum hitElementShape)
     { }
 
@@ -270,20 +273,27 @@ public class BaseElement : MonoBehaviour
     protected virtual void DestroyElement()
     {        
         destroyed = true;
+        //StopAllCoroutines();
+        //if (returnToPool)
+        //{
+        //    foreach (Transform child in this.transform)
+        //    {
+        //        Destroy(child.gameObject);
+        //    }
+        //}
+
         ElementsList.DellElement(shape);
         Score.Instance.AddScore(transform.position, score, scoreScale);
+        PoolManager.Instance.ReturnObjectToPool(DopPS);
+        //if (animatorElement == null)
+        //{
+        //    animatorElement = this.GetComponent<AnimatorElement>();
+        //}
+        //animatorElement.playIdleAnimationRandomTime = false;
         //SuperBonus.Instance.CreatePowerSuperBonus(transform.position, score);
         AnimatElement.StopAllAnimation();
 
-        //звук уничтожения
-        //int randomNumber = UnityEngine.Random.Range(1, 4);
-        //Debug.Log(randomNumber);
-        //(SoundsEnum)Enum.Parse(typeof(SoundsEnum), "DestroyElement_" + randomNumber.ToString())
-        //if (soundDestroy != SoundsEnum.EmptySound)
-        //{
-            SoundManager.Instance.PlayDestroyElement(shape);
-        //SoundManager.Instance.PlaySoundInternal(soundDestroy);
-        //}        
+        SoundManager.Instance.PlayDestroyElement(shape);      
 
         //определяем есть ли вокруг элементы коллекционирующие наш вид элемента
         bool addToCollection = false;
@@ -300,10 +310,9 @@ public class BaseElement : MonoBehaviour
             }
         }
         //проверяем по заданиям
-        if (!addToCollection && !Tasks.Instance.Collect(shape, transform))
+        if (!addToCollection && !Tasks.Instance.Collect(shape, transform, returnToPool))
         {
-            //AnimatorElement animatorElement = this.GetComponent<AnimatorElement>();
-            AnimatElement.PlayDestroyAnimation();
+            AnimatElement.PlayDestroyAnimation(returnToPool);            
         }
         else
         {

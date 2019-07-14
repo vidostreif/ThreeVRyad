@@ -141,14 +141,15 @@ public class LifeManager : MonoBehaviour
             }
             life--;
             thisAnimation.Play("Life_sub");
-            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Life_sub);
-            RecordSave();
+            SoundManager.Instance.PlaySoundInternal(SoundsEnum.Life_sub);            
             UpdateText();
             if (life == 0 && !giftFirstImmortalityIssued)
             {
                 GameObject informationPanelGO = SupportFunctions.CreateInformationPanel("У тебя закончились жизни! В дальнейшем ты сможешь получить бессмертие из подарков или купить в магазине. А пока прими от меня подарочек!");
                 addTimeImmortal(60, informationPanelGO.transform, new Vector3(0, 1.5f, 0), new Vector3(0, 2.5f, 0));
+                giftFirstImmortalityIssued = true;
             }
+            RecordSave();
             return true;
         }
         else

@@ -173,7 +173,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
         {
             if (preparedInstrument != null && preparedInstrument.PSSelect != null)
             {
-                Destroy(preparedInstrument.PSSelect);
+                //Destroy(preparedInstrument.PSSelect);
+                PoolManager.Instance.ReturnObjectToPool(preparedInstrument.PSSelect);
             }   
 
             preparedInstrument = null;
@@ -276,7 +277,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             GameObject instrumentGO = new GameObject();
             //добавляем эффект
             //Instantiate(MainParticleSystem.Instance.pSMagicalTail, instrumentGO.transform);
-            ParticleSystemManager.Instance.CreatePSAsync(instrumentGO.transform, PSEnum.PSMagicalTail);
+            GameObject PSMagicalTail = ParticleSystemManager.Instance.CreatePS(instrumentGO.transform, PSEnum.PSMagicalTail);
             SpriteRenderer spriteRenderer = instrumentGO.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = SpriteBank.SetShape(preparedInstrument.Type);
             spriteRenderer.sortingLayerName = "Magic";
@@ -312,7 +313,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                 if (stopActivation)
                 {
                     successfulActivation = false;
-                    DestroyHighlightBlocks();
+                    DestroyHighlightBlocks();                    
+                    PoolManager.Instance.ReturnObjectToPool(PSMagicalTail);
                     Destroy(instrumentGO);
                     yield break;
                 }
@@ -346,6 +348,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             }
             DestroyHighlightBlocks();
             spriteRenderer.sprite = null;
+            PoolManager.Instance.ReturnObjectToPool(PSMagicalTail);
             Destroy(instrumentGO, 3);
             successfulActivation = true;
             yield break;
@@ -456,7 +459,7 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
                             curBlock.Element.transform.position = block.transform.position;
                             //добавляем эффект для перемещяемого эллемента
                             //GameObject effect = Instantiate(MainParticleSystem.Instance.pSMagicalTail, curBlock.Element.transform);
-                            ParticleSystemManager.Instance.CreatePSAsync(curBlock.Element.transform, PSEnum.PSMagicalTail, 4);
+                            ParticleSystemManager.Instance.CreatePS(curBlock.Element.transform, PSEnum.PSMagicalTail, 4);
                             //Destroy(effect, 4);
 
                             yield return new WaitForSeconds(0.25f);
@@ -499,11 +502,11 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
     }
 
     private GameObject CreateHighlightEffect(Transform parentBlock, float lifeTime = 0) {        
-        GameObject psGO = ParticleSystemManager.Instance.CreatePS(parentBlock, PSEnum.PSSelectTargetBlockBlue);
-        if (lifeTime != 0)
-        {
-            Destroy(psGO, lifeTime);
-        }
+        GameObject psGO = ParticleSystemManager.Instance.CreatePS(parentBlock, PSEnum.PSSelectTargetBlockBlue, lifeTime);
+        //if (lifeTime != 0)
+        //{
+        //    Destroy(psGO, lifeTime);
+        //}
         return psGO;
     }
 
@@ -516,7 +519,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             {
                 for (int i = 0; i < psGOs.Length; i++)
                 {
-                    Destroy(psGOs[i]);
+                    PoolManager.Instance.ReturnObjectToPool(psGOs[i]);
+                    //Destroy(psGOs[i]);
                 }
             }
             psGOs = null;
@@ -533,7 +537,8 @@ public class InstrumentPanel : MonoBehaviour, IESaveAndLoad
             {
                 if (psGOs[i] != null && psGOs[i].transform.parent == block.transform)
                 {
-                    Destroy(psGOs[i]);
+                    PoolManager.Instance.ReturnObjectToPool(psGOs[i]);
+                    //Destroy(psGOs[i]);
                 }                
             }
         }

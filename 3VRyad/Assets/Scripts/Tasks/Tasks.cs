@@ -262,7 +262,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
         }        
     }
     
-    public bool Collect(AllShapeEnum allShape, Transform transformElement)
+    public bool Collect(AllShapeEnum allShape, Transform transformElement, bool standartElement)
     {
         foreach (Target target in targets)
         {
@@ -272,11 +272,11 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
                 //go.transform.position = transformElement.position;
                 //go.transform.parent = this.thisTransform;
                 //transformElement.parent = this.thisTransform;
-                transformElement.SetParent(this.thisTransform, true);
+                //transformElement.SetParent(this.thisTransform, true);
                 transformElement.GetComponent<SpriteRenderer>().sortingLayerName = "Magic";
                 //transformElement.GetComponent<AnimatorElement>().PlayIdleAnimation();
                 //перемещаем элемент к нашему объекту
-                MainAnimator.Instance.AddElementForSmoothMove(transformElement, target.Image.transform.position, 7, SmoothEnum.InLineWithOneSpeed, 1.30f, true, false, delegate { target.ItemReached(transformElement); } );
+                MainAnimator.Instance.AddElementForSmoothMove(transformElement, target.Image.transform.position, 7, SmoothEnum.InLineWithOneSpeed, 1.30f, false, false, delegate { target.ItemReached(transformElement, standartElement); } );
                 //проверяем, не собрали ли мы коллекцию
                 CheckAll();
                 return true;

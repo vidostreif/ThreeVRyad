@@ -238,12 +238,32 @@ public class Block : MonoBehaviour {
             }
 
             //создаем новый элемент
-            GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), Quaternion.identity);
+            GameObject elementGameObject;
+            if (Application.isPlaying && typeElementsEnum == ElementsTypeEnum.StandardElement)
+            {
+                elementGameObject = PoolManager.Instance.GetObject("Element", new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), thisTransform);
+                Destroy(elementGameObject.GetComponent<BaseElement>());
+                foreach (Transform child in elementGameObject.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+            else
+            {
+                elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), Quaternion.identity);
+            }
+
+            
+            //GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), Quaternion.identity);
             Element curElement;
                     
             if (typeElementsEnum == ElementsTypeEnum.StandardElement)
-            {                
-                curElement = elementGameObject.AddComponent<Element>();
+            {
+                //curElement = elementGameObject.GetComponent<Element>();
+                //if (curElement == null)
+                //{
+                    curElement = elementGameObject.AddComponent<Element>();
+                //}                
                 curElement.InitialSettings(typeElementsEnum, false, false, true, false, true, HitTypeEnum.HitFromNearbyElement ,1 , 100, false);
             }
             else if (typeElementsEnum == ElementsTypeEnum.CrushableWall)
@@ -343,8 +363,18 @@ public class Block : MonoBehaviour {
                 startPosition = thisTransform.position;
             }
 
+            GameObject elementGameObject;
             //создаем новый элемент
-            GameObject elementGameObject = Instantiate(prefabElement, startPosition, Quaternion.identity);
+            //if (Application.isPlaying)
+            //{
+            //    elementGameObject = PoolManager.Instance.GetObject("Element", startPosition, thisTransform);
+            //    Destroy(elementGameObject.GetComponent<BaseElement>());
+            //}
+            //else
+            //{
+                elementGameObject = Instantiate(prefabElement, startPosition, Quaternion.identity);
+            //}
+            
             BehindElement curElement;
 
             //если позиция элемента не совпадает с позицией нашего элемента, то перемещаем элемент к блоку
@@ -365,7 +395,7 @@ public class Block : MonoBehaviour {
                 curElement.MakeActionAfterMove(0, true);
                 if (ParticleSystemManager.Instance != null)
                 {
-                    ParticleSystemManager.Instance.CreatePSAsync(thisTransform, PSEnum.PSDirt, 3);
+                    ParticleSystemManager.Instance.CreatePS(thisTransform, PSEnum.PSDirt, 3);
                 }                
             }
             else

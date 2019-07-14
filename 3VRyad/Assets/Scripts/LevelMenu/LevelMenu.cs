@@ -266,6 +266,7 @@ public class LevelMenu : MonoBehaviour
             DailyGiftManager.Instance.DelCquirrel();//удаляем белку
             MainAnimator.Instance.ClearAllMassive();
             HelpToPlayer.ClearHintList();//очищаем список подсказок
+            PoolManager.Instance.ReturnAllObjectToPool();//возвращаем все объекты в пул
             StopAllCoroutines();
             StartCoroutine(CurLoadLevel(inLevel));
         }

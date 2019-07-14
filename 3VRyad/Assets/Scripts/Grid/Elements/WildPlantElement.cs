@@ -51,7 +51,8 @@ public class WildPlantElement : Element
                         {
                             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Spread_liana);
                             ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
-                            Destroy(PSNextMove);
+                            //Destroy(PSNextMove);
+                            PoolManager.Instance.ReturnObjectToPool(PSNextMove);
                             block.Element.CreatBlockingElement(GridBlocks.Instance.prefabBlockingWall, AllShapeEnum.Liana, BlockingElementsTypeEnum.Liana, thisTransform);
                             break;
                         }

@@ -45,11 +45,11 @@ public class StartGame : MonoBehaviour
         Debug.Log("Загрузка картинок: " + Time.realtimeSinceStartup);
         SpriteBank.Preload();
 
-        yield return new WaitForEndOfFrame();
-        textLoad.text = "Загрузка эффектов...";
-        imageLoad.fillAmount = 0.60f;
-        Debug.Log("Загрузка эффектов: " + Time.realtimeSinceStartup);
-        ParticleSystemManager.Instance.Preload();
+        //yield return new WaitForEndOfFrame();
+        //textLoad.text = "Загрузка эффектов...";
+        //imageLoad.fillAmount = 0.60f;
+        //Debug.Log("Загрузка эффектов: " + Time.realtimeSinceStartup);
+        //ParticleSystemManager.Instance.Preload();
         //gameObject.AddComponent<ParticleSystemManager>().Preload();
 
         yield return new WaitForEndOfFrame();

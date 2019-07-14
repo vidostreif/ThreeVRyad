@@ -1916,6 +1916,18 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         Transform blocksTransform = transform.Find(blocksName);
         if (blocksTransform != null)
         {
+            if (Application.isPlaying)
+            {
+                BaseElement[] baseElementsMas = blocksTransform.GetComponentsInChildren<BaseElement>();
+                foreach (BaseElement item in baseElementsMas)
+                {
+                    foreach (Transform child in item.transform)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                    PoolManager.Instance.ReturnObjectToPool(item.gameObject);
+                }                
+            }
             DestroyImmediate(blocksTransform.gameObject);
         }
         ElementsList.ClearElementsOnField();
@@ -2048,7 +2060,6 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     //возвращает истину если удалось поставить элемент на новую позицию?
     public bool AddBlockToPosition(Block Block, Position newPosition)
     {
-
         //находим текущая позиция в сетке
         Position oldPosition = Block.PositionInGrid;
 

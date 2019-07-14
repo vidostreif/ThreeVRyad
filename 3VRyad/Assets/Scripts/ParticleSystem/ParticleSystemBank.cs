@@ -19,23 +19,27 @@ public static class ParticleSystemBank
         if (pSArray == null)
         {
             List<PSResurse> pSResurseList = new List<PSResurse>();
-            pSResurseList.Add(new PSResurse(PSEnum.PSCollect, pSFolder, "PSCollect"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSCollectAll, pSFolder, "PSCollectAll"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSSelect, pSFolder, "PSSelect"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSMagicalTail, pSFolder, "PSMagicTail"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSAddPowerSuperBonus, pSFolder, "PSAddSuperBonus"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSBeatsSuperBonus, pSFolder, "PSBeatSuperBonus"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSDirt, pSFolder, "PSDirt"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSDirtNextAction, pSFolder, "PSDirtNextAction"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSWeb, pSFolder, "PSWeb"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSLiana, pSFolder, "PSLiana"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSWildPlantNextAction, pSFolder, "PSWildPlantNextAction"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSRocket, pSFolder, "Rocket"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSAddSuperBonusFromLevels, pSFolder, "PSAddSuperBonusFromLevels"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSSuperBonusActiveted, pSFolder, "PSSuperBonusActiveted"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSSelectTargetBlock, pSFolder, "PSSelectTargetBlock"));
-            pSResurseList.Add(new PSResurse(PSEnum.PSSelectTargetBlockBlue, pSFolder, "PSSelectTargetBlockBlue"));
-            
+            pSResurseList.Add(new PSResurse(PSEnum.PSCollect, pSFolder, "PSCollect", 5));
+            pSResurseList.Add(new PSResurse(PSEnum.PSCollectAll, pSFolder, "PSCollectAll", 2));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSelect, pSFolder, "PSSelect", 1));
+            pSResurseList.Add(new PSResurse(PSEnum.PSMagicalTail, pSFolder, "PSMagicTail", 1));
+            pSResurseList.Add(new PSResurse(PSEnum.PSAddPowerSuperBonus, pSFolder, "PSAddSuperBonus", 20));
+            pSResurseList.Add(new PSResurse(PSEnum.PSBeatsSuperBonus, pSFolder, "PSBeatSuperBonus", 7));
+            pSResurseList.Add(new PSResurse(PSEnum.PSDirt, pSFolder, "PSDirt", 0));
+            pSResurseList.Add(new PSResurse(PSEnum.PSDirtNextAction, pSFolder, "PSDirtNextAction", 0));
+            pSResurseList.Add(new PSResurse(PSEnum.PSWeb, pSFolder, "PSWeb", 0));
+            pSResurseList.Add(new PSResurse(PSEnum.PSLiana, pSFolder, "PSLiana", 0));
+            pSResurseList.Add(new PSResurse(PSEnum.PSWildPlantNextAction, pSFolder, "PSWildPlantNextAction", 0));
+            pSResurseList.Add(new PSResurse(PSEnum.PSRocket, pSFolder, "Rocket", 2));
+            pSResurseList.Add(new PSResurse(PSEnum.PSAddSuperBonusFromLevels, pSFolder, "PSAddSuperBonusFromLevels", 1));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSuperBonusActiveted, pSFolder, "PSSuperBonusActiveted", 1));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSelectTargetBlock, pSFolder, "PSSelectTargetBlock", 1));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSelectTargetBlockBlue, pSFolder, "PSSelectTargetBlockBlue", 1));
+            pSResurseList.Add(new PSResurse(PSEnum.PSMoveElement, pSFolder, "PSMoveElement", 10));
+            pSResurseList.Add(new PSResurse(PSEnum.PSSmallFlask, pSFolder, "PSSmallFlask", 2));
+            pSResurseList.Add(new PSResurse(PSEnum.PSMediumFlask, pSFolder, "PSMediumFlask", 2));
+            pSResurseList.Add(new PSResurse(PSEnum.PSBigFlask, pSFolder, "PSBigFlask", 2));
+
 
             pSArray = pSResurseList.ToArray();
         }
@@ -113,17 +117,20 @@ public class PSResurse
     private string pSFolderName;
     private string pSName;
     private GameObject go;
+    private int minNumberOnStage;//минимальное количество на сцене
 
     public PSEnum PSEnum { get => pSEnum; }
     public string PSFolderName { get => pSFolderName; }
     public string PSName { get => pSName; }
     public GameObject Go { get => go; }
+    public int MinNumberOnStage { get => minNumberOnStage; }
 
-    public PSResurse(PSEnum pSEnum, string pSFolderName, string pSName)
+    public PSResurse(PSEnum pSEnum, string pSFolderName, string pSName, int minNumberOnStage)
     {
         this.pSEnum = pSEnum;
         this.pSFolderName = pSFolderName;
         this.pSName = pSName;
         this.go = ParticleSystemBank.GetPS(this);
+        this.minNumberOnStage = minNumberOnStage;
     }
 }

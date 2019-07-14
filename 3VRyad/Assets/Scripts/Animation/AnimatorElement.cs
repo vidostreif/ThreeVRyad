@@ -9,12 +9,14 @@ public class AnimatorElement : MonoBehaviour
     private Animation thisAnimation;
     private float idleAnimationTime;
     public bool playIdleAnimationRandomTime;
+    private bool returnToPool;
 
     void Awake()
     {
         //ссылка на аниматор
         thisAnimation = GetComponent<Animation>();
         playIdleAnimationRandomTime = false;
+        returnToPool = false;
         //определяем когда в следующий раз проиграть анимацию
         SetidleAnimationTime();
 
@@ -47,12 +49,19 @@ public class AnimatorElement : MonoBehaviour
 
     //Если закончилась анимация смерти, то удаляем этот элемент
     public void DestroyObject() {
-        Destroy(this.gameObject);
+        if (returnToPool)
+        {
+            PoolManager.Instance.ReturnObjectToPool(gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 
-    public void PlayDestroyAnimation()
+    public void PlayDestroyAnimation(bool returnToPool)
     {
-        //thisAnimator.SetBool("Destroy", true);
+        this.returnToPool = returnToPool;
         thisAnimation.CrossFade("Destroy");
     }
 

@@ -74,7 +74,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
                             item.Block.Hit();
                             item.Block.Blocked = false;
                             strikesOnBlocks++;
-                            Destroy(item.backlight, 0.1f);
+                            //Destroy(item.backlight, 0.1f);
+                            PoolManager.Instance.ReturnObjectToPool(item.backlight);
                         }
                         HitSuperBonusListForDelete.Add(item);
                     }
@@ -110,7 +111,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         {
             foreach (HitSuperBonus item in HitSuperBonusList)
             {
-                Destroy(item.backlight);
+                //Destroy(item.backlight);
+                PoolManager.Instance.ReturnObjectToPool(item.backlight);
                 Destroy(item.gameObjectBeat);
             }
         }
@@ -118,7 +120,8 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         {
             foreach (HitSuperBonus item in newHitSuperBonusList)
             {
-                Destroy(item.backlight);
+                //Destroy(item.backlight);
+                PoolManager.Instance.ReturnObjectToPool(item.backlight);
                 Destroy(item.gameObjectBeat);
             }
         }
@@ -149,11 +152,16 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
             powerSuperBonus.name = "powerSuperBonus";
             powerSuperBonus.transform.parent = transform;
             //GameObject element = Instantiate(MainParticleSystem.Instance.pSAddPowerSuperBonus, powerSuperBonus.transform);
-            ParticleSystemManager.Instance.CreatePSAsync(powerSuperBonus.transform, PSEnum.PSAddPowerSuperBonus);
+            GameObject PS = ParticleSystemManager.Instance.CreatePS(powerSuperBonus.transform, PSEnum.PSAddPowerSuperBonus);
             powerSuperBonus.transform.position = position;
-            MainAnimator.Instance.AddElementForSmoothMove(powerSuperBonus.transform, transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 0.7f, destroyAfterMoving: true);
+            MainAnimator.Instance.AddElementForSmoothMove(powerSuperBonus.transform, transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 0.7f, action: delegate { DestroyPowerSuperBonus(powerSuperBonus, PS); });
             AddBonusPower(power);
         }        
+    }
+
+    public void DestroyPowerSuperBonus(GameObject powerSuperBonus, GameObject PS) {
+        PoolManager.Instance.ReturnObjectToPool(PS);
+        Destroy(powerSuperBonus);
     }
 
     //ракета
@@ -161,11 +169,11 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
     {
         GameObject beatsSuperBonus = new GameObject();
         beatsSuperBonus.name = "beatsSuperBonus";
-        beatsSuperBonus.transform.parent = targetTransform;        
+        beatsSuperBonus.transform.parent = targetTransform;
         //GameObject element = Instantiate(MainParticleSystem.Instance.pSBeatsSuperBonus, beatsSuperBonus.transform);
-        ParticleSystemManager.Instance.CreatePSAsync(beatsSuperBonus.transform, PSEnum.PSBeatsSuperBonus);
+        GameObject PS = ParticleSystemManager.Instance.CreatePS(beatsSuperBonus.transform, PSEnum.PSBeatsSuperBonus);
         beatsSuperBonus.transform.position = transform.position;
-        MainAnimator.Instance.AddElementForSmoothMove(beatsSuperBonus.transform, targetTransform.position, 1, SmoothEnum.InArc, smoothTime: 0.1f, destroyAfterMoving: true);
+        MainAnimator.Instance.AddElementForSmoothMove(beatsSuperBonus.transform, targetTransform.position, 1, SmoothEnum.InArc, smoothTime: 0.1f, action: delegate { DestroyPowerSuperBonus(beatsSuperBonus, PS); });
         return beatsSuperBonus;
     }
 
@@ -354,7 +362,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         FilledImage();
 
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusActiveted);
-        ParticleSystemManager.Instance.CreatePSAsync(transform, PSEnum.PSSuperBonusActiveted, 5);
+        ParticleSystemManager.Instance.CreatePS(transform, PSEnum.PSSuperBonusActiveted, 5);
         //Destroy(psSuperBonusActiveted, 5);
         yield return new WaitForSeconds(0.15f);
 

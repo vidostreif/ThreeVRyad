@@ -13,11 +13,10 @@ public class MainGameSceneScript : MonoBehaviour {
     private bool animationStarsIdle = false;
     private bool animationScoreIdle = false;
     private bool animationGiftIdle = false;
-    private bool completeGameIdle = false;    
+    private bool completeGameIdle = false;
 
-    //private IEnumerator animationStarsCompleteCur;
-    //private IEnumerator animationScoreCompleteCur;
-    //private IEnumerator animationGiftCompleteCur;
+    private GameObject PSRocket1;
+    private GameObject PSRocket2;
 
     void Awake()
     {
@@ -96,7 +95,8 @@ public class MainGameSceneScript : MonoBehaviour {
             }
         } while (true);
 
-        
+        PoolManager.Instance.ReturnObjectToPool(PSRocket1);
+        PoolManager.Instance.ReturnObjectToPool(PSRocket2);
         Destroy(CanvasMenu);
     }
 
@@ -181,10 +181,10 @@ public class MainGameSceneScript : MonoBehaviour {
             //победа
             textEndGame.text = "Победа!";
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Victory);
-            GameObject psGO = ParticleSystemManager.Instance.CreatePS(CanvasMenu.transform, PSEnum.PSRocket);
-            psGO.transform.position = new Vector3(-4, -5, 0);
-            GameObject psGO2 = ParticleSystemManager.Instance.CreatePS(CanvasMenu.transform, PSEnum.PSRocket);
-            psGO2.transform.position = new Vector3(4, -5, 0);
+            PSRocket1 = ParticleSystemManager.Instance.CreatePS(CanvasMenu.transform, PSEnum.PSRocket);
+            PSRocket1.transform.position = new Vector3(-4, -5, 0);
+            PSRocket2 = ParticleSystemManager.Instance.CreatePS(CanvasMenu.transform, PSEnum.PSRocket);
+            PSRocket2.transform.position = new Vector3(4, -5, 0);
             //Выдаем звезды
             int stars = Score.Instance.NumberOfStarsReceived();
             LevelPassedResult levelPassedResult = LevelMenu.Instance.SetLevelPassed(stars, Score.Instance.getScore);
@@ -548,7 +548,7 @@ public class MainGameSceneScript : MonoBehaviour {
     //перезапуск сцены
     public void RestartLevel()
     {
-            Destroy(CanvasMenu);        
+        DestroyCanvasMenu();        
 
             //if (LevelMenu.Instance.LastLoadLevel != null)
             //{
@@ -564,7 +564,7 @@ public class MainGameSceneScript : MonoBehaviour {
     {
         if (LifeManager.Instance.Life > 0)
         {
-            Destroy(CanvasMenu);
+            DestroyCanvasMenu();
             LevelMenu.Instance.LoadNextLevel();
         }
         else

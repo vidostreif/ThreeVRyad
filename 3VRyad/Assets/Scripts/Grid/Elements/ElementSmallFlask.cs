@@ -8,6 +8,7 @@ using UnityEngine;
 public class ElementSmallFlask : Element
 {
     [SerializeField] protected int explosionRadius;
+    
 
     public int ExplosionRadius
     {
@@ -21,10 +22,14 @@ public class ElementSmallFlask : Element
     {        
         explosionRadius = 1;
         vulnerabilityTypeEnum = new HitTypeEnum[] { HitTypeEnum.StandartHit, HitTypeEnum.Explosion, HitTypeEnum.DoubleClick, HitTypeEnum.Instrument };
-        //находим аниматор
-        transform.GetComponent<AnimatorElement>().playIdleAnimationRandomTime = true;
-        //добавляем эфект
-        GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSSmallFlask") as GameObject, thisTransform);
+        if (Application.isPlaying)
+        {
+            //находим аниматор
+            transform.GetComponent<AnimatorElement>().playIdleAnimationRandomTime = true;
+            //добавляем эфект
+            DopPS = ParticleSystemManager.Instance.CreatePS(thisTransform, PSEnum.PSSmallFlask);
+        }
+        
     }
 
     //действие после удара
@@ -39,21 +44,21 @@ public class ElementSmallFlask : Element
     //ударяем по соседним блокам
     protected override void HitNeighboringBlocks(HitTypeEnum hitTypeEnum, Position position)
     {
-        ////Находим позицию блока в сетке
-        //Position gridPosition = this.PositionInGrid;
         //Определяем блоки вокруг
         Block[] aroundBlocks = GridBlocks.Instance.GetBlocksForHit(position, ExplosionRadius);
-        GameObject blockBacklightGo = Instantiate(PrefabBank.BlockBacklight, thisTransform.position, Quaternion.identity, thisTransform);
-        Destroy(blockBacklightGo, 1f);
+
+        Block thisBlock = GridBlocks.Instance.GetBlock(position);
+        PoolManager.Instance.GetObject("BlockBacklight", thisBlock.thisTransform.position, thisBlock.thisTransform, 1f);
 
         for (int i = 0; i < aroundBlocks.Length; i++)
         {
-            if (aroundBlocks[i] != null) {
-                blockBacklightGo = Instantiate(PrefabBank.BlockBacklight, aroundBlocks[i].thisTransform.position, Quaternion.identity, aroundBlocks[i].thisTransform);
-                Destroy(blockBacklightGo, 1f);
+            if (aroundBlocks[i] != null)
+            {
+                PoolManager.Instance.GetObject("BlockBacklight", aroundBlocks[i].thisTransform.position, aroundBlocks[i].thisTransform, 1f);
                 aroundBlocks[i].Hit(hitTypeEnum, this.shape);
             }                
         }
     }    
+
 
 }

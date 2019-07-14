@@ -268,7 +268,11 @@ public enum PSEnum
     PSAddSuperBonusFromLevels,
     PSSuperBonusActiveted,
     PSSelectTargetBlock,
-    PSSelectTargetBlockBlue
+    PSSelectTargetBlockBlue,
+    PSMoveElement,
+    PSSmallFlask,
+    PSMediumFlask,
+    PSBigFlask
 
 }//тип эфектов
 

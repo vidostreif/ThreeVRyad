@@ -139,7 +139,7 @@ public class Target
         }
     }
 
-    public void ItemReached(Transform transformElement) {
+    public void ItemReached(Transform transformElement, bool standartElement) {
 
         bool found = false;
         foreach (Transform item in transformsInTransitList)
@@ -175,7 +175,17 @@ public class Target
                 
             }
             UpdateText();
-        }        
+        }
+
+        if (standartElement)
+        {
+            PoolManager.Instance.ReturnObjectToPool(transformElement.gameObject);
+        }
+        else
+        {
+            GameObject.Destroy(transformElement.gameObject);
+        }
+        
     }
 }
 

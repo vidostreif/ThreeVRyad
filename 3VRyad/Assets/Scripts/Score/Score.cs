@@ -129,12 +129,13 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
     private void CreateScoreElement(Vector3 position, int score)
     {
-        GameObject scoreElement = Instantiate(PrefabBank.ScoreElementPrefab, transform);
-        scoreElement.transform.position = position;
+        GameObject scoreElement = PoolManager.Instance.GetObject("ScoreElement", position, transform);
+        //GameObject scoreElement = Instantiate(PrefabBank.ScoreElementPrefab, transform);
+        //scoreElement.transform.position = position;
         Text scoreElementText = scoreElement.GetComponent<Text>();
         scoreElementText.text = score.ToString();
-        scoreElementText.fontSize = scoreElementText.fontSize * (score / 100);
-        MainAnimator.Instance.AddElementForSmoothMove(scoreElement.transform, text.transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 1, destroyAfterMoving: true);
+        scoreElementText.fontSize = 15 * (score / 100);
+        MainAnimator.Instance.AddElementForSmoothMove(scoreElement.transform, text.transform.position, 1, SmoothEnum.InLineWithAcceleration, smoothTime: 1, action: delegate { PoolManager.Instance.ReturnObjectToPool(scoreElement); } );
         SuperBonus.Instance.CreatePowerSuperBonus(position, score);
         this.addScore += score;
     }
