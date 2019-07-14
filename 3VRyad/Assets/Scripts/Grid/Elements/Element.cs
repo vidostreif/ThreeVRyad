@@ -131,19 +131,19 @@ public class Element : BaseElement
         this.scoreScale = scoreScale;
         drag = false;
         destroyed = false;
-        if (type == ElementsTypeEnum.StandardElement)
-        {
-            returnToPool = true;
-            //if (animatorElement == null)
-            //{
-            //    animatorElement = this.GetComponent<AnimatorElement>();
-            //}            
-            //animatorElement.PlayCreatureAnimation();
-        }
-        else
-        {
-            returnToPool = false;
-        }
+        //if (type == ElementsTypeEnum.StandardElement)
+        //{
+        //    returnToPool = true;
+        //    //if (animatorElement == null)
+        //    //{
+        //    //    animatorElement = this.GetComponent<AnimatorElement>();
+        //    //}            
+        //    //animatorElement.PlayCreatureAnimation();
+        //}
+        //else
+        //{
+        //    returnToPool = false;
+        //}
         DopSettings();
     }
 

@@ -18,7 +18,7 @@ public class BaseElement : MonoBehaviour
     [SerializeField] protected int score;//количество очков за уничтожение элемента
     [SerializeField] protected bool scoreScale;//очки приумножаются при уничтожении одинаковых элементов в один ход
     [SerializeField] protected bool immortal;//признак бессмертия
-    [SerializeField] protected bool returnToPool;//вернуть в пул
+    //[SerializeField] protected bool returnToPool;//вернуть в пул
 
     [SerializeField] protected bool actionAfterMove = false;//признак активируемости по окончанию хода    
     [SerializeField] protected int actionDelay;//задержка перед активированием    
@@ -84,13 +84,13 @@ public class BaseElement : MonoBehaviour
             return actionAfterMove;
         }
     }
-    public bool ReturnToPool
-    {
-        get
-        {
-            return returnToPool;
-        }
-    }
+    //public bool ReturnToPool
+    //{
+    //    get
+    //    {
+    //        return returnToPool;
+    //    }
+    //}
     public AllShapeEnum Shape
     {
         get
@@ -240,11 +240,6 @@ public class BaseElement : MonoBehaviour
 
             ParticleSystemManager.Instance.CreateCollectEffect(gameObject.transform, SpriteBank.SetShape(collectShape, mini: true));
 
-            //GameObject psGO = GameObject.Instantiate(Resources.Load("Prefabs/ParticleSystem/PSCollect") as GameObject, gameObject.transform);
-            //GameObject.Destroy(psGO, 3);
-            //ParticleSystem ps = psGO.GetComponent<ParticleSystem>();
-            //ps.textureSheetAnimation.AddSprite(SpriteBank.SetShape(collectShape));
-
             numberOfElementCollected--;
             //если собрали колецию
             if (numberOfElementCollected == 0)
@@ -310,9 +305,9 @@ public class BaseElement : MonoBehaviour
             }
         }
         //проверяем по заданиям
-        if (!addToCollection && !Tasks.Instance.Collect(shape, transform, returnToPool))
+        if (!addToCollection && !Tasks.Instance.Collect(shape, transform))
         {
-            AnimatElement.PlayDestroyAnimation(returnToPool);            
+            AnimatElement.PlayDestroyAnimation();            
         }
         else
         {

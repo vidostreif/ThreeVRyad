@@ -239,19 +239,19 @@ public class Block : MonoBehaviour {
 
             //создаем новый элемент
             GameObject elementGameObject;
-            if (Application.isPlaying && typeElementsEnum == ElementsTypeEnum.StandardElement)
-            {
-                elementGameObject = PoolManager.Instance.GetObject("Element", new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), thisTransform);
-                Destroy(elementGameObject.GetComponent<BaseElement>());
-                foreach (Transform child in elementGameObject.transform)
-                {
-                    Destroy(child.gameObject);
-                }
-            }
-            else
-            {
+            //if (Application.isPlaying && typeElementsEnum == ElementsTypeEnum.StandardElement)
+            //{
+            //    elementGameObject = PoolManager.Instance.GetObject("Element", new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), thisTransform);
+            //    Destroy(elementGameObject.GetComponent<BaseElement>());
+            //    foreach (Transform child in elementGameObject.transform)
+            //    {
+            //        Destroy(child.gameObject);
+            //    }
+            //}
+            //else
+            //{
                 elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), Quaternion.identity);
-            }
+            //}
 
             
             //GameObject elementGameObject = Instantiate(prefabElement, new Vector3(thisTransform.position.x, thisTransform.position.y + addY, thisTransform.position.z), Quaternion.identity);
