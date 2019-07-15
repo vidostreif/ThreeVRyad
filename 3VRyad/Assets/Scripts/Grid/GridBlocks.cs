@@ -1610,10 +1610,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         for (int y = 0; y < containers[0].block.GetLength(0); y++)
         {
             dropBlock = null;
-            yield return new WaitForSeconds(0.0165f);
+            //yield return new WaitForSeconds(0.0165f);
+            yield return new WaitForEndOfFrame();
             //начинаем со второй строки
             for (int x = 0; x < containers.GetLength(0); x++)
-            {
+            {                
                 Block currentBlock = containers[x].block[y];
                 bool createdElement = false;
                 if (currentBlock != null && !BlockInProcessing(currentBlock))

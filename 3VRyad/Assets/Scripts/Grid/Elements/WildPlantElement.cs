@@ -5,7 +5,7 @@ using UnityEngine;
 //дикое растение, кажды Х количество ходдов распространяет лиану на блоки вокруг
 public class WildPlantElement : Element
 {
-    private GameObject PSNextMove;
+    //private GameObject PSNextMove;
 
     protected override void DopSettings()
     {
@@ -52,7 +52,8 @@ public class WildPlantElement : Element
                             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Spread_liana);
                             ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
                             //Destroy(PSNextMove);
-                            PoolManager.Instance.ReturnObjectToPool(PSNextMove);
+                            PoolManager.Instance.ReturnObjectToPool(DopPS);
+                            DopPS = null;
                             block.Element.CreatBlockingElement(GridBlocks.Instance.prefabBlockingWall, AllShapeEnum.Liana, BlockingElementsTypeEnum.Liana, thisTransform);
                             break;
                         }
@@ -62,9 +63,9 @@ public class WildPlantElement : Element
             else if(ActivationMove - 1 == Tasks.Instance.RealMoves)
             {
                 //создаем эффект что элемент будет активирован
-                if (ParticleSystemManager.Instance != null && PSNextMove == null)
+                if (ParticleSystemManager.Instance != null && DopPS == null)
                 {
-                    PSNextMove = ParticleSystemManager.Instance.CreatePS(thisTransform, PSEnum.PSWildPlantNextAction);
+                    DopPS = ParticleSystemManager.Instance.CreatePS(thisTransform, PSEnum.PSWildPlantNextAction);
                     SoundManager.Instance.PlaySoundInternal(SoundsEnum.Preparation_wildplant);
                 }
             }

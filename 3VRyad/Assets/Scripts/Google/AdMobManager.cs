@@ -37,6 +37,10 @@ public class AdMobManager : MonoBehaviour
 
     public void Start()
     {
+        Initialize();
+    }
+
+    private void Initialize() {
 #if UNITY_ANDROID
         string appId = "ca-app-pub-6280237892174167~8971322173";
 #elif UNITY_IPHONE
@@ -66,7 +70,7 @@ public class AdMobManager : MonoBehaviour
         //        timeLoadVideoForDailyGift = 10;
         //    }
         //}     
-        
+
         rewardVideoForDailyGift = new RewardVideo(AdMobManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-6280237892174167/9113007538", "", PrefabBank.VideoBrowsePouchButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, 0);
     }
 
@@ -76,10 +80,41 @@ public class AdMobManager : MonoBehaviour
         if (LastArrayProcessingTime + 0.5f < Time.realtimeSinceStartup)
         {
             LastArrayProcessingTime = Time.realtimeSinceStartup;
-            rewardVideoForCoin.ProcessingOfButtonArrays();
-            rewardVideoForMove.ProcessingOfButtonArrays();
-            rewardVideoForLife.ProcessingOfButtonArrays();
-            rewardVideoForDailyGift.ProcessingOfButtonArrays();
+            if (rewardVideoForCoin != null)
+            {
+                rewardVideoForCoin.ProcessingOfButtonArrays();
+            }
+            else
+            {
+                Initialize();
+            }
+
+            if (rewardVideoForMove != null)
+            {
+                rewardVideoForMove.ProcessingOfButtonArrays();
+            }
+            else
+            {
+                Initialize();
+            }
+
+            if (rewardVideoForLife != null)
+            {
+                rewardVideoForLife.ProcessingOfButtonArrays();
+            }
+            else
+            {
+                Initialize();
+            }
+
+            if (rewardVideoForDailyGift != null)
+            {
+                rewardVideoForDailyGift.ProcessingOfButtonArrays();
+            }
+            else
+            {
+                Initialize();
+            }
         }
     }
 
