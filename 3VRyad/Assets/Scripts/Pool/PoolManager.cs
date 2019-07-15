@@ -13,6 +13,7 @@ public class PoolManager : MonoBehaviour
     private PoolPart[] pools;
     private List<RentalGO> rentalGOList;
     private bool returnRentalGOIdle;
+    private bool quantityRecoveryGOIdle;
     private GameObject objectsParent;
 
     [System.Serializable]
@@ -21,6 +22,7 @@ public class PoolManager : MonoBehaviour
         public string name; //имя префаба
         public GameObject prefab; //сам префаб, как образец
         public int count; //количество объектов при инициализации пула
+        public int replenishment;//пополнение в цикл (0,1сек)
         public ObjectPooling ferula; //сам пул
     }
 
@@ -128,37 +130,45 @@ public class PoolManager : MonoBehaviour
         returnRentalGOIdle = false;
     }
 
-    ////выдача объекта
-    //public GameObject GetObject(string name, Vector3 position, Quaternion rotation, float rentalTime = 0)
-    //{
-    //    GameObject result = null;
-    //    if (pools != null)
-    //    {
-    //        for (int i = 0; i < pools.Length; i++)
-    //        {
-    //            if (string.Compare(pools[i].name, name) == 0)
-    //            {
-    //                result = pools[i].ferula.GetObject().gameObject;
-    //                result.transform.position = position;
-    //                result.transform.rotation = rotation;
-    //                result.SetActive(true);
+    //восстановление количества объектов в масссивах
+    private void QuantityRecoveryGO()
+    {
+        if (!quantityRecoveryGOIdle)
+        {
+            StartCoroutine(CurQuantityRecoveryGO());
+        }
+    }
 
-    //                //добавляем в массив аренды
-    //                if (rentalTime > 0)
-    //                {
-    //                    rentalGOList.Add(new RentalGO(result, Time.time + rentalTime));
-    //                    ReturnRentalGO();
-    //                }
+    //куротина для возврата арендованных объектов
+    private IEnumerator CurQuantityRecoveryGO()
+    {
+        quantityRecoveryGOIdle = true;
+        bool repeat = true;
+        while (pools != null && pools.Length > 0 && repeat)
+        {
+            repeat = false;
+            yield return new WaitForSeconds(0.1f);
 
-    //                return result;
-    //            }
-    //        }
-    //    }
-    //    return result; //если такого объекта нет в пулах, вернет null
-    //}
+            foreach (PoolPart item in pools)
+            {
+                //заполняем массив если в нем меньше объектов чем было при старте
+                if (item.replenishment > 0 && item.ferula.Objects.Count < item.count)
+                {
+                    int replenishment = item.replenishment;
+                    if (item.replenishment > item.count - item.ferula.Objects.Count)
+                    {
+                        replenishment = item.count - item.ferula.Objects.Count;
+                    }
+                    item.ferula.ExpandArray(replenishment);
+                    repeat = true;
+                }
+            }
+        }
+        quantityRecoveryGOIdle = false;
+    }
 
-    //выдача объекта
-    public GameObject GetObject(string name, Vector3 position, Transform parent, float rentalTime = 0)
+    //выдача объекта в аренду
+    public GameObject GetObjectToRent(string name, Vector3 position, Transform parent, float rentalTime = 0)
     {
         GameObject result = null;
         if (pools != null)
@@ -167,7 +177,7 @@ public class PoolManager : MonoBehaviour
             {
                 if (string.Compare(pools[i].name, name) == 0)
                 {
-                    result = pools[i].ferula.GetObject().gameObject;
+                    result = pools[i].ferula.GetObjectToRent().gameObject;
                     result.transform.SetParent(parent, false);
                     result.transform.position = position;
                     //result.transform.rotation = rotation;
@@ -179,6 +189,32 @@ public class PoolManager : MonoBehaviour
                         rentalGOList.Add(new RentalGO(result, Time.time + rentalTime));
                         ReturnRentalGO();
                     }
+
+                    return result;
+                }
+            }
+        }
+        return result; //если такого объекта нет в пулах, вернет null
+    }
+
+    //выдача объекта навсегда
+    public GameObject GetObjectForever(string name, Vector3 position, Transform parent, float rentalTime = 0)
+    {
+        GameObject result = null;
+        if (pools != null)
+        {
+            for (int i = 0; i < pools.Length; i++)
+            {
+                if (string.Compare(pools[i].name, name) == 0)
+                {
+                    result = pools[i].ferula.GetObjectForever().gameObject;
+                    result.transform.SetParent(parent, false);
+                    result.transform.position = position;
+                    //result.transform.rotation = rotation;
+                    result.SetActive(true);
+
+                    //запускаем авто восстановление массива
+                    QuantityRecoveryGO();
 
                     return result;
                 }

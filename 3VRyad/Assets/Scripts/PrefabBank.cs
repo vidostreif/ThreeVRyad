@@ -51,6 +51,7 @@ public static class PrefabBank
     private static GameObject textLifeElement = Resources.Load(prefabFolder + "TextLifeElement") as GameObject;
     private static GameObject collectElement = Resources.Load(prefabFolder + "CollectElement") as GameObject;
     private static GameObject blockBacklight = Resources.Load(prefabFolder + "BlockBacklight") as GameObject;
+    private static GameObject soundGO = Resources.Load(prefabFolder + "SoundGO") as GameObject;
 
     public static GameObject LevelsCanvasPrefab { get => levelsCanvasPrefab;}
     public static GameObject RegionsCanvasPrefab { get => regionsCanvasPrefab;}
@@ -84,8 +85,8 @@ public static class PrefabBank
     public static GameObject Cquirrel { get => cquirrel; }
     public static GameObject ImageOpenBoxDailyGift { get => imageOpenBoxDailyGift; }
     public static GameObject VideoBrowsePouchButton { get => videoBrowsePouchButton; }
+    public static GameObject SoundGO { get => soundGO; }
     
-
     public static void Preload()
     {
         //FieldInfo[] properties = PrefabBank.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);

@@ -184,11 +184,11 @@ GameObject:
   - component: {fileID: 7295260872422668445}
   - component: {fileID: 5559665414758939041}
   - component: {fileID: 5146158884997414175}
+  - component: {fileID: 2684195165456141242}
   - component: {fileID: 114191125961773848}
   - component: {fileID: 713935765}
   - component: {fileID: 754313913625643757}
   - component: {fileID: 1845231574}
-  - component: {fileID: 2684195165456141242}
   - component: {fileID: 8736265215075987509}
   - component: {fileID: 8072804774652110714}
   - component: {fileID: 138591660193383993}
@@ -304,13 +304,28 @@ MonoBehaviour:
   - name: ScoreElement
     prefab: {fileID: 117811080947788871, guid: a205143d57c405547a4d1232b52256d3, type: 3}
     count: 60
+    replenishment: 1
   - name: BlockBacklight
     prefab: {fileID: 6814334779224649784, guid: 930c72f90f4ecef4a8d8030e03d2e61c,
       type: 3}
     count: 60
+    replenishment: 1
   - name: Element
     prefab: {fileID: 30, guid: f925ff8db482b684d84e1e8ebc0b80c4, type: 3}
-    count: 150
+    count: 100
+    replenishment: 1
+--- !u!114 &2684195165456141242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234334804531704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b95bc4755f44c244483cff11cb2b99f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114191125961773848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,18 +384,6 @@ MonoBehaviour:
   boom: {fileID: 0}
   explosionEffect: {fileID: 5187769647623933975, guid: 3c7925780b11508498fd0be7fba505cf,
     type: 3}
---- !u!114 &2684195165456141242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1234334804531704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b95bc4755f44c244483cff11cb2b99f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &8736265215075987509
 MonoBehaviour:
   m_ObjectHideFlags: 0

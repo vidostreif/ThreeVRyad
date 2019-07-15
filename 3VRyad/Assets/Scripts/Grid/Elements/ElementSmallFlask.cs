@@ -48,13 +48,13 @@ public class ElementSmallFlask : Element
         Block[] aroundBlocks = GridBlocks.Instance.GetBlocksForHit(position, ExplosionRadius);
 
         Block thisBlock = GridBlocks.Instance.GetBlock(position);
-        PoolManager.Instance.GetObject("BlockBacklight", thisBlock.thisTransform.position, thisBlock.thisTransform, 1f);
+        PoolManager.Instance.GetObjectToRent("BlockBacklight", thisBlock.thisTransform.position, thisBlock.thisTransform, 1f);
 
         for (int i = 0; i < aroundBlocks.Length; i++)
         {
             if (aroundBlocks[i] != null)
             {
-                PoolManager.Instance.GetObject("BlockBacklight", aroundBlocks[i].thisTransform.position, aroundBlocks[i].thisTransform, 1f);
+                PoolManager.Instance.GetObjectToRent("BlockBacklight", aroundBlocks[i].thisTransform.position, aroundBlocks[i].thisTransform, 1f);
                 aroundBlocks[i].Hit(hitTypeEnum, this.shape);
             }                
         }

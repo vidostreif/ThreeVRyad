@@ -24,7 +24,6 @@ public class ParticleSystemManager : MonoBehaviour
         {
             DontDestroyOnLoadManager.DontDestroyOnLoad(gameObject); //Set as do not destroy
         }
-        //WarmingUp();
     }
 
     private void Start()
@@ -33,18 +32,11 @@ public class ParticleSystemManager : MonoBehaviour
     }
 
     //прогрев всех GO
-    public void Preload() {
-
-        //GameObject warmingUpPS= new GameObject();
-        //warmingUpPS.name = "warmingUpPS";
-        //warmingUpPS.transform.parent = transform;
-        //warmingUpPS.transform.position = new Vector3(-1000, -1000, 0);
-        //GameObject.Destroy(warmingUpPS, 5);
-
+    public void Preload()
+    {
         for (int i = 0; i < ParticleSystemBank.PSArray.Length; i++)
         {
             PoolManager.Instance.PoolsSetupAddPool(ParticleSystemBank.PSArray[i].PSEnum.ToString(), ParticleSystemBank.GetPS(ParticleSystemBank.PSArray[i].PSEnum), ParticleSystemBank.PSArray[i].MinNumberOnStage);
-            //CreatePSAsync(warmingUpPS.transform, ParticleSystemBank.PSArray[i].PSEnum, 3);
         }
     }
 
@@ -109,7 +101,7 @@ public class ParticleSystemManager : MonoBehaviour
 
         //создаем эффект 
         //GameObject psGO = GameObject.Instantiate(requestGO, parentTransform);
-        GameObject psGO = PoolManager.Instance.GetObject(pSEnum.ToString(), parentTransform.position, parentTransform, lifeTime);
+        GameObject psGO = PoolManager.Instance.GetObjectToRent(pSEnum.ToString(), parentTransform.position, parentTransform, lifeTime);
         //время жизни эффекта
         //if (lifeTime != 0)
         //{

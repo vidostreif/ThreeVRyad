@@ -129,7 +129,7 @@ public class Score : MonoBehaviour, IESaveAndLoad
 
     private void CreateScoreElement(Vector3 position, int score)
     {
-        GameObject scoreElement = PoolManager.Instance.GetObject("ScoreElement", position, transform);
+        GameObject scoreElement = PoolManager.Instance.GetObjectToRent("ScoreElement", position, transform);
         //GameObject scoreElement = Instantiate(PrefabBank.ScoreElementPrefab, transform);
         //scoreElement.transform.position = position;
         Text scoreElementText = scoreElement.GetComponent<Text>();

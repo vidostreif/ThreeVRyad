@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class SoundManager : MonoBehaviour
 {
     public static SoundManager _instance;
@@ -12,6 +12,9 @@ public class SoundManager : MonoBehaviour
     private AudioMixer audioMixer;
     private AudioMixerGroup audMixThisCompressor;
     private AudioMixerGroup audMixThisoutCompressor;
+    private bool soundToDeleteSearchIdle;
+    private bool createSoundsListComplite;
+    private bool createPoolComplite;
 
     public static SoundManager Instance
     {
@@ -19,10 +22,7 @@ public class SoundManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                // Do not modify _instance here. It will be assigned in awake
-                //GameObject go = new GameObject("(singleton) SoundManager");
                 GameObject go = GameObject.Find("GameHelper");
-                //SoundManager soundManager = go.AddComponent<SoundManager>();
                 SoundManager soundManager = go.GetComponent<SoundManager>();
                 if (soundManager == null)
                 {
@@ -59,33 +59,49 @@ public class SoundManager : MonoBehaviour
         CreateSoundsList();
     }
 
-    void Update()
+    private void Start()
     {
-        // каждый фрей удаляем только один законившийся звук
-        AudioSource soundToDelete = null;
-        //CreateSoundsList();
-        foreach (AudioSource sound in soundsList)
-        {
-            if (IsSoundFinished(sound))
-            {
-                soundToDelete = sound;
-                break;
-            }
-        }
+        //создание пула звуков
+        PoolManager.Instance.PoolsSetupAddPool("Sound", PrefabBank.SoundGO, 35);
+        createPoolComplite = true;
+    }
 
-        if (soundToDelete != null)
+    private void SoundToDeleteSearch()
+    {
+        if (!soundToDeleteSearchIdle)
         {
-            soundsList.Remove(soundToDelete);
-            if (Application.isPlaying)
-            {
-                Destroy(soundToDelete.gameObject);
-            }
-            else
-            {
-                DestroyImmediate(soundToDelete.gameObject);
-            }
-            
+            StartCoroutine(CurSoundToDeleteSearch());
         }
+    }
+
+    //куротина для возврата арендованных объектов
+    private IEnumerator CurSoundToDeleteSearch()
+    {
+        soundToDeleteSearchIdle = true;
+        while (soundsList != null && soundsList.Count > 0)
+        {
+            yield return new WaitForSeconds(0.05f);
+
+            // каждый проход удаляем только один законившийся звук
+            AudioSource soundToDelete = null;
+
+            foreach (AudioSource sound in soundsList)
+            {
+                if (IsSoundFinished(sound))
+                {
+                    soundToDelete = sound;
+                    break;
+                }
+            }
+
+            if (soundToDelete != null)
+            {
+                soundsList.Remove(soundToDelete);
+                soundToDelete.clip = null;
+                PoolManager.Instance.ReturnObjectToPool(soundToDelete.gameObject);
+            }
+        }
+        soundToDeleteSearchIdle = false;
     }
 
     private void CreateSoundsList() {
@@ -107,6 +123,7 @@ public class SoundManager : MonoBehaviour
 
             audMixThisoutCompressor = audioMixer.FindMatchingGroups("NoCompress")[0];
         }
+        createSoundsListComplite = true;
     }
 
     private bool IsSoundFinished(AudioSource sound)
@@ -119,7 +136,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySoundInternal(SoundsEnum soundName, bool thisOutCompress = false)
     {
-        if (!Application.isPlaying)
+        if (!Application.isPlaying || !createSoundsListComplite || !createPoolComplite)
         {
             return;
         }
@@ -153,7 +170,7 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        if (soundsList.Count > 25)
+        if (soundsList.Count > 30)
         {
             //Debug.Log("Вообще слишком много звуков!");
             return;
@@ -191,17 +208,18 @@ public class SoundManager : MonoBehaviour
             }
         }
 
-        GameObject sound = new GameObject();
-        sound.transform.parent = transform;
-        sound.transform.position = transform.position;
+        GameObject sound = PoolManager.Instance.GetObjectToRent("Sound", transform.position, transform);
+        //sound.transform.parent = transform;
+        //sound.transform.position = transform.position;
 
-        AudioSource soundSource = sound.AddComponent<AudioSource>();
+        AudioSource soundSource = sound.GetComponent<AudioSource>();
         soundSource.mute = !SettingsController.SoundOn;
         soundSource.clip = soundClip;
         soundSource.outputAudioMixerGroup = thisOutCompress ? audMixThisoutCompressor : audMixThisCompressor;
         soundSource.Play();
 
         soundsList.Add(soundSource);
+        SoundToDeleteSearch();
     }
 
     public void SoundMute(bool mute) {
