@@ -29,7 +29,7 @@ public class MainAnimator : MonoBehaviour {
     private List<ChangeColorElement> changeColorElements;//элементы для смены цвета
     private List<ChangeColorElement> changeColorElementsForRemove;//элементы которые можно удалить из коллекции
 
-    public GameObject boom;
+    //public GameObject boom;
     public GameObject explosionEffect;//префаб
     //public List<GameObject> explosionEffects;// лист взрывов
 
@@ -299,8 +299,6 @@ public class MainAnimator : MonoBehaviour {
                         Vector3 offset = direction * factor;
                         Vector3 newPosition = item.thisTransform.position + offset;
                         item.thisTransform.position = newPosition;
-                        //item.thisTransform.Translate(offset);
-
                     }
                     else
                     {
@@ -309,19 +307,12 @@ public class MainAnimator : MonoBehaviour {
                 }
 
                 if (item.thisTransform.position == item.targetPosition)
-                {
-                    
-                    //удаляем если требуется
-                    if (item.destroyAfterMoving)
-                        Destroy(item.thisTransform.gameObject, 0.1f);
+                {              
                     moveElementsForRemove.Add(item);
                 }
             }
             else if (item.thisTransform == null)
             {
-                ////выполняем прописанный делегат
-                //if (item.action != null)
-                //    item.action();
                 moveElementsForRemove.Add(item);
             }
         }
@@ -336,15 +327,19 @@ public class MainAnimator : MonoBehaviour {
                     item.action();
                 }
             }
-                
+            //удаляем если требуется
+            if (item.destroyAfterMoving && item.thisTransform != null)
+                Destroy(item.thisTransform.gameObject, 0.1f);
             moveElements.Remove(item);
         }
         moveElementsForRemove.Clear();
     }
 
-    public void AddExplosionEffect(Vector3 epicenter, float power) {
-
-        GameObject explosionEf = Instantiate(explosionEffect, epicenter, Quaternion.identity);
+    public void AddExplosionEffect(Vector3 epicenter, float power)
+    {
+        //GameObject explosionEf = Instantiate(explosionEffect, epicenter, Quaternion.identity);
+        GameObject explosionEf = ParticleSystemManager.Instance.CreatePS(this.transform, PSEnum.PSBoom);
+        explosionEf.transform.position = epicenter;
         explosionEf.transform.localScale = explosionEf.transform.localScale * power;
         explosions.Add(new Explosion(epicenter, power, Time.time, explosionEf));
     }
@@ -395,7 +390,9 @@ public class MainAnimator : MonoBehaviour {
         //удаляем из массива
         foreach (Explosion item in explosionsForRemove)
         {
-            Destroy(item.explosionEffect, 2);
+            //Destroy(item.explosionEffect, 2);
+            item.explosionEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            PoolManager.Instance.ReturnObjectToPool(item.explosionEffect, 2);
             explosions.Remove(item);
         }
         explosionsForRemove.Clear();

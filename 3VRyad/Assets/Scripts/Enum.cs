@@ -272,7 +272,8 @@ public enum PSEnum
     PSMoveElement,
     PSSmallFlask,
     PSMediumFlask,
-    PSBigFlask
+    PSBigFlask,
+    PSBoom
 
 }//тип эфектов
 

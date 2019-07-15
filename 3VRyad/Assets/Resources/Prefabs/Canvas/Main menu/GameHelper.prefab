@@ -303,12 +303,12 @@ MonoBehaviour:
   poolsSetup:
   - name: ScoreElement
     prefab: {fileID: 117811080947788871, guid: a205143d57c405547a4d1232b52256d3, type: 3}
-    count: 60
+    count: 40
     replenishment: 1
   - name: BlockBacklight
     prefab: {fileID: 6814334779224649784, guid: 930c72f90f4ecef4a8d8030e03d2e61c,
       type: 3}
-    count: 60
+    count: 40
     replenishment: 1
   - name: Element
     prefab: {fileID: 30, guid: f925ff8db482b684d84e1e8ebc0b80c4, type: 3}

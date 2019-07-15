@@ -223,14 +223,23 @@ public class PoolManager : MonoBehaviour
         return result; //если такого объекта нет в пулах, вернет null
     }
 
-    //возврат объекта в пул
-    public void ReturnObjectToPool(GameObject GO)
+    //возврат объекта в пул с возможной задеркой
+    public void ReturnObjectToPool(GameObject GO, float delay = 0)
     {
-        if (GO != null)
+        if (delay == 0)
         {
-            GO.transform.SetParent(objectsParent.transform, false);
-            GO.SetActive(false);
+            if (GO != null)
+            {
+                GO.transform.SetParent(objectsParent.transform, false);
+                GO.SetActive(false);
+            }
         }
+        else
+        {
+            rentalGOList.Add(new RentalGO(GO, Time.time + delay));
+            ReturnRentalGO();
+        }
+        
     }
 
     //вернуть все объеты в пулы
