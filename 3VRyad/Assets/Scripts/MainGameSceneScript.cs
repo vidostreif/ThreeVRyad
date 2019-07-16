@@ -297,9 +297,14 @@ public class MainGameSceneScript : MonoBehaviour {
 
         //Находим монету в магазине
         GameObject shopImageCoinsGO = GameObject.Find("ImageCoins");
-
+        animationStarsIdle = false;
         for (int i = 1; i <= levelPassedResult.stars; i++)
         {
+            //прерываем если уничтожили меню
+            if (panelMenu == null)
+            {
+                yield break;
+            }
             Transform starTransform = panelMenu.transform.Find("Star" + i);
             Image starImage = starTransform.GetComponent(typeof(Image)) as Image;
             SupportFunctions.ChangeAlfa(starImage, 1);
@@ -331,7 +336,7 @@ public class MainGameSceneScript : MonoBehaviour {
             yield return new WaitForSeconds(0.7f);
         }
 
-        animationStarsIdle = false;
+        //animationStarsIdle = false;
     }
 
     ////анимация набора очков в конце уровня
@@ -350,35 +355,55 @@ public class MainGameSceneScript : MonoBehaviour {
 
         bool createdNewScore = false;
         yield return new WaitForSeconds(0.2f);
+        animationScoreIdle = false;
         do
         {
+            //прерываем если уничтожили меню
+            if (panelMenu == null)
+            {
+                yield break;
+            }
             if (score > 50)
             {
                 int i = score / 15;
                 newScore += i;
                 score -= i;
-                textScore.text = "Score: " + newScore;
             }
             else if (score > 0)
             {
                 newScore += 1;
-                score -= 1;
+                score -= 1;            
+            }
+
+            if (textScore != null)
+            {
                 textScore.text = "Score: " + newScore;
             }
+            //else
+            //{
+            //    yield break;
+            //}
 
             //показываем newscore если увеличили рекорд
             if (!createdNewScore && newScore > oldScore)
             {
                 createdNewScore = true;
                 //показываем надпись new
-                SupportFunctions.ChangeAlfa(imageNewScore, 1);
-                ParticleSystemManager.Instance.CreateCollectEffect(imageNewScore.transform, imageNewScore);
+                if (imageNewScore != null)
+                {
+                    SupportFunctions.ChangeAlfa(imageNewScore, 1);
+                    ParticleSystemManager.Instance.CreateCollectEffect(imageNewScore.transform, imageNewScore);
+                }
+                //else
+                //{
+                //    yield break;
+                //}                
             }
 
             yield return new WaitForEndOfFrame();
         } while (score > 0);
 
-        animationScoreIdle = false;
+        //animationScoreIdle = false;
     }
 
     //анимация выдачи подарков в конце уровня

@@ -464,7 +464,7 @@ public class Shop : MonoBehaviour, IStoreListener
             float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
             float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
-            GameObject coinGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftCoinGO.transform.position, Quaternion.identity, shopImageCoinsTransform);
+            GameObject coinGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftCoinGO.transform.position, Quaternion.identity, giftCoinGO.transform);
             //coinGO.GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Coin, true);
             coinGOList.Add(coinGO);
             //перемещаем на рандомную позицию
@@ -538,7 +538,7 @@ public class Shop : MonoBehaviour, IStoreListener
             float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
             float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
-            GameObject miniGiftGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftGO.transform.position, Quaternion.identity, panelImageLiveTransform);            
+            GameObject miniGiftGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftGO.transform.position, Quaternion.identity, giftGO.transform);            
             miniGiftGO.GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Life, true);
             miniGiftGOList.Add(miniGiftGO);
             //перемещаем на рандомную позицию

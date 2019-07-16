@@ -149,7 +149,7 @@ public class SoundManager : MonoBehaviour
         int sameCountGuard = 0;
         foreach (AudioSource audioSource in soundsList)
         {
-            if (audioSource.clip.name == soundResurse.SoundName)
+            if (audioSource != null && audioSource.clip != null && audioSource.clip.name == soundResurse.SoundName)
                 if (audioSource.time < 0.05f) 
                 {
                     //Debug.Log(audioSource.clip.name + " " + audioSource.time);

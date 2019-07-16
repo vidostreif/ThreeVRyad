@@ -54,11 +54,11 @@ public class AdMobManager : MonoBehaviour
 
         //тестовый код рекламы ca-app-pub-3940256099942544/5224354917
 
-        rewardVideoForCoin = new RewardVideo(AdMobManager.Instance.AddCoinsForViewingAds, "ca-app-pub-6280237892174167/9330414827", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Coin), 60, 30);
+        rewardVideoForCoin = new RewardVideo(AddCoinsForViewingAds, "ca-app-pub-6280237892174167/9330414827", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Coin), 60, 30);
 
-        rewardVideoForMove = new RewardVideo(AdMobManager.Instance.AddMovesOnEndGAme, "ca-app-pub-6280237892174167/5734011639", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Move), 300, 120);
+        rewardVideoForMove = new RewardVideo(AddMovesOnEndGAme, "ca-app-pub-6280237892174167/5734011639", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Move), 300, 90);
 
-        rewardVideoForLife = new RewardVideo(AdMobManager.Instance.AddLifeForViewingAds, "ca-app-pub-6280237892174167/8374640938", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Life), 300, 60);
+        rewardVideoForLife = new RewardVideo(AddLifeForViewingAds, "ca-app-pub-6280237892174167/8374640938", "", PrefabBank.PrefabVideoBrowseButton, SpriteBank.SetShape(SpritesEnum.Life), 300, 60);
 
         ////определяем время загрузки видео для ежедневного подарка
         //int timeLoadVideoForDailyGift = 10;
@@ -71,7 +71,7 @@ public class AdMobManager : MonoBehaviour
         //    }
         //}     
 
-        rewardVideoForDailyGift = new RewardVideo(AdMobManager.Instance.ConfirmationOfViewingVideo_1, "ca-app-pub-6280237892174167/9113007538", "", PrefabBank.VideoBrowsePouchButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, 0);
+        rewardVideoForDailyGift = new RewardVideo(ConfirmationOfViewingVideo_1, "ca-app-pub-6280237892174167/9113007538", "", PrefabBank.VideoBrowsePouchButton, SpriteBank.SetShape(SpritesEnum.Daily_Gift), 5, 0);
     }
 
     public void Update()
@@ -148,7 +148,7 @@ public class AdMobManager : MonoBehaviour
     {
         if (Shop.Instance != null)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             Shop.Instance.AddCoinsForViewingAds(args);
         }
     }
@@ -161,7 +161,7 @@ public class AdMobManager : MonoBehaviour
     {
         if (Tasks.Instance != null)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             Tasks.Instance.AddMovesOnEndGAme(args);
         }
     }
@@ -175,7 +175,7 @@ public class AdMobManager : MonoBehaviour
     {
         if (LifeManager.Instance != null)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             LifeManager.Instance.AddLifeForViewingAds(args);
         }
     }
@@ -189,7 +189,7 @@ public class AdMobManager : MonoBehaviour
     {
         if (DailyGiftManager.Instance != null)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             DailyGiftManager.Instance.ConfirmationOfViewingVideo_1(args);
         }
     }
