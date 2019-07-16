@@ -138,6 +138,27 @@ public static class SupportFunctions
         //GameObject.Destroy(textInfirmationGO, 2);
     }
 
+    //создание панели информации с просмотром видео или покупкой
+    public static GameObject CreateInformationPanelWithVideoAndShopButton(string str, VideoForFeeEnum videoForFeeEnum, Transform transformParent = null)
+    {
+        DestroyPanelInfirmation();
+        if (transformParent == null)
+        {
+            transformParent = GameObject.Find("GameHelper").transform;
+        }
+        panelInfirmation = GameObject.Instantiate(PrefabBank.PanelInformationWithVideoAndShopBut, transformParent);
+        panelInfirmation.transform.Find("TextConfirmation").GetComponent<Text>().text = str;
+
+        //получаем кнопку просмотра видео за вознаграждение
+        VideoBrowseButton videoBrowseButton = AdMobManager.Instance.GetVideoBrowseButton(panelInfirmation.transform.Find("VideoPlace"), videoForFeeEnum);
+        videoBrowseButton.button.onClick.AddListener(DestroyPanelInfirmation);
+
+        ChangeButtonAction(panelInfirmation.transform.Find("ButtonOk"), DestroyPanelInfirmation);
+        Action actionShop = delegate { DestroyPanelInfirmation(); Shop.Instance.CreateShop(); };
+        ChangeButtonAction(panelInfirmation.transform.Find("ButtonShop"), actionShop);
+        return panelInfirmation;
+    }
+
     //создание панели информации с просмотром видео
     public static GameObject CreateInformationPanelWithVideo(string str, VideoForFeeEnum videoForFeeEnum, Transform transformParent = null)
     {

@@ -22,6 +22,7 @@ public static class PrefabBank
     private static GameObject imageMainLoad = Resources.Load(prefabFolder + "Canvas/Main menu/ImageMainLoad") as GameObject;
     private static GameObject panelInformation = Resources.Load(prefabFolder + "Canvas/Main menu/PanelInformation") as GameObject;
     private static GameObject panelInformationWithVideo = Resources.Load(prefabFolder + "Canvas/Main menu/PanelInformationWithVideo") as GameObject;
+    private static GameObject panelInformationWithVideoAndShopBut = Resources.Load(prefabFolder + "Canvas/Main menu/PanelInformationWithVideoAndShopBut") as GameObject;
     private static GameObject panelDailyGift = Resources.Load(prefabFolder + "Canvas/Main menu/PanelDailyGift") as GameObject;    
 
     //магазин
@@ -69,6 +70,7 @@ public static class PrefabBank
     public static GameObject PanelInformation { get => panelInformation; }
     public static GameObject TextInformationPrefab { get => textInformationPrefab; }
     public static GameObject PanelInformationWithVideo { get => panelInformationWithVideo; }
+    public static GameObject PanelInformationWithVideoAndShopBut { get => panelInformationWithVideoAndShopBut; }    
     public static GameObject PanelDailyGift { get => panelDailyGift; }
     public static GameObject ImageCoin { get => imageCoin; }
     public static GameObject ScoreElementPrefab { get => scoreElementPrefab;}

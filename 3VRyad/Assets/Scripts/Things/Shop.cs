@@ -611,8 +611,6 @@ public class Shop : MonoBehaviour, IStoreListener
             ProductV newProductV = null; //выбранная покупка
             foreach (ProductV ProductVItem in PRODUCTS)
             {
-                //if (ProductVItem.priceCoins == 0)
-                //{
                     if (ProductVItem.coins >= needCoins)
                     {
                         //если нашли более дешевый вариант или вариант который полностью удовлетваряет наши потребности в монетах
@@ -625,7 +623,6 @@ public class Shop : MonoBehaviour, IStoreListener
                     {
                         newProductV = ProductVItem;
                     }
-                //}
             }
 
             //вставляем в кнопку покупки монет новые данные
@@ -661,6 +658,8 @@ public class Shop : MonoBehaviour, IStoreListener
             }
         }
     }
+
+
 
     public void DestroyPanelShop()
     {

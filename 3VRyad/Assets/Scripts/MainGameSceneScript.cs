@@ -514,7 +514,7 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
-            SupportFunctions.CreateInformationPanelWithVideo("Вам нужно больше одной жизни, что бы перезапустить уровень во время игры. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+            SupportFunctions.CreateInformationPanelWithVideoAndShopButton("Тебе нужно больше одной жизни, что бы перезапустить уровень во время игры. Подожди немного, зайди в магазин за бессмертием или посмотри видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
         }        
     }
 
@@ -528,7 +528,7 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
-            SupportFunctions.CreateInformationPanelWithVideo("Вам нужно больше одной жизни, что бы перезапустить уровень во время игры. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+            SupportFunctions.CreateInformationPanelWithVideoAndShopButton("Тебе нужно больше одной жизни, что бы перезапустить уровень во время игры. Подожди немного, зайди в магазин за бессмертием или посмотри видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
         }
     }
 
@@ -541,7 +541,7 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
-            SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы перезапустить уровень. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+            SupportFunctions.CreateInformationPanelWithVideoAndShopButton("У тебя недостаточно жизней, что бы перезапустить уровень. Подожди немного, зайди в магазин за бессмертием или посмотри видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
         }
     }
 
@@ -569,7 +569,7 @@ public class MainGameSceneScript : MonoBehaviour {
         }
         else
         {
-            SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы перейти на следующий уровень. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+            SupportFunctions.CreateInformationPanelWithVideoAndShopButton("У тебя недостаточно жизней, что бы перейти на следующий уровень. Подожди немного, зайди в магазин за бессмертием или посмотри видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
         }       
     }
 

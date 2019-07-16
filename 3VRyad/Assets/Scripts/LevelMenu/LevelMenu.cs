@@ -273,7 +273,7 @@ public class LevelMenu : MonoBehaviour
         else
         {
             //Debug.Log("Нет жизней!");
-            SupportFunctions.CreateInformationPanelWithVideo("У вас недостаточно жизней, что бы запустить уровень. Подождите немного или посмотрите видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
+            SupportFunctions.CreateInformationPanelWithVideoAndShopButton("У тебя недостаточно жизней, что бы запустить уровень. Подожди немного, зайди в магазин за бессмертием или посмотри видео за одну жизнь!", VideoForFeeEnum.ForLive, Shop.Instance.transform);
         }        
     }
 
