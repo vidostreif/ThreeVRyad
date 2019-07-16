@@ -274,7 +274,7 @@ public class MainGameSceneScript : MonoBehaviour {
                 //}
                 break;
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.1f);
         } while (true);
 
         completeGameIdle = false;
@@ -470,7 +470,6 @@ public class MainGameSceneScript : MonoBehaviour {
             else
             {
                 //находим закрытый ящик и показываем его
-                //SupportFunctions.ChangeAlfa(CloseGiftTransform.GetComponent<Image>(), 1);
                 CloseGiftTransform.GetComponent<Animation>().Play();               
                 Destroy(panelGiftTransform.gameObject);
                 yield return new WaitForSeconds(1.3f);
@@ -497,7 +496,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Score.Instance.ResetParameters();
         SuperBonus.Instance.ResetParameters();
         InstrumentPanel.Instance.ResetParameters();
-        MainAnimator.Instance.ClearAllMassive();
+        //MainAnimator.Instance.ClearAllMassive();
     }
 
     //запрос на перезапуск сцены во время игры

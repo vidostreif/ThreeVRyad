@@ -393,7 +393,7 @@ public class Shop : MonoBehaviour, IStoreListener
                 float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
                 //берем монетку и меняем у нее вид
-                GameObject mminiThingGO = GameObject.Instantiate(PrefabBank.ImageCoin, go.transform.position, Quaternion.identity, transformParent);
+                GameObject mminiThingGO = GameObject.Instantiate(PrefabBank.ImageCoin, go.transform.position, Quaternion.identity, thing.Go.transform);
                 Image miniGiftImage = mminiThingGO.GetComponent<Image>();
                 miniGiftImage.sprite = SpriteBank.SetShape(instrumentsEnum, true);
 
@@ -464,7 +464,7 @@ public class Shop : MonoBehaviour, IStoreListener
             float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
             float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
-            GameObject coinGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftCoinGO.transform.position, Quaternion.identity, transformParent);
+            GameObject coinGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftCoinGO.transform.position, Quaternion.identity, shopImageCoinsTransform);
             //coinGO.GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Coin, true);
             coinGOList.Add(coinGO);
             //перемещаем на рандомную позицию
@@ -538,7 +538,7 @@ public class Shop : MonoBehaviour, IStoreListener
             float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
             float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
-            GameObject miniGiftGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftGO.transform.position, Quaternion.identity, transformParent);
+            GameObject miniGiftGO = GameObject.Instantiate(PrefabBank.ImageCoin, giftGO.transform.position, Quaternion.identity, panelImageLiveTransform);            
             miniGiftGO.GetComponent<Image>().sprite = SpriteBank.SetShape(SpritesEnum.Life, true);
             miniGiftGOList.Add(miniGiftGO);
             //перемещаем на рандомную позицию

@@ -98,15 +98,20 @@ public class MainAnimator : MonoBehaviour {
         if (moveElements != null && moveElements.Count > 0)
         {
             foreach (MoveElement item in moveElements)
-            {                
-                ////выполняем прописанный делегат
-                //if (item.action != null)
-                //{
-                //    if (item.action.Method != null && item.action.Target != null)
-                //    {
-                //        item.action();
-                //    }
-                //}
+            {
+                if (item.thisTransform.position != item.targetPosition)
+                {
+                    item.thisTransform.position = item.targetPosition;
+                }
+
+                //выполняем прописанный делегат
+                if (item.action != null)
+                {
+                    if (item.action.Method != null && item.action.Target != null)
+                    {
+                        item.action();
+                    }
+                }
 
                 if (item.destroyAfterMoving)
                 {
