@@ -334,27 +334,28 @@ public class Shop : MonoBehaviour, IStoreListener
         //показываем наши покупки
         if (giftLength > 0)
         {
+            Vector3 panelShoppingListPosition = panelShoppingListTransform.position;
             //смещение по x
-            float startingXPoint = panelShoppingListTransform.position.x - ((1 + 0.5f) * (giftLength - 1)) * 0.5f;
+            float startingXPoint = panelShoppingListPosition.x - ((1 + 0.5f) * (giftLength - 1)) * 0.5f;
 
             for (int i = 0; i < product.compositionBundle.Length; i++)
             {
                 if (product.compositionBundle[i].count > 0)
                 {
-                    yield return StartCoroutine(CreateThingAnimation(new Vector3(startingXPoint + (i * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.compositionBundle[i].type, product.compositionBundle[i].count));              
+                    yield return StartCoroutine(CreateThingAnimation(new Vector3(startingXPoint + (i * (1 + 0.5f)), panelShoppingListPosition.y, panelShoppingListPosition.z), panelShoppingListTransform, product.compositionBundle[i].type, product.compositionBundle[i].count));              
                 }
                 yield return new WaitForSeconds(0.3f);
             }
                         
             if (product.coins > 0)
             {
-                yield return StartCoroutine(CreateCoinAnimation(new Vector3(startingXPoint + ((product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.coins));
+                yield return StartCoroutine(CreateCoinAnimation(new Vector3(startingXPoint + ((product.compositionBundle.Length) * (1 + 0.5f)), panelShoppingListPosition.y, panelShoppingListPosition.z), panelShoppingListTransform, product.coins));
                 yield return new WaitForSeconds(0.3f);
             }
 
             if (product.timeImmortalLives > 0)
             {
-                yield return StartCoroutine(CreateLivesAnimation(new Vector3(startingXPoint + ((product.compositionBundle.Length + (product.coins > 0 ? 1 : 0)) * (1 + 0.5f)), panelShoppingListTransform.position.y, panelShoppingListTransform.position.z), panelShoppingListTransform, product.timeImmortalLives));
+                yield return StartCoroutine(CreateLivesAnimation(new Vector3(startingXPoint + ((product.compositionBundle.Length + (product.coins > 0 ? 1 : 0)) * (1 + 0.5f)), panelShoppingListPosition.y, panelShoppingListPosition.z), panelShoppingListTransform, product.timeImmortalLives));
             }
         }
         yield return new WaitForSeconds(1.0f);
@@ -363,6 +364,16 @@ public class Shop : MonoBehaviour, IStoreListener
     //анимация получения вещи
     public IEnumerator CreateThingAnimation(Vector3 startPosition, Transform transformParent, InstrumentsEnum instrumentsEnum, int getCount, Vector3 newPosition = new Vector3())
     {
+        //находим нашу вещ в менеджере вещей
+        Thing thing = ThingsManager.Instance.GetThing(instrumentsEnum);
+
+        //если уничтожили основной трансформ
+        if (transformParent == null)
+        {
+            thing.ThingFlew(getCount);
+            yield break;
+        }
+
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.Ring_1);
         GameObject go = Instantiate(PrefabBank.PrefabButtonThing, startPosition, Quaternion.identity, transformParent);
         //go.GetComponent<Image>().sprite = SpriteBank.SetShape(instrumentsEnum);
@@ -378,22 +389,26 @@ public class Shop : MonoBehaviour, IStoreListener
             yield return new WaitForSeconds(0.3f);
         }
 
-        //находим нашу вещ в менеджере вещей
-        Thing thing = ThingsManager.Instance.GetThing(instrumentsEnum);
-
         if (thing != null)
-        {
+        {            
             //создаем новые покупки рядом с основной
             int count = getCount;
             do
             {
+                //если уничтожили основной подарок
+                if (go == null)
+                {
+                    thing.ThingFlew(getCount);
+                    yield break;
+                }
+
                 count -= 1;
                 //добавим рандома в месте создания монет
                 float randomNumberX = UnityEngine.Random.Range(-15, 15) * 0.1f;
                 float randomNumberY = UnityEngine.Random.Range(-15, 15) * 0.1f;
 
                 //берем монетку и меняем у нее вид
-                GameObject mminiThingGO = GameObject.Instantiate(PrefabBank.ImageCoin, go.transform.position, Quaternion.identity, thing.Go.transform);
+                GameObject mminiThingGO = GameObject.Instantiate(PrefabBank.ImageCoin, go.transform.position, Quaternion.identity, go.transform);
                 Image miniGiftImage = mminiThingGO.GetComponent<Image>();
                 miniGiftImage.sprite = SpriteBank.SetShape(instrumentsEnum, true);
 
@@ -428,7 +443,14 @@ public class Shop : MonoBehaviour, IStoreListener
 
     //анимация получения монет
     public IEnumerator CreateCoinAnimation(Vector3 position, Transform transformParent, int getCoins, Vector3 newPosition = new Vector3(), bool destroyMainCoin = false) {
-      
+
+        //если уничтожили основной трансформ
+        if (transformParent == null)
+        {
+            Shop.Instance.CoinFlew(getCoins);
+            yield break;
+        }
+
         //показываем монету
         //Находим монету в магазине
         Transform shopImageCoinsTransform = panelShopOnGame.transform.Find("ImageCoins");
@@ -453,6 +475,13 @@ public class Shop : MonoBehaviour, IStoreListener
         //создаем монеты рядом с монетой
         do
         {
+            //если уничтожили основной подарок
+            if (giftCoinGO == null)
+            {
+                Shop.Instance.CoinFlew(getCoins);
+                yield break;
+            }
+
             //определяем какое количество будет передано в монете
             if (coins < exchangeRate)
             {
@@ -503,6 +532,13 @@ public class Shop : MonoBehaviour, IStoreListener
     //анимация получения времени бессмертия
     public IEnumerator CreateLivesAnimation(Vector3 position, Transform transformParent, int timeImmortalLives, Vector3 newPosition = new Vector3(), bool destroyMainGift = false)
     {
+        //если уничтожили основной трансформ
+        if (transformParent == null)
+        {
+            LifeManager.Instance.LiveFlew(timeImmortalLives);
+            yield break;
+        }
+
         //показываем сердце
         //Находим сердце на панели
         Transform panelImageLiveTransform = GameObject.Find("ImageLive").transform;
@@ -527,6 +563,13 @@ public class Shop : MonoBehaviour, IStoreListener
         //создаем жизни рядом с подарком
         do
         {
+            //если уничтожили основной подарок
+            if (giftGO == null)
+            {
+                LifeManager.Instance.LiveFlew(timeImmortalLives);
+                yield break;
+            }
+
             //определяем какое количество будет передано в одном сердце
             if (timeLives < exchangeRate)
             {

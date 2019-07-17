@@ -14,7 +14,7 @@
       <shapeAndPriority shape="Apple" type="StandardElement" priority="10" maxAmountOnField="25" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Strawberry" type="StandardElement" priority="10" maxAmountOnField="15" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Plum" type="StandardElement" priority="10" maxAmountOnField="25" limitOnAmountCreated="2147483647" />
-      <shapeAndPriority shape="Mushroom" type="StandardElement" priority="15" maxAmountOnField="30" limitOnAmountCreated="2147483647" />
+      <shapeAndPriority shape="Mushroom" type="StandardElement" priority="10" maxAmountOnField="25" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Orange" type="StandardElement" priority="10" maxAmountOnField="25" limitOnAmountCreated="2147483647" />
       <shapeAndPriority shape="Camomile" type="StandardElement" priority="10" maxAmountOnField="25" limitOnAmountCreated="2147483647" />
     </elementsShape>

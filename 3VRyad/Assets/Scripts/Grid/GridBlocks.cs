@@ -1832,7 +1832,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         {
             XAttribute shape = new XAttribute("shape", shapeAndPriority.ElementsShape);
             XAttribute type = new XAttribute("type", shapeAndPriority.elementsType);
-            XAttribute priority = new XAttribute("priority", shapeAndPriority.Priority);
+            XAttribute priority = new XAttribute("priority", shapeAndPriority.StartPriority);
             XAttribute maxAmountOnField = new XAttribute("maxAmountOnField", shapeAndPriority.maxAmountOnField);
             XAttribute limitOnAmountCreated = new XAttribute("limitOnAmountCreated", shapeAndPriority.limitOnAmountCreated);
             XElement shapeXElement = new XElement("shapeAndPriority", shape, type, priority, maxAmountOnField, limitOnAmountCreated);
