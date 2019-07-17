@@ -228,12 +228,12 @@ public class Shop : MonoBehaviour, IStoreListener
 
             Transform panelLivesTransform = LifeManager.Instance.ThisTransform;
             Transform panelLivePlace = panelShop.transform.Find("PanelLivePlace");
-            panelLivesTransform.SetParent(panelShop.transform, true);
+            panelLivesTransform.SetParent(panelLivePlace.transform, true);
             MainAnimator.Instance.AddElementForSmoothMove(panelLivesTransform, panelLivePlace.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
             panelLivesTransform.localScale = new Vector3(1.5f, 1.5f, 1.5f);// panelLivesTransform.localScale * 1.5f;
 
-            panelShopOnGame.SetParent(panelShop.transform, true);
             Transform panelShopButPlase = panelShop.transform.Find("PanelShopButPlase");
+            panelShopOnGame.SetParent(panelShopButPlase.transform, true);            
             MainAnimator.Instance.AddElementForSmoothMove(panelShopOnGame, panelShopButPlase.position, 1, SmoothEnum.InLineWithSlowdown, smoothTime: 0.1f, addToQueue: true);
             //увеличиваем панель в верхнем углу
             panelShopOnGame.localScale = new Vector3(1.5f, 1.5f, 1.5f); //panelShopOnGame.localScale * 1.5f;
@@ -279,6 +279,10 @@ public class Shop : MonoBehaviour, IStoreListener
                     imageTransform.GetComponentInChildren<Image>().sprite = product.image;
 
                     product.AddAction(bottonGO);
+                }
+                else
+                {
+                    break;
                 }
             }
         }   
