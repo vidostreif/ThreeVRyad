@@ -256,7 +256,7 @@ MonoBehaviour:
       count: 10
     coins: 2000
     timeImmortalLives: 1500
-    image: {fileID: 21300000, guid: 9b3faf4772e962b43b494f4db951ecc7, type: 3}
+    image: {fileID: 21300000, guid: a078fee80e796b04ba8ea3aece0b7f97, type: 3}
 --- !u!114 &41
 MonoBehaviour:
   m_ObjectHideFlags: 0
