@@ -111,7 +111,7 @@ public class Element : BaseElement
             {
                 break;
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
         } while (true);
         moveBlockingElementIdle = false;
     }

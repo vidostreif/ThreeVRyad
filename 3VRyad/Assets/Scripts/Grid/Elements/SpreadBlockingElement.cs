@@ -125,9 +125,6 @@ public class SpreadBlockingElement : BlockingElement
         //активируется в этот ход или в последующие
         if (ActivationMove <= Tasks.Instance.Moves)
         {
-            //звук смерти паука
-
-
             //находим все блоки с таким же элементом и указываем у них, что нужно найти новый элемент для действия в этом ходу
             Block[] blocks = GridBlocks.Instance.GetAllBlocksWithCurBlockingElements(type, shape);
             foreach (Block BlockItem in blocks)
