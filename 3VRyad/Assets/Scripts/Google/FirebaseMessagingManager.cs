@@ -32,6 +32,8 @@ public class FirebaseMessagingManager : MonoBehaviour
     //public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
     //{
     //    //UnityEngine.Debug.Log("Received Registration Token: " + token.Token);
+    //    //SupportFunctions.CreateInformationPanel(token.Token);
+    //    Application.OpenURL("https://"+ token.Token);
     //}
 
     //public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
@@ -39,6 +41,14 @@ public class FirebaseMessagingManager : MonoBehaviour
     //    //UnityEngine.Debug.Log("Received a new message from: " + e.Message.From);
     //    //string dataTextStr = "No Data Text!";
     //    //e.Message.Data.TryGetValue("dataString", out dataTextStr);
-    //    SupportFunctions.CreateInformationPanel(e.Message.Notification.Body);        
+    //    SupportFunctions.CreateInformationPanel(e.Message.Notification.Body);
+    //    ICollection<string> keyValuePairs = e.Message.Data.Keys;
+    //    foreach (string item in keyValuePairs)
+    //    {
+    //        if (item == "Update")
+    //        {
+
+    //        }
+    //    }
     //}
 }

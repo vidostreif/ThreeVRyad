@@ -91,6 +91,27 @@ public class LevelMenu : MonoBehaviour
         }
     }
 
+    //public void OnApplicationPause(bool pause)
+    //{
+    //    CheckUpdateMassege();
+    //}
+
+    //public void CheckUpdateMassege()
+    //{
+    //    //#if UNITY_ANDROID
+    //        AndroidJavaClass UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+    //        AndroidJavaObject curActivity = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+    //        AndroidJavaObject curIntent = curActivity.Call<AndroidJavaObject>("getIntent");
+
+    //        string update = curIntent.Call<string>("getStringExtra", "Update");
+
+    //        if (!string.IsNullOrEmpty(update) && update == "true")
+    //        {
+    //            SupportFunctions.CreateYesNoPanel(transform, "Вы хотите перейти на страницу обновления?", OpenLinkToUpdate);
+    //        }
+    //    //#endif
+    //}
+
     public void Prepare()
     {
         //загрузить данных из сохранения
@@ -711,6 +732,9 @@ public class LevelMenu : MonoBehaviour
         Button buttonLink = buttonLinkTransform.GetComponent(typeof(Button)) as Button;
         buttonLink.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
         buttonLink.onClick.AddListener(delegate { OpenLinkToWebsite(); });
+
+        ////проверяем сообщение об обновлении
+        //CheckUpdateMassege();
     }
 
     //переход по ссылке на сайт
@@ -718,6 +742,12 @@ public class LevelMenu : MonoBehaviour
     {
         Application.OpenURL("https://vidostreif.github.io/");
     }
+
+    ////переход по ссылке к обновлению
+    //public void OpenLinkToUpdate()
+    //{
+    //    Application.OpenURL("https://vidostreif.github.io/");
+    //}
 
     //создание меню настроек
     public void CreateSettingsMenu()
