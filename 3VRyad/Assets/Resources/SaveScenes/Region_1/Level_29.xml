@@ -12,8 +12,8 @@
       <block posX="1" posY="1" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="1" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="1" posY="3" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="1" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Plum" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="1" posY="5" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Plum" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="1" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="1" posY="5" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="1" posY="6" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="1" posY="7" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="2" posY="0" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -29,7 +29,7 @@
       <block posX="3" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="3" posY="3" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="3" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Strawberry" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="3" posY="5" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Plum" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="3" posY="5" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Apple" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="3" posY="6" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Orange" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="3" posY="7" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Strawberry" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="4" posY="0" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Strawberry" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -102,16 +102,19 @@
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
   <LevelSettings>
-    <bundles />
-    <bundelCount>0</bundelCount>
+    <bundles>
+      <bundleShopV type="Vortex" count="2" />
+      <bundleShopV type="Repainting" count="2" />
+    </bundles>
+    <bundelCount>2</bundelCount>
     <coins>0</coins>
-    <timeImmortalLives>0</timeImmortalLives>
-    <optional>false</optional>
+    <timeImmortalLives>30</timeImmortalLives>
+    <optional>true</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>50000</scoreForFirstStar>
-    <scoreForSecondStar>60000</scoreForSecondStar>
-    <scoreForThirdStar>82000</scoreForThirdStar>
+    <scoreForFirstStar>5000</scoreForFirstStar>
+    <scoreForSecondStar>8000</scoreForSecondStar>
+    <scoreForThirdStar>11500</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>12000</maxBonusPower>
@@ -123,8 +126,8 @@
     <sizeTargets>3</sizeTargets>
     <targets>
       <shapeAndGoal shape="Strawberry" goal="14" collectEverything="true" />
-      <shapeAndGoal shape="Orange" goal="19" collectEverything="true" />
-      <shapeAndGoal shape="Plum" goal="15" collectEverything="true" />
+      <shapeAndGoal shape="Orange" goal="18" collectEverything="true" />
+      <shapeAndGoal shape="Apple" goal="16" collectEverything="true" />
     </targets>
   </Tasks>
   <InstrumentPanel>
