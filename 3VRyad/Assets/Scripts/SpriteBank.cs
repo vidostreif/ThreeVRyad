@@ -129,7 +129,7 @@ public static class SpriteBank
         ////в зависимости от типа
         if (shape == ElementsShapeEnum.Empty)
         {
-            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
+            return Resources.Load<Sprite>("Sprites/interface/plus") as Sprite;
         }
         else
         {
@@ -160,7 +160,7 @@ public static class SpriteBank
         ////в зависимости от типа
         if (shape == BehindElementsShapeEnum.Empty)
         {
-            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
+            return Resources.Load<Sprite>("Sprites/interface/plus") as Sprite;
         }
         else
         {
@@ -190,7 +190,7 @@ public static class SpriteBank
         ////в зависимости от типа
         if (shape == BlockTypeEnum.Empty)
         {
-            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
+            return Resources.Load<Sprite>("Sprites/interface/plus") as Sprite;
         }
         else
         {
@@ -234,7 +234,7 @@ public static class SpriteBank
         ////в зависимости от типа
         if (shape == BlockingElementsShapeEnum.Empty)
         {
-            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
+            return Resources.Load<Sprite>("Sprites/interface/plus") as Sprite;
         }
         else
         {
@@ -265,7 +265,7 @@ public static class SpriteBank
         ////в зависимости от типа
         if (shape == InstrumentsEnum.Empty)
         {
-            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
+            return Resources.Load<Sprite>("Sprites/interface/plus") as Sprite;
         }
         else
         {
@@ -289,7 +289,7 @@ public static class SpriteBank
         ////в зависимости от типа
         if (shape == SpritesEnum.Empty)
         {
-            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
+            return Resources.Load<Sprite>("Sprites/interface/plus") as Sprite;
         }
         else
         {
@@ -325,7 +325,7 @@ public static class SpriteBank
         ////в зависимости от типа
         if (shape == BorderEnum.Empty)
         {
-            return Resources.Load<Sprite>("Sprites/plus") as Sprite;
+            return Resources.Load<Sprite>("Sprites/interface/plus") as Sprite;
         }
         else
         {
