@@ -174,7 +174,9 @@ public enum HelpEnum
     OptionalLvl,
     Lifes,
     DailyGift,
-    DropBlock
+    DropBlock,
+    StartRegion1,
+    Spider
 
 
 }//тип сглаженного перемещения

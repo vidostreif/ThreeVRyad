@@ -251,6 +251,14 @@ public static class HelpToPlayer
                 {
                     created = CreateSeedBarelHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
                 }
+                else if (activeHint.help == ElementsTypeEnum.WildPlant.ToString())
+                {
+                    created = CreateWildPlantHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
+                }
+                else if (activeHint.help == BlockingElementsTypeEnum.Spread.ToString())
+                {
+                    created = CreateSpreadHelp();
+                }
                 else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
                 {
                     created = CreateLianaHelp((BlockingElementsTypeEnum)Enum.Parse(typeof(BlockingElementsTypeEnum), activeHint.help));
@@ -259,7 +267,7 @@ public static class HelpToPlayer
                 {
                     created = CreateGrassHelp((BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), activeHint.help));
                 }
-                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString())
+                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString() || activeHint.help == HelpEnum.StartRegion1.ToString() || activeHint.help == HelpEnum.Spider.ToString())
                 {
                     created = InterfaceHelp("Gnome");
                 }
@@ -597,10 +605,18 @@ public static class HelpToPlayer
             {
                 text.text = "Это бочка с семенами. Наполни её, собирая рядом растения, указанные на бочке!";
             }
+            else if (activeHint.help == ElementsTypeEnum.WildPlant.ToString())
+            {
+                text.text = "Это дикое растение! Оно, каждые два хода, захватывает одно обычное растение рядом с собой! Его можно ранить взрывом или собрав комбинацию рядом.";
+            }
             else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
             {
                 text.text = "Эта лиана захватила весь наш сад! Её можно уничтожить тем же, чем уничтожается захваченное растение!";
-            }            
+            }
+            else if (activeHint.help == BlockingElementsTypeEnum.Spread.ToString())
+            {
+                text.text = "Каждые два хода, паук прыгает на соседнее растение и оплетает его паутиной! Если уничтожить паутину вместе с пауком, то он будет ждать еще два хода на другой паутине!";
+            }
             else if (activeHint.help == BehindElementsTypeEnum.Grass.ToString())
             {
                 text.text = "Это сорняк. Он убирается вместе с благородным растением или от взрыва!";
@@ -613,6 +629,14 @@ public static class HelpToPlayer
             {
                 text.text = "Привет, я гномик Сеня! Мои магия и подсказки помогут тебе в этом интересном путешествии!";
             }
+            else if (activeHint.help == HelpEnum.StartRegion1.ToString())
+            {
+                text.text = "Это сад бабушки Шуры и на него напало странное растение. Мы должны помочь ей уничтожить его!";
+            }
+            else if (activeHint.help == HelpEnum.Spider.ToString())
+            {
+                text.text = "Новая напасть! В саду завелся паук! Что бы уничтожить паука, уничтож всю паутину!";
+            }            
             else if (activeHint.help == HelpEnum.GnomeStandardElement.ToString())
             {
                 text.text = "Продолжай собирать растения в ряд пока не выполнишь задание!";
@@ -972,6 +996,68 @@ public static class HelpToPlayer
             }
         }
         Debug.Log("Не нашли не одной маленькой фласки для создания подсказки!");
+        return false;
+    }
+
+    //дикое растение
+    private static bool CreateSpreadHelp()
+    {
+        //наоходим все объекты с нужным элементом
+        Block[] findeBlock = GridBlocks.Instance.GetAllBlocksWithCurBlockingElements(BlockingElementsTypeEnum.Spread);
+
+        if (findeBlock.Length > 0)
+        {
+            //если нашли хоть один элемент
+            foreach (Block curBlock in findeBlock)
+            {
+                CanvasLiveTime(1);
+                //высвечиваем блок
+                ChangeSorting(curBlock.gameObject, activeHint);
+
+                //добавляем эффект мерцания
+                AddToFlashing(curBlock.gameObject, activeHint);
+                
+            }
+            return true;
+        }
+        else
+        {
+            Debug.Log("Не нашли ни одной паутины!");
+            return false;
+        }       
+       
+    }
+
+    //дикое растение
+    private static bool CreateWildPlantHelp(ElementsTypeEnum elementsTypeEnum)
+    {
+        //наоходим все объекты с нужным элементом
+        Block[] findeBlock = GridBlocks.Instance.GetAllBlocksWithCurElements(elementsTypeEnum);
+
+        //если нашли хоть один элемент
+        foreach (Block curBlock in findeBlock)
+        {
+            CanvasLiveTime(1);
+            //высвечиваем блок
+            ChangeSorting(curBlock.gameObject, activeHint);
+
+            //добавляем эффект мерцания
+            AddToFlashing(curBlock.gameObject, activeHint);
+
+            //получаем блоки вокруг
+            Block[] blocksAround = GridBlocks.Instance.GetAroundBlocks(curBlock.PositionInGrid);
+
+            //перебираем все блоки
+            foreach (Block block in blocksAround)
+            {
+                if (block != null)
+                {
+                    ChangeSorting(block.gameObject, activeHint);
+                }
+            }
+            return true;
+        }
+        Debug.Log("Не нашли ни одного дикого растения!");
         return false;
     }
 
