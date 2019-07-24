@@ -491,7 +491,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             {
                 
                 //проверка, что остались доступные ходы
-                yield return StartCoroutine(FoundNextMove());
+                yield return StartCoroutine(FoundNextMove(false));
                 
                 //если не конец игры, но ходов не осталось и супер бонус не активен то рисуем проигрыш
                 if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove)
@@ -781,7 +781,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //поиск следующего хода
-    public IEnumerator FoundNextMove()
+    public IEnumerator FoundNextMove(bool invisibly)
     {
         //Profiler.BeginSample("FoundNextMove");
         //проверка, что остались доступные ходы
@@ -821,7 +821,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             //если первый проход, то сообщаем что нет ходов
             if (numberOfShuffles == 10)
             {
-                if (Score.Instance.getScore > 0)
+                if (!invisibly)
                 {
                     SupportFunctions.CreateInformationText("Нет ходов!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
                     yield return new WaitForSeconds(1.2f);
@@ -833,8 +833,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 }
             } 
 
-            //если начало игры, то перемешиваем незаметно для пользователя 
-            if (Score.Instance.getScore == 0)
+            //если незаментно, то перемешиваем незаметно для пользователя 
+            if (invisibly)
             {
                 MixStandartElements(true);
             }
@@ -896,8 +896,11 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         else//если не удалось ничего найти
         {
             foundNextMove = false;
-            SupportFunctions.CreateInformationText("Торнадо нам не помогло!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
-            yield return new WaitForSeconds(0.7f);
+            if (!invisibly)
+            {
+                SupportFunctions.CreateInformationText("Торнадо нам не помогло!", new Color(1, 0, 0.4602175f, 1), 50, longAnimation: true);
+                yield return new WaitForSeconds(0.7f);
+            }
         }
         //Profiler.EndSample();
     }

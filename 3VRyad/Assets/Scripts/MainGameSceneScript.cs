@@ -60,7 +60,7 @@ public class MainGameSceneScript : MonoBehaviour {
         Time.timeScale = 1;        
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
-        yield return StartCoroutine(GridBlocks.Instance.FoundNextMove());//поиск хода
+        yield return StartCoroutine(GridBlocks.Instance.FoundNextMove(true));//поиск хода
         GridBlocks.Instance.NextActionElementsAfterMove();//поиск следующего хода для активируемых элементов
 
         if (HelpFromGnome.Instance.helpEnum != HelpEnum.Empty)

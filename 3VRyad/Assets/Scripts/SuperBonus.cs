@@ -362,7 +362,7 @@ public class SuperBonus : MonoBehaviour, IESaveAndLoad
         FilledImage();
 
         SoundManager.Instance.PlaySoundInternal(SoundsEnum.SuperBonusActiveted);
-        ParticleSystemManager.Instance.CreatePS(transform, PSEnum.PSSuperBonusActiveted, 5);
+        ParticleSystemManager.Instance.CreatePS(superBonusPowerImage.transform, PSEnum.PSSuperBonusActiveted, 5);
         //Destroy(psSuperBonusActiveted, 5);
         yield return new WaitForSeconds(0.15f);
 

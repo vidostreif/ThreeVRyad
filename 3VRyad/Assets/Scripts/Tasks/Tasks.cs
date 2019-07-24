@@ -75,7 +75,7 @@ public class Tasks : MonoBehaviour, IESaveAndLoad
             Transform moveImageTransform = movesText.transform.Find("MoveImage");
             Image moveImage = moveImageTransform.GetComponent<Image>();
 
-            yield return StartCoroutine(GridBlocks.Instance.FoundNextMove());//поиск хода
+            yield return StartCoroutine(GridBlocks.Instance.FoundNextMove(false));//поиск хода
 
             while (addMoves > 0)
             {

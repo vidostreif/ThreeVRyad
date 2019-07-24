@@ -47,6 +47,7 @@ public class DirtBehindElement : BehindElement
                 {
                     //Destroy(PSNextMove);
                     PoolManager.Instance.ReturnObjectToPool(PSNextMove);
+                    PSNextMove = null;
                     UpdateSprite();
                 }
             }
