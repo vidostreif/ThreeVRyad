@@ -356,11 +356,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                         }
                         else
                         {
-                            ////проаускаем активируемые элементы
-                            //if (blockField.Element != null && blockField.Element.Activated)
-                            //{
-                            //    continue;
-                            //}
+                            //yield return new WaitForEndOfFrame();
                             blockField.Hit();
                         }
                     }
