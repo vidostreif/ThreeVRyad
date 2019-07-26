@@ -98,8 +98,8 @@ public class DirtBehindElement : BehindElement
 
         foreach (Block block in neighboringBlocks.allBlockField)
         {
-            //находим не заблокированный элемент
-            if (BlockCheck.ThisStandardBlockWithStandartElementCanMove(block))
+            //находим стандартный элемент
+            if (BlockCheck.ThisStandardBlockWithStandartElement(block))
             {
                 if (block.BehindElement == null || block.BehindElement.Destroyed)
                 {

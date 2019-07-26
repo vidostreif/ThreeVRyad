@@ -210,6 +210,19 @@ public static class BlockCheck
         }
     }
 
+    public static bool ThisStandardBlockWithStandartElement(Block block)
+    {
+
+        if (block != null && block.Type == BlockTypeEnum.StandardBlock && block.Element != null && !block.Element.Destroyed && block.Element.Type == ElementsTypeEnum.StandardElement)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public static bool ThisBlockWithElementCreateLine(Block block)
     {
 
