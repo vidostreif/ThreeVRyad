@@ -122,7 +122,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>35</moves>
+    <moves>32</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="Bush" goal="38" collectEverything="true" />
