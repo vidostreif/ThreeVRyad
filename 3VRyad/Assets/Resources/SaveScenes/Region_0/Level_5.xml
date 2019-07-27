@@ -128,9 +128,9 @@
     <optional>false</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>20000</scoreForFirstStar>
-    <scoreForSecondStar>30000</scoreForSecondStar>
-    <scoreForThirdStar>37000</scoreForThirdStar>
+    <scoreForFirstStar>17000</scoreForFirstStar>
+    <scoreForSecondStar>22000</scoreForSecondStar>
+    <scoreForThirdStar>27000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>12000</maxBonusPower>

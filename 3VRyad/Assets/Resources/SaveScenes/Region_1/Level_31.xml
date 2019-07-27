@@ -66,7 +66,7 @@
       <block posX="5" posY="1" blockType="StandardBlock" generatorElements="false" dontFillOnStart="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="SeedBarrel" elementShape="SeedBarrel" dopShape="Orange" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="3" blockType="StandardBlock" generatorElements="false" dontFillOnStart="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="5" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="5" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Liana" blockingElementShape="Liana" />
       <block posX="5" posY="5" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="SeedBarrel" elementShape="SeedBarrel" dopShape="Camomile" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="6" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="5" posY="7" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -137,7 +137,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>45</moves>
+    <moves>40</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="SeedBarrel" goal="2" collectEverything="true" />
