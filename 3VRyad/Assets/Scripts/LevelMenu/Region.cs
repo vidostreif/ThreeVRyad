@@ -10,6 +10,7 @@ public class Region
     [HideInInspector]public string name;
     public string fullName;
     public Sprite sprite;
+    public Sprite BackGround;
     [SerializeField] public List<Level> levelList = new List<Level>();    
     private Text text;
     private Button button;

@@ -34,7 +34,7 @@
       <block posX="1" posY="6" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="2" posY="0" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Apple" dopShape="Empty" blockingElementType="Spread" blockingElementShape="Web" />
       <block posX="2" posY="1" blockType="StandardBlock" generatorElements="false" dontFillOnStart="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="2" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="2" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="2" posY="3" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="2" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="2" posY="5" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -96,7 +96,7 @@
       <block posX="8" posY="8" blockType="StandardBlock" generatorElements="true" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="9" posY="0" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="StandardElement" elementShape="Apple" dopShape="Empty" blockingElementType="Spread" blockingElementShape="Web" />
       <block posX="9" posY="1" blockType="StandardBlock" generatorElements="false" dontFillOnStart="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
-      <block posX="9" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="true" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
+      <block posX="9" posY="2" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="9" posY="3" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="CrushableWall" elementShape="Bush" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="9" posY="4" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
       <block posX="9" posY="5" blockType="StandardBlock" generatorElements="false" dontFillOnStart="false" dropping="false" behindElementsType="Empty" behindElementsShape="Empty" elementType="Empty" elementShape="Empty" dopShape="Empty" blockingElementType="Empty" blockingElementShape="Empty" />
@@ -138,7 +138,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>41</moves>
+    <moves>39</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="Web" goal="4" collectEverything="true" />

@@ -250,6 +250,18 @@ public class LevelMenu : MonoBehaviour
             inLevel.xmlDocument = SaveAndLoadScene.Instance().GetXmlDocument("Level_" + inLevel.levelNumber, "Region_" + inLevel.regionNumber);
     }
 
+    public Sprite GetBackGroundSprite(Level inLevel)
+    {
+        if (inLevel != null)
+        {
+            return regionsList[inLevel.regionNumber].BackGround;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     private void SaveNameScene(Level inLevel)
     {
             GameMetaData.GetInstance().SetString("name_scene", inLevel.xmlDocument.name);

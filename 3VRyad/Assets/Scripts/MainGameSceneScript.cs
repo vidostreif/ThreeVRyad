@@ -46,7 +46,7 @@ public class MainGameSceneScript : MonoBehaviour {
         {
             ResetScene();
             Debug.Log("MainGameSceneScript вызов ResetScene()");
-        }
+        }        
         Prepare();
     }
 
@@ -57,7 +57,8 @@ public class MainGameSceneScript : MonoBehaviour {
 
     private IEnumerator CurPrepare()
     {
-        Time.timeScale = 1;        
+        Time.timeScale = 1;
+        transform.Find("BackGround").GetComponent<Image>().sprite = LevelMenu.Instance.GetBackGroundSprite(LevelMenu.Instance.LastLoadLevel);
         BorderGrid.CircleGrid(GridBlocks.Instance);//обводка сетки
         GridBlocks.Instance.StartFilling();//стартовое заполнение элементами  
         yield return StartCoroutine(GridBlocks.Instance.FoundNextMove(true));//поиск хода
