@@ -28,7 +28,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     public GameObject prefabBlockingWall;
 
     private List<Element> elementsForMixList = new List<Element>();//элементы для замены во время микса
-    private List<Blocks> elementsForMoveList = new List<Blocks>();//элементы для последовательного выполнения ходов
+    private List<NextMoveBlockAndElement> elementsForMoveList = new List<NextMoveBlockAndElement>();//элементы для последовательного выполнения ходов
     private List<Block> blockFieldsList = new List<Block>();// найденные блоки для удара
     private List<Block> droppingBlockList = new List<Block>();// список сбрасывающих блоков
     private bool needFilling;//требуется заполнение элементами
@@ -205,10 +205,21 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             if ((!Tasks.Instance.endGame && !InstrumentPanel.Instance.InstrumentPrepared && (Tasks.Instance.Moves - elementsForMoveList.Count) > 0 && (touchingBlock != null || destinationBlock != null))
             || (touchingBlock == null && destinationBlock == null && (elementsForMoveList.Count == 0 || (blockedForMove && elementsForMoveList.Count < 2))))
             {
-                Blocks blocks = new Blocks();
-                blocks.block = new Block[2];
-                blocks.block[0] = touchingBlock;
-                blocks.block[1] = destinationBlock;
+                Element element1 = null;
+                Element element2 = null;
+                if (touchingBlock != null)
+                {
+                    element1 = touchingBlock.Element;
+                }
+                if (destinationBlock != null)
+                {
+                    element2 = destinationBlock.Element;
+                }
+
+                NextMoveBlockAndElement blocks = new NextMoveBlockAndElement(touchingBlock, element1, destinationBlock, element2);
+                //blocks.block = new Block[2];
+                //blocks.block[0] = touchingBlock;
+                //blocks.block[1] = destinationBlock;
                 elementsForMoveList.Add(blocks);
 
                 //Debug.Log("Добавление хода.");
@@ -239,9 +250,17 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 //удаляем подсказку
                 bool gameHelpWasDell = HelpToPlayer.DellGameHelp();
 
-                Blocks blocks = elementsForMoveList[0];
-                Block touchingBlock = blocks.block[0];
-                Block destinationBlock = blocks.block[1];
+                NextMoveBlockAndElement nextMoveBlockAndElement = elementsForMoveList[0];
+                //если элементы в блоках изменились, то удаляем из массива и переходим к следующему ходу
+                if ((nextMoveBlockAndElement.block1 != null && (nextMoveBlockAndElement.element1 != nextMoveBlockAndElement.block1.Element))
+                    || (nextMoveBlockAndElement.block2 != null && (nextMoveBlockAndElement.element2 != nextMoveBlockAndElement.block2.Element)))
+                {
+                    elementsForMoveList.Remove(nextMoveBlockAndElement);
+                    continue;
+                }
+
+                Block touchingBlock = nextMoveBlockAndElement.block1;
+                Block destinationBlock = nextMoveBlockAndElement.block2;
 
                 MainAnimator.Instance.ClearElementsForNextMove();
 
@@ -422,7 +441,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     }
                     else if (iteration == 1)
                     {
-                        elementsForMoveList.Remove(blocks);
+                        elementsForMoveList.Remove(nextMoveBlockAndElement);
                     }
                     yield return StartCoroutine(Filling(true, iteration));
 
@@ -483,14 +502,13 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             }
 
             //если не конец игры, ищем существующие ходы создаем подсказку
-            if (!Tasks.Instance.endGame && !SuperBonus.Instance.InWork())
-            {
-                
+            if (!Tasks.Instance.endGame)
+            {                
                 //проверка, что остались доступные ходы
                 yield return StartCoroutine(FoundNextMove(false));
                 
                 //если не конец игры, но ходов не осталось и супер бонус не активен то рисуем проигрыш
-                if (elementsForMoveList.Count == 0 && !Tasks.Instance.endGame && !foundNextMove)
+                if (elementsForMoveList.Count == 0 && !SuperBonus.Instance.InWork() && !foundNextMove)
                 {
                     yield return new WaitForSeconds(0.5f);
                     StartCoroutine(MainGameSceneScript.Instance.CompleteGame(Tasks.Instance.collectedAll, foundNextMove));
@@ -583,15 +601,15 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
             return true;
         }
         //в списке для последовательного выполнения ходов
-        foreach (Blocks blocks in elementsForMoveList)
+        foreach (NextMoveBlockAndElement blocks in elementsForMoveList)
         {
-            foreach (Block block in blocks.block)
-            {
-                if (block == inBlock)
+            //foreach (Block block in blocks.block)
+            //{
+                if (blocks.block1 == inBlock || blocks.block2 == inBlock)
                 {
                     return true;
                 }
-            }
+            //}
         }
         return false;
     }
@@ -1900,7 +1918,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         StopAllCoroutines();
         blockedForMove = false;
         elementsForMixList = new List<Element>();
-        elementsForMoveList = new List<Blocks>();
+        elementsForMoveList = new List<NextMoveBlockAndElement>();
         needFilling = false;
         elementsPriorityList = new List<ElementsPriority>();
 
@@ -2190,11 +2208,21 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
 #endif
 }
 
-//public struct FoundNextMove
-//{
-//    public bool found;
-//    public bool mix;
-//}
+public class NextMoveBlockAndElement
+{
+    public Block block1;
+    public Element element1;
+    public Block block2;
+    public Element element2;
+
+    public NextMoveBlockAndElement(Block block1, Element element1, Block block2, Element element2)
+    {
+        this.block1 = block1;
+        this.element1 = element1;
+        this.block2 = block2;
+        this.element2 = element2;
+    }
+}
 
 //public struct ElementForNextMove
 //{

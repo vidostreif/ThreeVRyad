@@ -267,7 +267,7 @@ public static class HelpToPlayer
                 {
                     created = CreateGrassHelp((BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), activeHint.help));
                 }
-                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString() || activeHint.help == HelpEnum.StartRegion1.ToString() || activeHint.help == HelpEnum.Spider.ToString())
+                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString() || activeHint.help == HelpEnum.StartRegion1.ToString() || activeHint.help == HelpEnum.Spider.ToString() || activeHint.help == HelpEnum.WildPlantAndSpiderTogether.ToString())
                 {
                     created = InterfaceHelp("Gnome");
                 }
@@ -705,6 +705,10 @@ public static class HelpToPlayer
             {
                 text.text = "Двигай материалы к соберающей грядке!";
             }
+            else if (activeHint.help == HelpEnum.WildPlantAndSpiderTogether.ToString())
+            {
+                text.text = "Дикое растение и паук решили объеденить свои усилия и захватить сад! Но они не знают с кем связались. В бой!";
+            }            
             else
             {
                 text.text = "Често говоря, я и сам не понимаю, что происходит :)";

@@ -176,7 +176,8 @@ public enum HelpEnum
     DailyGift,
     DropBlock,
     StartRegion1,
-    Spider
+    Spider,
+    WildPlantAndSpiderTogether
 
 
 }//тип сглаженного перемещения
