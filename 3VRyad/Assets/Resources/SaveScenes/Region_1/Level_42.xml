@@ -140,7 +140,7 @@
     <optional>false</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>40000</scoreForFirstStar>
+    <scoreForFirstStar>33000</scoreForFirstStar>
     <scoreForSecondStar>50000</scoreForSecondStar>
     <scoreForThirdStar>70000</scoreForThirdStar>
   </Score>

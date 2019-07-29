@@ -116,9 +116,9 @@
     <optional>false</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>30000</scoreForFirstStar>
-    <scoreForSecondStar>40000</scoreForSecondStar>
-    <scoreForThirdStar>50000</scoreForThirdStar>
+    <scoreForFirstStar>25000</scoreForFirstStar>
+    <scoreForSecondStar>31000</scoreForSecondStar>
+    <scoreForThirdStar>40000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>12000</maxBonusPower>
@@ -129,7 +129,7 @@
     <moves>35</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Bush" goal="40" collectEverything="true" />
+      <shapeAndGoal shape="Bush" goal="36" collectEverything="true" />
     </targets>
   </Tasks>
   <InstrumentPanel>

@@ -575,7 +575,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == ElementsTypeEnum.StandardElement.ToString())
             {
-                text.text = "Что бы убрать растения в нашем саду, их нужно собрать в комбинации из трех или более растений в ряд. Попробуй передвинуть растение!";
+                text.text = "Чтобы убрать растения в нашем саду, их нужно собрать в комбинации из трех или более растений в ряд. Попробуй передвинуть растение!";
             }
             else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString())
             {
@@ -599,7 +599,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == ElementsTypeEnum.Drop.ToString())
             {
-                text.text = "Это хороший кирпич, из него можно построить новый сарай. Веди его жерез поле в самый низ!";
+                text.text = "Это хороший кирпич, из него можно построить новый сарай. Веди его через поле в самый низ!";
             }
             else if (activeHint.help == ElementsTypeEnum.SeedBarrel.ToString())
             {
@@ -635,7 +635,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.Spider.ToString())
             {
-                text.text = "Новая напасть! В саду завелся паук! Что бы уничтожить паука, уничтож всю паутину!";
+                text.text = "Новая напасть! В саду завелся паук! Чтобы уничтожить паука, уничтож всю паутину!";
             }            
             else if (activeHint.help == HelpEnum.GnomeStandardElement.ToString())
             {
@@ -667,7 +667,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.SuperBonus.ToString())
             {
-                text.text = "Это котёл с волшебным зельем, который наполняется энергией собраных растений, а после помогает тебе, изливая волшебные капли на поле!";
+                text.text = "Это котёл с волшебным зельем, который наполняется энергией собранных растений, а после помогает тебе, изливая волшебные капли на поле!";
             }
             else if (activeHint.help == HelpEnum.Instruments.ToString())
             {
@@ -703,15 +703,15 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.DropBlock.ToString())
             {
-                text.text = "Двигай материалы к соберающей грядке!";
+                text.text = "Двигай материалы к собирающей грядке!";
             }
             else if (activeHint.help == HelpEnum.WildPlantAndSpiderTogether.ToString())
             {
-                text.text = "Дикое растение и паук решили объеденить свои усилия и захватить сад! Но они не знают с кем связались. В бой!";
+                text.text = "Дикое растение и паук решили объединить свои усилия и захватить сад! Но они не знают с кем связались. В бой!";
             }            
             else
             {
-                text.text = "Често говоря, я и сам не понимаю, что происходит :)";
+                text.text = "Честно говоря, я и сам не понимаю, что происходит :)";
             }
         }
         else

@@ -142,7 +142,7 @@
   <Score>
     <scoreForFirstStar>30000</scoreForFirstStar>
     <scoreForSecondStar>40000</scoreForSecondStar>
-    <scoreForThirdStar>50000</scoreForThirdStar>
+    <scoreForThirdStar>60000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>12000</maxBonusPower>

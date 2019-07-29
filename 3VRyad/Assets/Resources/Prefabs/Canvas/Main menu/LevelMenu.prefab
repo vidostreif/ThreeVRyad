@@ -357,14 +357,23 @@ MonoBehaviour:
     - xmlDocument: {fileID: 4900000, guid: 12d41cad6f3fc9c49a54942bbd54f61d, type: 3}
       regionNumber: 1
       levelNumber: 46
+    - xmlDocument: {fileID: 4900000, guid: 97e03fba6ff28be41b5ce6959879eab2, type: 3}
+      regionNumber: 1
+      levelNumber: 47
+    - xmlDocument: {fileID: 4900000, guid: 2da6fb337cef37d45bf71a6232934f13, type: 3}
+      regionNumber: 1
+      levelNumber: 48
+    - xmlDocument: {fileID: 4900000, guid: 387041a55725ed54796a82f17db29794, type: 3}
+      regionNumber: 1
+      levelNumber: 49
   - availableForPassing: 0
     name: Region_1
     fullName: "\u0423\u0447\u0430\u0441\u0442\u043E\u043A \u0431\u0430\u0431\u0443\u0448\u043A\u0438
       \u0428\u0443\u0440\u044B"
-    sprite: {fileID: 21300000, guid: 141705717e71b09488a2345ae5e3f3d6, type: 3}
+    sprite: {fileID: 21300000, guid: f15a2684567189e429e9ac0afdbd44bb, type: 3}
     BackGround: {fileID: 0}
     levelList: []
-  lastLoadXmlDocument: Level_42
+  lastLoadXmlDocument: Level_49
   lastLoadFolder: Region_1
   levelSaved: 0
 --- !u!223 &6844234493297698153

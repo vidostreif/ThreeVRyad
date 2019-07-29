@@ -103,16 +103,19 @@
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
   <LevelSettings>
-    <bundles />
-    <bundelCount>0</bundelCount>
-    <coins>0</coins>
+    <bundles>
+      <bundleShopV type="Repainting" count="2" />
+      <bundleShopV type="Shovel" count="2" />
+    </bundles>
+    <bundelCount>2</bundelCount>
+    <coins>10</coins>
     <timeImmortalLives>0</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>25000</scoreForFirstStar>
-    <scoreForSecondStar>35000</scoreForSecondStar>
-    <scoreForThirdStar>45000</scoreForThirdStar>
+    <scoreForFirstStar>40000</scoreForFirstStar>
+    <scoreForSecondStar>65000</scoreForSecondStar>
+    <scoreForThirdStar>90000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>12000</maxBonusPower>

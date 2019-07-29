@@ -71,18 +71,18 @@ public class StartGame : MonoBehaviour
 
         //загружаем уровень
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("MainMenu");
-            //создаем изображение для отображения загрузки уровня
-            GameObject imageMainLoadGO = Instantiate(PrefabBank.ImageMainLoad, transform);
-            Image imageLoadScene = imageMainLoadGO.transform.Find("ImageLoad").GetComponent<Image>();
+            ////создаем изображение для отображения загрузки уровня
+            //GameObject imageMainLoadGO = Instantiate(PrefabBank.ImageMainLoad, transform);
+            //Image imageLoadScene = imageMainLoadGO.transform.Find("ImageLoad").GetComponent<Image>();
             //ожидаем загрузки уровня
             float progress = 0;
             while (!asyncLoad.isDone)
             {
                 progress = asyncLoad.progress / 0.9f;
-                imageLoadScene.fillAmount = progress;
+                //imageLoadScene.fillAmount = progress;
                 yield return new WaitForEndOfFrame();
             }
-            Destroy(imageMainLoadGO);
+            //Destroy(imageMainLoadGO);
         Destroy(gameObject);
     }
 }

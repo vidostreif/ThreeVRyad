@@ -120,16 +120,18 @@
     <helpEnum>Empty</helpEnum>
   </HelpFromGnome>
   <LevelSettings>
-    <bundles />
-    <bundelCount>0</bundelCount>
-    <coins>0</coins>
-    <timeImmortalLives>0</timeImmortalLives>
+    <bundles>
+      <bundleShopV type="Vortex" count="3" />
+    </bundles>
+    <bundelCount>1</bundelCount>
+    <coins>10</coins>
+    <timeImmortalLives>30</timeImmortalLives>
     <optional>false</optional>
   </LevelSettings>
   <Score>
-    <scoreForFirstStar>50000</scoreForFirstStar>
-    <scoreForSecondStar>60000</scoreForSecondStar>
-    <scoreForThirdStar>82000</scoreForThirdStar>
+    <scoreForFirstStar>25000</scoreForFirstStar>
+    <scoreForSecondStar>39000</scoreForSecondStar>
+    <scoreForThirdStar>52000</scoreForThirdStar>
   </Score>
   <SuperBonus>
     <maxBonusPower>12000</maxBonusPower>
