@@ -295,7 +295,7 @@ public enum SpritesEnum
     Move,
     Life,
     Star,
-    Daily_Gift,
+    //Daily_Gift,
     Gift_Box,
     Gift_Box_Open,
     Button_Shop,
