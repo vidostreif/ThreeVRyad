@@ -98,6 +98,7 @@ public class MainGameSceneScript : MonoBehaviour {
 
         PoolManager.Instance.ReturnObjectToPool(PSRocket1);
         PoolManager.Instance.ReturnObjectToPool(PSRocket2);
+        DailyGiftManager.Instance.DelCquirrel();
         Destroy(CanvasMenu);
     }
 
@@ -179,6 +180,16 @@ public class MainGameSceneScript : MonoBehaviour {
         //если выполнили все задания
         if (victory)
         {
+            //показываем кнопку отзыва если пройдено обучение и на кнопку еще ни разу не нажимали
+            if (JsonSaveAndLoad.LoadSave().trainingCompleted && !JsonSaveAndLoad.LoadSave().reviewWritten)
+            {
+                Transform transformPanelReview = PanelMenu.transform.Find("PanelReview");
+                transformPanelReview.GetComponent<Animation>().Play();
+
+                Button transformPanelReviewButton =  transformPanelReview.Find("ButtonReview").GetComponent<Button>();
+                transformPanelReviewButton.onClick.AddListener(SoundManager.Instance.PlayClickButtonSound);
+                transformPanelReviewButton.onClick.AddListener(delegate { Application.OpenURL("https://play.google.com/store/apps/details?id=ru.VIDOCompany"); JsonSaveAndLoad.ReviewWritten(); });
+            }
             //победа
             textEndGame.text = "Победа!";
             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Victory);
@@ -241,7 +252,7 @@ public class MainGameSceneScript : MonoBehaviour {
             Destroy(PanelMenu.transform.Find("TextScore").gameObject);
         }
 
-        //если нет кнопеи видео, то показываем кнопку следующего уровня
+        //если нет кнопки видео, то показываем кнопку следующего уровня
         if (videoBrowseButton == null)
         {
             if (!LevelMenu.Instance.NextLevelIsOpen())

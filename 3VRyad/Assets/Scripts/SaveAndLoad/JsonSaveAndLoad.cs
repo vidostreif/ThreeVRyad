@@ -266,6 +266,20 @@ public static class JsonSaveAndLoad
             SetSaveToFile();
         }
     }
+
+    //отзыв оставлен
+    public static void ReviewWritten()
+    {
+        LoadSaveFromFile();
+        if (!save.reviewWritten)
+        {
+            save.reviewWritten = true;
+            //Firebase.Analytics.FirebaseAnalytics.LogEvent(Firebase.Analytics.FirebaseAnalytics.);
+            //сразу сохраняем в файл
+            saveIsChanged = true;
+            SetSaveToFile();
+        }
+    }
 }
 
 [Serializable]
@@ -279,6 +293,7 @@ public class Save
     public List<InstrumentsSave> instrumentsSave = new List<InstrumentsSave>();
     public SettingsSave settingsSave = JsonSaveAndLoad.GetStandartSettings();
     public bool trainingCompleted = false;
+    public bool reviewWritten = false;
 }
 
 [Serializable]
