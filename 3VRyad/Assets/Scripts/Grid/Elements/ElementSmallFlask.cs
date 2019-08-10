@@ -33,7 +33,7 @@ public class ElementSmallFlask : Element
     }
 
     //действие после удара
-    protected override void ActionAfterHitting(HitTypeEnum hitType)
+    protected override void ActionAfterDestroyHitting(HitTypeEnum hitType)
     {
         Position position = new Position(PositionInGrid.posX, PositionInGrid.posY);
         base.DestroyElement();

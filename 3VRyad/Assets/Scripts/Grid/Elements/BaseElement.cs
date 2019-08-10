@@ -255,8 +255,9 @@ public class BaseElement : MonoBehaviour
     { }
 
     //действие после хода
-    public virtual void PerformActionAfterMove()
+    public virtual IEnumerator PerformActionAfterMove()
     {
+        yield break;
     }
 
     //поиск следующего хода

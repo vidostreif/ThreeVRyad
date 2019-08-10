@@ -25,7 +25,7 @@ public class WildPlantElement : Element
         lifeText.text = Life.ToString();
     }
 
-    public override void PerformActionAfterMove()
+    public override IEnumerator PerformActionAfterMove()
     {
         if (!destroyed)
         {
@@ -50,11 +50,11 @@ public class WildPlantElement : Element
                         if (block.Element.BlockingElement == null || block.Element.BlockingElement.Destroyed)
                         {
                             SoundManager.Instance.PlaySoundInternal(SoundsEnum.Spread_liana);
-                            ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
-                            //Destroy(PSNextMove);
+                            ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;                            
                             PoolManager.Instance.ReturnObjectToPool(DopPS);
                             DopPS = null;
                             block.Element.CreatBlockingElement(GridBlocks.Instance.prefabBlockingWall, AllShapeEnum.Liana, BlockingElementsTypeEnum.Liana, thisTransform);
+                            yield return new WaitForSeconds(0.1f);
                             break;
                         }
                     }

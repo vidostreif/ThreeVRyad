@@ -174,19 +174,29 @@ public class Element : BaseElement
             {
                 if (SubLife())
                 {
+                    ActionAfterDestroyHitting(hitType);
+                }
+                else
+                {
                     ActionAfterHitting(hitType);
                 }                  
             }
         }
     }
 
-    //действие после удара
-    protected virtual void ActionAfterHitting(HitTypeEnum hitType) {
+    //действие после смертельного удара
+    protected virtual void ActionAfterDestroyHitting(HitTypeEnum hitType) {
         Position position = new Position(PositionInGrid.posX, PositionInGrid.posY);
         base.DestroyElement();
 
         if (hitType == HitTypeEnum.StandartHit || hitType == HitTypeEnum.Instrument)
             HitNeighboringBlocks(thisHitTypeEnum, position);
+    }
+
+    //действие после не смертельного удара
+    protected virtual void ActionAfterHitting(HitTypeEnum hitType)
+    {
+
     }
 
     public virtual BlockingElement BlockingElement

@@ -70,6 +70,11 @@ public class AnimatorElement : MonoBehaviour
         thisAnimation.Stop("Destroy");
     }
 
+    public void PlayIncreaseAnimation()
+    {
+        thisAnimation.CrossFade("Increase");
+    }
+
     public void PlayFallAnimation()
     {
         //thisAnimator.SetBool("Destroy", true);

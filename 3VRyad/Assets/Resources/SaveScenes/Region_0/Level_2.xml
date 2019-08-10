@@ -109,10 +109,10 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>22</moves>
+    <moves>25</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Strawberry" goal="50" collectEverything="false" />
+      <shapeAndGoal shape="Strawberry" goal="45" collectEverything="false" />
     </targets>
   </Tasks>
   <InstrumentPanel>

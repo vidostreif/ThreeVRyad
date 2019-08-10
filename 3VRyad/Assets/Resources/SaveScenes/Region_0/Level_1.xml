@@ -93,11 +93,11 @@
     <allow>false</allow>
   </SuperBonus>
   <Tasks>
-    <moves>25</moves>
+    <moves>26</moves>
     <sizeTargets>2</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Apple" goal="15" collectEverything="false" />
-      <shapeAndGoal shape="Orange" goal="15" collectEverything="false" />
+      <shapeAndGoal shape="Apple" goal="14" collectEverything="false" />
+      <shapeAndGoal shape="Orange" goal="14" collectEverything="false" />
     </targets>
   </Tasks>
   <InstrumentPanel>

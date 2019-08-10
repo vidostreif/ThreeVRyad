@@ -7,7 +7,7 @@ public class DirtBehindElement : BehindElement
 {
     private GameObject PSNextMove;
 
-    public override void PerformActionAfterMove()
+    public override IEnumerator PerformActionAfterMove()
     {
         //если нужно активировать этот элемент в этом ходу
         if (!destroyed && ActivationMove == Tasks.Instance.RealMoves)
@@ -17,6 +17,7 @@ public class DirtBehindElement : BehindElement
             if (block != null)
             {
                 newBehindElement = block.CreatBehindElement(GridBlocks.Instance.prefabElement, shape, type, thisTransform);
+                yield return new WaitForSeconds(0.1f);
             }
 
             //если активируется только один элемент из всех, то только для него ищем следующий ход

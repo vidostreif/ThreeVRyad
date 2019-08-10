@@ -300,7 +300,14 @@ public class Block : MonoBehaviour {
             else if (typeElementsEnum == ElementsTypeEnum.WildPlant)
             {
                 curElement = elementGameObject.AddComponent<WildPlantElement>();
-                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 10, 1000, false);
+                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 10, 1000, false);                
+                curElement.MakeActionAfterMove(1, false);
+            }
+            else if (typeElementsEnum == ElementsTypeEnum.MagicBush)
+            {
+                curElement = elementGameObject.AddComponent<MagicBushElement>();
+                curElement.InitialSettings(typeElementsEnum, true, false, false, false, false, HitTypeEnum.Empty, 999, 10000, false);
+                curElement.CollectShape = dopShape;
                 curElement.MakeActionAfterMove(1, false);
             }
             else

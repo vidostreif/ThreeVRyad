@@ -138,11 +138,11 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>27</moves>
+    <moves>28</moves>
     <sizeTargets>2</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Plum" goal="30" collectEverything="false" />
-      <shapeAndGoal shape="Camomile" goal="30" collectEverything="false" />
+      <shapeAndGoal shape="Plum" goal="28" collectEverything="false" />
+      <shapeAndGoal shape="Camomile" goal="28" collectEverything="false" />
     </targets>
   </Tasks>
   <InstrumentPanel>

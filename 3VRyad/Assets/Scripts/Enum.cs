@@ -15,6 +15,7 @@ public enum ElementsTypeEnum
     SeedBarrel,//бочка собирающая элементы
     Drop,//сбрасваемый элемент
     WildPlant, //дикое растение
+    MagicBush, //магический куст
 }//Типы элементов
 
 public enum ElementsShapeEnum
@@ -37,6 +38,7 @@ public enum ElementsShapeEnum
     Bush,//куст
     Brick,//кирпич
     WildPlant, //дикое растение
+    MagicBush, //магический куст
 }//Внешние виды элементов
 
 public enum BehindElementsTypeEnum
@@ -92,6 +94,7 @@ public enum AllShapeEnum
     Brick,//кирпич
     Web, //паутина
     WildPlant, //дикое растение
+    MagicBush, //магический куст
 }//Внешние виды элементов
 
 public enum BlockTypeEnum

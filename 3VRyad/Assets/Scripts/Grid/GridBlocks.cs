@@ -455,7 +455,8 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                 if (makeActionElementsAfterMove)
                 {
                     //действия элементов после хода             
-                    PerformActionElementsAfterMove();
+                    yield return StartCoroutine(PerformActionElementsAfterMove());
+                    //yield return new WaitForSeconds(0.1f);
                 }
 
                 blockFieldsList.Clear();
@@ -543,7 +544,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
     }
 
     //действия элементов после хода
-    private void PerformActionElementsAfterMove()
+    private IEnumerator PerformActionElementsAfterMove()
     {
         //предварительно собераем все элементы которые выполняют действие
 
@@ -564,7 +565,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
         //выполняем действия
         foreach (BaseElement item in elementsForAction)
         {
-            item.PerformActionAfterMove();
+            yield return StartCoroutine(item.PerformActionAfterMove());
         }
 
         NextActionElementsAfterMove();
@@ -1876,7 +1877,7 @@ public class GridBlocks : MonoBehaviour, IESaveAndLoad
                     XAttribute behindElementsShape = new XAttribute("behindElementsShape", BehindElementsShapeEnum.Empty);
                     XAttribute elementType = new XAttribute("elementType", ElementsTypeEnum.Empty);
                     XAttribute elementShape = new XAttribute("elementShape", ElementsShapeEnum.Empty);
-                    XAttribute dopShape = new XAttribute("dopShape", ElementsShapeEnum.Empty);
+                    XAttribute dopShape = new XAttribute("dopShape", AllShapeEnum.Empty);
                     XAttribute blockingElementType = new XAttribute("blockingElementType", BlockingElementsTypeEnum.Empty);
                     XAttribute blockingElementShape = new XAttribute("blockingElementShape", BlockingElementsShapeEnum.Empty);
 
