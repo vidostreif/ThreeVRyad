@@ -255,6 +255,10 @@ public static class HelpToPlayer
                 {
                     created = CreateWildPlantHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
                 }
+                else if (activeHint.help == ElementsTypeEnum.MagicBush.ToString())
+                {
+                    created = CreateMagicBushHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
+                }                
                 else if (activeHint.help == BlockingElementsTypeEnum.Spread.ToString())
                 {
                     created = CreateSpreadHelp();
@@ -267,7 +271,7 @@ public static class HelpToPlayer
                 {
                     created = CreateGrassHelp((BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), activeHint.help));
                 }
-                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString() || activeHint.help == HelpEnum.StartRegion1.ToString() || activeHint.help == HelpEnum.Spider.ToString() || activeHint.help == HelpEnum.WildPlantAndSpiderTogether.ToString())
+                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString() || activeHint.help == HelpEnum.StartRegion1.ToString() || activeHint.help == HelpEnum.StartRegion2.ToString() || activeHint.help == HelpEnum.Spider.ToString() || activeHint.help == HelpEnum.WildPlantAndSpiderTogether.ToString())
                 {
                     created = InterfaceHelp("Gnome");
                 }
@@ -609,6 +613,10 @@ public static class HelpToPlayer
             {
                 text.text = "Это дикое растение! Оно, каждые два хода, захватывает одно обычное растение рядом с собой! Его можно ранить взрывом или собрав комбинацию рядом.";
             }
+            else if (activeHint.help == ElementsTypeEnum.MagicBush.ToString())
+            {
+                text.text = "Если потрести дерево собрав комбинацию рядом или взорвав колбу, то в конце хода оно разбросает фрукты по полю. Что бы выросли новые фрукты ножно подождать один ход.";
+            }
             else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
             {
                 text.text = "Эта лиана захватила весь наш сад! Её можно уничтожить тем же, чем уничтожается захваченное растение!";
@@ -632,6 +640,10 @@ public static class HelpToPlayer
             else if (activeHint.help == HelpEnum.StartRegion1.ToString())
             {
                 text.text = "Это сад бабушки Шуры и на него напало странное растение. Мы должны помочь ей уничтожить его!";
+            }
+            else if (activeHint.help == HelpEnum.StartRegion2.ToString())
+            {
+                text.text = "В саду дядюшки Бориса растут волшебные деревья с очень вкусными фруктами. Но как же их собрать?";
             }
             else if (activeHint.help == HelpEnum.Spider.ToString())
             {
@@ -1060,6 +1072,42 @@ public static class HelpToPlayer
                 }
             }
             return true;
+        }
+        Debug.Log("Не нашли ни одного дикого растения!");
+        return false;
+    }
+
+    //волшебное дерево
+    private static bool CreateMagicBushHelp(ElementsTypeEnum elementsTypeEnum)
+    {
+        //наоходим все объекты с нужным элементом
+        Block[] findeBlock = GridBlocks.Instance.GetAllBlocksWithCurElements(elementsTypeEnum);
+
+        //если нашли хоть один элемент
+        foreach (Block curBlock in findeBlock)
+        {
+            if (curBlock.Element.ActivationMove - 1 <= Tasks.Instance.RealMoves && curBlock.Element.ActivationMove != -1)
+            {
+                CanvasLiveTime(1);
+                //высвечиваем блок
+                ChangeSorting(curBlock.gameObject, activeHint);
+
+                //добавляем эффект мерцания
+                AddToFlashing(curBlock.gameObject, activeHint);
+
+                //получаем блоки вокруг
+                Block[] blocksAround = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, 5);
+
+                //перебираем все блоки
+                foreach (Block block in blocksAround)
+                {
+                    if (block != null)
+                    {
+                        ChangeSorting(block.gameObject, activeHint);
+                    }
+                }
+                return true;
+            }            
         }
         Debug.Log("Не нашли ни одного дикого растения!");
         return false;

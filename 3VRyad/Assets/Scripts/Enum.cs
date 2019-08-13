@@ -39,6 +39,7 @@ public enum ElementsShapeEnum
     Brick,//кирпич
     WildPlant, //дикое растение
     MagicBush, //магический куст
+    MagicFruit, //магический фрукт
 }//Внешние виды элементов
 
 public enum BehindElementsTypeEnum
@@ -95,6 +96,7 @@ public enum AllShapeEnum
     Web, //паутина
     WildPlant, //дикое растение
     MagicBush, //магический куст
+    MagicFruit, //магический фрукт
 }//Внешние виды элементов
 
 public enum BlockTypeEnum
@@ -179,6 +181,7 @@ public enum HelpEnum
     DailyGift,
     DropBlock,
     StartRegion1,
+    StartRegion2,
     Spider,
     WildPlantAndSpiderTogether
 
