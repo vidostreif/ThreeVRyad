@@ -183,8 +183,8 @@ public enum HelpEnum
     StartRegion1,
     StartRegion2,
     Spider,
-    WildPlantAndSpiderTogether
-
+    WildPlantAndSpiderTogether,
+    MagicFruitHelp,
 
 }//тип сглаженного перемещения
 

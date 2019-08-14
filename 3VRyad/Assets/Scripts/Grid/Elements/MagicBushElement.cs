@@ -15,7 +15,7 @@ public class MagicBushElement : Element
     //действие после не смертельного удара
     protected override void ActionAfterHitting(HitTypeEnum hitType)
     {
-        if (ActivationMove - 1 <= Tasks.Instance.RealMoves && ActivationMove != -1)
+        if (ActivationMove - 1 <= Tasks.Instance.RealMoves)
         {
             UpdateSprite(2);
             wasHit = true;            
@@ -32,15 +32,15 @@ public class MagicBushElement : Element
     {
         if (!destroyed)
         {
-            if (ActivationMove == -1)
-            {
-                ActivationMove = Tasks.Instance.RealMoves + actionDelay;
-            }
+            //if (ActivationMove == -1)
+            //{
+            //    ActivationMove = 1;
+            //}
 
             if (ActivationMove - 1 == Tasks.Instance.RealMoves)
             {
                 //SoundManager.Instance.PlaySoundInternal(SoundsEnum.);
-                UpdateSprite(1);
+                UpdateSprite();
             }
 
             //если на кусте есть ягоды
@@ -57,7 +57,7 @@ public class MagicBushElement : Element
     public void Spread()
     {
         ActivationMove = Tasks.Instance.RealMoves + 1 + actionDelay;
-        UpdateSprite();
+        UpdateSprite(1);
         Block[] neighboringBlocks = GridBlocks.Instance.GetBlocksForHit(this.positionInGrid, 5);
         SupportFunctions.MixArray(neighboringBlocks);//перемешаем блоки
         int numberOfCopies = 5;

@@ -225,7 +225,10 @@ public static class HelpToPlayer
                 else if (activeHint.help == ElementsTypeEnum.StandardElement.ToString())
                 {
                     created = CreateStandardElementHelp(3);
-                    AddHint(HelpEnum.GnomeStandardElement);
+                    if (created)
+                    {
+                        AddHint(HelpEnum.GnomeStandardElement);
+                    }                    
                 }
                 else if (activeHint.help == ElementsTypeEnum.CrushableWall.ToString())
                 {
@@ -234,7 +237,7 @@ public static class HelpToPlayer
                 else if (activeHint.help == ElementsTypeEnum.SmallFlask.ToString() || activeHint.help == ElementsTypeEnum.MediumFlask.ToString())
                 {
                     created = CreateFlaskHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help), false);
-                }
+                }                
                 else if (activeHint.help == ElementsTypeEnum.BigFlask.ToString())
                 {
                     created = CreateFlaskHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help), true);
@@ -258,6 +261,10 @@ public static class HelpToPlayer
                 else if (activeHint.help == ElementsTypeEnum.MagicBush.ToString())
                 {
                     created = CreateMagicBushHelp((ElementsTypeEnum)Enum.Parse(typeof(ElementsTypeEnum), activeHint.help));
+                    if (created)
+                    {
+                        AddHint(HelpEnum.MagicFruitHelp);
+                    }
                 }                
                 else if (activeHint.help == BlockingElementsTypeEnum.Spread.ToString())
                 {
@@ -271,7 +278,8 @@ public static class HelpToPlayer
                 {
                     created = CreateGrassHelp((BehindElementsTypeEnum)Enum.Parse(typeof(BehindElementsTypeEnum), activeHint.help));
                 }
-                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString() || activeHint.help == HelpEnum.StartRegion1.ToString() || activeHint.help == HelpEnum.StartRegion2.ToString() || activeHint.help == HelpEnum.Spider.ToString() || activeHint.help == HelpEnum.WildPlantAndSpiderTogether.ToString())
+                else if (activeHint.help == HelpEnum.Gnome.ToString() || activeHint.help == HelpEnum.GnomeStandardElement.ToString() || activeHint.help == HelpEnum.StartRegion1.ToString() || activeHint.help == HelpEnum.StartRegion2.ToString()
+                    || activeHint.help == HelpEnum.Spider.ToString() || activeHint.help == HelpEnum.WildPlantAndSpiderTogether.ToString() || activeHint.help == HelpEnum.MagicFruitHelp.ToString())
                 {
                     created = InterfaceHelp("Gnome");
                 }
@@ -615,7 +623,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == ElementsTypeEnum.MagicBush.ToString())
             {
-                text.text = "Если потрести дерево собрав комбинацию рядом или взорвав колбу, то в конце хода оно разбросает фрукты по полю. Что бы выросли новые фрукты ножно подождать один ход.";
+                text.text = "Если потрести дерево взорвав рядом колбу, то в конце хода оно разбросает фрукты по полю. Что бы выросли новые фрукты нужно подождать один ход.";
             }
             else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
             {
@@ -643,7 +651,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == HelpEnum.StartRegion2.ToString())
             {
-                text.text = "В саду дядюшки Бориса растут волшебные деревья с очень вкусными фруктами. Но как же их собрать?";
+                text.text = "В саду дядюшки Бориса растут волшебные деревья с очень вкусными фруктами. Но как же их собрать? Может ударить по нему лопатой?";
             }
             else if (activeHint.help == HelpEnum.Spider.ToString())
             {
@@ -720,7 +728,11 @@ public static class HelpToPlayer
             else if (activeHint.help == HelpEnum.WildPlantAndSpiderTogether.ToString())
             {
                 text.text = "Дикое растение и паук решили объединить свои усилия и захватить сад! Но они не знают с кем связались. В бой!";
-            }            
+            }
+            else if (activeHint.help == HelpEnum.MagicFruitHelp.ToString())
+            {
+                text.text = "Магический фрукт собирается так же как и обычные растения!";
+            }
             else
             {
                 text.text = "Честно говоря, я и сам не понимаю, что происходит :)";
@@ -1086,30 +1098,86 @@ public static class HelpToPlayer
         //если нашли хоть один элемент
         foreach (Block curBlock in findeBlock)
         {
-            if (curBlock.Element.ActivationMove - 1 <= Tasks.Instance.RealMoves && curBlock.Element.ActivationMove != -1)
+            if (curBlock.Element.ActivationMove - 1 <= Tasks.Instance.RealMoves)
             {
                 CanvasLiveTime(1);
-                //высвечиваем блок
-                ChangeSorting(curBlock.gameObject, activeHint);
 
-                //добавляем эффект мерцания
-                AddToFlashing(curBlock.gameObject, activeHint);
+                Block blockFlask = null;
 
                 //получаем блоки вокруг
-                Block[] blocksAround = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, 5);
+                Block[] blocksAround = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, 1);
 
                 //перебираем все блоки
                 foreach (Block block in blocksAround)
                 {
                     if (block != null)
                     {
-                        ChangeSorting(block.gameObject, activeHint);
+                        if (block.Element != null && block.Element.Type == ElementsTypeEnum.SmallFlask)
+                        {
+                            blockFlask = block;
+                            
+                        }
                     }
                 }
-                return true;
+
+                if (blockFlask == null)
+                {
+                    //получаем блоки вокруг
+                    blocksAround = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, 2);
+
+                    //перебираем все блоки
+                    foreach (Block block in blocksAround)
+                    {
+                        if (block != null)
+                        {
+                            if (block.Element != null && block.Element.Type == ElementsTypeEnum.MediumFlask)
+                            {
+                                blockFlask = block;
+                            }
+                        }
+                    }
+                }
+
+                if (blockFlask == null)
+                {
+                    //получаем блоки вокруг
+                    blocksAround = GridBlocks.Instance.GetBlocksForHit(curBlock.PositionInGrid, 3);
+
+                    //перебираем все блоки
+                    foreach (Block block in blocksAround)
+                    {
+                        if (block != null)
+                        {
+                            if (block.Element != null && block.Element.Type == ElementsTypeEnum.BigFlask)
+                            {
+                                blockFlask = block;
+                            }
+                        }
+                    }
+                }                
+
+                //работаем с найденым блоком
+                if (blockFlask != null)
+                {
+                    //отключаем перетаскивание
+                    BlockController blockController = blockFlask.GetComponent<BlockController>();
+                    activeHint.blockControllersSetingList.Add(new BlockControllerSettings(blockController, blockController.handleСlick, blockController.handleDragging, blockController.permittedDirection));
+                    blockController.handleDragging = false;
+
+                    ChangeSorting(blockFlask.gameObject, activeHint);
+                    //добавляем эффект мерцания
+                    AddToFlashing(blockFlask.gameObject, activeHint);
+
+                    //высвечиваем блок
+                    ChangeSorting(curBlock.gameObject, activeHint);
+                    ////добавляем эффект мерцания
+                    //AddToFlashing(curBlock.gameObject, activeHint);
+
+                    return true;
+                }
             }            
         }
-        Debug.Log("Не нашли ни одного дикого растения!");
+        Debug.Log("Не нашли всех элементов для подсказки магического дерева!");
         return false;
     }
 

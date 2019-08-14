@@ -129,7 +129,7 @@
     <allow>true</allow>
   </SuperBonus>
   <Tasks>
-    <moves>26</moves>
+    <moves>27</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
       <shapeAndGoal shape="Brick" goal="4" collectEverything="false" />

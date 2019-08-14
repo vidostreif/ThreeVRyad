@@ -153,7 +153,7 @@
     <moves>27</moves>
     <sizeTargets>1</sizeTargets>
     <targets>
-      <shapeAndGoal shape="Apple" goal="60" collectEverything="false" />
+      <shapeAndGoal shape="Apple" goal="55" collectEverything="false" />
     </targets>
   </Tasks>
   <InstrumentPanel>
