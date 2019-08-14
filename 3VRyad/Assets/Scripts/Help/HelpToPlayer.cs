@@ -623,7 +623,7 @@ public static class HelpToPlayer
             }
             else if (activeHint.help == ElementsTypeEnum.MagicBush.ToString())
             {
-                text.text = "Если потрести дерево взорвав рядом колбу, то в конце хода оно разбросает фрукты по полю. Что бы выросли новые фрукты нужно подождать один ход.";
+                text.text = "Если потрясти дерево, взорвав рядом зелье, то в конце хода дерево разбросает фрукты по полю. Что бы выросли новые фрукты нужно подождать один ход.";
             }
             else if (activeHint.help == BlockingElementsTypeEnum.Liana.ToString())
             {
